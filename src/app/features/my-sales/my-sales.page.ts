@@ -40,6 +40,8 @@ export class MySalesPage {
   createOpen = signal(false);
   editingSaleId = signal<string | null>(null);
 
+  detailsSaleId = signal<string | null>(null);
+
   sales = signal<MySale[]>([]);
 
   private readonly fb = inject(FormBuilder);
@@ -60,6 +62,11 @@ export class MySalesPage {
 
   constructor() {
     this.refresh();
+  }
+
+  toggleDetails(s: MySale): void {
+    const id = String(s.id);
+    this.detailsSaleId.set(this.detailsSaleId() === id ? null : id);
   }
 
   openCreate(): void {
