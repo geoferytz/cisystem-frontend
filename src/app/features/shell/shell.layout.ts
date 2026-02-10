@@ -4,6 +4,7 @@ import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/auth/auth.service';
 import { GraphqlService } from '../../core/graphql/graphql.service';
+import { ShellHeaderComponent } from './shell-header.component';
 
 type MeQueryResult = {
   me: {
@@ -25,7 +26,7 @@ type LowStockAlertsQueryResult = {
 @Component({
   selector: 'cis-shell',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterOutlet],
+  imports: [CommonModule, RouterLink, RouterOutlet, ShellHeaderComponent],
   templateUrl: './shell.layout.html',
   styleUrl: './shell.layout.scss'
 })
@@ -34,6 +35,8 @@ export class ShellLayout {
 
   currentUrl = signal<string>('/');
   isHome = computed(() => this.currentUrl() === '/home' || this.currentUrl().startsWith('/home?'));
+
+  sidebarOpen = signal(true);
 
   user = signal<MeQueryResult['me']>(null);
   userMenuOpen = signal(false);
@@ -48,6 +51,10 @@ export class ShellLayout {
     private readonly router: Router,
     private readonly destroyRef: DestroyRef
   ) {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      this.sidebarOpen.set(false);
+    }
+
     this.currentUrl.set(this.router.url);
     this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((e) => {
       if (e instanceof NavigationEnd) {
@@ -91,6 +98,14 @@ export class ShellLayout {
   closeMenus(): void {
     this.userMenuOpen.set(false);
     this.notificationsOpen.set(false);
+  }
+
+  toggleSidebar(): void {
+    this.sidebarOpen.set(!this.sidebarOpen());
+  }
+
+  closeSidebar(): void {
+    this.sidebarOpen.set(false);
   }
 
   refreshNotifications(): void {
