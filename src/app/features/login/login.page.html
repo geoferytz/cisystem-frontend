@@ -1,0 +1,98 @@
+<div class="h-screen w-screen bg-gradient-to-br from-indigo-950 via-purple-900 to-fuchsia-600 px-4 py-10 overflow-hidden relative">
+  <!-- Centered login card -->
+  <div class="flex h-full w-full items-center justify-center">
+    <div class="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-white/10">
+      
+      <!-- Hero / Logo -->
+      <div class="cis-login-hero relative h-52">
+        <div class="absolute inset-0 flex items-center justify-center px-6">
+          <img src="/GYLA-LOGO.png" alt="GYLA Cosmetics" class="h-20 w-auto object-contain" />
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="p-8">
+        <div class="text-center">
+          <div class="text-2xl font-extrabold tracking-wide text-slate-900">WELCOME!</div>
+          <div class="mt-2 text-xs text-slate-500">Login to Gyla Cosmetics Inventory System</div>
+        </div>
+
+        <form class="mt-6 grid gap-4" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+          <!-- Email -->
+          <div class="relative">
+            <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 11a4 4 0 100-8 4 4 0 000 8z" />
+              </svg>
+            </span>
+            <input
+              class="w-full rounded-none bg-slate-100 px-10 py-3 text-sm text-slate-800 outline-none ring-1 ring-slate-200 focus:bg-white focus:ring-purple-500"
+              type="email" placeholder="email or username" formControlName="email" autocomplete="username" />
+          </div>
+
+          <!-- Password -->
+          <div class="relative">
+            <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 11c1.66 0 3-1.34 3-3S13.66 5 12 5 9 6.34 9 8s1.34 3 3 3z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 11v-1a5 5 0 0110 0v1" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 11h10v10H7z" />
+              </svg>
+            </span>
+            <input
+              class="w-full rounded-none bg-slate-100 px-10 pr-10 py-3 text-sm text-slate-800 outline-none ring-1 ring-slate-200 focus:bg-white focus:ring-purple-500"
+              [type]="showPassword() ? 'text' : 'password'" placeholder="password" formControlName="password" autocomplete="current-password" />
+
+            <button
+              type="button"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-purple-700"
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'">
+              <svg *ngIf="!showPassword()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <svg *ngIf="showPassword()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.477 10.48a3 3 0 104.243 4.243" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.228 6.228C4.407 7.5 3.089 9.487 2.458 12c1.274 4.057 5.064 7 9.542 7 1.505 0 2.94-.332 4.228-.928" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.88 4.24A9.952 9.952 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.967 9.967 0 01-3.274 4.504" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Remember / Forgot -->
+          <div class="flex items-center justify-between text-[11px] text-slate-500">
+            <label class="inline-flex items-center gap-2">
+              <input type="checkbox" class="h-3.5 w-3.5 rounded border-slate-300" formControlName="remember" />
+              Remember
+            </label>
+            <button type="button" class="text-slate-500 hover:text-purple-700">Forgot your password?</button>
+          </div>
+
+          <!-- Error Message -->
+          <div class="text-sm text-red-700" *ngIf="error()">{{ error() }}</div>
+
+          <!-- Submit Button -->
+          <button
+            class="mt-2 inline-flex w-36 items-center justify-center gap-2 bg-gradient-to-r from-fuchsia-600 to-indigo-700 px-5 py-3 text-sm font-extrabold tracking-widest text-white shadow-lg shadow-purple-900/30 disabled:cursor-not-allowed disabled:opacity-70"
+            type="submit" [disabled]="form.invalid || loading()">
+            <span>{{ loading() ? 'WAIT...' : 'NEXT' }}</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 6l6 6-6 6" />
+            </svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="absolute bottom-4 w-full text-center text-[11px] text-white">
+    © 2026 Gyla Cosmetics Co. All rights reserved.
+  </div>
+</div>

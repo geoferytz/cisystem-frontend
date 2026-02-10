@@ -1,0 +1,344 @@
+<div class="flex items-center justify-between">
+  <h2 class="text-xl font-semibold text-slate-900">Products</h2>
+</div>
+
+<div class="mt-4 grid grid-cols-1 gap-4">
+  <section class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
+    <div class="flex items-center justify-between">
+      <h3 class="text-base font-semibold text-slate-900">List</h3>
+      <div class="flex items-center gap-2">
+        <button
+          class="rounded-xl bg-indigo-950 px-3 py-2 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+          (click)="openCreate()"
+          [disabled]="loading()"
+        >
+          Add Product
+        </button>
+      </div>
+    </div>
+
+    <div class="mt-3 grid gap-2 sm:grid-cols-[1fr_auto]">
+      <input
+        class="rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:border-purple-500"
+        [value]="searchQuery()"
+        (input)="onSearch(($any($event.target)).value)"
+        placeholder="Search by product name, SKU, or barcode"
+      />
+      <button
+        class="rounded-xl bg-indigo-950 px-3 py-2 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+        (click)="load()"
+        [disabled]="loading()"
+      >
+        Search
+      </button>
+    </div>
+
+    <div class="mt-3 flex flex-wrap items-center justify-between gap-2">
+      <div class="text-xs font-semibold text-slate-600">Total: {{ products().length }}</div>
+      <div class="flex items-center gap-2">
+        <label class="text-xs font-semibold text-slate-600">
+          Show
+          <select
+            class="ml-2 rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs"
+            [value]="pageSize()"
+            (change)="setPageSize(($any($event.target)).value)"
+          >
+            <option [value]="10">10</option>
+            <option [value]="20">20</option>
+            <option [value]="50">50</option>
+            <option [value]="100">100</option>
+          </select>
+        </label>
+
+        <button
+          class="rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
+          (click)="prevPage()"
+          [disabled]="pageIndex() === 0"
+        >
+          Prev
+        </button>
+        <div class="text-xs font-semibold text-slate-600">Page {{ pageIndex() + 1 }} / {{ totalPages() }}</div>
+        <button
+          class="rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
+          (click)="nextPage()"
+          [disabled]="pageIndex() >= totalPages() - 1"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+
+    <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100">
+      <table class="w-full border-collapse text-sm">
+        <thead class="bg-slate-50">
+          <tr>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">SKU</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Barcode</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Batch</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Name</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Brand</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Category</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Buying</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Selling</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Units</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Status</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of displayedProducts()" class="border-t border-slate-100">
+            <td class="px-3 py-2">
+              <ng-container *ngIf="editingId() !== p.id; else editSku">
+                {{ p.sku }}
+              </ng-container>
+              <ng-template #editSku>
+                <div [formGroup]="editForm">
+                  <input
+                    class="w-full rounded-lg border border-slate-200 px-2 py-1 text-sm outline-none focus:border-purple-500"
+                    formControlName="sku"
+                  />
+                </div>
+              </ng-template>
+            </td>
+
+            <td class="px-3 py-2">
+              <ng-container *ngIf="editingId() !== p.id; else editBarcode">
+                {{ p.barcode || '-' }}
+              </ng-container>
+              <ng-template #editBarcode>
+                <div [formGroup]="editForm">
+                  <input
+                    class="w-full rounded-lg border border-slate-200 px-2 py-1 text-sm outline-none focus:border-purple-500"
+                    formControlName="barcode"
+                  />
+                </div>
+              </ng-template>
+            </td>
+
+            <td class="px-3 py-2">
+              <ng-container *ngIf="editingId() !== p.id; else editBatch">
+                {{ latestBatchNumber(p) }}
+              </ng-container>
+              <ng-template #editBatch>
+                <div [formGroup]="editForm">
+                  <input
+                    class="w-full rounded-lg border border-slate-200 px-2 py-1 text-sm outline-none focus:border-purple-500"
+                    formControlName="batchNumber"
+                    [placeholder]="latestBatchNumber(p) === '-' ? 'No batch' : ''"
+                    [readOnly]="latestBatchNumber(p) === '-'"
+                  />
+                </div>
+              </ng-template>
+            </td>
+
+            <td class="px-3 py-2">
+              <ng-container *ngIf="editingId() !== p.id; else editName">
+                {{ p.name }}
+              </ng-container>
+              <ng-template #editName>
+                <div [formGroup]="editForm">
+                  <input
+                    class="w-full rounded-lg border border-slate-200 px-2 py-1 text-sm outline-none focus:border-purple-500"
+                    formControlName="name"
+                  />
+                </div>
+              </ng-template>
+            </td>
+
+            <td class="px-3 py-2">
+              <ng-container *ngIf="editingId() !== p.id; else editBrand">
+                {{ p.brand || '-' }}
+              </ng-container>
+              <ng-template #editBrand>
+                <div [formGroup]="editForm">
+                  <input
+                    class="w-full rounded-lg border border-slate-200 px-2 py-1 text-sm outline-none focus:border-purple-500"
+                    formControlName="brand"
+                  />
+                </div>
+              </ng-template>
+            </td>
+
+            <td class="px-3 py-2">
+              <ng-container *ngIf="editingId() !== p.id; else editCategory">
+                {{ p.category || '-' }}
+              </ng-container>
+              <ng-template #editCategory>
+                <div [formGroup]="editForm">
+                  <select
+                    class="w-full rounded-lg border border-slate-200 px-2 py-1 text-sm outline-none focus:border-purple-500"
+                    formControlName="category"
+                  >
+                    <option value="">Select category</option>
+                    <option *ngFor="let c of categories()" [value]="c.name">{{ c.name }}</option>
+                  </select>
+                </div>
+              </ng-template>
+            </td>
+
+            <td class="px-3 py-2">
+              <ng-container *ngIf="editingId() !== p.id; else editBuying">
+                {{ p.buyingPrice ?? '-' }}
+              </ng-container>
+              <ng-template #editBuying>
+                <div [formGroup]="editForm">
+                  <input
+                    class="w-full rounded-lg border border-slate-200 px-2 py-1 text-sm outline-none focus:border-purple-500"
+                    type="number"
+                    formControlName="buyingPrice"
+                  />
+                </div>
+              </ng-template>
+            </td>
+
+            <td class="px-3 py-2">
+              <ng-container *ngIf="editingId() !== p.id; else editSelling">
+                {{ p.sellingPrice ?? '-' }}
+              </ng-container>
+              <ng-template #editSelling>
+                <div [formGroup]="editForm">
+                  <input
+                    class="w-full rounded-lg border border-slate-200 px-2 py-1 text-sm outline-none focus:border-purple-500"
+                    type="number"
+                    formControlName="sellingPrice"
+                  />
+                </div>
+              </ng-template>
+            </td>
+            <td class="px-3 py-2">
+              <ng-container *ngIf="editingId() !== p.id; else editunitOfMeasure">
+                {{ p.unitOfMeasure ?? '-' }}
+              </ng-container>
+              <ng-template #editunitOfMeasure>
+                <div [formGroup]="editForm">
+                  <input
+                    class="w-full rounded-lg border border-slate-200 px-2 py-1 text-sm outline-none focus:border-purple-500"
+                    type="number"
+                    formControlName="unitOfMeasure"
+                  />
+                </div>
+              </ng-template>
+            </td>
+            <td class="px-3 py-2">
+              <span class="text-slate-800" [class.text-red-700]="!p.active">
+                {{ p.active ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+
+            <td class="px-3 py-2">
+              <div class="flex gap-2">
+                <ng-container *ngIf="editingId() !== p.id; else editActions">
+                  <button
+                    class="rounded-lg bg-indigo-950 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                    (click)="startEdit(p)"
+                    [disabled]="loading()"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    class="rounded-lg bg-red-700 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                    (click)="delete(p)"
+                    [disabled]="loading()"
+                  >
+                    Delete
+                  </button>
+                </ng-container>
+
+                <ng-template #editActions>
+                  <button
+                    class="rounded-lg bg-emerald-700 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                    (click)="saveEdit()"
+                    [disabled]="loading() || editForm.invalid"
+                  >
+                    Save
+                  </button>
+                  <button
+                    class="rounded-lg bg-slate-700 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                    (click)="cancelEdit()"
+                    [disabled]="loading()"
+                  >
+                    Cancel
+                  </button>
+                </ng-template>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<div *ngIf="createDialogOpen()" class="fixed inset-0 z-40">
+  <div class="absolute inset-0 bg-slate-900/40" (click)="cancelCreate()"></div>
+  <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl rounded-2xl bg-white p-5 shadow-xl ring-1 ring-slate-200">
+      <div class="flex items-center justify-between">
+        <div class="text-base font-semibold text-slate-900">Add Product</div>
+        <button class="text-sm font-semibold text-slate-600 hover:text-slate-900" (click)="cancelCreate()">Close</button>
+      </div>
+
+      <div class="mt-4">
+        <cis-product-form
+          [categories]="categories()"
+          [loading]="loading()"
+          [error]="error()"
+          [open]="createDialogOpen()"
+          (submitted)="create($event)"
+          (cancel)="cancelCreate()"
+        ></cis-product-form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  *ngIf="toastMessage()"
+  class="fixed right-4 top-4 z-50"
+  role="status"
+  aria-live="polite"
+>
+  <div
+    class="flex items-start gap-3 rounded-xl px-4 py-3 text-sm font-medium shadow-lg ring-1"
+    [class.bg-emerald-50]="toastVariant() === 'success'"
+    [class.text-emerald-900]="toastVariant() === 'success'"
+    [class.ring-emerald-200]="toastVariant() === 'success'"
+    [class.bg-red-50]="toastVariant() === 'error'"
+    [class.text-red-900]="toastVariant() === 'error'"
+    [class.ring-red-200]="toastVariant() === 'error'"
+  >
+    <div class="flex-1">{{ toastMessage() }}</div>
+    <button class="text-xs font-semibold opacity-80 hover:opacity-100" (click)="dismissToast()">Close</button>
+  </div>
+</div>
+
+<div *ngIf="deleteDialogOpen()" class="fixed inset-0 z-40">
+  <div class="absolute inset-0 bg-slate-900/40" (click)="cancelDelete()"></div>
+  <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div class="w-full max-w-md rounded-2xl bg-white p-5 shadow-xl ring-1 ring-slate-200">
+      <div class="text-base font-semibold text-slate-900">Confirm delete</div>
+      <div class="mt-2 text-sm text-slate-600">
+        Are you sure you want to delete
+        <span class="font-semibold text-slate-900">{{ pendingDelete()?.name }}</span>?
+        The product will be marked as inactive.
+      </div>
+
+      <div class="mt-5 flex justify-end gap-2">
+        <button
+          class="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-70"
+          (click)="cancelDelete()"
+          [disabled]="loading()"
+        >
+          Cancel
+        </button>
+        <button
+          class="rounded-xl bg-red-700 px-4 py-2 text-sm font-semibold text-white hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-70"
+          (click)="confirmDelete()"
+          [disabled]="loading()"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

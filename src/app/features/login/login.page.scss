@@ -1,0 +1,52 @@
+
+.cis-login-hero {
+  background:
+    radial-gradient(2px 2px at 20% 30%, rgba(255, 255, 255, 0.7) 50%, transparent 52%),
+    radial-gradient(1.5px 1.5px at 70% 20%, rgba(255, 255, 255, 0.55) 50%, transparent 52%),
+    radial-gradient(1.5px 1.5px at 50% 55%, rgba(255, 255, 255, 0.45) 50%, transparent 52%),
+    radial-gradient(1px 1px at 85% 60%, rgba(255, 255, 255, 0.35) 50%, transparent 52%),
+    linear-gradient(135deg, #0b0b3b 0%, #3b1365 45%, #6b21a8 100%);
+  position: relative;
+}
+
+.cis-login-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 80% 25%, rgba(255, 255, 255, 0.9) 0 6px, transparent 7px),
+    linear-gradient(120deg, rgba(236, 72, 153, 0.65) 0%, rgba(168, 85, 247, 0.18) 55%, transparent 75%);
+  opacity: 0.9;
+}
+
+.cis-login-hero::after {
+  content: '';
+  position: absolute;
+  left: 24px;
+  bottom: 18px;
+  width: 70px;
+  height: 120px;
+  background:
+    linear-gradient(180deg, rgba(236, 72, 153, 0.0) 0%, rgba(236, 72, 153, 0.0) 24%, rgba(236, 72, 153, 0.75) 100%);
+  clip-path: polygon(
+    44% 0%,
+    56% 0%,
+    62% 10%,
+    60% 18%,
+    58% 18%,
+    58% 28%,
+    70% 34%,
+    70% 40%,
+    58% 40%,
+    58% 100%,
+    42% 100%,
+    42% 40%,
+    30% 40%,
+    30% 34%,
+    42% 28%,
+    42% 18%,
+    40% 18%,
+    38% 10%
+  );
+  opacity: 0.9;
+}
