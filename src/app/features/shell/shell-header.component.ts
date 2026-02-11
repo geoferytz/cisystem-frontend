@@ -29,6 +29,8 @@ export class ShellHeaderComponent {
   @Output() toggleNotifications = new EventEmitter<void>();
   @Output() toggleUserMenu = new EventEmitter<void>();
   @Output() closeMenus = new EventEmitter<void>();
+  @Output() changePassword = new EventEmitter<void>();
+  @Output() resetUserPassword = new EventEmitter<void>();
   @Output() logout = new EventEmitter<void>();
 
   @Output() toggleSidebar = new EventEmitter<void>();
@@ -47,6 +49,14 @@ export class ShellHeaderComponent {
 
   onLogout(): void {
     this.logout.emit();
+  }
+
+  onChangePassword(): void {
+    this.changePassword.emit();
+  }
+
+  onResetUserPassword(): void {
+    this.resetUserPassword.emit();
   }
 
   onToggleSidebar(): void {

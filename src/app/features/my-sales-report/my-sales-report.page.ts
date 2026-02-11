@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { GraphqlService } from '../../core/graphql/graphql.service';
 
@@ -35,8 +36,12 @@ export class MySalesReportPage {
   loading = signal(false);
   error = signal<string | null>(null);
 
+  selectedDate = signal<string>(new Date().toISOString().slice(0, 10));
+  selectedMonth = signal<string>(new Date().toISOString().slice(0, 7));
+
   private readonly fb = inject(FormBuilder);
   private readonly gql = inject(GraphqlService);
+  private readonly destroyRef = inject(DestroyRef);
 
   form = this.fb.group({
     date: [new Date().toISOString().slice(0, 10), [Validators.required]],
@@ -44,6 +49,16 @@ export class MySalesReportPage {
   });
 
   constructor() {
+    this.form.controls.date.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((v) => {
+      const next = String(v || '').trim();
+      if (next) this.selectedDate.set(next);
+    });
+
+    this.form.controls.month.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((v) => {
+      const next = String(v || '').trim();
+      if (next) this.selectedMonth.set(next);
+    });
+
     this.refresh();
   }
 
@@ -73,15 +88,13 @@ export class MySalesReportPage {
   }
 
   dailySales = computed(() => {
-    const raw = this.form.getRawValue();
-    const date = String(raw.date || '').trim();
+    const date = this.selectedDate();
     if (!date) return [];
     return this.sales().filter((s) => this.isSameDay(s.createdAt, date));
   });
 
   monthlySales = computed(() => {
-    const raw = this.form.getRawValue();
-    const month = String(raw.month || '').trim();
+    const month = this.selectedMonth();
     if (!month) return [];
     return this.sales().filter((s) => this.isSameMonth(s.createdAt, month));
   });

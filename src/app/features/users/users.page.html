@@ -1,80 +1,18 @@
 <div class="flex items-center">
   <h2 class="text-xl font-semibold text-slate-900">Users & Roles</h2>
+  <div class="ml-auto flex items-center gap-2">
+    <button
+      type="button"
+      class="rounded-xl bg-indigo-950 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-900"
+      (click)="openCreate()"
+    >
+      Create User
+    </button>
+  </div>
 </div>
 
-<div class="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-[420px_1fr]">
+<div class="mt-4">
   <section class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
-    <h3 class="text-base font-semibold text-slate-900">Create User</h3>
-
-    <p class="mt-1 text-xs text-slate-500">Roles available: {{ roles().join(', ') || 'Loading...' }}</p>
-
-    <form class="mt-4 grid gap-3" [formGroup]="form" (ngSubmit)="create()">
-      <label class="grid gap-2 text-xs text-slate-700">
-        Name
-        <input class="rounded-xl border border-slate-200 px-3 py-2 text-sm" formControlName="name" />
-      </label>
-
-      <label class="grid gap-2 text-xs text-slate-700">
-        Email
-        <input class="rounded-xl border border-slate-200 px-3 py-2 text-sm" formControlName="email" />
-      </label>
-
-      <label class="grid gap-2 text-xs text-slate-700">
-        Password
-        <input type="password" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" formControlName="password" />
-      </label>
-
-      <label class="grid gap-2 text-xs text-slate-700">
-        Role
-        <select class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm" formControlName="role">
-          <option *ngFor="let r of roles()" [value]="r">{{ r }}</option>
-        </select>
-      </label>
-
-      <div class="text-sm text-red-700" *ngIf="error()">{{ error() }}</div>
-      <div class="text-sm text-emerald-700" *ngIf="success()">{{ success() }}</div>
-
-      <button
-        class="rounded-xl bg-indigo-950 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
-        type="submit"
-        [disabled]="form.invalid || loading()"
-      >
-        Create
-      </button>
-    </form>
-  </section>
-
-  <section class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
-    <h3 class="text-base font-semibold text-slate-900">Change Password</h3>
-
-    <form class="mt-4 grid gap-3" [formGroup]="resetForm" (ngSubmit)="resetPassword()">
-      <label class="grid gap-2 text-xs text-slate-700">
-        User
-        <select class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm" formControlName="userId">
-          <option value="">Select user</option>
-          <option *ngFor="let u of users()" [value]="u.id">{{ u.name }} ({{ u.email }})</option>
-        </select>
-      </label>
-
-      <label class="grid gap-2 text-xs text-slate-700">
-        New Password
-        <input type="password" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" formControlName="newPassword" />
-      </label>
-
-      <div class="text-sm text-red-700" *ngIf="error()">{{ error() }}</div>
-      <div class="text-sm text-emerald-700" *ngIf="success()">{{ success() }}</div>
-
-      <button
-        class="rounded-xl bg-indigo-950 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
-        type="submit"
-        [disabled]="resetForm.invalid || loading()"
-      >
-        Update Password
-      </button>
-    </form>
-  </section>
-
-  <section class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100 xl:col-span-2">
     <h3 class="text-base font-semibold text-slate-900">List</h3>
 
     <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100">
@@ -85,6 +23,7 @@
             <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Email</th>
             <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Roles</th>
             <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Status</th>
+            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -95,9 +34,141 @@
             <td class="px-3 py-2">
               <span class="text-slate-800" [class.text-red-700]="!u.active">{{ u.active ? 'Active' : 'Inactive' }}</span>
             </td>
+            <td class="px-3 py-2 text-right">
+              <button
+                type="button"
+                class="rounded-xl bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-800 hover:bg-slate-200"
+                (click)="openPermissions(u.id)"
+              >
+                Permissions
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
   </section>
+</div>
+
+<div *ngIf="createOpen()" class="fixed inset-0 z-50">
+  <div class="absolute inset-0 bg-slate-900/40" (click)="closeCreate()"></div>
+  <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div class="w-full max-w-md rounded-2xl bg-white p-5 shadow-xl ring-1 ring-slate-200" (click)="$event.stopPropagation()">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <div class="text-base font-semibold text-slate-900">Create User</div>
+          <div class="mt-1 text-xs text-slate-500">Roles available: {{ roles().join(', ') || 'Loading...' }}</div>
+        </div>
+        <button type="button" class="rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold" (click)="closeCreate()">Close</button>
+      </div>
+
+      <form class="mt-4 grid gap-3" [formGroup]="form" (ngSubmit)="create()">
+        <label class="grid gap-2 text-xs text-slate-700">
+          Name
+          <input class="rounded-xl border border-slate-200 px-3 py-2 text-sm" formControlName="name" />
+        </label>
+
+        <label class="grid gap-2 text-xs text-slate-700">
+          Email
+          <input class="rounded-xl border border-slate-200 px-3 py-2 text-sm" formControlName="email" />
+        </label>
+
+        <label class="grid gap-2 text-xs text-slate-700">
+          Password
+          <input type="password" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" formControlName="password" />
+        </label>
+
+        <label class="grid gap-2 text-xs text-slate-700">
+          Role
+          <select class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm" formControlName="role">
+            <option *ngFor="let r of roles()" [value]="r">{{ r }}</option>
+          </select>
+        </label>
+
+        <div class="text-sm text-red-700" *ngIf="error()">{{ error() }}</div>
+        <div class="text-sm text-emerald-700" *ngIf="success()">{{ success() }}</div>
+
+        <div class="mt-1 flex items-center justify-end gap-2">
+          <button type="button" class="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-200" (click)="closeCreate()">
+            Cancel
+          </button>
+          <button
+            class="rounded-xl bg-indigo-950 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+            type="submit"
+            [disabled]="form.invalid || loading()"
+          >
+            Create
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="permissionsOpen()" class="fixed inset-0 z-50">
+  <div class="absolute inset-0 bg-slate-900/40" (click)="closePermissions()"></div>
+  <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div class="w-full max-w-3xl rounded-2xl bg-white p-5 shadow-xl ring-1 ring-slate-200" (click)="$event.stopPropagation()">
+      <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <div class="text-base font-semibold text-slate-900">Permissions</div>
+          <div class="mt-1 text-xs text-slate-500">Assign per-user access (View / Create / Edit / Delete)</div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            class="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
+            (click)="loadUserPermissions()"
+            [disabled]="!selectedUserId() || permissionsLoading()"
+          >
+            Refresh
+          </button>
+          <button
+            type="button"
+            class="rounded-xl bg-indigo-950 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+            (click)="savePermissions()"
+            [disabled]="!selectedUserId() || permissionsLoading()"
+          >
+            Save
+          </button>
+          <button type="button" class="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold" (click)="closePermissions()">Close</button>
+        </div>
+      </div>
+
+      <div class="mt-4 overflow-auto rounded-xl ring-1 ring-slate-100">
+        <table class="w-full border-collapse text-sm">
+          <thead class="bg-slate-50">
+            <tr>
+              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Module</th>
+              <th class="px-3 py-2 text-center text-xs font-semibold text-slate-600">View</th>
+              <th class="px-3 py-2 text-center text-xs font-semibold text-slate-600">Create</th>
+              <th class="px-3 py-2 text-center text-xs font-semibold text-slate-600">Edit</th>
+              <th class="px-3 py-2 text-center text-xs font-semibold text-slate-600">Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of permissions()" class="border-t border-slate-100">
+              <td class="px-3 py-2 text-sm font-semibold text-slate-900">{{ p.module }}</td>
+              <td class="px-3 py-2 text-center">
+                <input type="checkbox" [checked]="p.canView" (change)="togglePermission(p.module, 'canView')" />
+              </td>
+              <td class="px-3 py-2 text-center">
+                <input type="checkbox" [checked]="p.canCreate" (change)="togglePermission(p.module, 'canCreate')" />
+              </td>
+              <td class="px-3 py-2 text-center">
+                <input type="checkbox" [checked]="p.canEdit" (change)="togglePermission(p.module, 'canEdit')" />
+              </td>
+              <td class="px-3 py-2 text-center">
+                <input type="checkbox" [checked]="p.canDelete" (change)="togglePermission(p.module, 'canDelete')" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="permissionsLoading()" class="mt-3 text-xs font-semibold text-slate-600">Loading permissions…</div>
+      <div class="mt-2 text-sm text-red-700" *ngIf="error()">{{ error() }}</div>
+      <div class="mt-2 text-sm text-emerald-700" *ngIf="success()">{{ success() }}</div>
+    </div>
+  </div>
 </div>

@@ -42,6 +42,9 @@ export class MySalesPage {
 
   detailsSaleId = signal<string | null>(null);
 
+  confirmDeleteOpen = signal(false);
+  pendingDeleteSaleId = signal<string | null>(null);
+
   sales = signal<MySale[]>([]);
 
   private readonly fb = inject(FormBuilder);
@@ -62,6 +65,24 @@ export class MySalesPage {
 
   constructor() {
     this.refresh();
+  }
+
+  openDeleteConfirm(id: string): void {
+    this.pendingDeleteSaleId.set(String(id));
+    this.confirmDeleteOpen.set(true);
+  }
+
+  cancelDeleteConfirm(): void {
+    this.confirmDeleteOpen.set(false);
+    this.pendingDeleteSaleId.set(null);
+  }
+
+  confirmDelete(): void {
+    const id = this.pendingDeleteSaleId();
+    if (!id) return;
+    this.confirmDeleteOpen.set(false);
+    this.pendingDeleteSaleId.set(null);
+    this.deleteSale(id);
   }
 
   toggleDetails(s: MySale): void {

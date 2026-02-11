@@ -15,12 +15,34 @@ type MeQueryResult = {
   } | null;
 };
 
+type UserPermission = {
+  module: string;
+  canView: boolean;
+  canCreate: boolean;
+  canEdit: boolean;
+  canDelete: boolean;
+};
+
+type MyPermissionsQueryResult = {
+  myPermissions: UserPermission[];
+};
+
 type ExpiryAlertsQueryResult = {
   expiryAlerts: Array<{ productId: string }>;
 };
 
 type LowStockAlertsQueryResult = {
   lowStockAlerts: Array<{ productId: string }>;
+};
+
+type AdminUser = {
+  id: string;
+  name: string;
+  email: string;
+};
+
+type UsersQueryResult = {
+  users: AdminUser[];
 };
 
 @Component({
@@ -43,6 +65,23 @@ export class ShellLayout {
   notificationsOpen = signal(false);
   notificationsCount = signal(0);
 
+  myPermissions = signal<UserPermission[]>([]);
+
+  changePasswordOpen = signal(false);
+  changePasswordCurrent = signal('');
+  changePasswordNew = signal('');
+  changePasswordLoading = signal(false);
+  changePasswordError = signal<string | null>(null);
+  changePasswordSuccess = signal<string | null>(null);
+
+  resetUserPasswordOpen = signal(false);
+  resetUserPasswordLoading = signal(false);
+  resetUserPasswordError = signal<string | null>(null);
+  resetUserPasswordSuccess = signal<string | null>(null);
+  resetUserId = signal('');
+  resetNewPassword = signal('');
+  adminUsers = signal<AdminUser[]>([]);
+
   currentYear = new Date().getFullYear();
 
   constructor(
@@ -54,7 +93,6 @@ export class ShellLayout {
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
       this.sidebarOpen.set(false);
     }
-
     this.currentUrl.set(this.router.url);
     this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((e) => {
       if (e instanceof NavigationEnd) {
@@ -64,6 +102,7 @@ export class ShellLayout {
 
     if (this.isAuthed()) {
       this.loadMe();
+      this.loadMyPermissions();
       this.refreshNotifications();
     }
   }
@@ -78,6 +117,114 @@ export class ShellLayout {
         this.user.set(null);
       }
     });
+  }
+
+  loadMyPermissions(): void {
+    const query = `query MyPermissions { myPermissions { module canView canCreate canEdit canDelete } }`;
+    this.gql.request<MyPermissionsQueryResult>(query).subscribe({
+      next: (res) => this.myPermissions.set(res.myPermissions ?? []),
+      error: () => this.myPermissions.set([])
+    });
+  }
+
+  canView(module: string): boolean {
+    const u = this.user();
+    if (u?.roles?.includes('ADMIN')) return true;
+    const m = String(module).toUpperCase();
+    const p = this.myPermissions().find((x) => String(x.module).toUpperCase() === m);
+    return Boolean(p?.canView);
+  }
+
+  openChangePassword(): void {
+    this.changePasswordError.set(null);
+    this.changePasswordSuccess.set(null);
+    this.changePasswordCurrent.set('');
+    this.changePasswordNew.set('');
+    this.changePasswordOpen.set(true);
+  }
+
+  closeChangePassword(): void {
+    this.changePasswordOpen.set(false);
+  }
+
+  submitChangePassword(): void {
+    if (!this.changePasswordCurrent().trim() || !this.changePasswordNew().trim()) return;
+    this.changePasswordLoading.set(true);
+    this.changePasswordError.set(null);
+    this.changePasswordSuccess.set(null);
+
+    const mutation = `mutation ChangeMyPassword($input: ChangeMyPasswordInput!) { changeMyPassword(input: $input) }`;
+    this.gql
+      .request<{ changeMyPassword: boolean }>(mutation, {
+        input: {
+          currentPassword: this.changePasswordCurrent(),
+          newPassword: this.changePasswordNew()
+        }
+      })
+      .subscribe({
+        next: () => {
+          this.changePasswordSuccess.set('Password updated');
+          this.changePasswordLoading.set(false);
+          this.changePasswordCurrent.set('');
+          this.changePasswordNew.set('');
+          this.changePasswordOpen.set(false);
+        },
+        error: (e: unknown) => {
+          this.changePasswordError.set(e instanceof Error ? e.message : 'Failed to update password');
+          this.changePasswordLoading.set(false);
+        }
+      });
+  }
+
+  openResetUserPassword(): void {
+    const u = this.user();
+    if (!u?.roles?.includes('ADMIN')) return;
+
+    this.resetUserPasswordError.set(null);
+    this.resetUserPasswordSuccess.set(null);
+    this.resetUserId.set('');
+    this.resetNewPassword.set('');
+    this.resetUserPasswordOpen.set(true);
+
+    const qUsers = `query { users { id name email } }`;
+    this.gql.request<UsersQueryResult>(qUsers).subscribe({
+      next: (res) => this.adminUsers.set(res.users ?? []),
+      error: () => this.adminUsers.set([])
+    });
+  }
+
+  closeResetUserPassword(): void {
+    this.resetUserPasswordOpen.set(false);
+  }
+
+  submitResetUserPassword(): void {
+    if (!this.resetUserId().trim() || !this.resetNewPassword().trim()) return;
+    this.resetUserPasswordLoading.set(true);
+    this.resetUserPasswordError.set(null);
+    this.resetUserPasswordSuccess.set(null);
+
+    const mutation = `mutation ResetUserPassword($input: ResetUserPasswordInput!) {
+      resetUserPassword(input: $input) { id }
+    }`;
+
+    this.gql
+      .request<{ resetUserPassword: { id: string } }>(mutation, {
+        input: {
+          userId: this.resetUserId(),
+          newPassword: this.resetNewPassword()
+        }
+      })
+      .subscribe({
+        next: () => {
+          this.resetUserPasswordSuccess.set('Password reset');
+          this.resetUserPasswordLoading.set(false);
+          this.resetUserPasswordOpen.set(false);
+        },
+        error: (e: unknown) => {
+          this.resetUserPasswordError.set(e instanceof Error ? e.message : 'Failed to reset password');
+          this.resetUserPasswordLoading.set(false);
+        }
+      });
   }
 
   toggleUserMenu(): void {

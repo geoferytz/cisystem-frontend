@@ -47,6 +47,7 @@
         </a>
 
         <a
+          *ngIf="canView('PRODUCTS')"
           routerLink="/products"
           routerLinkActive="bg-white/15"
           class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
@@ -60,6 +61,7 @@
         </a>
 
         <a
+          *ngIf="canView('CATEGORIES')"
           routerLink="/categories"
           routerLinkActive="bg-white/15"
           class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
@@ -72,6 +74,7 @@
         </a>
 
         <a
+          *ngIf="canView('INVENTORY')"
           routerLink="/inventory"
           routerLinkActive="bg-white/15"
           class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
@@ -86,6 +89,7 @@
         </a>
 
         <a
+          *ngIf="canView('STOCK_MOVEMENTS')"
           routerLink="/stock-movements"
           routerLinkActive="bg-white/15"
           class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
@@ -99,6 +103,7 @@
         </a>
 
         <a
+          *ngIf="canView('PURCHASING')"
           routerLink="/purchasing"
           routerLinkActive="bg-white/15"
           class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
@@ -112,6 +117,7 @@
         </a>
 
         <a
+          *ngIf="canView('SALES')"
           routerLink="/sales"
           routerLinkActive="bg-white/15"
           class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
@@ -126,6 +132,7 @@
         </a>
 
         <a
+          *ngIf="canView('MY_SALES')"
           routerLink="/my-sales"
           routerLinkActive="bg-white/15"
           class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
@@ -152,6 +159,7 @@
         </a>
 
         <a
+          *ngIf="canView('REPORTS')"
           routerLink="/reports"
           routerLinkActive="bg-white/15"
           class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
@@ -165,6 +173,7 @@
         </a>
 
         <a
+          *ngIf="canView('USERS_ROLES')"
           routerLink="/users"
           routerLinkActive="bg-white/15"
           class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
@@ -211,9 +220,119 @@
         (toggleUserMenu)="toggleUserMenu()"
         (closeMenus)="closeMenus()"
         (logout)="logout()"
+        (changePassword)="openChangePassword()"
+        (resetUserPassword)="openResetUserPassword()"
       />
 
       <router-outlet />
     </main>
+  </div>
+</div>
+
+<div *ngIf="changePasswordOpen()" class="fixed inset-0 z-50">
+  <div class="absolute inset-0 bg-slate-900/40" (click)="closeChangePassword()"></div>
+  <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div class="w-full max-w-sm rounded-2xl bg-white p-5 shadow-xl ring-1 ring-slate-200" (click)="$event.stopPropagation()">
+      <div class="text-base font-semibold text-slate-900">Change password</div>
+      <div class="mt-1 text-xs text-slate-500">Enter your current password and a new password.</div>
+
+      <div class="mt-4 grid gap-3">
+        <label class="grid gap-2 text-xs text-slate-700">
+          Current password
+          <input
+            type="password"
+            class="rounded-xl border border-slate-200 px-3 py-2 text-sm"
+            [value]="changePasswordCurrent()"
+            (input)="changePasswordCurrent.set(($any($event.target).value))"
+          />
+        </label>
+
+        <label class="grid gap-2 text-xs text-slate-700">
+          New password
+          <input
+            type="password"
+            class="rounded-xl border border-slate-200 px-3 py-2 text-sm"
+            [value]="changePasswordNew()"
+            (input)="changePasswordNew.set(($any($event.target).value))"
+          />
+        </label>
+
+        <div class="text-sm text-red-700" *ngIf="changePasswordError()">{{ changePasswordError() }}</div>
+        <div class="text-sm text-emerald-700" *ngIf="changePasswordSuccess()">{{ changePasswordSuccess() }}</div>
+
+        <div class="mt-1 flex items-center justify-end gap-2">
+          <button
+            type="button"
+            class="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-200"
+            (click)="closeChangePassword()"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="rounded-xl bg-indigo-950 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+            (click)="submitChangePassword()"
+            [disabled]="changePasswordLoading()"
+          >
+            Update
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="resetUserPasswordOpen()" class="fixed inset-0 z-50">
+  <div class="absolute inset-0 bg-slate-900/40" (click)="closeResetUserPassword()"></div>
+  <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div class="w-full max-w-md rounded-2xl bg-white p-5 shadow-xl ring-1 ring-slate-200" (click)="$event.stopPropagation()">
+      <div class="text-base font-semibold text-slate-900">Reset user password</div>
+      <div class="mt-1 text-xs text-slate-500">Admin only. Choose a user and set a new password.</div>
+
+      <div class="mt-4 grid gap-3">
+        <label class="grid gap-2 text-xs text-slate-700">
+          User
+          <select
+            class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
+            [value]="resetUserId()"
+            (change)="resetUserId.set(($any($event.target).value))"
+          >
+            <option value="">Select user</option>
+            <option *ngFor="let u of adminUsers()" [value]="u.id">{{ u.name }} ({{ u.email }})</option>
+          </select>
+        </label>
+
+        <label class="grid gap-2 text-xs text-slate-700">
+          New password
+          <input
+            type="password"
+            class="rounded-xl border border-slate-200 px-3 py-2 text-sm"
+            [value]="resetNewPassword()"
+            (input)="resetNewPassword.set(($any($event.target).value))"
+          />
+        </label>
+
+        <div class="text-sm text-red-700" *ngIf="resetUserPasswordError()">{{ resetUserPasswordError() }}</div>
+        <div class="text-sm text-emerald-700" *ngIf="resetUserPasswordSuccess()">{{ resetUserPasswordSuccess() }}</div>
+
+        <div class="mt-1 flex items-center justify-end gap-2">
+          <button
+            type="button"
+            class="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-200"
+            (click)="closeResetUserPassword()"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="rounded-xl bg-indigo-950 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+            (click)="submitResetUserPassword()"
+            [disabled]="resetUserPasswordLoading()"
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

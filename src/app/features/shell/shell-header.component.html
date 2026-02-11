@@ -83,11 +83,43 @@
           <div class="text-xs text-slate-600">{{ user?.email || '' }}</div>
         </div>
         <div class="my-1 h-px bg-slate-100"></div>
+
         <button
           type="button"
-          class="w-full rounded-xl px-3 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
-          (click)="onLogout()"
+          class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          (click)="onCloseMenus(); onChangePassword()"
         >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-slate-500">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 19v-1a6 6 0 0112 0v1" />
+          </svg>
+          Change Password
+        </button>
+
+        <button
+          *ngIf="user?.roles?.includes('ADMIN')"
+          type="button"
+          class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          (click)="onCloseMenus(); onResetUserPassword()"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-slate-500">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v4" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 14h.01" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+          </svg>
+          Reset User Password
+        </button>
+
+        <button
+          type="button"
+          class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          (click)="onCloseMenus(); onLogout()"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-slate-500">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 16l4-4-4-4" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 12H3" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 19V5a2 2 0 00-2-2h-6" />
+          </svg>
           Logout
         </button>
       </div>
