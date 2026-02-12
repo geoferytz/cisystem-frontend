@@ -33,6 +33,89 @@
   </section>
 </div>
 
+<div class="mt-6" *ngIf="canView('REPORTS')">
+  <div class="flex items-center justify-between">
+    <div>
+      <h3 class="text-base font-semibold text-slate-900">Profit Review</h3>
+      <div class="mt-1 text-xs text-slate-500">Sales profit minus daily expenses</div>
+    </div>
+
+    <form class="flex items-center gap-2" [formGroup]="selectedDateForm" (ngSubmit)="loadProfit()">
+      <input class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm" type="date" formControlName="date" />
+      <button
+        type="button"
+        class="rounded-xl bg-indigo-950 px-3 py-2 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+        (click)="loadProfit()"
+        [disabled]="profitLoading()"
+      >
+        Refresh
+      </button>
+    </form>
+  </div>
+
+  <div class="mt-3 text-sm text-red-700" *ngIf="profitError()">{{ profitError() }}</div>
+
+  <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
+      <div class="text-xs font-semibold text-slate-500">Today Sales</div>
+      <div class="mt-1 text-2xl font-extrabold text-slate-900">{{ todaySales() | number: '1.2-2' }}</div>
+    </div>
+
+    <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
+      <div class="text-xs font-semibold text-slate-500">Gross Profit</div>
+      <div class="mt-1 text-2xl font-extrabold text-slate-900">{{ grossProfit() | number: '1.2-2'}}</div>
+      <div class="mt-1 text-xs text-slate-500">(From stock movements)</div>
+    </div>
+
+    <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
+      <div class="text-xs font-semibold text-slate-500">Expenses Today</div>
+      <div class="mt-1 text-2xl font-extrabold text-slate-900">{{ expensesToday() | number: '1.2-2'}}</div>
+    </div>
+
+    <div
+      class="rounded-2xl p-4 shadow-sm ring-1"
+      [ngClass]="netProfitIsPositive() ? 'bg-emerald-50 ring-emerald-200' : 'bg-red-50 ring-red-200'"
+    >
+      <div class="text-xs font-semibold" [ngClass]="netProfitIsPositive() ? 'text-emerald-700' : 'text-red-700'">Net Profit</div>
+      <div class="mt-1 text-2xl font-extrabold" [ngClass]="netProfitIsPositive() ? 'text-emerald-800' : 'text-red-800'">
+        {{ netProfit() | number: '1.2-2' }}
+      </div>
+      <div class="mt-1 text-xs" [ngClass]="netProfitIsPositive() ? 'text-emerald-700' : 'text-red-700'">
+        {{ netProfitIsPositive() ? 'Profit (positive)' : 'Loss (negative)' }}
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-4">
+    <section class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100 lg:col-span-2">
+      <div class="flex items-center justify-between">
+        <h4 class="text-base font-semibold text-slate-900">Last 7 Days Profit</h4>
+      </div>
+      <div class="mt-3">
+        <canvas baseChart [type]="'line'" [data]="lineChartData()" [options]="lineChartOptions"></canvas>
+      </div>
+    </section>
+
+    <section class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
+      <div class="flex items-center justify-between">
+        <h4 class="text-base font-semibold text-slate-900">Top Selling Products</h4>
+      </div>
+      <div class="mt-3">
+        <canvas baseChart [type]="'bar'" [data]="barChartData()" [options]="barChartOptions"></canvas>
+      </div>
+    </section>
+
+    <section class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
+      <div class="flex items-center justify-between">
+        <h4 class="text-base font-semibold text-slate-900">Expense Breakdown</h4>
+      </div>
+      <div class="mt-3">
+        <canvas baseChart [type]="'pie'" [data]="pieChartData()" [options]="pieChartOptions"></canvas>
+      </div>
+    </section>
+  </div>
+</div>
+
 <div class="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-2">
   <section class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
     <div class="flex items-center justify-between">

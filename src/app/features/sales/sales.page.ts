@@ -26,6 +26,7 @@ type SalesOrderLine = {
   sku: string;
   productName: string;
   quantity: number;
+  location: string;
   unitPrice: number;
   deductions: SalesDeduction[];
 };
@@ -54,6 +55,14 @@ export class SalesPage {
   loading = signal(false);
   error = signal<string | null>(null);
   orders = signal<SalesOrder[]>([]);
+
+  createOpen = signal(false);
+
+  editingOrderId = signal<string | null>(null);
+  detailsOrderId = signal<string | null>(null);
+
+  confirmDeleteOpen = signal(false);
+  pendingDeleteOrderId = signal<string | null>(null);
 
   products = signal<Product[]>([]);
   productQuery = signal('');
@@ -96,6 +105,64 @@ export class SalesPage {
   constructor(private readonly gql: GraphqlService) {
     this.loadProducts();
     this.load();
+  }
+
+  openDeleteConfirm(id: string): void {
+    this.pendingDeleteOrderId.set(String(id));
+    this.confirmDeleteOpen.set(true);
+  }
+
+  cancelDeleteConfirm(): void {
+    this.confirmDeleteOpen.set(false);
+    this.pendingDeleteOrderId.set(null);
+  }
+
+  confirmDelete(): void {
+    const id = this.pendingDeleteOrderId();
+    if (!id) return;
+    this.confirmDeleteOpen.set(false);
+    this.pendingDeleteOrderId.set(null);
+    this.deleteSale(id);
+  }
+
+  toggleDetails(o: SalesOrder): void {
+    const id = String(o.id);
+    this.detailsOrderId.set(this.detailsOrderId() === id ? null : id);
+  }
+
+  openCreate(): void {
+    this.error.set(null);
+    this.editingOrderId.set(null);
+    this.headerForm.reset({ customer: '', referenceNumber: '' });
+    this.lineForm.reset({ productId: null, quantity: 1, unitPrice: 0, location: 'MAIN' });
+    this.lines.set([]);
+    this.productQuery.set('');
+    this.createOpen.set(true);
+  }
+
+  openEdit(o: SalesOrder): void {
+    this.error.set(null);
+    this.editingOrderId.set(String(o.id));
+    this.headerForm.reset({
+      customer: o.customer ?? '',
+      referenceNumber: o.referenceNumber ?? ''
+    });
+    this.lineForm.reset({ productId: null, quantity: 1, unitPrice: 0, location: 'MAIN' });
+    this.lines.set(
+      (o.lines ?? []).map((l) => ({
+        productId: Number(l.productId),
+        quantity: Number(l.quantity ?? 0),
+        unitPrice: Number(l.unitPrice ?? 0),
+        location: (l.location?.trim() ? String(l.location).trim() : 'MAIN')
+      }))
+    );
+    this.productQuery.set('');
+    this.createOpen.set(true);
+  }
+
+  closeCreate(): void {
+    this.createOpen.set(false);
+    this.editingOrderId.set(null);
   }
 
   loadProducts(): void {
@@ -146,11 +213,15 @@ export class SalesPage {
     return this.lines().reduce((sum, l) => sum + this.lineTotal(l.quantity, l.unitPrice), 0);
   }
 
+  saleTotalValue(o: SalesOrder): number {
+    return (o.lines ?? []).reduce((sum, l) => sum + Number(l.quantity ?? 0) * Number(l.unitPrice ?? 0), 0);
+  }
+
   load(): void {
     this.loading.set(true);
     this.error.set(null);
 
-    const q = `query { salesOrders { id customer referenceNumber soldAt soldBy lines { id productId sku productName quantity unitPrice deductions { id batchId batchNumber expiryDate quantity } } } }`;
+    const q = `query { salesOrders { id customer referenceNumber soldAt soldBy lines { id productId sku productName quantity location unitPrice deductions { id batchId batchNumber expiryDate quantity } } } }`;
 
     this.gql.request<SalesOrdersQueryResult>(q).subscribe({
       next: (res) => {
@@ -209,6 +280,10 @@ export class SalesPage {
   }
 
   createSale(): void {
+    this.saveSale();
+  }
+
+  saveSale(): void {
     if (!this.lines().length) {
       this.error.set('Add at least one line');
       return;
@@ -218,10 +293,45 @@ export class SalesPage {
     this.error.set(null);
 
     const header = this.headerForm.getRawValue();
+
+    const editingId = this.editingOrderId();
+    if (editingId) {
+      const mutation = `mutation UpdateSale($input: UpdateSaleInput!) {
+        updateSale(input: $input) {
+          id soldAt
+          lines { id productId sku productName quantity location unitPrice deductions { id batchId batchNumber expiryDate quantity } }
+        }
+      }`;
+
+      this.gql
+        .request<{ updateSale: SalesOrder }>(mutation, {
+          input: {
+            id: editingId,
+            customer: header.customer || null,
+            referenceNumber: header.referenceNumber || null,
+            lines: this.lines()
+          }
+        })
+        .subscribe({
+          next: () => {
+            this.headerForm.reset({ customer: '', referenceNumber: '' });
+            this.lines.set([]);
+            this.createOpen.set(false);
+            this.editingOrderId.set(null);
+            this.load();
+          },
+          error: (e: unknown) => {
+            this.error.set(e instanceof Error ? e.message : 'Failed to update sale');
+            this.loading.set(false);
+          }
+        });
+      return;
+    }
+
     const mutation = `mutation CreateSale($input: CreateSaleInput!) {
       createSale(input: $input) {
         id soldAt
-        lines { id productId sku productName quantity unitPrice deductions { id batchId batchNumber expiryDate quantity } }
+        lines { id productId sku productName quantity location unitPrice deductions { id batchId batchNumber expiryDate quantity } }
       }
     }`;
 
@@ -237,6 +347,8 @@ export class SalesPage {
         next: () => {
           this.headerForm.reset({ customer: '', referenceNumber: '' });
           this.lines.set([]);
+          this.createOpen.set(false);
+          this.editingOrderId.set(null);
           this.load();
         },
         error: (e: unknown) => {
@@ -244,5 +356,21 @@ export class SalesPage {
           this.loading.set(false);
         }
       });
+  }
+
+  deleteSale(id: string): void {
+    this.loading.set(true);
+    this.error.set(null);
+
+    const mutation = `mutation DeleteSale($input: DeleteSaleInput!) { deleteSale(input: $input) }`;
+    this.gql.request<{ deleteSale: boolean }>(mutation, { input: { id } }).subscribe({
+      next: () => {
+        this.load();
+      },
+      error: (e: unknown) => {
+        this.error.set(e instanceof Error ? e.message : 'Failed to delete sale');
+        this.loading.set(false);
+      }
+    });
   }
 }

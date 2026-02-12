@@ -69,6 +69,8 @@ export class UsersPage {
     { key: 'SALES', label: 'Sales' },
     { key: 'MY_SALES', label: 'My Sales' },
     { key: 'PURCHASING', label: 'Purchasing' },
+    { key: 'EXPENSES', label: 'Expenses' },
+    { key: 'EXPENSE_CATEGORIES', label: 'Expense Categories' },
     { key: 'REPORTS', label: 'Reports' },
     { key: 'USERS_ROLES', label: 'Users & Roles' }
   ];

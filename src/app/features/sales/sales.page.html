@@ -2,146 +2,244 @@
   <h2 class="text-xl font-semibold text-slate-900">Sales & Stock Out</h2>
 </div>
 
-<div class="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-[520px_1fr]">
-  <section class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
-    <h3 class="text-base font-semibold text-slate-900">Create Sale (FIFO)</h3>
-    <p class="mt-1 text-xs text-slate-500">Expired batches are blocked automatically by backend.</p>
+<div class="mt-4 flex items-center justify-end">
+  <button class="rounded-xl bg-indigo-950 px-4 py-2 text-sm font-semibold text-white" (click)="openCreate()">
+    Create Sale
+  </button>
+</div>
 
-    <form class="mt-4 grid gap-3" [formGroup]="headerForm" (ngSubmit)="createSale()">
-      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <label class="grid gap-2 text-xs text-slate-700">
-          Customer
-          <input class="rounded-xl border border-slate-200 px-3 py-2 text-sm" formControlName="customer" />
-        </label>
-        <label class="grid gap-2 text-xs text-slate-700">
-          Reference
-          <input class="rounded-xl border border-slate-200 px-3 py-2 text-sm" formControlName="referenceNumber" />
-        </label>
-      </div>
-    </form>
-
-    <div class="mt-4 rounded-xl bg-slate-50 p-3 ring-1 ring-slate-100">
-      <h4 class="text-sm font-semibold text-slate-900">Add Line</h4>
-      <form class="mt-3 grid gap-3" [formGroup]="lineForm" (ngSubmit)="addLine()">
-        <div class="grid grid-cols-1 gap-2">
-          <label class="grid gap-2 text-xs text-slate-700">
-            Product Search
-            <input
-              class="rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:border-purple-500"
-              [value]="productQuery()"
-              (input)="productQuery.set(($any($event.target)).value)"
-              placeholder="Search by product name or SKU"
-            />
-          </label>
+<div *ngIf="createOpen()" class="fixed inset-0 z-50">
+  <div class="absolute inset-0 bg-slate-900/40" (click)="closeCreate()"></div>
+  <div class="absolute inset-0 flex items-start justify-center p-4 sm:p-6">
+    <div
+      class="w-full max-w-2xl rounded-2xl bg-white p-5 shadow-xl ring-1 ring-slate-200"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <div class="text-base font-semibold text-slate-900">{{ editingOrderId() ? 'Edit Sale (FIFO)' : 'Create Sale (FIFO)' }}</div>
+          <div class="mt-1 text-xs text-slate-500">Expired batches are blocked automatically by backend.</div>
         </div>
+        <button class="text-sm font-semibold text-slate-600 hover:text-slate-900" type="button" (click)="closeCreate()">
+          Close
+        </button>
+      </div>
 
+      <form class="mt-4 grid gap-3" [formGroup]="headerForm" (ngSubmit)="createSale()">
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <label class="grid gap-2 text-xs text-slate-700">
-            Product Name
-            <select
-              class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-purple-500"
-              formControlName="productId"
-              (change)="onProductChanged()"
-            >
-              <option [ngValue]="null">Select product...</option>
-              <option *ngFor="let p of filteredProducts()" [ngValue]="+p.id">
-                {{ p.name }}
-                 <!-- ({{ p.sku }}) -->
-              </option>
-            </select>
+            Customer
+            <input class="rounded-xl border border-slate-200 px-3 py-2 text-sm" formControlName="customer" />
           </label>
           <label class="grid gap-2 text-xs text-slate-700">
-            Qty
-            <input class="rounded-xl border border-slate-200 px-3 py-2 text-sm" type="number" formControlName="quantity" />
-          </label>
-          <label class="grid gap-2 text-xs text-slate-700">
-            Unit Price
-            <input class="rounded-xl border border-slate-200 px-3 py-2 text-sm" type="number" step="0.01" formControlName="unitPrice" />
-          </label>
-          <label class="grid gap-2 text-xs text-slate-700">
-            Location
-            <input class="rounded-xl border border-slate-200 px-3 py-2 text-sm" formControlName="location" />
+            Reference
+            <input class="rounded-xl border border-slate-200 px-3 py-2 text-sm" formControlName="referenceNumber" />
           </label>
         </div>
-
-        <div class="text-right text-xs font-semibold text-slate-600">
-          Line total: <span class="text-slate-900">{{ currentLineTotal() }}</span>
-        </div>
-
-        <button class="rounded-xl bg-indigo-950 px-4 py-2 text-sm font-semibold text-white" type="submit">
-          Add line
-        </button>
       </form>
-    </div>
 
-    <div class="mt-4" *ngIf="lines().length">
-      <h4 class="text-sm font-semibold text-slate-900">Lines</h4>
-      <div class="mt-2 overflow-auto rounded-xl ring-1 ring-slate-100">
-        <table class="w-full border-collapse text-sm">
-          <thead class="bg-slate-50">
-            <tr>
-              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Product</th>
-              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Location</th>
-              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600">Qty</th>
-              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600">Price</th>
-              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600">Total</th>
-              <th class="px-3 py-2"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let l of displayLines(); let idx = index" class="border-t border-slate-100">
-              <td class="px-3 py-2">
-                <div class="font-semibold text-slate-900">{{ l.product?.name || ('#' + l.productId) }}</div>
-                <div class="text-xs text-slate-500" *ngIf="l.product?.sku">{{ l.product?.sku }}</div>
-              </td>
-              <td class="px-3 py-2">{{ l.location || 'MAIN' }}</td>
-              <td class="px-3 py-2 text-right font-semibold">{{ l.quantity }}</td>
-              <td class="px-3 py-2 text-right">{{ l.unitPrice }}</td>
-              <td class="px-3 py-2 text-right font-semibold">{{ lineTotal(l.quantity, l.unitPrice) }}</td>
-              <td class="px-3 py-2 text-right">
-                <button class="text-xs font-semibold text-red-700" (click)="removeLine(idx)">Remove</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="mt-4 rounded-xl bg-slate-50 p-3 ring-1 ring-slate-100">
+        <h4 class="text-sm font-semibold text-slate-900">Add Line</h4>
+        <form class="mt-3 grid gap-3" [formGroup]="lineForm" (ngSubmit)="addLine()">
+          <div class="grid grid-cols-1 gap-2">
+            <label class="grid gap-2 text-xs text-slate-700">
+              Product Search
+              <input
+                class="rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:border-purple-500"
+                [value]="productQuery()"
+                (input)="productQuery.set(($any($event.target)).value)"
+                placeholder="Search by product name or SKU"
+              />
+            </label>
+          </div>
+
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <label class="grid gap-2 text-xs text-slate-700">
+              Product Name
+              <select
+                class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-purple-500"
+                formControlName="productId"
+                (change)="onProductChanged()"
+              >
+                <option [ngValue]="null">Select product...</option>
+                <option *ngFor="let p of filteredProducts()" [ngValue]="+p.id">
+                  {{ p.name }}
+                   <!-- ({{ p.sku }}) -->
+                </option>
+              </select>
+            </label>
+            <label class="grid gap-2 text-xs text-slate-700">
+              Qty
+              <input class="rounded-xl border border-slate-200 px-3 py-2 text-sm" type="number" formControlName="quantity" />
+            </label>
+            <label class="grid gap-2 text-xs text-slate-700">
+              Unit Price
+              <input class="rounded-xl border border-slate-200 px-3 py-2 text-sm" type="number" step="0.01" formControlName="unitPrice" />
+            </label>
+            <label class="grid gap-2 text-xs text-slate-700">
+              Location
+              <input class="rounded-xl border border-slate-200 px-3 py-2 text-sm" formControlName="location" />
+            </label>
+          </div>
+
+          <div class="text-right text-xs font-semibold text-slate-600">
+            Line total: <span class="text-slate-900">{{ currentLineTotal() | number: '1.2-2'}}</span>
+          </div>
+
+          <button class="rounded-xl bg-indigo-950 px-4 py-2 text-sm font-semibold text-white" type="submit">
+            Add line
+          </button>
+        </form>
       </div>
 
-      <div class="mt-2 text-right text-sm font-semibold text-slate-700">
-        Grand total: <span class="text-slate-900">{{ grandTotal() }}</span>
+      <div class="mt-4" *ngIf="lines().length">
+        <h4 class="text-sm font-semibold text-slate-900">Lines</h4>
+        <div class="mt-2 overflow-auto rounded-xl ring-1 ring-slate-100">
+          <table class="w-full border-collapse text-sm">
+            <thead class="bg-slate-50">
+              <tr>
+                <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Product</th>
+                <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Location</th>
+                <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600">Qty</th>
+                <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600">Price</th>
+                <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600">Total</th>
+                <th class="px-3 py-2"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let l of displayLines(); let idx = index" class="border-t border-slate-100">
+                <td class="px-3 py-2">
+                  <div class="font-semibold text-slate-900">{{ l.product?.name || ('#' + l.productId) }}</div>
+                  <div class="text-xs text-slate-500" *ngIf="l.product?.sku">{{ l.product?.sku }}</div>
+                </td>
+                <td class="px-3 py-2">{{ l.location || 'MAIN' }}</td>
+                <td class="px-3 py-2 text-right font-semibold">{{ l.quantity }}</td>
+                <td class="px-3 py-2 text-right">{{ l.unitPrice | number: '1.2-2'}}</td>
+                <td class="px-3 py-2 text-right font-semibold">{{ lineTotal(l.quantity, l.unitPrice) | number: '1.2-2'}}</td>
+                <td class="px-3 py-2 text-right">
+                  <button class="text-xs font-semibold text-red-700" type="button" (click)="removeLine(idx)">Remove</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mt-2 text-right text-sm font-semibold text-slate-700">
+          Grand total: <span class="text-slate-900">{{ grandTotal() | number: '1.2-2'}}</span>
+        </div>
+      </div>
+
+      <div class="mt-3 text-sm text-red-700" *ngIf="error()">{{ error() }}</div>
+
+      <div class="mt-4 flex items-center justify-end gap-2">
+        <button
+          type="button"
+          class="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-200"
+          (click)="closeCreate()"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+          (click)="createSale()"
+          [disabled]="loading()"
+        >
+          Save
+        </button>
       </div>
     </div>
+  </div>
+</div>
 
-    <div class="mt-3 text-sm text-red-700" *ngIf="error()">{{ error() }}</div>
-
-    <button
-      class="mt-4 w-full rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
-      (click)="createSale()"
-      [disabled]="loading()"
-    >
-      Create Sale
-    </button>
-  </section>
-
+<div class="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-1">
   <section class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
     <h3 class="text-base font-semibold text-slate-900">Sales Orders</h3>
     <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100">
       <table class="w-full border-collapse text-sm">
         <thead class="bg-slate-50">
           <tr>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">ID</th>
             <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Sold At</th>
             <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Customer</th>
             <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Ref</th>
             <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600">Lines</th>
+            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600">Total</th>
+            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let o of orders()" class="border-t border-slate-100">
-            <td class="px-3 py-2">{{ o.id }}</td>
-            <td class="px-3 py-2">{{ o.soldAt }}</td>
-            <td class="px-3 py-2">{{ o.customer || '-' }}</td>
-            <td class="px-3 py-2">{{ o.referenceNumber || '-' }}</td>
-            <td class="px-3 py-2 text-right font-semibold">{{ o.lines.length }}</td>
+          <ng-container *ngFor="let o of orders()">
+            <tr class="border-t border-slate-100">
+              <td class="px-3 py-2 text-xs text-slate-600">{{ o.soldAt }}</td>
+              <td class="px-3 py-2">{{ o.customer || '-' }}</td>
+              <td class="px-3 py-2">{{ o.referenceNumber || '-' }}</td>
+              <td class="px-3 py-2 text-right font-semibold">{{ o.lines.length }}</td>
+              <td class="px-3 py-2 text-right font-semibold">{{ saleTotalValue(o) | number: '1.2-2'}}</td>
+              <td class="px-3 py-2">
+                <div class="flex justify-end gap-2">
+                  <button
+                    class="rounded-lg bg-purple-700 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                    type="button"
+                    (click)="toggleDetails(o)"
+                  >
+                    {{ detailsOrderId() === o.id ? 'Hide details' : 'Details' }}
+                  </button>
+
+                  <button
+                    class="rounded-lg bg-indigo-950 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                    type="button"
+                    (click)="openEdit(o)"
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    class="rounded-lg bg-red-700 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                    type="button"
+                    (click)="openDeleteConfirm(o.id)"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr *ngIf="detailsOrderId() === o.id" class="border-t border-slate-100 bg-slate-50/50">
+              <td class="px-3 py-3" colspan="6">
+                <div class="text-xs font-semibold text-slate-700">
+                  <span
+                    class="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-1 text-[11px] font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-200"
+                    >Sale details</span
+                  >
+                </div>
+                <div class="mt-2 overflow-auto rounded-xl bg-white ring-1 ring-indigo-100 border border-indigo-100">
+                  <table class="w-full border-collapse text-xs">
+                    <thead class="bg-indigo-50">
+                      <tr>
+                        <th class="px-3 py-2 text-left font-semibold text-slate-600">Customer</th>
+                        <th class="px-3 py-2 text-left font-semibold text-slate-600">Product</th>
+                        <th class="px-3 py-2 text-left font-semibold text-slate-600">Location</th>
+                        <th class="px-3 py-2 text-right font-semibold text-slate-600">Units</th>
+                        <th class="px-3 py-2 text-right font-semibold text-slate-600">Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let l of o.lines" class="border-t border-indigo-100">
+                        <td class="px-3 py-2">{{ o.customer || '-' }}</td>
+                        <td class="px-3 py-2">{{ l.productName }}</td>
+                        <td class="px-3 py-2">{{ l.location || 'MAIN' }}</td>
+                        <td class="px-3 py-2 text-right font-semibold">{{ l.quantity }}</td>
+                        <td class="px-3 py-2 text-right">{{ l.unitPrice | number: '1.2-2' }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+
+          <tr *ngIf="!orders().length" class="border-t border-slate-100">
+            <td class="px-3 py-6 text-center text-sm text-slate-600" colspan="6">No sales orders yet</td>
           </tr>
         </tbody>
       </table>
@@ -151,4 +249,31 @@
       Tip: Stock deductions per line are stored in backend and visible in GraphQL response.
     </div>
   </section>
+</div>
+
+<div *ngIf="confirmDeleteOpen()" class="fixed inset-0 z-50">
+  <div class="absolute inset-0 bg-slate-900/40" (click)="cancelDeleteConfirm()"></div>
+  <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div class="w-full max-w-sm rounded-2xl bg-white p-5 shadow-xl ring-1 ring-slate-200" (click)="$event.stopPropagation()">
+      <div class="text-base font-semibold text-slate-900">Delete sale?</div>
+      <div class="mt-2 text-sm text-slate-600">Are you sure you want to delete this sale? This action cannot be undone.</div>
+
+      <div class="mt-5 flex items-center justify-end gap-2">
+        <button
+          type="button"
+          class="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-200"
+          (click)="cancelDeleteConfirm()"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="rounded-xl bg-red-700 px-4 py-2 text-sm font-semibold text-white hover:bg-red-800"
+          (click)="confirmDelete()"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

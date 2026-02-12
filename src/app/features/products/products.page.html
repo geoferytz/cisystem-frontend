@@ -178,7 +178,7 @@
 
             <td class="px-3 py-2">
               <ng-container *ngIf="editingId() !== p.id; else editBuying">
-                {{ p.buyingPrice ?? '-' }}
+                {{ p.buyingPrice ?? '-' | number: '1.2-2'}}
               </ng-container>
               <ng-template #editBuying>
                 <div [formGroup]="editForm">
@@ -193,7 +193,7 @@
 
             <td class="px-3 py-2">
               <ng-container *ngIf="editingId() !== p.id; else editSelling">
-                {{ p.sellingPrice ?? '-' }}
+                {{ p.sellingPrice ?? '-' | number: '1.2-2' }}
               </ng-container>
               <ng-template #editSelling>
                 <div [formGroup]="editForm">

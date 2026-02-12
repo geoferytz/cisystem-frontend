@@ -27,6 +27,8 @@ type PurchaseOrder = {
 
 type PurchaseOrdersQueryResult = { purchaseOrders: PurchaseOrder[] };
 type ReceivePurchaseMutationResult = { receivePurchase: PurchaseOrder };
+type UpdatePurchaseMutationResult = { updatePurchase: PurchaseOrder };
+type DeletePurchaseMutationResult = { deletePurchase: boolean };
 
 @Component({
   selector: 'cis-purchasing-page',
@@ -38,6 +40,14 @@ type ReceivePurchaseMutationResult = { receivePurchase: PurchaseOrder };
 export class PurchasingPage {
   loading = signal(false);
   error = signal<string | null>(null);
+
+  createOpen = signal(false);
+
+  editingOrderId = signal<string | null>(null);
+  detailsOrderId = signal<string | null>(null);
+
+  confirmDeleteOpen = signal(false);
+  pendingDeleteOrderId = signal<string | null>(null);
 
   orders = signal<PurchaseOrder[]>([]);
   lines = signal<
@@ -61,6 +71,64 @@ export class PurchasingPage {
 
   constructor(private readonly gql: GraphqlService) {
     this.load();
+  }
+
+  openDeleteConfirm(id: string): void {
+    this.pendingDeleteOrderId.set(String(id));
+    this.confirmDeleteOpen.set(true);
+  }
+
+  cancelDeleteConfirm(): void {
+    this.confirmDeleteOpen.set(false);
+    this.pendingDeleteOrderId.set(null);
+  }
+
+  confirmDelete(): void {
+    const id = this.pendingDeleteOrderId();
+    if (!id) return;
+    this.confirmDeleteOpen.set(false);
+    this.pendingDeleteOrderId.set(null);
+    this.deletePurchase(id);
+  }
+
+  toggleDetails(o: PurchaseOrder): void {
+    const id = String(o.id);
+    this.detailsOrderId.set(this.detailsOrderId() === id ? null : id);
+  }
+
+  openCreate(): void {
+    this.error.set(null);
+    this.editingOrderId.set(null);
+    this.headerForm.reset({ supplier: '', invoiceNumber: '' });
+    this.lineForm.reset({ productId: null, batchNumber: '', expiryDate: '', costPrice: 0, quantityReceived: 1 });
+    this.lines.set([]);
+    this.createOpen.set(true);
+  }
+
+  openEdit(o: PurchaseOrder): void {
+    this.error.set(null);
+    this.editingOrderId.set(String(o.id));
+    this.headerForm.reset({ supplier: o.supplier ?? '', invoiceNumber: o.invoiceNumber ?? '' });
+    this.lineForm.reset({ productId: null, batchNumber: '', expiryDate: '', costPrice: 0, quantityReceived: 1 });
+    this.lines.set(
+      (o.lines ?? []).map((l) => ({
+        productId: Number(l.productId),
+        batchNumber: String(l.batchNumber ?? ''),
+        expiryDate: String(l.expiryDate ?? ''),
+        costPrice: Number(l.costPrice ?? 0),
+        quantityReceived: Number(l.quantityReceived ?? 0)
+      }))
+    );
+    this.createOpen.set(true);
+  }
+
+  closeCreate(): void {
+    this.createOpen.set(false);
+    this.editingOrderId.set(null);
+  }
+
+  purchaseTotalValue(o: PurchaseOrder): number {
+    return (o.lines ?? []).reduce((sum, l) => sum + Number(l.quantityReceived ?? 0) * Number(l.costPrice ?? 0), 0);
   }
 
   load(): void {
@@ -111,6 +179,10 @@ export class PurchasingPage {
   }
 
   receive(): void {
+    this.savePurchase();
+  }
+
+  savePurchase(): void {
     if (!this.lines().length) {
       this.error.set('Add at least one line');
       return;
@@ -120,6 +192,40 @@ export class PurchasingPage {
     this.error.set(null);
 
     const header = this.headerForm.getRawValue();
+
+    const editingId = this.editingOrderId();
+    if (editingId) {
+      const mutation = `mutation UpdatePurchase($input: UpdatePurchaseInput!) {
+        updatePurchase(input: $input) {
+          id supplier invoiceNumber receivedAt receivedBy
+          lines { id productId sku productName batchId batchNumber expiryDate costPrice quantityReceived }
+        }
+      }`;
+
+      this.gql
+        .request<UpdatePurchaseMutationResult>(mutation, {
+          input: {
+            id: editingId,
+            supplier: header.supplier || null,
+            invoiceNumber: header.invoiceNumber || null,
+            lines: this.lines()
+          }
+        })
+        .subscribe({
+          next: () => {
+            this.headerForm.reset({ supplier: '', invoiceNumber: '' });
+            this.lines.set([]);
+            this.createOpen.set(false);
+            this.editingOrderId.set(null);
+            this.load();
+          },
+          error: (e: unknown) => {
+            this.error.set(e instanceof Error ? e.message : 'Failed to update purchase');
+            this.loading.set(false);
+          }
+        });
+      return;
+    }
 
     const mutation = `mutation Receive($input: ReceivePurchaseInput!) {
       receivePurchase(input: $input) {
@@ -140,6 +246,8 @@ export class PurchasingPage {
         next: () => {
           this.headerForm.reset({ supplier: '', invoiceNumber: '' });
           this.lines.set([]);
+          this.createOpen.set(false);
+          this.editingOrderId.set(null);
           this.load();
         },
         error: (e: unknown) => {
@@ -147,5 +255,21 @@ export class PurchasingPage {
           this.loading.set(false);
         }
       });
+  }
+
+  deletePurchase(id: string): void {
+    this.loading.set(true);
+    this.error.set(null);
+
+    const mutation = `mutation DeletePurchase($input: DeletePurchaseInput!) { deletePurchase(input: $input) }`;
+    this.gql.request<DeletePurchaseMutationResult>(mutation, { input: { id } }).subscribe({
+      next: () => {
+        this.load();
+      },
+      error: (e: unknown) => {
+        this.error.set(e instanceof Error ? e.message : 'Failed to delete purchase');
+        this.loading.set(false);
+      }
+    });
   }
 }

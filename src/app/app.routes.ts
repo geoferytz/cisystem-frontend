@@ -14,8 +14,11 @@ import { MySalesPage } from './features/my-sales/my-sales.page';
 import { MySalesReportPage } from './features/my-sales-report/my-sales-report.page';
 import { ExpiryAlertsPage } from './features/expiry-alerts/expiry-alerts.page';
 import { ReportsPage } from './features/reports/reports.page';
+import { ProfitManagementPage } from './features/profit-management/profit-management.page';
 import { UsersPage } from './features/users/users.page';
 import { HomePage } from './features/home/home.page';
+import { ExpensesPage } from './features/expenses/expenses.page';
+import { ExpenseCategoriesPage } from './features/expense-categories/expense-categories.page';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
@@ -36,7 +39,10 @@ export const routes: Routes = [
       { path: 'my-sales', component: MySalesPage },
       { path: 'my-sales-report', component: MySalesReportPage },
       { path: 'expiry-alerts', component: ExpiryAlertsPage },
+      { path: 'expenses', component: ExpensesPage },
+      { path: 'expense-categories', component: ExpenseCategoriesPage },
       { path: 'reports', component: ReportsPage },
+      { path: 'profit-management', component: ProfitManagementPage },
       { path: 'users', component: UsersPage }
     ]
   },

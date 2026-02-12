@@ -103,6 +103,18 @@
           </svg>
 
           <svg
+            *ngIf="c.icon === 'expenses'"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            class="h-40 w-40"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
+          </svg>
+
+          <svg
             *ngIf="c.icon === 'reports'"
             viewBox="0 0 24 24"
             fill="none"
@@ -167,6 +179,18 @@
                 >
                   <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13M8 12h13M8 17h13" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h.01M3 12h.01M3 17h.01" />
+                </svg>
+
+                <svg
+                  *ngIf="c.icon === 'expenses'"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  class="h-6 w-6"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
                 </svg>
 
                 <svg

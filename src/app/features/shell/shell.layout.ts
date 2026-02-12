@@ -1,6 +1,6 @@
 import { Component, DestroyRef, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/auth/auth.service';
 import { GraphqlService } from '../../core/graphql/graphql.service';
@@ -48,7 +48,7 @@ type UsersQueryResult = {
 @Component({
   selector: 'cis-shell',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterOutlet, ShellHeaderComponent],
+  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet, ShellHeaderComponent],
   templateUrl: './shell.layout.html',
   styleUrl: './shell.layout.scss'
 })

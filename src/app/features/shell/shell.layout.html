@@ -33,10 +33,11 @@
         </a>
       </div>
 
-      <nav class="mt-5 grid gap-1" (click)="closeSidebar()">
+      <nav class="mt-5 grid gap-1">
         <a
           routerLink="/dashboard"
           routerLinkActive="bg-white/15"
+          [routerLinkActiveOptions]="{ exact: true }"
           class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
           <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
@@ -50,6 +51,7 @@
           *ngIf="canView('PRODUCTS')"
           routerLink="/products"
           routerLinkActive="bg-white/15"
+          [routerLinkActiveOptions]="{ exact: true }"
           class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
           <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
@@ -64,6 +66,7 @@
           *ngIf="canView('CATEGORIES')"
           routerLink="/categories"
           routerLinkActive="bg-white/15"
+          [routerLinkActiveOptions]="{ exact: true }"
           class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
           <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
@@ -77,6 +80,7 @@
           *ngIf="canView('INVENTORY')"
           routerLink="/inventory"
           routerLinkActive="bg-white/15"
+          [routerLinkActiveOptions]="{ exact: true }"
           class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
           <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
@@ -92,6 +96,7 @@
           *ngIf="canView('STOCK_MOVEMENTS')"
           routerLink="/stock-movements"
           routerLinkActive="bg-white/15"
+          [routerLinkActiveOptions]="{ exact: true }"
           class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
           <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
@@ -106,6 +111,7 @@
           *ngIf="canView('PURCHASING')"
           routerLink="/purchasing"
           routerLinkActive="bg-white/15"
+          [routerLinkActiveOptions]="{ exact: true }"
           class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
           <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
@@ -120,6 +126,7 @@
           *ngIf="canView('SALES')"
           routerLink="/sales"
           routerLinkActive="bg-white/15"
+          [routerLinkActiveOptions]="{ exact: true }"
           class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
           <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
@@ -135,6 +142,7 @@
           *ngIf="canView('MY_SALES')"
           routerLink="/my-sales"
           routerLinkActive="bg-white/15"
+          [routerLinkActiveOptions]="{ exact: true }"
           class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
           <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
@@ -148,6 +156,7 @@
         <a
           routerLink="/expiry-alerts"
           routerLinkActive="bg-white/15"
+          [routerLinkActiveOptions]="{ exact: true }"
           class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
           <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
@@ -159,9 +168,39 @@
         </a>
 
         <a
+          *ngIf="canView('EXPENSES')"
+          routerLink="/expenses"
+          routerLinkActive="bg-white/15"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
+          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
+            </svg>
+          </span>
+          <span>Expenses</span>
+        </a>
+
+        <a
+          *ngIf="canView('EXPENSE_CATEGORIES')"
+          routerLink="/expense-categories"
+          routerLinkActive="bg-white/15"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
+          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </span>
+          <span>Expense Categories</span>
+        </a>
+
+        <a
           *ngIf="canView('REPORTS')"
           routerLink="/reports"
           routerLinkActive="bg-white/15"
+          [routerLinkActiveOptions]="{ exact: true }"
           class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
           <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
@@ -173,9 +212,25 @@
         </a>
 
         <a
+          *ngIf="canView('REPORTS')"
+          routerLink="/profit-management"
+          routerLinkActive="bg-white/15"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
+          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 15l3-3 3 2 5-6" />
+            </svg>
+          </span>
+          <span>Profit Management</span>
+        </a>
+
+        <a
           *ngIf="canView('USERS_ROLES')"
           routerLink="/users"
           routerLinkActive="bg-white/15"
+          [routerLinkActiveOptions]="{ exact: true }"
           class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
           <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">

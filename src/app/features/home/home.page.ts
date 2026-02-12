@@ -24,6 +24,7 @@ type HomeCard = {
     | 'sales'
     | 'mySales'
     | 'expiryAlerts'
+    | 'expenses'
     | 'reports'
     | 'users';
   description: string;
@@ -115,6 +116,13 @@ export class HomePage {
       description: 'Expiry and low-stock notifications.',
       route: '/expiry-alerts',
       hidden: !this.canView('INVENTORY')
+    },
+    {
+      title: 'Expenses',
+      icon: 'expenses',
+      description: 'Record and track daily expenses.',
+      route: '/expenses',
+      hidden: !this.canView('EXPENSES')
     },
     {
       title: 'Reports',

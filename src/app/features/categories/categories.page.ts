@@ -38,6 +38,8 @@ export class CategoriesPage {
   error = signal<string | null>(null);
   categories = signal<Category[]>([]);
 
+  createOpen = signal(false);
+
   editingId = signal<string | null>(null);
 
   private readonly fb = inject(FormBuilder);
@@ -55,6 +57,16 @@ export class CategoriesPage {
 
   constructor(private readonly gql: GraphqlService) {
     this.load();
+  }
+
+  openCreate(): void {
+    this.error.set(null);
+    this.createForm.reset({ name: '', description: '' });
+    this.createOpen.set(true);
+  }
+
+  closeCreate(): void {
+    this.createOpen.set(false);
   }
 
   load(): void {
@@ -87,6 +99,7 @@ export class CategoriesPage {
     this.gql.request<CreateCategoryMutationResult>(mutation, { input }).subscribe({
       next: () => {
         this.createForm.reset({ name: '', description: '' });
+        this.createOpen.set(false);
         this.load();
       },
       error: (e: unknown) => {
