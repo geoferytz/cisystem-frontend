@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 
 import { GraphqlService } from '../../core/graphql/graphql.service';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
+import { PermissionService } from '../../shared/services/permission.service';
 
 type MySaleLine = {
   id: string;
@@ -35,6 +36,8 @@ type DeleteMySaleMutationResult = { deleteMySale: boolean };
   styleUrl: './my-sales.page.scss'
 })
 export class MySalesPage {
+  readonly perm = inject(PermissionService);
+
   loading = signal(false);
   error = signal<string | null>(null);
 
@@ -65,6 +68,7 @@ export class MySalesPage {
   lines = signal<Array<{ productName: string; quantity: number; unitPrice: number }>>([]);
 
   constructor() {
+    this.perm.load();
     this.refresh();
   }
 

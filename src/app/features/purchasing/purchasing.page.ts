@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { GraphqlService } from '../../core/graphql/graphql.service';
 import { ConfirmDialogComponent } from '../../shared/ui/confirm-dialog/confirm-dialog.component';
 import { ModalComponent } from '../../shared/ui/modal/modal.component';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
+import { PermissionService } from '../../shared/services/permission.service';
 
 type PurchaseOrderLine = {
   id: string;
@@ -41,6 +42,8 @@ type DeletePurchaseMutationResult = { deletePurchase: boolean };
   styleUrl: './purchasing.page.scss'
 })
 export class PurchasingPage {
+  readonly perm = inject(PermissionService);
+
   loading = signal(false);
   error = signal<string | null>(null);
 
@@ -73,6 +76,7 @@ export class PurchasingPage {
   });
 
   constructor(private readonly gql: GraphqlService) {
+    this.perm.load();
     this.load();
   }
 

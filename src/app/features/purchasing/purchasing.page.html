@@ -1,6 +1,6 @@
 <div class="flex items-center justify-between">
   <h2 class="text-xl font-semibold text-slate-900">Purchases & Stock In</h2>
-  <button class="rounded-xl bg-indigo-950 px-4 py-2 text-sm font-semibold text-white" type="button" (click)="openCreate()">
+  <button *ngIf="perm.canCreate('PURCHASING')" class="rounded-xl bg-indigo-950 px-4 py-2 text-sm font-semibold text-white" type="button" (click)="openCreate()">
     Add Purchasing
   </button>
 </div>
@@ -146,6 +146,7 @@
                   </button>
 
                   <button
+                    *ngIf="perm.canEdit('PURCHASING')"
                     class="rounded-lg bg-indigo-950 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
                     type="button"
                     (click)="openEdit(o)"
@@ -154,6 +155,7 @@
                   </button>
 
                   <button
+                    *ngIf="perm.canDelete('PURCHASING')"
                     class="rounded-lg bg-red-700 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
                     type="button"
                     (click)="openDeleteConfirm(o.id)"

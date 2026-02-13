@@ -1,6 +1,6 @@
 <div class="flex items-center justify-between">
   <h2 class="text-xl font-semibold text-slate-900">Categories</h2>
-  <button class="rounded-xl bg-indigo-950 px-4 py-2 text-sm font-semibold text-white" type="button" (click)="openCreate()">
+  <button *ngIf="perm.canCreate('CATEGORIES')" class="rounded-xl bg-indigo-950 px-4 py-2 text-sm font-semibold text-white" type="button" (click)="openCreate()">
     Add Category
   </button>
 </div>
@@ -123,6 +123,7 @@
               <div class="flex gap-2">
                 <ng-container *ngIf="editingId() !== c.id; else editActions">
                   <button
+                    *ngIf="perm.canEdit('CATEGORIES')"
                     class="rounded-lg bg-indigo-950 px-2 py-1 text-xs font-semibold text-white"
                     (click)="startEdit(c)"
                     [disabled]="loading()"
@@ -130,6 +131,7 @@
                     Edit
                   </button>
                   <button
+                    *ngIf="perm.canDelete('CATEGORIES')"
                     class="rounded-lg bg-red-700 px-2 py-1 text-xs font-semibold text-white"
                     (click)="delete(c)"
                     [disabled]="loading()"

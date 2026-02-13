@@ -5,7 +5,7 @@
       routerLink="/my-sales-report">
       My Sales Report
     </a>
-    <button class="rounded-xl bg-indigo-950 px-3 py-2 text-xs font-semibold text-white" type="button"
+    <button *ngIf="perm.canCreate('MY_SALES')" class="rounded-xl bg-indigo-950 px-3 py-2 text-xs font-semibold text-white" type="button"
       (click)="openCreate()">
       Create My Sale
     </button>
@@ -41,6 +41,7 @@
         </button>
 
         <button
+          *ngIf="perm.canEdit('MY_SALES')"
           class="rounded-lg bg-indigo-950 px-3 py-2 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
           type="button"
           (click)="openEdit(s)"
@@ -49,6 +50,7 @@
         </button>
 
         <button
+          *ngIf="perm.canDelete('MY_SALES')"
           class="rounded-lg bg-red-700 px-3 py-2 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
           type="button"
           (click)="openDeleteConfirm(s.id)"
@@ -117,12 +119,14 @@
                   </button>
 
                   <button
+                    *ngIf="perm.canEdit('MY_SALES')"
                     class="rounded-lg bg-indigo-950 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
                     type="button" (click)="openEdit(s)">
                     Edit
                   </button>
 
                   <button
+                    *ngIf="perm.canDelete('MY_SALES')"
                     class="rounded-lg bg-red-700 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
                     type="button" (click)="openDeleteConfirm(s.id)">
                     Delete

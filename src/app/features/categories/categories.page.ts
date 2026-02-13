@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GraphqlService } from '../../core/graphql/graphql.service';
+import { PermissionService } from '../../shared/services/permission.service';
 
 type Category = {
   id: string;
@@ -34,6 +35,8 @@ type DeleteCategoryMutationResult = {
   styleUrl: './categories.page.scss'
 })
 export class CategoriesPage {
+  readonly perm = inject(PermissionService);
+
   loading = signal(false);
   error = signal<string | null>(null);
   categories = signal<Category[]>([]);
@@ -56,6 +59,7 @@ export class CategoriesPage {
   });
 
   constructor(private readonly gql: GraphqlService) {
+    this.perm.load();
     this.load();
   }
 

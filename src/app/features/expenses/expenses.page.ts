@@ -3,6 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GraphqlService } from '../../core/graphql/graphql.service';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
+import { PermissionService } from '../../shared/services/permission.service';
 import { forkJoin } from 'rxjs';
 
 type ExpenseCategory = {
@@ -50,6 +51,8 @@ type DeleteExpenseMutationResult = {
   styleUrl: './expenses.page.scss'
 })
 export class ExpensesPage {
+  readonly perm = inject(PermissionService);
+
   loading = signal(false);
   error = signal<string | null>(null);
 
@@ -226,6 +229,7 @@ export class ExpensesPage {
   }
 
   constructor(private readonly gql: GraphqlService) {
+    this.perm.load();
     const now = new Date();
     const yyyy = String(now.getFullYear());
     const mm = String(now.getMonth() + 1).padStart(2, '0');

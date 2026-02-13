@@ -2,11 +2,13 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GraphqlService } from '../../core/graphql/graphql.service';
+import { PermissionService } from '../../shared/services/permission.service';
 
 type AdminUser = {
   id: string;
   name: string;
   email: string;
+  plainPassword?: string | null;
   active: boolean;
   roles: string[];
 };
@@ -21,6 +23,14 @@ type RolesQueryResult = {
 
 type CreateUserResult = {
   createUser: AdminUser;
+};
+
+type UpdateUserResult = {
+  updateUser: AdminUser;
+};
+
+type DeleteUserResult = {
+  deleteUser: boolean;
 };
 
 type UserPermission = {
@@ -47,6 +57,8 @@ type SetUserPermissionsMutationResult = {
   styleUrl: './users.page.scss'
 })
 export class UsersPage {
+  readonly perm = inject(PermissionService);
+
   loading = signal(false);
   error = signal<string | null>(null);
   success = signal<string | null>(null);
@@ -55,6 +67,10 @@ export class UsersPage {
   roles = signal<string[]>([]);
 
   createOpen = signal(false);
+  editOpen = signal(false);
+  editingUser = signal<AdminUser | null>(null);
+  deleteOpen = signal(false);
+  pendingDelete = signal<AdminUser | null>(null);
   permissionsOpen = signal(false);
 
   selectedUserId = signal<string>('');
@@ -72,6 +88,7 @@ export class UsersPage {
     { key: 'EXPENSES', label: 'Expenses' },
     { key: 'EXPENSE_CATEGORIES', label: 'Expense Categories' },
     { key: 'REPORTS', label: 'Reports' },
+    { key: 'PROFIT_MANAGEMENT', label: 'Profit Management' },
     { key: 'USERS_ROLES', label: 'Users & Roles' }
   ];
 
@@ -84,7 +101,15 @@ export class UsersPage {
     role: ['STOREKEEPER', [Validators.required]]
   });
 
+  editForm = this.fb.group({
+    name: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.email]],
+    password: [''],
+    role: ['STOREKEEPER', [Validators.required]]
+  });
+
   constructor(private readonly gql: GraphqlService) {
+    this.perm.load();
     this.load();
   }
 
@@ -217,7 +242,7 @@ export class UsersPage {
     this.error.set(null);
     this.success.set(null);
 
-    const qUsers = `query { users { id name email active roles } }`;
+    const qUsers = `query { users { id name email plainPassword active roles } }`;
     const qRoles = `query { roles }`;
 
     this.gql.request<UsersQueryResult>(qUsers).subscribe({
@@ -247,7 +272,7 @@ export class UsersPage {
     const role = String(raw.role || '').trim();
     const roles = role ? [role] : [];
 
-    const mutation = `mutation CreateUser($input: CreateUserInput!) { createUser(input: $input) { id name email active roles } }`;
+    const mutation = `mutation CreateUser($input: CreateUserInput!) { createUser(input: $input) { id name email plainPassword active roles } }`;
 
     this.gql
       .request<CreateUserResult>(mutation, {
@@ -266,6 +291,95 @@ export class UsersPage {
         },
         error: (e: unknown) => {
           this.error.set(e instanceof Error ? e.message : 'Failed to create user');
+          this.loading.set(false);
+        }
+      });
+  }
+
+  openEdit(user: AdminUser): void {
+    this.editingUser.set(user);
+    this.editForm.reset({
+      name: user.name,
+      email: user.email,
+      password: '',
+      role: user.roles[0] ?? 'STOREKEEPER'
+    });
+    this.error.set(null);
+    this.success.set(null);
+    this.editOpen.set(true);
+  }
+
+  closeEdit(): void {
+    this.editOpen.set(false);
+    this.editingUser.set(null);
+  }
+
+  saveEdit(): void {
+    const user = this.editingUser();
+    if (!user || this.editForm.invalid) return;
+
+    this.loading.set(true);
+    this.error.set(null);
+
+    const raw = this.editForm.getRawValue();
+    const role = String(raw.role || '').trim();
+    const roles = role ? [role] : [];
+    const password = (raw.password || '').trim();
+
+    const mutation = `mutation UpdateUser($input: UpdateUserInput!) { updateUser(input: $input) { id name email plainPassword active roles } }`;
+
+    this.gql
+      .request<UpdateUserResult>(mutation, {
+        input: {
+          userId: user.id,
+          name: raw.name,
+          email: raw.email,
+          password: password || null,
+          roles
+        }
+      })
+      .subscribe({
+        next: () => {
+          this.closeEdit();
+          this.success.set('User updated');
+          this.load();
+        },
+        error: (e: unknown) => {
+          this.error.set(e instanceof Error ? e.message : 'Failed to update user');
+          this.loading.set(false);
+        }
+      });
+  }
+
+  openDelete(user: AdminUser): void {
+    this.pendingDelete.set(user);
+    this.deleteOpen.set(true);
+  }
+
+  closeDelete(): void {
+    this.deleteOpen.set(false);
+    this.pendingDelete.set(null);
+  }
+
+  confirmDelete(): void {
+    const user = this.pendingDelete();
+    if (!user) return;
+
+    this.loading.set(true);
+    this.error.set(null);
+
+    const mutation = `mutation DeleteUser($userId: ID!) { deleteUser(userId: $userId) }`;
+
+    this.gql
+      .request<DeleteUserResult>(mutation, { userId: user.id })
+      .subscribe({
+        next: () => {
+          this.closeDelete();
+          this.success.set('User deleted');
+          this.load();
+        },
+        error: (e: unknown) => {
+          this.error.set(e instanceof Error ? e.message : 'Failed to delete user');
           this.loading.set(false);
         }
       });

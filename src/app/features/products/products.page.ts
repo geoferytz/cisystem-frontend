@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GraphqlService } from '../../core/graphql/graphql.service';
 import { ProductFormComponent, ProductFormValue } from './product-form/product-form.component';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
+import { PermissionService } from '../../shared/services/permission.service';
 
 type Product = {
   id: string;
@@ -70,6 +71,8 @@ type UpdateBatchNumberMutationResult = {
   styleUrl: './products.page.scss'
 })
 export class ProductsPage {
+  readonly perm = inject(PermissionService);
+
   loading = signal(false);
   error = signal<string | null>(null);
   products = signal<Product[]>([]);
@@ -122,6 +125,7 @@ export class ProductsPage {
   });
 
   constructor(private readonly gql: GraphqlService) {
+    this.perm.load();
     this.loadCategories();
     this.load();
   }

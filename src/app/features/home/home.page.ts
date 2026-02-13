@@ -26,6 +26,7 @@ type HomeCard = {
     | 'expiryAlerts'
     | 'expenses'
     | 'reports'
+    | 'profitManagement'
     | 'users';
   description: string;
   route?: string;
@@ -130,6 +131,13 @@ export class HomePage {
       description: 'Sales, profit and movement reports.',
       route: '/reports',
       hidden: !this.canView('REPORTS')
+    },
+    {
+      title: 'Profit Management',
+      icon: 'profitManagement',
+      description: 'Track profits, margins and analysis.',
+      route: '/profit-management',
+      hidden: !this.canView('PROFIT_MANAGEMENT')
     },
     {
       title: 'Users & Roles',

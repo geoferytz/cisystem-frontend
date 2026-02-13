@@ -2,6 +2,7 @@
   <h2 class="text-xl font-semibold text-slate-900">Expenses</h2>
   <div class="flex items-center gap-2">
     <button
+      *ngIf="perm.canCreate('EXPENSES')"
       class="rounded-xl bg-indigo-950 px-3 py-2 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
       (click)="openCreate()"
       [disabled]="loading()"
@@ -171,6 +172,7 @@
                         <td class="px-3 py-2 text-right">
                           <div class="flex justify-end gap-2">
                             <button
+                              *ngIf="perm.canEdit('EXPENSES')"
                               class="rounded-lg bg-indigo-950 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
                               type="button"
                               (click)="openEdit(e)"
@@ -179,6 +181,7 @@
                               Edit
                             </button>
                             <button
+                              *ngIf="perm.canDelete('EXPENSES')"
                               class="rounded-lg bg-red-700 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
                               type="button"
                               (click)="openDeleteConfirm(e)"

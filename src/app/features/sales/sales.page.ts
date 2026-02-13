@@ -6,6 +6,7 @@ import { GraphqlService } from '../../core/graphql/graphql.service';
 import { ConfirmDialogComponent } from '../../shared/ui/confirm-dialog/confirm-dialog.component';
 import { ModalComponent } from '../../shared/ui/modal/modal.component';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
+import { PermissionService } from '../../shared/services/permission.service';
 
 type Product = {
   id: string;
@@ -55,6 +56,8 @@ type ProductsQueryResult = { products: Product[] };
   styleUrl: './sales.page.scss'
 })
 export class SalesPage {
+  readonly perm = inject(PermissionService);
+
   loading = signal(false);
   error = signal<string | null>(null);
   orders = signal<SalesOrder[]>([]);
@@ -106,6 +109,7 @@ export class SalesPage {
   });
 
   constructor(private readonly gql: GraphqlService) {
+    this.perm.load();
     this.loadProducts();
     this.load();
   }
