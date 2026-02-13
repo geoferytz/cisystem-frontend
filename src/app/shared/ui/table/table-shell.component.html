@@ -1,0 +1,18 @@
+<div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
+  <div *ngIf="title || subtitle" class="flex items-start justify-between gap-3">
+    <div>
+      <div *ngIf="title" class="text-base font-semibold text-slate-900">{{ title }}</div>
+      <div *ngIf="subtitle" class="mt-1 text-xs text-slate-500">{{ subtitle }}</div>
+    </div>
+    <ng-content select="[actions]" />
+  </div>
+
+  <div [ngClass]="(title || subtitle) ? 'mt-3' : ''">
+    <ng-container *ngIf="!empty; else emptyState">
+      <ng-content />
+    </ng-container>
+    <ng-template #emptyState>
+      <div class="rounded-xl bg-slate-50 p-4 text-sm text-slate-600 ring-1 ring-slate-100">{{ emptyMessage }}</div>
+    </ng-template>
+  </div>
+</div>

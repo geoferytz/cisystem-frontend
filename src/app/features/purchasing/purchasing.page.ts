@@ -3,6 +3,9 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { GraphqlService } from '../../core/graphql/graphql.service';
+import { ConfirmDialogComponent } from '../../shared/ui/confirm-dialog/confirm-dialog.component';
+import { ModalComponent } from '../../shared/ui/modal/modal.component';
+import { MoneyPipe } from '../../shared/pipes/money.pipe';
 
 type PurchaseOrderLine = {
   id: string;
@@ -33,7 +36,7 @@ type DeletePurchaseMutationResult = { deletePurchase: boolean };
 @Component({
   selector: 'cis-purchasing-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ModalComponent, ConfirmDialogComponent, MoneyPipe],
   templateUrl: './purchasing.page.html',
   styleUrl: './purchasing.page.scss'
 })

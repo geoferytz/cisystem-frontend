@@ -58,18 +58,18 @@
   <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
     <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
       <div class="text-xs font-semibold text-slate-500">Today Sales</div>
-      <div class="mt-1 text-2xl font-extrabold text-slate-900">{{ todaySales() | number: '1.2-2' }}</div>
+      <div class="mt-1 text-2xl font-extrabold text-slate-900">{{ todaySales() | money }}</div>
     </div>
 
     <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
       <div class="text-xs font-semibold text-slate-500">Gross Profit</div>
-      <div class="mt-1 text-2xl font-extrabold text-slate-900">{{ grossProfit() | number: '1.2-2'}}</div>
+      <div class="mt-1 text-2xl font-extrabold text-slate-900">{{ grossProfit() | money}}</div>
       <div class="mt-1 text-xs text-slate-500">(From stock movements)</div>
     </div>
 
     <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
       <div class="text-xs font-semibold text-slate-500">Expenses Today</div>
-      <div class="mt-1 text-2xl font-extrabold text-slate-900">{{ expensesToday() | number: '1.2-2'}}</div>
+      <div class="mt-1 text-2xl font-extrabold text-slate-900">{{ expensesToday() | money}}</div>
     </div>
 
     <div
@@ -78,7 +78,7 @@
     >
       <div class="text-xs font-semibold" [ngClass]="netProfitIsPositive() ? 'text-emerald-700' : 'text-red-700'">Net Profit</div>
       <div class="mt-1 text-2xl font-extrabold" [ngClass]="netProfitIsPositive() ? 'text-emerald-800' : 'text-red-800'">
-        {{ netProfit() | number: '1.2-2' }}
+        {{ netProfit() | money }}
       </div>
       <div class="mt-1 text-xs" [ngClass]="netProfitIsPositive() ? 'text-emerald-700' : 'text-red-700'">
         {{ netProfitIsPositive() ? 'Profit (positive)' : 'Loss (negative)' }}

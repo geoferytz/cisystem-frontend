@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 
 import { GraphqlService } from '../../core/graphql/graphql.service';
+import { MoneyPipe } from '../../shared/pipes/money.pipe';
 
 type DailySalesReport = {
   date: string;
@@ -40,7 +41,7 @@ type ProfitRow = {
 @Component({
   selector: 'cis-profit-management-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MoneyPipe],
   templateUrl: './profit-management.page.html',
   styleUrl: './profit-management.page.scss'
 })

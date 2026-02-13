@@ -3,6 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GraphqlService } from '../../core/graphql/graphql.service';
 import { BaseChartDirective } from 'ng2-charts';
+import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { forkJoin } from 'rxjs';
 import type { ChartConfiguration, ChartData } from 'chart.js';
 
@@ -100,7 +101,7 @@ type ExpensesQueryResult = {
 @Component({
   selector: 'cis-dashboard-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, BaseChartDirective],
+  imports: [CommonModule, ReactiveFormsModule, BaseChartDirective, MoneyPipe],
   templateUrl: './dashboard.page.html',
   styleUrl: './dashboard.page.scss'
 })

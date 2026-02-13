@@ -3,6 +3,9 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { GraphqlService } from '../../core/graphql/graphql.service';
+import { ConfirmDialogComponent } from '../../shared/ui/confirm-dialog/confirm-dialog.component';
+import { ModalComponent } from '../../shared/ui/modal/modal.component';
+import { MoneyPipe } from '../../shared/pipes/money.pipe';
 
 type Product = {
   id: string;
@@ -47,7 +50,7 @@ type ProductsQueryResult = { products: Product[] };
 @Component({
   selector: 'cis-sales-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ModalComponent, ConfirmDialogComponent, MoneyPipe],
   templateUrl: './sales.page.html',
   styleUrl: './sales.page.scss'
 })

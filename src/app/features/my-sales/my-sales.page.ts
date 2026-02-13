@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
 import { GraphqlService } from '../../core/graphql/graphql.service';
+import { MoneyPipe } from '../../shared/pipes/money.pipe';
 
 type MySaleLine = {
   id: string;
@@ -29,7 +30,7 @@ type DeleteMySaleMutationResult = { deleteMySale: boolean };
 @Component({
   selector: 'cis-my-sales-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, MoneyPipe],
   templateUrl: './my-sales.page.html',
   styleUrl: './my-sales.page.scss'
 })

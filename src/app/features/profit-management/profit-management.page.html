@@ -48,11 +48,11 @@
   <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
     <div class="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
       <div class="text-xs text-slate-500">Gross Profit</div>
-      <div class="mt-1 text-2xl font-extrabold text-slate-900">{{ totalGrossProfit() | number: '1.2-2' }}</div>
+      <div class="mt-1 text-2xl font-extrabold text-slate-900">{{ totalGrossProfit() | money }}</div>
     </div>
     <div class="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
       <div class="text-xs text-slate-500">Expenses</div>
-      <div class="mt-1 text-2xl font-extrabold text-slate-900">{{ totalExpenses() | number: '1.2-2' }}</div>
+      <div class="mt-1 text-2xl font-extrabold text-slate-900">{{ totalExpenses() | money }}</div>
     </div>
     <div class="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
       <div class="text-xs text-slate-500">Net Profit</div>
@@ -60,7 +60,7 @@
         class="mt-1 text-2xl font-extrabold"
         [ngClass]="netProfitIsPositive() ? 'text-emerald-700' : 'text-red-700'"
       >
-        {{ totalNetProfit() | number: '1.2-2' }}
+        {{ totalNetProfit() | money }}
       </div>
     </div>
   </div>
@@ -84,9 +84,9 @@
         </tr>
         <tr *ngFor="let r of rows()" class="border-t border-slate-100">
           <td class="px-4 py-3 font-medium text-slate-900">{{ r.label }}</td>
-          <td class="px-4 py-3">{{ r.grossProfit | number: '1.2-2' }}</td>
-          <td class="px-4 py-3">{{ r.expenses | number: '1.2-2' }}</td>
-          <td class="px-4 py-3" [ngClass]="r.netProfit >= 0 ? 'text-emerald-700' : 'text-red-700'">{{ r.netProfit | number: '1.2-2' }}</td>
+          <td class="px-4 py-3">{{ r.grossProfit | money }}</td>
+          <td class="px-4 py-3">{{ r.expenses | money }}</td>
+          <td class="px-4 py-3" [ngClass]="r.netProfit >= 0 ? 'text-emerald-700' : 'text-red-700'">{{ r.netProfit | money }}</td>
         </tr>
       </tbody>
     </table>

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GraphqlService } from '../../core/graphql/graphql.service';
+import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { forkJoin } from 'rxjs';
 
 type ExpenseCategory = {
@@ -44,7 +45,7 @@ type DeleteExpenseMutationResult = {
 @Component({
   selector: 'cis-expenses-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MoneyPipe],
   templateUrl: './expenses.page.html',
   styleUrl: './expenses.page.scss'
 })

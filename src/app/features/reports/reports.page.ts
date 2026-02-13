@@ -3,6 +3,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 import { GraphqlService } from '../../core/graphql/graphql.service';
+import { MoneyPipe } from '../../shared/pipes/money.pipe';
 
 type InventoryValuation = {
   totalStockValue: number;
@@ -54,7 +55,7 @@ type DailySalesReportQueryResult = {
 @Component({
   selector: 'cis-reports-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MoneyPipe],
   templateUrl: './reports.page.html',
   styleUrl: './reports.page.scss'
 })

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GraphqlService } from '../../core/graphql/graphql.service';
 import { ProductFormComponent, ProductFormValue } from './product-form/product-form.component';
+import { MoneyPipe } from '../../shared/pipes/money.pipe';
 
 type Product = {
   id: string;
@@ -64,7 +65,7 @@ type UpdateBatchNumberMutationResult = {
 @Component({
   selector: 'cis-products-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ProductFormComponent],
+  imports: [CommonModule, ReactiveFormsModule, ProductFormComponent, MoneyPipe],
   templateUrl: './products.page.html',
   styleUrl: './products.page.scss'
 })

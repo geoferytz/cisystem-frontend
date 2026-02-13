@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { GraphqlService } from '../../core/graphql/graphql.service';
+import { MoneyPipe } from '../../shared/pipes/money.pipe';
 
 type MySaleLine = {
   id: string;
@@ -27,7 +28,7 @@ type MySalesQueryResult = { mySales: MySale[] };
 @Component({
   selector: 'cis-my-sales-report-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, MoneyPipe],
   templateUrl: './my-sales-report.page.html',
   styleUrl: './my-sales-report.page.scss'
 })

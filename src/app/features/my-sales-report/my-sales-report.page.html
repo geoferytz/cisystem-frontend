@@ -15,7 +15,7 @@
       </h3>
       <div class="text-sm font-semibold text-slate-700">
         Total:
-        <span class="text-indigo-700">{{ dailyTotal() | number: '1.2-2'}}</span>
+        <span class="text-indigo-700">{{ dailyTotal() | money}}</span>
       </div>
     </div>
 
@@ -43,7 +43,7 @@
             <td class="px-3 py-2">{{ s.customer || '-' }}</td>
             <td class="px-3 py-2">{{ s.referenceNumber || '-' }}</td>
             <td class="px-3 py-2 text-right font-semibold">{{ s.lines.length }}</td>
-            <td class="px-3 py-2 text-right font-semibold">{{ saleTotalValue(s) | number: '1.2-2'}}</td>
+            <td class="px-3 py-2 text-right font-semibold">{{ saleTotalValue(s) | money}}</td>
           </tr>
           <tr *ngIf="!dailySales().length" class="border-t border-indigo-100">
             <td class="px-3 py-6 text-center text-sm text-slate-600" colspan="5">No sales for selected day</td>
@@ -63,7 +63,7 @@
       </h3>
       <div class="text-sm font-semibold text-slate-700">
         Total:
-        <span class="text-emerald-700">{{ monthlyTotal() | number: '1.2-2'}}</span>
+        <span class="text-emerald-700">{{ monthlyTotal() | money}}</span>
       </div>
     </div>
 
@@ -91,7 +91,7 @@
             <td class="px-3 py-2">{{ s.customer || '-' }}</td>
             <td class="px-3 py-2">{{ s.referenceNumber || '-' }}</td>
             <td class="px-3 py-2 text-right font-semibold">{{ s.lines.length }}</td>
-            <td class="px-3 py-2 text-right font-semibold">{{ saleTotalValue(s) | number: '1.2-2'}}</td>
+            <td class="px-3 py-2 text-right font-semibold">{{ saleTotalValue(s) | money}}</td>
           </tr>
           <tr *ngIf="!monthlySales().length" class="border-t border-emerald-100">
             <td class="px-3 py-6 text-center text-sm text-slate-600" colspan="5">No sales for selected month</td>
