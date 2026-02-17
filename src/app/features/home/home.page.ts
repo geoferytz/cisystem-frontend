@@ -73,7 +73,7 @@ export class HomePage {
       title: 'Products',
       icon: 'products',
       description: 'Manage products, categories and batches.',
-      route: '/products',
+      route: '/product-dashboard',
       hidden: !this.canView('PRODUCTS')
     },
     {

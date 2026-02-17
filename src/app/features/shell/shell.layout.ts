@@ -60,6 +60,12 @@ export class ShellLayout {
 
   sidebarOpen = signal(true);
 
+  productsExpanded = signal(false);
+  isProductsSection = computed(() => {
+    const url = this.currentUrl();
+    return url.startsWith('/product-dashboard') || url.startsWith('/products') || url.startsWith('/categories') || url.startsWith('/inventory') || url.startsWith('/stock-movements');
+  });
+
   user = signal<MeQueryResult['me']>(null);
   userMenuOpen = signal(false);
   notificationsOpen = signal(false);
@@ -245,6 +251,10 @@ export class ShellLayout {
   closeMenus(): void {
     this.userMenuOpen.set(false);
     this.notificationsOpen.set(false);
+  }
+
+  toggleProducts(): void {
+    this.productsExpanded.set(!this.productsExpanded());
   }
 
   toggleSidebar(): void {

@@ -17,6 +17,7 @@ import { ReportsPage } from './features/reports/reports.page';
 import { ProfitManagementPage } from './features/profit-management/profit-management.page';
 import { UsersPage } from './features/users/users.page';
 import { HomePage } from './features/home/home.page';
+import { ProductDashboardPage } from './features/product-dashboard/product-dashboard.page';
 import { ExpensesPage } from './features/expenses/expenses.page';
 import { ExpenseCategoriesPage } from './features/expense-categories/expense-categories.page';
 
@@ -30,6 +31,7 @@ export const routes: Routes = [
     children: [
       { path: 'home', component: HomePage },
       { path: 'dashboard', component: DashboardPage },
+      { path: 'product-dashboard', component: ProductDashboardPage },
       { path: 'products', component: ProductsPage },
       { path: 'categories', component: CategoriesPage },
       { path: 'inventory', component: InventoryPage },
