@@ -63014,7 +63014,7 @@ function ShellLayout_div_2_Template(rf, ctx) {
 function ShellLayout_aside_3_div_28_Template(rf, ctx) {
   if (rf & 1) {
     const _r4 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 43);
+    \u0275\u0275elementStart(0, "div", 45);
     \u0275\u0275listener("click", function ShellLayout_aside_3_div_28_Template_div_click_0_listener() {
       \u0275\u0275restoreView(_r4);
       const ctx_r1 = \u0275\u0275nextContext(2);
@@ -63026,14 +63026,14 @@ function ShellLayout_aside_3_div_28_Template(rf, ctx) {
 function ShellLayout_aside_3_div_29_a_5_Template(rf, ctx) {
   if (rf & 1) {
     const _r6 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "a", 52);
+    \u0275\u0275elementStart(0, "a", 54);
     \u0275\u0275listener("click", function ShellLayout_aside_3_div_29_a_5_Template_a_click_0_listener() {
       \u0275\u0275restoreView(_r6);
       const ctx_r1 = \u0275\u0275nextContext(3);
       return \u0275\u0275resetView(ctx_r1.toggleProducts());
     });
     \u0275\u0275namespaceSVG();
-    \u0275\u0275elementStart(1, "svg", 53);
+    \u0275\u0275elementStart(1, "svg", 55);
     \u0275\u0275element(2, "path", 24)(3, "path", 25);
     \u0275\u0275elementEnd();
     \u0275\u0275namespaceHTML();
@@ -63048,15 +63048,15 @@ function ShellLayout_aside_3_div_29_a_5_Template(rf, ctx) {
 function ShellLayout_aside_3_div_29_a_6_Template(rf, ctx) {
   if (rf & 1) {
     const _r7 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "a", 54);
+    \u0275\u0275elementStart(0, "a", 56);
     \u0275\u0275listener("click", function ShellLayout_aside_3_div_29_a_6_Template_a_click_0_listener() {
       \u0275\u0275restoreView(_r7);
       const ctx_r1 = \u0275\u0275nextContext(3);
       return \u0275\u0275resetView(ctx_r1.toggleProducts());
     });
     \u0275\u0275namespaceSVG();
-    \u0275\u0275elementStart(1, "svg", 55);
-    \u0275\u0275element(2, "path", 56);
+    \u0275\u0275elementStart(1, "svg", 57);
+    \u0275\u0275element(2, "path", 58);
     \u0275\u0275elementEnd();
     \u0275\u0275namespaceHTML();
     \u0275\u0275elementStart(3, "span");
@@ -63070,15 +63070,15 @@ function ShellLayout_aside_3_div_29_a_6_Template(rf, ctx) {
 function ShellLayout_aside_3_div_29_a_7_Template(rf, ctx) {
   if (rf & 1) {
     const _r8 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "a", 57);
+    \u0275\u0275elementStart(0, "a", 59);
     \u0275\u0275listener("click", function ShellLayout_aside_3_div_29_a_7_Template_a_click_0_listener() {
       \u0275\u0275restoreView(_r8);
       const ctx_r1 = \u0275\u0275nextContext(3);
       return \u0275\u0275resetView(ctx_r1.toggleProducts());
     });
     \u0275\u0275namespaceSVG();
-    \u0275\u0275elementStart(1, "svg", 58);
-    \u0275\u0275element(2, "path", 59)(3, "path", 60)(4, "path", 61);
+    \u0275\u0275elementStart(1, "svg", 60);
+    \u0275\u0275element(2, "path", 61)(3, "path", 62)(4, "path", 63);
     \u0275\u0275elementEnd();
     \u0275\u0275namespaceHTML();
     \u0275\u0275elementStart(5, "span");
@@ -63092,15 +63092,15 @@ function ShellLayout_aside_3_div_29_a_7_Template(rf, ctx) {
 function ShellLayout_aside_3_div_29_a_8_Template(rf, ctx) {
   if (rf & 1) {
     const _r9 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "a", 62);
+    \u0275\u0275elementStart(0, "a", 64);
     \u0275\u0275listener("click", function ShellLayout_aside_3_div_29_a_8_Template_a_click_0_listener() {
       \u0275\u0275restoreView(_r9);
       const ctx_r1 = \u0275\u0275nextContext(3);
       return \u0275\u0275resetView(ctx_r1.toggleProducts());
     });
     \u0275\u0275namespaceSVG();
-    \u0275\u0275elementStart(1, "svg", 63);
-    \u0275\u0275element(2, "path", 64)(3, "path", 65);
+    \u0275\u0275elementStart(1, "svg", 65);
+    \u0275\u0275element(2, "path", 66)(3, "path", 67);
     \u0275\u0275elementEnd();
     \u0275\u0275namespaceHTML();
     \u0275\u0275elementStart(4, "span");
@@ -63114,16 +63114,16 @@ function ShellLayout_aside_3_div_29_a_8_Template(rf, ctx) {
 function ShellLayout_aside_3_div_29_Template(rf, ctx) {
   if (rf & 1) {
     const _r5 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 44);
+    \u0275\u0275elementStart(0, "div", 46);
     \u0275\u0275listener("click", function ShellLayout_aside_3_div_29_Template_div_click_0_listener($event) {
       \u0275\u0275restoreView(_r5);
       return \u0275\u0275resetView($event.stopPropagation());
     });
-    \u0275\u0275elementStart(1, "div", 45)(2, "div", 46);
+    \u0275\u0275elementStart(1, "div", 47)(2, "div", 48);
     \u0275\u0275text(3, "Products");
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(4, "div", 47);
-    \u0275\u0275template(5, ShellLayout_aside_3_div_29_a_5_Template, 6, 2, "a", 48)(6, ShellLayout_aside_3_div_29_a_6_Template, 5, 2, "a", 49)(7, ShellLayout_aside_3_div_29_a_7_Template, 7, 2, "a", 50)(8, ShellLayout_aside_3_div_29_a_8_Template, 6, 2, "a", 51);
+    \u0275\u0275elementStart(4, "div", 49);
+    \u0275\u0275template(5, ShellLayout_aside_3_div_29_a_5_Template, 6, 2, "a", 50)(6, ShellLayout_aside_3_div_29_a_6_Template, 5, 2, "a", 51)(7, ShellLayout_aside_3_div_29_a_7_Template, 7, 2, "a", 52)(8, ShellLayout_aside_3_div_29_a_8_Template, 6, 2, "a", 53);
     \u0275\u0275elementEnd()();
   }
   if (rf & 2) {
@@ -63140,10 +63140,10 @@ function ShellLayout_aside_3_div_29_Template(rf, ctx) {
 }
 function ShellLayout_aside_3_a_30_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "a", 66)(1, "span", 19);
+    \u0275\u0275elementStart(0, "a", 68)(1, "span", 19);
     \u0275\u0275namespaceSVG();
     \u0275\u0275elementStart(2, "svg", 20);
-    \u0275\u0275element(3, "path", 67)(4, "path", 68);
+    \u0275\u0275element(3, "path", 69)(4, "path", 70);
     \u0275\u0275elementEnd()();
     \u0275\u0275namespaceHTML();
     \u0275\u0275elementStart(5, "span");
@@ -63156,10 +63156,10 @@ function ShellLayout_aside_3_a_30_Template(rf, ctx) {
 }
 function ShellLayout_aside_3_a_31_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "a", 69)(1, "span", 19);
+    \u0275\u0275elementStart(0, "a", 71)(1, "span", 19);
     \u0275\u0275namespaceSVG();
     \u0275\u0275elementStart(2, "svg", 20);
-    \u0275\u0275element(3, "path", 70)(4, "path", 71)(5, "path", 72);
+    \u0275\u0275element(3, "path", 37)(4, "path", 38)(5, "path", 39);
     \u0275\u0275elementEnd()();
     \u0275\u0275namespaceHTML();
     \u0275\u0275elementStart(6, "span");
@@ -63172,10 +63172,10 @@ function ShellLayout_aside_3_a_31_Template(rf, ctx) {
 }
 function ShellLayout_aside_3_a_32_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "a", 73)(1, "span", 19);
+    \u0275\u0275elementStart(0, "a", 72)(1, "span", 19);
     \u0275\u0275namespaceSVG();
     \u0275\u0275elementStart(2, "svg", 20);
-    \u0275\u0275element(3, "path", 74)(4, "path", 75);
+    \u0275\u0275element(3, "path", 73)(4, "path", 74);
     \u0275\u0275elementEnd()();
     \u0275\u0275namespaceHTML();
     \u0275\u0275elementStart(5, "span");
@@ -63186,44 +63186,91 @@ function ShellLayout_aside_3_a_32_Template(rf, ctx) {
     \u0275\u0275property("routerLinkActiveOptions", \u0275\u0275pureFunction0(1, _c2));
   }
 }
-function ShellLayout_aside_3_a_40_Template(rf, ctx) {
+function ShellLayout_aside_3_div_51_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "a", 76)(1, "span", 19);
-    \u0275\u0275namespaceSVG();
-    \u0275\u0275elementStart(2, "svg", 20);
-    \u0275\u0275element(3, "path", 70)(4, "path", 71);
-    \u0275\u0275elementEnd()();
-    \u0275\u0275namespaceHTML();
-    \u0275\u0275elementStart(5, "span");
-    \u0275\u0275text(6, "Expenses");
-    \u0275\u0275elementEnd()();
-  }
-  if (rf & 2) {
-    \u0275\u0275property("routerLinkActiveOptions", \u0275\u0275pureFunction0(1, _c2));
+    const _r10 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 45);
+    \u0275\u0275listener("click", function ShellLayout_aside_3_div_51_Template_div_click_0_listener() {
+      \u0275\u0275restoreView(_r10);
+      const ctx_r1 = \u0275\u0275nextContext(2);
+      return \u0275\u0275resetView(ctx_r1.toggleFinance());
+    });
+    \u0275\u0275elementEnd();
   }
 }
-function ShellLayout_aside_3_a_41_Template(rf, ctx) {
+function ShellLayout_aside_3_div_52_a_5_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "a", 77)(1, "span", 19);
+    const _r12 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "a", 77);
+    \u0275\u0275listener("click", function ShellLayout_aside_3_div_52_a_5_Template_a_click_0_listener() {
+      \u0275\u0275restoreView(_r12);
+      const ctx_r1 = \u0275\u0275nextContext(3);
+      return \u0275\u0275resetView(ctx_r1.toggleFinance());
+    });
     \u0275\u0275namespaceSVG();
-    \u0275\u0275elementStart(2, "svg", 20);
-    \u0275\u0275element(3, "path", 56);
-    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(1, "svg", 57);
+    \u0275\u0275element(2, "path", 37)(3, "path", 38);
+    \u0275\u0275elementEnd();
     \u0275\u0275namespaceHTML();
     \u0275\u0275elementStart(4, "span");
-    \u0275\u0275text(5, "Expense Categories");
+    \u0275\u0275text(5, "Expenses");
     \u0275\u0275elementEnd()();
   }
   if (rf & 2) {
     \u0275\u0275property("routerLinkActiveOptions", \u0275\u0275pureFunction0(1, _c2));
   }
 }
-function ShellLayout_aside_3_a_42_Template(rf, ctx) {
+function ShellLayout_aside_3_div_52_a_6_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "a", 78)(1, "span", 19);
+    const _r13 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "a", 78);
+    \u0275\u0275listener("click", function ShellLayout_aside_3_div_52_a_6_Template_a_click_0_listener() {
+      \u0275\u0275restoreView(_r13);
+      const ctx_r1 = \u0275\u0275nextContext(3);
+      return \u0275\u0275resetView(ctx_r1.toggleFinance());
+    });
+    \u0275\u0275namespaceSVG();
+    \u0275\u0275elementStart(1, "svg", 60);
+    \u0275\u0275element(2, "path", 58);
+    \u0275\u0275elementEnd();
+    \u0275\u0275namespaceHTML();
+    \u0275\u0275elementStart(3, "span");
+    \u0275\u0275text(4, "Expense Categories");
+    \u0275\u0275elementEnd()();
+  }
+  if (rf & 2) {
+    \u0275\u0275property("routerLinkActiveOptions", \u0275\u0275pureFunction0(1, _c2));
+  }
+}
+function ShellLayout_aside_3_div_52_Template(rf, ctx) {
+  if (rf & 1) {
+    const _r11 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 46);
+    \u0275\u0275listener("click", function ShellLayout_aside_3_div_52_Template_div_click_0_listener($event) {
+      \u0275\u0275restoreView(_r11);
+      return \u0275\u0275resetView($event.stopPropagation());
+    });
+    \u0275\u0275elementStart(1, "div", 47)(2, "div", 48);
+    \u0275\u0275text(3, "Finance");
+    \u0275\u0275elementEnd()();
+    \u0275\u0275elementStart(4, "div", 49);
+    \u0275\u0275template(5, ShellLayout_aside_3_div_52_a_5_Template, 6, 2, "a", 75)(6, ShellLayout_aside_3_div_52_a_6_Template, 5, 2, "a", 76);
+    \u0275\u0275elementEnd()();
+  }
+  if (rf & 2) {
+    const ctx_r1 = \u0275\u0275nextContext(2);
+    \u0275\u0275advance(5);
+    \u0275\u0275property("ngIf", ctx_r1.canView("EXPENSES"));
+    \u0275\u0275advance();
+    \u0275\u0275property("ngIf", ctx_r1.canView("EXPENSE_CATEGORIES"));
+  }
+}
+function ShellLayout_aside_3_a_53_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "a", 79)(1, "span", 19);
     \u0275\u0275namespaceSVG();
     \u0275\u0275elementStart(2, "svg", 20);
-    \u0275\u0275element(3, "path", 79)(4, "path", 80);
+    \u0275\u0275element(3, "path", 80)(4, "path", 81);
     \u0275\u0275elementEnd()();
     \u0275\u0275namespaceHTML();
     \u0275\u0275elementStart(5, "span");
@@ -63234,12 +63281,12 @@ function ShellLayout_aside_3_a_42_Template(rf, ctx) {
     \u0275\u0275property("routerLinkActiveOptions", \u0275\u0275pureFunction0(1, _c2));
   }
 }
-function ShellLayout_aside_3_a_43_Template(rf, ctx) {
+function ShellLayout_aside_3_a_54_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "a", 81)(1, "span", 19);
+    \u0275\u0275elementStart(0, "a", 82)(1, "span", 19);
     \u0275\u0275namespaceSVG();
     \u0275\u0275elementStart(2, "svg", 20);
-    \u0275\u0275element(3, "path", 79)(4, "path", 80);
+    \u0275\u0275element(3, "path", 80)(4, "path", 81);
     \u0275\u0275elementEnd()();
     \u0275\u0275namespaceHTML();
     \u0275\u0275elementStart(5, "span");
@@ -63250,12 +63297,12 @@ function ShellLayout_aside_3_a_43_Template(rf, ctx) {
     \u0275\u0275property("routerLinkActiveOptions", \u0275\u0275pureFunction0(1, _c2));
   }
 }
-function ShellLayout_aside_3_a_44_Template(rf, ctx) {
+function ShellLayout_aside_3_a_55_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "a", 82)(1, "span", 19);
+    \u0275\u0275elementStart(0, "a", 83)(1, "span", 19);
     \u0275\u0275namespaceSVG();
     \u0275\u0275elementStart(2, "svg", 20);
-    \u0275\u0275element(3, "path", 83)(4, "path", 84)(5, "path", 85)(6, "path", 86)(7, "path", 87);
+    \u0275\u0275element(3, "path", 84)(4, "path", 85)(5, "path", 86)(6, "path", 87)(7, "path", 88);
     \u0275\u0275elementEnd()();
     \u0275\u0275namespaceHTML();
     \u0275\u0275elementStart(8, "span");
@@ -63287,8 +63334,8 @@ function ShellLayout_aside_3_Template(rf, ctx) {
     \u0275\u0275elementStart(16, "span");
     \u0275\u0275text(17, "Dashboard");
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(18, "div", 22)(19, "button", 23);
-    \u0275\u0275listener("click", function ShellLayout_aside_3_Template_button_click_19_listener($event) {
+    \u0275\u0275elementStart(18, "div", 22)(19, "a", 23);
+    \u0275\u0275listener("click", function ShellLayout_aside_3_Template_a_click_19_listener($event) {
       \u0275\u0275restoreView(_r3);
       const ctx_r1 = \u0275\u0275nextContext();
       ctx_r1.toggleProducts();
@@ -63320,21 +63367,44 @@ function ShellLayout_aside_3_Template(rf, ctx) {
     \u0275\u0275elementStart(38, "span");
     \u0275\u0275text(39, "Expiry & Alerts");
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(40, ShellLayout_aside_3_a_40_Template, 7, 2, "a", 36)(41, ShellLayout_aside_3_a_41_Template, 6, 2, "a", 37)(42, ShellLayout_aside_3_a_42_Template, 7, 2, "a", 38)(43, ShellLayout_aside_3_a_43_Template, 7, 2, "a", 39)(44, ShellLayout_aside_3_a_44_Template, 10, 2, "a", 40);
+    \u0275\u0275elementStart(40, "div", 22)(41, "button", 36);
+    \u0275\u0275listener("click", function ShellLayout_aside_3_Template_button_click_41_listener($event) {
+      \u0275\u0275restoreView(_r3);
+      const ctx_r1 = \u0275\u0275nextContext();
+      ctx_r1.toggleFinance();
+      return \u0275\u0275resetView($event.stopPropagation());
+    });
+    \u0275\u0275elementStart(42, "span", 19);
+    \u0275\u0275namespaceSVG();
+    \u0275\u0275elementStart(43, "svg", 20);
+    \u0275\u0275element(44, "path", 37)(45, "path", 38)(46, "path", 39);
+    \u0275\u0275elementEnd()();
+    \u0275\u0275namespaceHTML();
+    \u0275\u0275elementStart(47, "span");
+    \u0275\u0275text(48, "Finance");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(45, "div", 41)(46, "div", 42);
-    \u0275\u0275text(47);
+    \u0275\u0275namespaceSVG();
+    \u0275\u0275elementStart(49, "svg", 26);
+    \u0275\u0275element(50, "path", 27);
+    \u0275\u0275elementEnd()();
+    \u0275\u0275template(51, ShellLayout_aside_3_div_51_Template, 1, 0, "div", 28)(52, ShellLayout_aside_3_div_52_Template, 7, 2, "div", 29);
+    \u0275\u0275elementEnd();
+    \u0275\u0275template(53, ShellLayout_aside_3_a_53_Template, 7, 2, "a", 40)(54, ShellLayout_aside_3_a_54_Template, 7, 2, "a", 41)(55, ShellLayout_aside_3_a_55_Template, 10, 2, "a", 42);
+    \u0275\u0275elementEnd();
+    \u0275\u0275namespaceHTML();
+    \u0275\u0275elementStart(56, "div", 43)(57, "div", 44);
+    \u0275\u0275text(58);
     \u0275\u0275elementEnd()()();
   }
   if (rf & 2) {
     const ctx_r1 = \u0275\u0275nextContext();
-    \u0275\u0275property("ngClass", \u0275\u0275pureFunction3(16, _c1, !ctx_r1.sidebarOpen(), !ctx_r1.sidebarOpen(), ctx_r1.sidebarOpen()));
+    \u0275\u0275property("ngClass", \u0275\u0275pureFunction3(18, _c1, !ctx_r1.sidebarOpen(), !ctx_r1.sidebarOpen(), ctx_r1.sidebarOpen()));
     \u0275\u0275advance(12);
-    \u0275\u0275property("routerLinkActiveOptions", \u0275\u0275pureFunction0(20, _c2));
+    \u0275\u0275property("routerLinkActiveOptions", \u0275\u0275pureFunction0(22, _c2));
     \u0275\u0275advance(7);
-    \u0275\u0275property("ngClass", \u0275\u0275pureFunction1(21, _c3, ctx_r1.isProductsSection() || ctx_r1.productsExpanded()));
+    \u0275\u0275property("ngClass", \u0275\u0275pureFunction1(23, _c3, ctx_r1.isProductsSection() || ctx_r1.productsExpanded()));
     \u0275\u0275advance(7);
-    \u0275\u0275property("ngClass", \u0275\u0275pureFunction1(23, _c4, ctx_r1.productsExpanded()));
+    \u0275\u0275property("ngClass", \u0275\u0275pureFunction1(25, _c4, ctx_r1.productsExpanded()));
     \u0275\u0275advance(2);
     \u0275\u0275property("ngIf", ctx_r1.productsExpanded());
     \u0275\u0275advance();
@@ -63346,11 +63416,15 @@ function ShellLayout_aside_3_Template(rf, ctx) {
     \u0275\u0275advance();
     \u0275\u0275property("ngIf", ctx_r1.canView("MY_SALES"));
     \u0275\u0275advance();
-    \u0275\u0275property("routerLinkActiveOptions", \u0275\u0275pureFunction0(25, _c2));
-    \u0275\u0275advance(7);
-    \u0275\u0275property("ngIf", ctx_r1.canView("EXPENSES"));
+    \u0275\u0275property("routerLinkActiveOptions", \u0275\u0275pureFunction0(27, _c2));
+    \u0275\u0275advance(8);
+    \u0275\u0275property("ngClass", \u0275\u0275pureFunction1(28, _c3, ctx_r1.isFinanceSection() || ctx_r1.financeExpanded()));
+    \u0275\u0275advance(8);
+    \u0275\u0275property("ngClass", \u0275\u0275pureFunction1(30, _c4, ctx_r1.financeExpanded()));
+    \u0275\u0275advance(2);
+    \u0275\u0275property("ngIf", ctx_r1.financeExpanded());
     \u0275\u0275advance();
-    \u0275\u0275property("ngIf", ctx_r1.canView("EXPENSE_CATEGORIES"));
+    \u0275\u0275property("ngIf", ctx_r1.financeExpanded());
     \u0275\u0275advance();
     \u0275\u0275property("ngIf", ctx_r1.canView("REPORTS"));
     \u0275\u0275advance();
@@ -63363,7 +63437,7 @@ function ShellLayout_aside_3_Template(rf, ctx) {
 }
 function ShellLayout_div_7_div_15_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 102);
+    \u0275\u0275elementStart(0, "div", 103);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -63375,7 +63449,7 @@ function ShellLayout_div_7_div_15_Template(rf, ctx) {
 }
 function ShellLayout_div_7_div_16_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 103);
+    \u0275\u0275elementStart(0, "div", 104);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -63387,55 +63461,55 @@ function ShellLayout_div_7_div_16_Template(rf, ctx) {
 }
 function ShellLayout_div_7_Template(rf, ctx) {
   if (rf & 1) {
-    const _r10 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 88)(1, "div", 89);
+    const _r14 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 89)(1, "div", 90);
     \u0275\u0275listener("click", function ShellLayout_div_7_Template_div_click_1_listener() {
-      \u0275\u0275restoreView(_r10);
+      \u0275\u0275restoreView(_r14);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.closeChangePassword());
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(2, "div", 90)(3, "div", 91);
+    \u0275\u0275elementStart(2, "div", 91)(3, "div", 92);
     \u0275\u0275listener("click", function ShellLayout_div_7_Template_div_click_3_listener($event) {
-      \u0275\u0275restoreView(_r10);
+      \u0275\u0275restoreView(_r14);
       return \u0275\u0275resetView($event.stopPropagation());
     });
-    \u0275\u0275elementStart(4, "div", 92);
+    \u0275\u0275elementStart(4, "div", 93);
     \u0275\u0275text(5, "Change password");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(6, "div", 93);
+    \u0275\u0275elementStart(6, "div", 94);
     \u0275\u0275text(7, "Enter your current password and a new password.");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(8, "div", 94)(9, "label", 95);
+    \u0275\u0275elementStart(8, "div", 95)(9, "label", 96);
     \u0275\u0275text(10, " Current password ");
-    \u0275\u0275elementStart(11, "input", 96);
+    \u0275\u0275elementStart(11, "input", 97);
     \u0275\u0275listener("input", function ShellLayout_div_7_Template_input_input_11_listener($event) {
-      \u0275\u0275restoreView(_r10);
+      \u0275\u0275restoreView(_r14);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.changePasswordCurrent.set($event.target.value));
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(12, "label", 95);
+    \u0275\u0275elementStart(12, "label", 96);
     \u0275\u0275text(13, " New password ");
-    \u0275\u0275elementStart(14, "input", 96);
+    \u0275\u0275elementStart(14, "input", 97);
     \u0275\u0275listener("input", function ShellLayout_div_7_Template_input_input_14_listener($event) {
-      \u0275\u0275restoreView(_r10);
+      \u0275\u0275restoreView(_r14);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.changePasswordNew.set($event.target.value));
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(15, ShellLayout_div_7_div_15_Template, 2, 1, "div", 97)(16, ShellLayout_div_7_div_16_Template, 2, 1, "div", 98);
-    \u0275\u0275elementStart(17, "div", 99)(18, "button", 100);
+    \u0275\u0275template(15, ShellLayout_div_7_div_15_Template, 2, 1, "div", 98)(16, ShellLayout_div_7_div_16_Template, 2, 1, "div", 99);
+    \u0275\u0275elementStart(17, "div", 100)(18, "button", 101);
     \u0275\u0275listener("click", function ShellLayout_div_7_Template_button_click_18_listener() {
-      \u0275\u0275restoreView(_r10);
+      \u0275\u0275restoreView(_r14);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.closeChangePassword());
     });
     \u0275\u0275text(19, " Cancel ");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(20, "button", 101);
+    \u0275\u0275elementStart(20, "button", 102);
     \u0275\u0275listener("click", function ShellLayout_div_7_Template_button_click_20_listener() {
-      \u0275\u0275restoreView(_r10);
+      \u0275\u0275restoreView(_r14);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.submitChangePassword());
     });
@@ -63458,20 +63532,20 @@ function ShellLayout_div_7_Template(rf, ctx) {
 }
 function ShellLayout_div_8_option_14_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 108);
+    \u0275\u0275elementStart(0, "option", 109);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const u_r12 = ctx.$implicit;
-    \u0275\u0275property("value", u_r12.id);
+    const u_r16 = ctx.$implicit;
+    \u0275\u0275property("value", u_r16.id);
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate2("", u_r12.name, " (", u_r12.email, ")");
+    \u0275\u0275textInterpolate2("", u_r16.name, " (", u_r16.email, ")");
   }
 }
 function ShellLayout_div_8_div_18_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 102);
+    \u0275\u0275elementStart(0, "div", 103);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -63483,7 +63557,7 @@ function ShellLayout_div_8_div_18_Template(rf, ctx) {
 }
 function ShellLayout_div_8_div_19_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 103);
+    \u0275\u0275elementStart(0, "div", 104);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -63495,59 +63569,59 @@ function ShellLayout_div_8_div_19_Template(rf, ctx) {
 }
 function ShellLayout_div_8_Template(rf, ctx) {
   if (rf & 1) {
-    const _r11 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div", 88)(1, "div", 89);
+    const _r15 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 89)(1, "div", 90);
     \u0275\u0275listener("click", function ShellLayout_div_8_Template_div_click_1_listener() {
-      \u0275\u0275restoreView(_r11);
+      \u0275\u0275restoreView(_r15);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.closeResetUserPassword());
     });
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(2, "div", 90)(3, "div", 104);
+    \u0275\u0275elementStart(2, "div", 91)(3, "div", 105);
     \u0275\u0275listener("click", function ShellLayout_div_8_Template_div_click_3_listener($event) {
-      \u0275\u0275restoreView(_r11);
+      \u0275\u0275restoreView(_r15);
       return \u0275\u0275resetView($event.stopPropagation());
     });
-    \u0275\u0275elementStart(4, "div", 92);
+    \u0275\u0275elementStart(4, "div", 93);
     \u0275\u0275text(5, "Reset user password");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(6, "div", 93);
+    \u0275\u0275elementStart(6, "div", 94);
     \u0275\u0275text(7, "Admin only. Choose a user and set a new password.");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(8, "div", 94)(9, "label", 95);
+    \u0275\u0275elementStart(8, "div", 95)(9, "label", 96);
     \u0275\u0275text(10, " User ");
-    \u0275\u0275elementStart(11, "select", 105);
+    \u0275\u0275elementStart(11, "select", 106);
     \u0275\u0275listener("change", function ShellLayout_div_8_Template_select_change_11_listener($event) {
-      \u0275\u0275restoreView(_r11);
+      \u0275\u0275restoreView(_r15);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.resetUserId.set($event.target.value));
     });
-    \u0275\u0275elementStart(12, "option", 106);
+    \u0275\u0275elementStart(12, "option", 107);
     \u0275\u0275text(13, "Select user");
     \u0275\u0275elementEnd();
-    \u0275\u0275template(14, ShellLayout_div_8_option_14_Template, 2, 3, "option", 107);
+    \u0275\u0275template(14, ShellLayout_div_8_option_14_Template, 2, 3, "option", 108);
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(15, "label", 95);
+    \u0275\u0275elementStart(15, "label", 96);
     \u0275\u0275text(16, " New password ");
-    \u0275\u0275elementStart(17, "input", 96);
+    \u0275\u0275elementStart(17, "input", 97);
     \u0275\u0275listener("input", function ShellLayout_div_8_Template_input_input_17_listener($event) {
-      \u0275\u0275restoreView(_r11);
+      \u0275\u0275restoreView(_r15);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.resetNewPassword.set($event.target.value));
     });
     \u0275\u0275elementEnd()();
-    \u0275\u0275template(18, ShellLayout_div_8_div_18_Template, 2, 1, "div", 97)(19, ShellLayout_div_8_div_19_Template, 2, 1, "div", 98);
-    \u0275\u0275elementStart(20, "div", 99)(21, "button", 100);
+    \u0275\u0275template(18, ShellLayout_div_8_div_18_Template, 2, 1, "div", 98)(19, ShellLayout_div_8_div_19_Template, 2, 1, "div", 99);
+    \u0275\u0275elementStart(20, "div", 100)(21, "button", 101);
     \u0275\u0275listener("click", function ShellLayout_div_8_Template_button_click_21_listener() {
-      \u0275\u0275restoreView(_r11);
+      \u0275\u0275restoreView(_r15);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.closeResetUserPassword());
     });
     \u0275\u0275text(22, " Cancel ");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(23, "button", 101);
+    \u0275\u0275elementStart(23, "button", 102);
     \u0275\u0275listener("click", function ShellLayout_div_8_Template_button_click_23_listener() {
-      \u0275\u0275restoreView(_r11);
+      \u0275\u0275restoreView(_r15);
       const ctx_r1 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r1.submitResetUserPassword());
     });
@@ -63584,6 +63658,11 @@ var ShellLayout = class _ShellLayout {
     const url = this.currentUrl();
     return url.startsWith("/product-dashboard") || url.startsWith("/products") || url.startsWith("/categories") || url.startsWith("/inventory") || url.startsWith("/stock-movements");
   }, ...ngDevMode ? [{ debugName: "isProductsSection" }] : []);
+  financeExpanded = signal(false, ...ngDevMode ? [{ debugName: "financeExpanded" }] : []);
+  isFinanceSection = computed(() => {
+    const url = this.currentUrl();
+    return url.startsWith("/expenses") || url.startsWith("/expense-categories");
+  }, ...ngDevMode ? [{ debugName: "isFinanceSection" }] : []);
   user = signal(null, ...ngDevMode ? [{ debugName: "user" }] : []);
   userMenuOpen = signal(false, ...ngDevMode ? [{ debugName: "userMenuOpen" }] : []);
   notificationsOpen = signal(false, ...ngDevMode ? [{ debugName: "notificationsOpen" }] : []);
@@ -63749,6 +63828,9 @@ var ShellLayout = class _ShellLayout {
   toggleProducts() {
     this.productsExpanded.set(!this.productsExpanded());
   }
+  toggleFinance() {
+    this.financeExpanded.set(!this.financeExpanded());
+  }
   toggleSidebar() {
     this.sidebarOpen.set(!this.sidebarOpen());
   }
@@ -63782,10 +63864,10 @@ var ShellLayout = class _ShellLayout {
   static \u0275fac = function ShellLayout_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _ShellLayout)(\u0275\u0275directiveInject(AuthService), \u0275\u0275directiveInject(GraphqlService), \u0275\u0275directiveInject(Router), \u0275\u0275directiveInject(DestroyRef));
   };
-  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _ShellLayout, selectors: [["cis-shell"]], decls: 9, vars: 14, consts: [[1, "min-h-screen", "bg-slate-50"], [1, "grid", "min-h-screen", "grid-cols-1", 3, "ngClass"], ["class", "fixed inset-0 z-40 bg-slate-900/40 md:hidden", 3, "click", 4, "ngIf"], ["class", "z-50 flex flex-col bg-gradient-to-b from-indigo-950 via-purple-900 to-fuchsia-700 text-white p-4 md:p-5 md:static md:translate-x-0", 3, "ngClass", 4, "ngIf"], [1, "p-4", "md:p-6", 3, "click"], [3, "toggleSidebar", "toggleNotifications", "toggleUserMenu", "closeMenus", "logout", "changePassword", "resetUserPassword", "user", "isAuthed", "showSidebarToggle", "sidebarOpen", "notificationsCount", "notificationsOpen", "userMenuOpen"], ["class", "fixed inset-0 z-50", 4, "ngIf"], [1, "fixed", "inset-0", "z-40", "bg-slate-900/40", "md:hidden", 3, "click"], [1, "z-50", "flex", "flex-col", "bg-gradient-to-b", "from-indigo-950", "via-purple-900", "to-fuchsia-700", "text-white", "p-4", "md:p-5", "md:static", "md:translate-x-0", 3, "ngClass"], [1, "flex", "items-start", "justify-between", "gap-2"], ["routerLink", "/home", 1, "block", "flex-1", "rounded-2xl", "bg-white/10", "p-4", "ring-1", "ring-white/10", "hover:bg-white/15"], [1, "flex", "items-center", "gap-3"], [1, "grid", "h-10", "w-10", "place-items-center", "rounded-2xl", "bg-white/15", "ring-1", "ring-white/10"], ["src", "/GYLA-LOGO.png", "alt", "GYLA Cosmetics", 1, "h-8", "w-8", "object-contain"], [1, "min-w-0"], [1, "text-sm", "font-semibold", "text-purple-100/90"], [1, "text-lg", "font-extrabold", "tracking-wide", "leading-tight"], [1, "mt-5", "grid", "gap-1"], ["routerLink", "/dashboard", "routerLinkActive", "bg-white/15", 1, "grid", "grid-cols-[44px_1fr]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", 3, "routerLinkActiveOptions"], [1, "grid", "h-8", "w-8", "place-items-center", "rounded-lg", "bg-white/5", "ring-1", "ring-white/10"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2", 1, "h-4", "w-4"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M3 11l9-8 9 8v10a2 2 0 01-2 2H5a2 2 0 01-2-2V11z"], [1, "relative"], ["type", "button", 1, "grid", "w-full", "grid-cols-[44px_1fr_auto]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", 3, "click", "ngClass"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M20 13V7a2 2 0 00-2-2H6a2 2 0 00-2 2v6"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M4 13h16v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6z"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2", 1, "h-4", "w-4", "transition-transform", "duration-200", 3, "ngClass"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M9 5l7 7-7 7"], ["class", "fixed inset-0 z-[60]", 3, "click", 4, "ngIf"], ["class", "absolute left-full top-0 z-[61] ml-2 w-56 rounded-xl bg-white shadow-xl ring-1 ring-slate-200 overflow-hidden", 3, "click", 4, "ngIf"], ["routerLink", "/purchasing", "routerLinkActive", "bg-white/15", "class", "grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10", 3, "routerLinkActiveOptions", 4, "ngIf"], ["routerLink", "/sales", "routerLinkActive", "bg-white/15", "class", "grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10", 3, "routerLinkActiveOptions", 4, "ngIf"], ["routerLink", "/my-sales", "routerLinkActive", "bg-white/15", "class", "grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10", 3, "routerLinkActiveOptions", 4, "ngIf"], ["routerLink", "/expiry-alerts", "routerLinkActive", "bg-white/15", 1, "grid", "grid-cols-[44px_1fr]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", 3, "routerLinkActiveOptions"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M12 9v4m0 4h.01"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"], ["routerLink", "/expenses", "routerLinkActive", "bg-white/15", "class", "grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10", 3, "routerLinkActiveOptions", 4, "ngIf"], ["routerLink", "/expense-categories", "routerLinkActive", "bg-white/15", "class", "grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10", 3, "routerLinkActiveOptions", 4, "ngIf"], ["routerLink", "/reports", "routerLinkActive", "bg-white/15", "class", "grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10", 3, "routerLinkActiveOptions", 4, "ngIf"], ["routerLink", "/profit-management", "routerLinkActive", "bg-white/15", "class", "grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10", 3, "routerLinkActiveOptions", 4, "ngIf"], ["routerLink", "/users", "routerLinkActive", "bg-white/15", "class", "grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10", 3, "routerLinkActiveOptions", 4, "ngIf"], [1, "mt-auto", "pt-6"], [1, "text-center", "text-[11px]", "text-purple-100/90"], [1, "fixed", "inset-0", "z-[60]", 3, "click"], [1, "absolute", "left-full", "top-0", "z-[61]", "ml-2", "w-56", "rounded-xl", "bg-white", "shadow-xl", "ring-1", "ring-slate-200", "overflow-hidden", 3, "click"], [1, "border-b", "border-slate-100", "px-4", "py-3"], [1, "text-xs", "font-bold", "uppercase", "tracking-wider", "text-slate-400"], [1, "grid", "gap-0.5", "p-2"], ["routerLink", "/product-dashboard", "routerLinkActive", "bg-indigo-50 text-indigo-900 font-semibold", "class", "flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50", 3, "routerLinkActiveOptions", "click", 4, "ngIf"], ["routerLink", "/categories", "routerLinkActive", "bg-indigo-50 text-indigo-900 font-semibold", "class", "flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50", 3, "routerLinkActiveOptions", "click", 4, "ngIf"], ["routerLink", "/inventory", "routerLinkActive", "bg-indigo-50 text-indigo-900 font-semibold", "class", "flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50", 3, "routerLinkActiveOptions", "click", 4, "ngIf"], ["routerLink", "/stock-movements", "routerLinkActive", "bg-indigo-50 text-indigo-900 font-semibold", "class", "flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50", 3, "routerLinkActiveOptions", "click", 4, "ngIf"], ["routerLink", "/product-dashboard", "routerLinkActive", "bg-indigo-50 text-indigo-900 font-semibold", 1, "flex", "items-center", "gap-3", "rounded-lg", "px-3", "py-2", "text-sm", "text-slate-700", "hover:bg-slate-50", 3, "click", "routerLinkActiveOptions"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2", 1, "h-4", "w-4", "text-purple-600"], ["routerLink", "/categories", "routerLinkActive", "bg-indigo-50 text-indigo-900 font-semibold", 1, "flex", "items-center", "gap-3", "rounded-lg", "px-3", "py-2", "text-sm", "text-slate-700", "hover:bg-slate-50", 3, "click", "routerLinkActiveOptions"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2", 1, "h-4", "w-4", "text-emerald-600"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M4 6h16M4 12h16M4 18h16"], ["routerLink", "/inventory", "routerLinkActive", "bg-indigo-50 text-indigo-900 font-semibold", 1, "flex", "items-center", "gap-3", "rounded-lg", "px-3", "py-2", "text-sm", "text-slate-700", "hover:bg-slate-50", 3, "click", "routerLinkActiveOptions"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2", 1, "h-4", "w-4", "text-amber-600"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M20 7l-8-4-8 4v10l8 4 8-4V7z"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M12 3v18"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M4 7l8 4 8-4"], ["routerLink", "/stock-movements", "routerLinkActive", "bg-indigo-50 text-indigo-900 font-semibold", 1, "flex", "items-center", "gap-3", "rounded-lg", "px-3", "py-2", "text-sm", "text-slate-700", "hover:bg-slate-50", 3, "click", "routerLinkActiveOptions"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2", 1, "h-4", "w-4", "text-sky-600"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M8 7h13M8 12h13M8 17h13"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M3 7h.01M3 12h.01M3 17h.01"], ["routerLink", "/purchasing", "routerLinkActive", "bg-white/15", 1, "grid", "grid-cols-[44px_1fr]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", 3, "routerLinkActiveOptions"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M3 3h2l.4 2M7 13h10l4-8H5.4"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M7 13l-1.5 7h13L17 13"], ["routerLink", "/sales", "routerLinkActive", "bg-white/15", 1, "grid", "grid-cols-[44px_1fr]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", 3, "routerLinkActiveOptions"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M12 6v2m0 10v2"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M20 12a8 8 0 11-16 0 8 8 0 0116 0z"], ["routerLink", "/my-sales", "routerLinkActive", "bg-white/15", 1, "grid", "grid-cols-[44px_1fr]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", 3, "routerLinkActiveOptions"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M9 14l2 2 4-4"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M7 3h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z"], ["routerLink", "/expenses", "routerLinkActive", "bg-white/15", 1, "grid", "grid-cols-[44px_1fr]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", 3, "routerLinkActiveOptions"], ["routerLink", "/expense-categories", "routerLinkActive", "bg-white/15", 1, "grid", "grid-cols-[44px_1fr]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", 3, "routerLinkActiveOptions"], ["routerLink", "/reports", "routerLinkActive", "bg-white/15", 1, "grid", "grid-cols-[44px_1fr]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", 3, "routerLinkActiveOptions"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M3 3v18h18"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M7 15l3-3 3 2 5-6"], ["routerLink", "/profit-management", "routerLinkActive", "bg-white/15", 1, "grid", "grid-cols-[44px_1fr]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", 3, "routerLinkActiveOptions"], ["routerLink", "/users", "routerLinkActive", "bg-white/15", 1, "grid", "grid-cols-[44px_1fr]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", 3, "routerLinkActiveOptions"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M17 20h5v-2a4 4 0 00-4-4h-1"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M9 20H2v-2a4 4 0 014-4h1"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M16 3.13a4 4 0 010 7.75"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M8 3.13a4 4 0 000 7.75"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M12 12a4 4 0 100-8 4 4 0 000 8z"], [1, "fixed", "inset-0", "z-50"], [1, "absolute", "inset-0", "bg-slate-900/40", 3, "click"], [1, "absolute", "inset-0", "flex", "items-center", "justify-center", "p-4"], [1, "w-full", "max-w-sm", "rounded-2xl", "bg-white", "p-5", "shadow-xl", "ring-1", "ring-slate-200", 3, "click"], [1, "text-base", "font-semibold", "text-slate-900"], [1, "mt-1", "text-xs", "text-slate-500"], [1, "mt-4", "grid", "gap-3"], [1, "grid", "gap-2", "text-xs", "text-slate-700"], ["type", "password", 1, "rounded-xl", "border", "border-slate-200", "px-3", "py-2", "text-sm", 3, "input", "value"], ["class", "text-sm text-red-700", 4, "ngIf"], ["class", "text-sm text-emerald-700", 4, "ngIf"], [1, "mt-1", "flex", "items-center", "justify-end", "gap-2"], ["type", "button", 1, "rounded-xl", "bg-slate-100", "px-4", "py-2", "text-sm", "font-semibold", "text-slate-800", "hover:bg-slate-200", 3, "click"], ["type", "button", 1, "rounded-xl", "bg-indigo-950", "px-4", "py-2", "text-sm", "font-semibold", "text-white", "disabled:cursor-not-allowed", "disabled:opacity-70", 3, "click", "disabled"], [1, "text-sm", "text-red-700"], [1, "text-sm", "text-emerald-700"], [1, "w-full", "max-w-md", "rounded-2xl", "bg-white", "p-5", "shadow-xl", "ring-1", "ring-slate-200", 3, "click"], [1, "rounded-xl", "border", "border-slate-200", "bg-white", "px-3", "py-2", "text-sm", 3, "change", "value"], ["value", ""], [3, "value", 4, "ngFor", "ngForOf"], [3, "value"]], template: function ShellLayout_Template(rf, ctx) {
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _ShellLayout, selectors: [["cis-shell"]], decls: 9, vars: 14, consts: [[1, "min-h-screen", "bg-slate-50"], [1, "grid", "min-h-screen", "grid-cols-1", 3, "ngClass"], ["class", "fixed inset-0 z-40 bg-slate-900/40 md:hidden", 3, "click", 4, "ngIf"], ["class", "z-50 flex flex-col bg-gradient-to-b from-indigo-950 via-purple-900 to-fuchsia-700 text-white p-4 md:p-5 md:static md:translate-x-0", 3, "ngClass", 4, "ngIf"], [1, "p-4", "md:p-6", 3, "click"], [3, "toggleSidebar", "toggleNotifications", "toggleUserMenu", "closeMenus", "logout", "changePassword", "resetUserPassword", "user", "isAuthed", "showSidebarToggle", "sidebarOpen", "notificationsCount", "notificationsOpen", "userMenuOpen"], ["class", "fixed inset-0 z-50", 4, "ngIf"], [1, "fixed", "inset-0", "z-40", "bg-slate-900/40", "md:hidden", 3, "click"], [1, "z-50", "flex", "flex-col", "bg-gradient-to-b", "from-indigo-950", "via-purple-900", "to-fuchsia-700", "text-white", "p-4", "md:p-5", "md:static", "md:translate-x-0", 3, "ngClass"], [1, "flex", "items-start", "justify-between", "gap-2"], ["routerLink", "/home", 1, "block", "flex-1", "rounded-2xl", "bg-white/10", "p-4", "ring-1", "ring-white/10", "hover:bg-white/15"], [1, "flex", "items-center", "gap-3"], [1, "grid", "h-10", "w-10", "place-items-center", "rounded-2xl", "bg-white/15", "ring-1", "ring-white/10"], ["src", "/GYLA-LOGO.png", "alt", "GYLA Cosmetics", 1, "h-8", "w-8", "object-contain"], [1, "min-w-0"], [1, "text-sm", "font-semibold", "text-purple-100/90"], [1, "text-lg", "font-extrabold", "tracking-wide", "leading-tight"], [1, "mt-5", "grid", "gap-1"], ["routerLink", "/dashboard", "routerLinkActive", "bg-white/15", 1, "grid", "grid-cols-[44px_1fr]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", 3, "routerLinkActiveOptions"], [1, "grid", "h-8", "w-8", "place-items-center", "rounded-lg", "bg-white/5", "ring-1", "ring-white/10"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2", 1, "h-4", "w-4"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M3 11l9-8 9 8v10a2 2 0 01-2 2H5a2 2 0 01-2-2V11z"], [1, "relative"], ["routerLink", "/product-dashboard", 1, "grid", "w-full", "grid-cols-[44px_1fr_auto]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", "cursor-pointer", 3, "click", "ngClass"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M20 13V7a2 2 0 00-2-2H6a2 2 0 00-2 2v6"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M4 13h16v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6z"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2", 1, "h-4", "w-4", "transition-transform", "duration-200", 3, "ngClass"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M9 5l7 7-7 7"], ["class", "fixed inset-0 z-[60]", 3, "click", 4, "ngIf"], ["class", "absolute left-full top-0 z-[61] ml-2 w-56 rounded-xl bg-white shadow-xl ring-1 ring-slate-200 overflow-hidden", 3, "click", 4, "ngIf"], ["routerLink", "/purchasing", "routerLinkActive", "bg-white/15", "class", "grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10", 3, "routerLinkActiveOptions", 4, "ngIf"], ["routerLink", "/sales", "routerLinkActive", "bg-white/15", "class", "grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10", 3, "routerLinkActiveOptions", 4, "ngIf"], ["routerLink", "/my-sales", "routerLinkActive", "bg-white/15", "class", "grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10", 3, "routerLinkActiveOptions", 4, "ngIf"], ["routerLink", "/expiry-alerts", "routerLinkActive", "bg-white/15", 1, "grid", "grid-cols-[44px_1fr]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", 3, "routerLinkActiveOptions"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M12 9v4m0 4h.01"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"], ["type", "button", 1, "grid", "w-full", "grid-cols-[44px_1fr_auto]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", 3, "click", "ngClass"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M12 6v2m0 10v2"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M20 12a8 8 0 11-16 0 8 8 0 0116 0z"], ["routerLink", "/reports", "routerLinkActive", "bg-white/15", "class", "grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10", 3, "routerLinkActiveOptions", 4, "ngIf"], ["routerLink", "/profit-management", "routerLinkActive", "bg-white/15", "class", "grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10", 3, "routerLinkActiveOptions", 4, "ngIf"], ["routerLink", "/users", "routerLinkActive", "bg-white/15", "class", "grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10", 3, "routerLinkActiveOptions", 4, "ngIf"], [1, "mt-auto", "pt-6"], [1, "text-center", "text-[11px]", "text-purple-100/90"], [1, "fixed", "inset-0", "z-[60]", 3, "click"], [1, "absolute", "left-full", "top-0", "z-[61]", "ml-2", "w-56", "rounded-xl", "bg-white", "shadow-xl", "ring-1", "ring-slate-200", "overflow-hidden", 3, "click"], [1, "border-b", "border-slate-100", "px-4", "py-3"], [1, "text-xs", "font-bold", "uppercase", "tracking-wider", "text-slate-400"], [1, "grid", "gap-0.5", "p-2"], ["routerLink", "/products", "routerLinkActive", "bg-indigo-50 text-indigo-900 font-semibold", "class", "flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50", 3, "routerLinkActiveOptions", "click", 4, "ngIf"], ["routerLink", "/categories", "routerLinkActive", "bg-indigo-50 text-indigo-900 font-semibold", "class", "flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50", 3, "routerLinkActiveOptions", "click", 4, "ngIf"], ["routerLink", "/inventory", "routerLinkActive", "bg-indigo-50 text-indigo-900 font-semibold", "class", "flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50", 3, "routerLinkActiveOptions", "click", 4, "ngIf"], ["routerLink", "/stock-movements", "routerLinkActive", "bg-indigo-50 text-indigo-900 font-semibold", "class", "flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50", 3, "routerLinkActiveOptions", "click", 4, "ngIf"], ["routerLink", "/products", "routerLinkActive", "bg-indigo-50 text-indigo-900 font-semibold", 1, "flex", "items-center", "gap-3", "rounded-lg", "px-3", "py-2", "text-sm", "text-slate-700", "hover:bg-slate-50", 3, "click", "routerLinkActiveOptions"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2", 1, "h-4", "w-4", "text-purple-600"], ["routerLink", "/categories", "routerLinkActive", "bg-indigo-50 text-indigo-900 font-semibold", 1, "flex", "items-center", "gap-3", "rounded-lg", "px-3", "py-2", "text-sm", "text-slate-700", "hover:bg-slate-50", 3, "click", "routerLinkActiveOptions"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2", 1, "h-4", "w-4", "text-emerald-600"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M4 6h16M4 12h16M4 18h16"], ["routerLink", "/inventory", "routerLinkActive", "bg-indigo-50 text-indigo-900 font-semibold", 1, "flex", "items-center", "gap-3", "rounded-lg", "px-3", "py-2", "text-sm", "text-slate-700", "hover:bg-slate-50", 3, "click", "routerLinkActiveOptions"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2", 1, "h-4", "w-4", "text-amber-600"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M20 7l-8-4-8 4v10l8 4 8-4V7z"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M12 3v18"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M4 7l8 4 8-4"], ["routerLink", "/stock-movements", "routerLinkActive", "bg-indigo-50 text-indigo-900 font-semibold", 1, "flex", "items-center", "gap-3", "rounded-lg", "px-3", "py-2", "text-sm", "text-slate-700", "hover:bg-slate-50", 3, "click", "routerLinkActiveOptions"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2", 1, "h-4", "w-4", "text-sky-600"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M8 7h13M8 12h13M8 17h13"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M3 7h.01M3 12h.01M3 17h.01"], ["routerLink", "/purchasing", "routerLinkActive", "bg-white/15", 1, "grid", "grid-cols-[44px_1fr]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", 3, "routerLinkActiveOptions"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M3 3h2l.4 2M7 13h10l4-8H5.4"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M7 13l-1.5 7h13L17 13"], ["routerLink", "/sales", "routerLinkActive", "bg-white/15", 1, "grid", "grid-cols-[44px_1fr]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", 3, "routerLinkActiveOptions"], ["routerLink", "/my-sales", "routerLinkActive", "bg-white/15", 1, "grid", "grid-cols-[44px_1fr]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", 3, "routerLinkActiveOptions"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M9 14l2 2 4-4"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M7 3h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z"], ["routerLink", "/expenses", "routerLinkActive", "bg-indigo-50 text-indigo-900 font-semibold", "class", "flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50", 3, "routerLinkActiveOptions", "click", 4, "ngIf"], ["routerLink", "/expense-categories", "routerLinkActive", "bg-indigo-50 text-indigo-900 font-semibold", "class", "flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50", 3, "routerLinkActiveOptions", "click", 4, "ngIf"], ["routerLink", "/expenses", "routerLinkActive", "bg-indigo-50 text-indigo-900 font-semibold", 1, "flex", "items-center", "gap-3", "rounded-lg", "px-3", "py-2", "text-sm", "text-slate-700", "hover:bg-slate-50", 3, "click", "routerLinkActiveOptions"], ["routerLink", "/expense-categories", "routerLinkActive", "bg-indigo-50 text-indigo-900 font-semibold", 1, "flex", "items-center", "gap-3", "rounded-lg", "px-3", "py-2", "text-sm", "text-slate-700", "hover:bg-slate-50", 3, "click", "routerLinkActiveOptions"], ["routerLink", "/reports", "routerLinkActive", "bg-white/15", 1, "grid", "grid-cols-[44px_1fr]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", 3, "routerLinkActiveOptions"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M3 3v18h18"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M7 15l3-3 3 2 5-6"], ["routerLink", "/profit-management", "routerLinkActive", "bg-white/15", 1, "grid", "grid-cols-[44px_1fr]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", 3, "routerLinkActiveOptions"], ["routerLink", "/users", "routerLinkActive", "bg-white/15", 1, "grid", "grid-cols-[44px_1fr]", "items-center", "rounded-xl", "px-3", "py-2", "text-sm", "text-purple-50", "hover:bg-white/10", 3, "routerLinkActiveOptions"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M17 20h5v-2a4 4 0 00-4-4h-1"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M9 20H2v-2a4 4 0 014-4h1"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M16 3.13a4 4 0 010 7.75"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M8 3.13a4 4 0 000 7.75"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M12 12a4 4 0 100-8 4 4 0 000 8z"], [1, "fixed", "inset-0", "z-50"], [1, "absolute", "inset-0", "bg-slate-900/40", 3, "click"], [1, "absolute", "inset-0", "flex", "items-center", "justify-center", "p-4"], [1, "w-full", "max-w-sm", "rounded-2xl", "bg-white", "p-5", "shadow-xl", "ring-1", "ring-slate-200", 3, "click"], [1, "text-base", "font-semibold", "text-slate-900"], [1, "mt-1", "text-xs", "text-slate-500"], [1, "mt-4", "grid", "gap-3"], [1, "grid", "gap-2", "text-xs", "text-slate-700"], ["type", "password", 1, "rounded-xl", "border", "border-slate-200", "px-3", "py-2", "text-sm", 3, "input", "value"], ["class", "text-sm text-red-700", 4, "ngIf"], ["class", "text-sm text-emerald-700", 4, "ngIf"], [1, "mt-1", "flex", "items-center", "justify-end", "gap-2"], ["type", "button", 1, "rounded-xl", "bg-slate-100", "px-4", "py-2", "text-sm", "font-semibold", "text-slate-800", "hover:bg-slate-200", 3, "click"], ["type", "button", 1, "rounded-xl", "bg-indigo-950", "px-4", "py-2", "text-sm", "font-semibold", "text-white", "disabled:cursor-not-allowed", "disabled:opacity-70", 3, "click", "disabled"], [1, "text-sm", "text-red-700"], [1, "text-sm", "text-emerald-700"], [1, "w-full", "max-w-md", "rounded-2xl", "bg-white", "p-5", "shadow-xl", "ring-1", "ring-slate-200", 3, "click"], [1, "rounded-xl", "border", "border-slate-200", "bg-white", "px-3", "py-2", "text-sm", 3, "change", "value"], ["value", ""], [3, "value", 4, "ngFor", "ngForOf"], [3, "value"]], template: function ShellLayout_Template(rf, ctx) {
     if (rf & 1) {
       \u0275\u0275elementStart(0, "div", 0)(1, "div", 1);
-      \u0275\u0275template(2, ShellLayout_div_2_Template, 1, 0, "div", 2)(3, ShellLayout_aside_3_Template, 48, 26, "aside", 3);
+      \u0275\u0275template(2, ShellLayout_div_2_Template, 1, 0, "div", 2)(3, ShellLayout_aside_3_Template, 59, 32, "aside", 3);
       \u0275\u0275elementStart(4, "main", 4);
       \u0275\u0275listener("click", function ShellLayout_Template_main_click_4_listener() {
         return ctx.closeMenus();
@@ -63881,10 +63963,10 @@ var ShellLayout = class _ShellLayout {
 
         <!-- Products with flyout popup -->
         <div class="relative">
-          <button
-            type="button"
+          <a
+            routerLink="/product-dashboard"
             (click)="toggleProducts(); $event.stopPropagation()"
-            class="grid w-full grid-cols-[44px_1fr_auto] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10"
+            class="grid w-full grid-cols-[44px_1fr_auto] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10 cursor-pointer"
             [ngClass]="{ 'bg-white/15': isProductsSection() || productsExpanded() }">
             <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
@@ -63897,7 +63979,7 @@ var ShellLayout = class _ShellLayout {
               [ngClass]="{ 'rotate-90': productsExpanded() }">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
             </svg>
-          </button>
+          </a>
 
           <!-- Flyout backdrop (click to close) -->
           <div
@@ -63919,7 +64001,7 @@ var ShellLayout = class _ShellLayout {
             <div class="grid gap-0.5 p-2">
               <a
                 *ngIf="canView('PRODUCTS')"
-                routerLink="/product-dashboard"
+                routerLink="/products"
                 routerLinkActive="bg-indigo-50 text-indigo-900 font-semibold"
                 [routerLinkActiveOptions]="{ exact: true }"
                 (click)="toggleProducts()"
@@ -64036,34 +64118,74 @@ var ShellLayout = class _ShellLayout {
           <span>Expiry & Alerts</span>
         </a>
 
-        <a
-          *ngIf="canView('EXPENSES')"
-          routerLink="/expenses"
-          routerLinkActive="bg-white/15"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
-          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
+        <!-- Finance with flyout popup -->
+        <div class="relative">
+          <button
+            type="button"
+            (click)="toggleFinance(); $event.stopPropagation()"
+            class="grid w-full grid-cols-[44px_1fr_auto] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10"
+            [ngClass]="{ 'bg-white/15': isFinanceSection() || financeExpanded() }">
+            <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" />
+              </svg>
+            </span>
+            <span>Finance</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 transition-transform duration-200"
+              [ngClass]="{ 'rotate-90': financeExpanded() }">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
             </svg>
-          </span>
-          <span>Expenses</span>
-        </a>
+          </button>
 
-        <a
-          *ngIf="canView('EXPENSE_CATEGORIES')"
-          routerLink="/expense-categories"
-          routerLinkActive="bg-white/15"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
-          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </span>
-          <span>Expense Categories</span>
-        </a>
+          <!-- Flyout backdrop (click to close) -->
+          <div
+            *ngIf="financeExpanded()"
+            class="fixed inset-0 z-[60]"
+            (click)="toggleFinance()">
+          </div>
+
+          <!-- Flyout popup -->
+          <div
+            *ngIf="financeExpanded()"
+            class="absolute left-full top-0 z-[61] ml-2 w-56 rounded-xl bg-white shadow-xl ring-1 ring-slate-200 overflow-hidden"
+            (click)="$event.stopPropagation()">
+
+            <div class="border-b border-slate-100 px-4 py-3">
+              <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Finance</div>
+            </div>
+
+            <div class="grid gap-0.5 p-2">
+              <a
+                *ngIf="canView('EXPENSES')"
+                routerLink="/expenses"
+                routerLinkActive="bg-indigo-50 text-indigo-900 font-semibold"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="toggleFinance()"
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-emerald-600">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
+                </svg>
+                <span>Expenses</span>
+              </a>
+
+              <a
+                *ngIf="canView('EXPENSE_CATEGORIES')"
+                routerLink="/expense-categories"
+                routerLinkActive="bg-indigo-50 text-indigo-900 font-semibold"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="toggleFinance()"
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-amber-600">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <span>Expense Categories</span>
+              </a>
+            </div>
+          </div>
+        </div>
 
         <a
           *ngIf="canView('REPORTS')"
@@ -74795,14 +74917,14 @@ var HomePage = class _HomePage {
 // src/app/features/product-dashboard/product-dashboard.page.ts
 function ProductDashboardPage_div_8_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 48);
+    \u0275\u0275elementStart(0, "div", 49);
     \u0275\u0275text(1, "Loading dashboard...");
     \u0275\u0275elementEnd();
   }
 }
 function ProductDashboardPage_div_9_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 49);
+    \u0275\u0275elementStart(0, "div", 50);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
@@ -74812,88 +74934,156 @@ function ProductDashboardPage_div_9_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r0.error());
   }
 }
-function ProductDashboardPage_div_82_tr_13_span_2_Template(rf, ctx) {
+function ProductDashboardPage_div_82_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "span", 63);
-    \u0275\u0275element(1, "span", 64);
+    const _r2 = \u0275\u0275getCurrentView();
+    \u0275\u0275elementStart(0, "div", 51)(1, "div", 52);
+    \u0275\u0275text(2);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(3, "div", 53)(4, "label", 52);
+    \u0275\u0275text(5, " Show ");
+    \u0275\u0275elementStart(6, "select", 54);
+    \u0275\u0275listener("change", function ProductDashboardPage_div_82_Template_select_change_6_listener($event) {
+      \u0275\u0275restoreView(_r2);
+      const ctx_r0 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r0.setAlertsPageSize($event.target.value));
+    });
+    \u0275\u0275elementStart(7, "option", 55);
+    \u0275\u0275text(8, "5");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(9, "option", 55);
+    \u0275\u0275text(10, "10");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(11, "option", 55);
+    \u0275\u0275text(12, "20");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(13, "option", 55);
+    \u0275\u0275text(14, "50");
+    \u0275\u0275elementEnd()()();
+    \u0275\u0275elementStart(15, "button", 56);
+    \u0275\u0275listener("click", function ProductDashboardPage_div_82_Template_button_click_15_listener() {
+      \u0275\u0275restoreView(_r2);
+      const ctx_r0 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r0.alertsPrevPage());
+    });
+    \u0275\u0275text(16, " Prev ");
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(17, "div", 52);
+    \u0275\u0275text(18);
+    \u0275\u0275elementEnd();
+    \u0275\u0275elementStart(19, "button", 56);
+    \u0275\u0275listener("click", function ProductDashboardPage_div_82_Template_button_click_19_listener() {
+      \u0275\u0275restoreView(_r2);
+      const ctx_r0 = \u0275\u0275nextContext();
+      return \u0275\u0275resetView(ctx_r0.alertsNextPage());
+    });
+    \u0275\u0275text(20, " Next ");
+    \u0275\u0275elementEnd()()();
+  }
+  if (rf & 2) {
+    const ctx_r0 = \u0275\u0275nextContext();
+    \u0275\u0275advance(2);
+    \u0275\u0275textInterpolate1("Total: ", ctx_r0.alerts().length);
+    \u0275\u0275advance(4);
+    \u0275\u0275property("value", ctx_r0.alertsPageSize());
+    \u0275\u0275advance();
+    \u0275\u0275property("value", 5);
+    \u0275\u0275advance(2);
+    \u0275\u0275property("value", 10);
+    \u0275\u0275advance(2);
+    \u0275\u0275property("value", 20);
+    \u0275\u0275advance(2);
+    \u0275\u0275property("value", 50);
+    \u0275\u0275advance(2);
+    \u0275\u0275property("disabled", ctx_r0.alertsPageIndex() === 0);
+    \u0275\u0275advance(3);
+    \u0275\u0275textInterpolate2("Page ", ctx_r0.alertsPageIndex() + 1, " / ", ctx_r0.alertsTotalPages());
+    \u0275\u0275advance();
+    \u0275\u0275property("disabled", ctx_r0.alertsPageIndex() >= ctx_r0.alertsTotalPages() - 1);
+  }
+}
+function ProductDashboardPage_div_83_tr_13_span_2_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275elementStart(0, "span", 70);
+    \u0275\u0275element(1, "span", 71);
     \u0275\u0275text(2, " Out of Stock ");
     \u0275\u0275elementEnd();
   }
 }
-function ProductDashboardPage_div_82_tr_13_span_3_Template(rf, ctx) {
+function ProductDashboardPage_div_83_tr_13_span_3_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "span", 65);
-    \u0275\u0275element(1, "span", 66);
+    \u0275\u0275elementStart(0, "span", 72);
+    \u0275\u0275element(1, "span", 73);
     \u0275\u0275text(2, " Running Low ");
     \u0275\u0275elementEnd();
   }
 }
-function ProductDashboardPage_div_82_tr_13_Template(rf, ctx) {
+function ProductDashboardPage_div_83_tr_13_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "tr", 56)(1, "td", 57);
-    \u0275\u0275template(2, ProductDashboardPage_div_82_tr_13_span_2_Template, 3, 0, "span", 58)(3, ProductDashboardPage_div_82_tr_13_span_3_Template, 3, 0, "span", 59);
+    \u0275\u0275elementStart(0, "tr", 63)(1, "td", 64);
+    \u0275\u0275template(2, ProductDashboardPage_div_83_tr_13_span_2_Template, 3, 0, "span", 65)(3, ProductDashboardPage_div_83_tr_13_span_3_Template, 3, 0, "span", 66);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(4, "td", 60);
+    \u0275\u0275elementStart(4, "td", 67);
     \u0275\u0275text(5);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(6, "td", 61);
+    \u0275\u0275elementStart(6, "td", 68);
     \u0275\u0275text(7);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(8, "td", 62);
+    \u0275\u0275elementStart(8, "td", 69);
     \u0275\u0275text(9);
     \u0275\u0275elementEnd()();
   }
   if (rf & 2) {
-    const a_r2 = ctx.$implicit;
+    const a_r3 = ctx.$implicit;
     \u0275\u0275advance(2);
-    \u0275\u0275property("ngIf", a_r2.status === "out_of_stock");
+    \u0275\u0275property("ngIf", a_r3.status === "out_of_stock");
     \u0275\u0275advance();
-    \u0275\u0275property("ngIf", a_r2.status === "running_low");
+    \u0275\u0275property("ngIf", a_r3.status === "running_low");
     \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate(a_r2.sku);
+    \u0275\u0275textInterpolate(a_r3.sku);
     \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate(a_r2.productName);
+    \u0275\u0275textInterpolate(a_r3.productName);
     \u0275\u0275advance();
-    \u0275\u0275property("ngClass", a_r2.status === "out_of_stock" ? "text-red-700" : "text-amber-700");
+    \u0275\u0275property("ngClass", a_r3.status === "out_of_stock" ? "text-red-700" : "text-amber-700");
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1(" ", a_r2.qtyOnHand, " ");
+    \u0275\u0275textInterpolate1(" ", a_r3.qtyOnHand, " ");
   }
 }
-function ProductDashboardPage_div_82_Template(rf, ctx) {
+function ProductDashboardPage_div_83_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 50)(1, "table", 51)(2, "thead", 52)(3, "tr")(4, "th", 53);
+    \u0275\u0275elementStart(0, "div", 57)(1, "table", 58)(2, "thead", 59)(3, "tr")(4, "th", 60);
     \u0275\u0275text(5, "Status");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(6, "th", 53);
+    \u0275\u0275elementStart(6, "th", 60);
     \u0275\u0275text(7, "SKU");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(8, "th", 53);
+    \u0275\u0275elementStart(8, "th", 60);
     \u0275\u0275text(9, "Product");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(10, "th", 54);
+    \u0275\u0275elementStart(10, "th", 61);
     \u0275\u0275text(11, "Qty on Hand");
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(12, "tbody");
-    \u0275\u0275template(13, ProductDashboardPage_div_82_tr_13_Template, 10, 6, "tr", 55);
+    \u0275\u0275template(13, ProductDashboardPage_div_83_tr_13_Template, 10, 6, "tr", 62);
     \u0275\u0275elementEnd()()();
   }
   if (rf & 2) {
     const ctx_r0 = \u0275\u0275nextContext();
     \u0275\u0275advance(13);
-    \u0275\u0275property("ngForOf", ctx_r0.alerts());
+    \u0275\u0275property("ngForOf", ctx_r0.displayedAlerts());
   }
 }
-function ProductDashboardPage_div_83_Template(rf, ctx) {
+function ProductDashboardPage_div_84_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 67)(1, "div", 68);
+    \u0275\u0275elementStart(0, "div", 74)(1, "div", 75);
     \u0275\u0275text(2, "All good! No stock alerts at this time.");
     \u0275\u0275elementEnd()();
   }
 }
-function ProductDashboardPage_div_90_Template(rf, ctx) {
+function ProductDashboardPage_div_91_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 69);
-    \u0275\u0275element(1, "canvas", 70);
+    \u0275\u0275elementStart(0, "div", 76);
+    \u0275\u0275element(1, "canvas", 77);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -74902,17 +75092,17 @@ function ProductDashboardPage_div_90_Template(rf, ctx) {
     \u0275\u0275property("type", "doughnut")("data", ctx_r0.categoryChartData())("options", ctx_r0.categoryChartOptions);
   }
 }
-function ProductDashboardPage_div_91_Template(rf, ctx) {
+function ProductDashboardPage_div_92_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 71);
+    \u0275\u0275elementStart(0, "div", 78);
     \u0275\u0275text(1, " No category data available ");
     \u0275\u0275elementEnd();
   }
 }
-function ProductDashboardPage_div_97_Template(rf, ctx) {
+function ProductDashboardPage_div_98_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 69);
-    \u0275\u0275element(1, "canvas", 70);
+    \u0275\u0275elementStart(0, "div", 76);
+    \u0275\u0275element(1, "canvas", 77);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -74921,17 +75111,17 @@ function ProductDashboardPage_div_97_Template(rf, ctx) {
     \u0275\u0275property("type", "bar")("data", ctx_r0.mostSoldChartData())("options", ctx_r0.mostSoldChartOptions);
   }
 }
-function ProductDashboardPage_div_98_Template(rf, ctx) {
+function ProductDashboardPage_div_99_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 71);
+    \u0275\u0275elementStart(0, "div", 78);
     \u0275\u0275text(1, " No sales data available ");
     \u0275\u0275elementEnd();
   }
 }
-function ProductDashboardPage_div_104_Template(rf, ctx) {
+function ProductDashboardPage_div_105_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 69);
-    \u0275\u0275element(1, "canvas", 70);
+    \u0275\u0275elementStart(0, "div", 76);
+    \u0275\u0275element(1, "canvas", 77);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -74940,83 +75130,83 @@ function ProductDashboardPage_div_104_Template(rf, ctx) {
     \u0275\u0275property("type", "bar")("data", ctx_r0.deadStockChartData())("options", ctx_r0.deadStockChartOptions);
   }
 }
-function ProductDashboardPage_div_105_Template(rf, ctx) {
+function ProductDashboardPage_div_106_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 71);
+    \u0275\u0275elementStart(0, "div", 78);
     \u0275\u0275text(1, " No dead stock detected ");
     \u0275\u0275elementEnd();
   }
 }
-function ProductDashboardPage_div_106_tr_20_span_8_Template(rf, ctx) {
+function ProductDashboardPage_div_107_tr_20_span_8_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "span", 77);
+    \u0275\u0275elementStart(0, "span", 85);
     \u0275\u0275text(1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
-    const d_r3 = \u0275\u0275nextContext().$implicit;
+    const d_r4 = \u0275\u0275nextContext().$implicit;
     \u0275\u0275advance();
-    \u0275\u0275textInterpolate1("", d_r3.daysSinceLastSale, "d ago");
+    \u0275\u0275textInterpolate1("", d_r4.daysSinceLastSale, "d ago");
   }
 }
-function ProductDashboardPage_div_106_tr_20_span_9_Template(rf, ctx) {
+function ProductDashboardPage_div_107_tr_20_span_9_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "span", 78);
+    \u0275\u0275elementStart(0, "span", 86);
     \u0275\u0275text(1, "Never sold");
     \u0275\u0275elementEnd();
   }
 }
-function ProductDashboardPage_div_106_tr_20_Template(rf, ctx) {
+function ProductDashboardPage_div_107_tr_20_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "tr", 56)(1, "td", 60);
+    \u0275\u0275elementStart(0, "tr", 63)(1, "td", 67);
     \u0275\u0275text(2);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(3, "td", 61);
+    \u0275\u0275elementStart(3, "td", 68);
     \u0275\u0275text(4);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(5, "td", 73);
+    \u0275\u0275elementStart(5, "td", 81);
     \u0275\u0275text(6);
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(7, "td", 74);
-    \u0275\u0275template(8, ProductDashboardPage_div_106_tr_20_span_8_Template, 2, 1, "span", 75)(9, ProductDashboardPage_div_106_tr_20_span_9_Template, 2, 0, "span", 76);
+    \u0275\u0275elementStart(7, "td", 82);
+    \u0275\u0275template(8, ProductDashboardPage_div_107_tr_20_span_8_Template, 2, 1, "span", 83)(9, ProductDashboardPage_div_107_tr_20_span_9_Template, 2, 0, "span", 84);
     \u0275\u0275elementEnd()();
   }
   if (rf & 2) {
-    const d_r3 = ctx.$implicit;
+    const d_r4 = ctx.$implicit;
     \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate(d_r3.sku);
+    \u0275\u0275textInterpolate(d_r4.sku);
     \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate(d_r3.productName);
+    \u0275\u0275textInterpolate(d_r4.productName);
     \u0275\u0275advance(2);
-    \u0275\u0275textInterpolate(d_r3.qtyOnHand);
+    \u0275\u0275textInterpolate(d_r4.qtyOnHand);
     \u0275\u0275advance(2);
-    \u0275\u0275property("ngIf", d_r3.daysSinceLastSale !== null);
+    \u0275\u0275property("ngIf", d_r4.daysSinceLastSale !== null);
     \u0275\u0275advance();
-    \u0275\u0275property("ngIf", d_r3.daysSinceLastSale === null);
+    \u0275\u0275property("ngIf", d_r4.daysSinceLastSale === null);
   }
 }
-function ProductDashboardPage_div_106_Template(rf, ctx) {
+function ProductDashboardPage_div_107_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "div", 72)(1, "div", 0)(2, "div")(3, "h3", 38);
+    \u0275\u0275elementStart(0, "div", 79)(1, "div", 0)(2, "div")(3, "h3", 38);
     \u0275\u0275text(4, "Dead Stock Details");
     \u0275\u0275elementEnd();
     \u0275\u0275elementStart(5, "div", 39);
     \u0275\u0275text(6);
     \u0275\u0275elementEnd()()();
-    \u0275\u0275elementStart(7, "div", 50)(8, "table", 51)(9, "thead", 52)(10, "tr")(11, "th", 53);
+    \u0275\u0275elementStart(7, "div", 80)(8, "table", 58)(9, "thead", 59)(10, "tr")(11, "th", 60);
     \u0275\u0275text(12, "SKU");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(13, "th", 53);
+    \u0275\u0275elementStart(13, "th", 60);
     \u0275\u0275text(14, "Product");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(15, "th", 54);
+    \u0275\u0275elementStart(15, "th", 61);
     \u0275\u0275text(16, "Qty on Hand");
     \u0275\u0275elementEnd();
-    \u0275\u0275elementStart(17, "th", 54);
+    \u0275\u0275elementStart(17, "th", 61);
     \u0275\u0275text(18, "Days Since Sale");
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(19, "tbody");
-    \u0275\u0275template(20, ProductDashboardPage_div_106_tr_20_Template, 10, 5, "tr", 55);
+    \u0275\u0275template(20, ProductDashboardPage_div_107_tr_20_Template, 10, 5, "tr", 62);
     \u0275\u0275elementEnd()()()();
   }
   if (rf & 2) {
@@ -75037,6 +75227,19 @@ var ProductDashboardPage = class _ProductDashboardPage {
   outOfStockCount = signal(0, ...ngDevMode ? [{ debugName: "outOfStockCount" }] : []);
   inventoryValue = signal(null, ...ngDevMode ? [{ debugName: "inventoryValue" }] : []);
   alerts = signal([], ...ngDevMode ? [{ debugName: "alerts" }] : []);
+  alertsPageSize = signal(5, ...ngDevMode ? [{ debugName: "alertsPageSize" }] : []);
+  alertsPageIndex = signal(0, ...ngDevMode ? [{ debugName: "alertsPageIndex" }] : []);
+  displayedAlerts = computed(() => {
+    const all = this.alerts();
+    const size = this.alertsPageSize();
+    const idx = this.alertsPageIndex();
+    return all.slice(idx * size, idx * size + size);
+  }, ...ngDevMode ? [{ debugName: "displayedAlerts" }] : []);
+  alertsTotalPages = computed(() => {
+    const size = this.alertsPageSize();
+    const total = this.alerts().length;
+    return Math.max(1, Math.ceil(total / size));
+  }, ...ngDevMode ? [{ debugName: "alertsTotalPages" }] : []);
   lowStockThreshold = 10;
   // Chart 1: Stock by Category
   categoryLabels = signal([], ...ngDevMode ? [{ debugName: "categoryLabels" }] : []);
@@ -75243,6 +75446,23 @@ var ProductDashboardPage = class _ProductDashboardPage {
     this.deadStockLabels.set(topDead.map((x) => x.productName));
     this.deadStockValues.set(topDead.map((x) => x.qtyOnHand));
   }
+  setAlertsPageSize(size) {
+    const next = Number(size);
+    if (!Number.isFinite(next) || next <= 0)
+      return;
+    this.alertsPageSize.set(next);
+    this.alertsPageIndex.set(0);
+  }
+  alertsPrevPage() {
+    const idx = this.alertsPageIndex();
+    if (idx > 0)
+      this.alertsPageIndex.set(idx - 1);
+  }
+  alertsNextPage() {
+    const idx = this.alertsPageIndex();
+    if (idx < this.alertsTotalPages() - 1)
+      this.alertsPageIndex.set(idx + 1);
+  }
   formatCurrency(value) {
     if (value == null)
       return "-";
@@ -75251,7 +75471,7 @@ var ProductDashboardPage = class _ProductDashboardPage {
   static \u0275fac = function ProductDashboardPage_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _ProductDashboardPage)();
   };
-  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _ProductDashboardPage, selectors: [["cis-product-dashboard-page"]], decls: 107, vars: 22, consts: [[1, "flex", "items-center", "justify-between"], [1, "text-xl", "font-semibold", "text-slate-900"], [1, "mt-1", "text-sm", "text-slate-600"], ["type", "button", 1, "rounded-xl", "bg-indigo-950", "px-4", "py-2", "text-sm", "font-semibold", "text-white", "hover:bg-purple-900", "disabled:opacity-70", 3, "click", "disabled"], ["class", "mt-4 text-sm text-slate-600", 4, "ngIf"], ["class", "mt-4 text-sm text-red-700", 4, "ngIf"], [1, "mt-6", "grid", "grid-cols-1", "gap-4", "sm:grid-cols-2", "lg:grid-cols-3", "xl:grid-cols-5"], [1, "rounded-2xl", "bg-white", "p-5", "shadow-sm", "ring-1", "ring-slate-100"], [1, "flex", "items-center", "gap-3"], [1, "grid", "h-10", "w-10", "shrink-0", "place-items-center", "rounded-xl", "bg-indigo-100", "text-indigo-600"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2", 1, "h-5", "w-5"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M20 7l-8-4-8 4v10l8 4 8-4V7z"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M12 3v18"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M4 7l8 4 8-4"], [1, "text-xs", "font-semibold", "uppercase", "tracking-wide", "text-slate-500"], [1, "mt-3", "text-3xl", "font-extrabold", "text-slate-900"], [1, "mt-1", "text-xs", "text-slate-500"], [1, "grid", "h-10", "w-10", "shrink-0", "place-items-center", "rounded-xl", "bg-emerald-100", "text-emerald-600"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M20 13V7a2 2 0 00-2-2H6a2 2 0 00-2 2v6"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M4 13h16v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6z"], [1, "rounded-2xl", "bg-white", "p-5", "shadow-sm", "ring-1", "ring-amber-200"], [1, "grid", "h-10", "w-10", "shrink-0", "place-items-center", "rounded-xl", "bg-amber-100", "text-amber-600"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M12 9v4m0 4h.01"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"], [1, "text-xs", "font-semibold", "uppercase", "tracking-wide", "text-amber-700"], [1, "mt-3", "text-3xl", "font-extrabold", "text-amber-700"], [1, "mt-1", "text-xs", "text-amber-600"], [1, "rounded-2xl", "bg-white", "p-5", "shadow-sm", "ring-1", "ring-red-200"], [1, "grid", "h-10", "w-10", "shrink-0", "place-items-center", "rounded-xl", "bg-red-100", "text-red-600"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"], [1, "text-xs", "font-semibold", "uppercase", "tracking-wide", "text-red-700"], [1, "mt-3", "text-3xl", "font-extrabold", "text-red-700"], [1, "mt-1", "text-xs", "text-red-600"], [1, "grid", "h-10", "w-10", "shrink-0", "place-items-center", "rounded-xl", "bg-purple-100", "text-purple-600"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M12 6v2m0 10v2"], [1, "mt-3", "text-2xl", "font-extrabold", "text-slate-900"], [1, "mt-8"], [1, "text-lg", "font-semibold", "text-slate-900"], [1, "mt-1", "text-sm", "text-slate-500"], ["routerLink", "/expiry-alerts", 1, "text-sm", "font-semibold", "text-purple-900", "hover:underline"], ["class", "mt-4 overflow-auto rounded-2xl bg-white shadow-sm ring-1 ring-slate-100", 4, "ngIf"], ["class", "mt-4 rounded-2xl bg-emerald-50 p-6 text-center ring-1 ring-emerald-200", 4, "ngIf"], [1, "mt-8", "grid", "grid-cols-1", "gap-6", "lg:grid-cols-3"], [1, "text-base", "font-semibold", "text-slate-900"], ["class", "mt-4", 4, "ngIf"], ["class", "mt-4 py-8 text-center text-sm text-slate-400", 4, "ngIf"], ["class", "mt-6", 4, "ngIf"], [1, "mt-4", "text-sm", "text-slate-600"], [1, "mt-4", "text-sm", "text-red-700"], [1, "mt-4", "overflow-auto", "rounded-2xl", "bg-white", "shadow-sm", "ring-1", "ring-slate-100"], [1, "w-full", "border-collapse", "text-sm"], [1, "bg-slate-50"], [1, "px-4", "py-3", "text-left", "text-xs", "font-semibold", "uppercase", "tracking-wide", "text-slate-600"], [1, "px-4", "py-3", "text-right", "text-xs", "font-semibold", "uppercase", "tracking-wide", "text-slate-600"], ["class", "border-t border-slate-100 hover:bg-slate-50/50", 4, "ngFor", "ngForOf"], [1, "border-t", "border-slate-100", "hover:bg-slate-50/50"], [1, "px-4", "py-3"], ["class", "inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700", 4, "ngIf"], ["class", "inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700", 4, "ngIf"], [1, "px-4", "py-3", "font-mono", "text-xs", "text-slate-600"], [1, "px-4", "py-3", "font-medium", "text-slate-900"], [1, "px-4", "py-3", "text-right", "font-semibold", 3, "ngClass"], [1, "inline-flex", "items-center", "gap-1.5", "rounded-full", "bg-red-50", "px-2.5", "py-1", "text-xs", "font-semibold", "text-red-700"], [1, "h-2", "w-2", "rounded-full", "bg-red-500"], [1, "inline-flex", "items-center", "gap-1.5", "rounded-full", "bg-amber-50", "px-2.5", "py-1", "text-xs", "font-semibold", "text-amber-700"], [1, "h-2", "w-2", "rounded-full", "bg-amber-500"], [1, "mt-4", "rounded-2xl", "bg-emerald-50", "p-6", "text-center", "ring-1", "ring-emerald-200"], [1, "text-sm", "font-semibold", "text-emerald-700"], [1, "mt-4"], ["baseChart", "", 3, "type", "data", "options"], [1, "mt-4", "py-8", "text-center", "text-sm", "text-slate-400"], [1, "mt-6"], [1, "px-4", "py-3", "text-right", "font-semibold", "text-slate-900"], [1, "px-4", "py-3", "text-right"], ["class", "font-semibold text-red-600", 4, "ngIf"], ["class", "text-xs text-slate-400", 4, "ngIf"], [1, "font-semibold", "text-red-600"], [1, "text-xs", "text-slate-400"]], template: function ProductDashboardPage_Template(rf, ctx) {
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _ProductDashboardPage, selectors: [["cis-product-dashboard-page"]], decls: 108, vars: 23, consts: [[1, "flex", "items-center", "justify-between"], [1, "text-xl", "font-semibold", "text-slate-900"], [1, "mt-1", "text-sm", "text-slate-600"], ["type", "button", 1, "rounded-xl", "bg-indigo-950", "px-4", "py-2", "text-sm", "font-semibold", "text-white", "hover:bg-purple-900", "disabled:opacity-70", 3, "click", "disabled"], ["class", "mt-4 text-sm text-slate-600", 4, "ngIf"], ["class", "mt-4 text-sm text-red-700", 4, "ngIf"], [1, "mt-6", "grid", "grid-cols-1", "gap-4", "sm:grid-cols-2", "lg:grid-cols-3", "xl:grid-cols-5"], [1, "rounded-2xl", "bg-white", "p-5", "shadow-sm", "ring-1", "ring-slate-100"], [1, "flex", "items-center", "gap-3"], [1, "grid", "h-10", "w-10", "shrink-0", "place-items-center", "rounded-xl", "bg-indigo-100", "text-indigo-600"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2", 1, "h-5", "w-5"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M20 7l-8-4-8 4v10l8 4 8-4V7z"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M12 3v18"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M4 7l8 4 8-4"], [1, "text-xs", "font-semibold", "uppercase", "tracking-wide", "text-slate-500"], [1, "mt-3", "text-3xl", "font-extrabold", "text-slate-900"], [1, "mt-1", "text-xs", "text-slate-500"], [1, "grid", "h-10", "w-10", "shrink-0", "place-items-center", "rounded-xl", "bg-emerald-100", "text-emerald-600"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M20 13V7a2 2 0 00-2-2H6a2 2 0 00-2 2v6"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M4 13h16v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6z"], [1, "rounded-2xl", "bg-white", "p-5", "shadow-sm", "ring-1", "ring-amber-200"], [1, "grid", "h-10", "w-10", "shrink-0", "place-items-center", "rounded-xl", "bg-amber-100", "text-amber-600"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M12 9v4m0 4h.01"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"], [1, "text-xs", "font-semibold", "uppercase", "tracking-wide", "text-amber-700"], [1, "mt-3", "text-3xl", "font-extrabold", "text-amber-700"], [1, "mt-1", "text-xs", "text-amber-600"], [1, "rounded-2xl", "bg-white", "p-5", "shadow-sm", "ring-1", "ring-red-200"], [1, "grid", "h-10", "w-10", "shrink-0", "place-items-center", "rounded-xl", "bg-red-100", "text-red-600"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"], [1, "text-xs", "font-semibold", "uppercase", "tracking-wide", "text-red-700"], [1, "mt-3", "text-3xl", "font-extrabold", "text-red-700"], [1, "mt-1", "text-xs", "text-red-600"], [1, "grid", "h-10", "w-10", "shrink-0", "place-items-center", "rounded-xl", "bg-purple-100", "text-purple-600"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M12 6v2m0 10v2"], [1, "mt-3", "text-2xl", "font-extrabold", "text-slate-900"], [1, "mt-8"], [1, "text-lg", "font-semibold", "text-slate-900"], [1, "mt-1", "text-sm", "text-slate-500"], ["routerLink", "/expiry-alerts", 1, "text-sm", "font-semibold", "text-purple-900", "hover:underline"], ["class", "mt-4 flex flex-wrap items-center justify-between gap-2", 4, "ngIf"], ["class", "mt-3 overflow-auto rounded-2xl bg-white shadow-sm ring-1 ring-slate-100", 4, "ngIf"], ["class", "mt-4 rounded-2xl bg-emerald-50 p-6 text-center ring-1 ring-emerald-200", 4, "ngIf"], [1, "mt-8", "grid", "grid-cols-1", "gap-6", "lg:grid-cols-3"], [1, "text-base", "font-semibold", "text-slate-900"], ["class", "mt-4", 4, "ngIf"], ["class", "mt-4 py-8 text-center text-sm text-slate-400", 4, "ngIf"], ["class", "mt-6", 4, "ngIf"], [1, "mt-4", "text-sm", "text-slate-600"], [1, "mt-4", "text-sm", "text-red-700"], [1, "mt-4", "flex", "flex-wrap", "items-center", "justify-between", "gap-2"], [1, "text-xs", "font-semibold", "text-slate-600"], [1, "flex", "items-center", "gap-2"], [1, "ml-2", "rounded-lg", "border", "border-slate-200", "bg-white", "px-2", "py-1", "text-xs", 3, "change", "value"], [3, "value"], [1, "rounded-lg", "bg-slate-100", "px-2", "py-1", "text-xs", "font-semibold", "text-slate-700", "disabled:cursor-not-allowed", "disabled:opacity-60", 3, "click", "disabled"], [1, "mt-3", "overflow-auto", "rounded-2xl", "bg-white", "shadow-sm", "ring-1", "ring-slate-100"], [1, "w-full", "border-collapse", "text-sm"], [1, "bg-slate-50"], [1, "px-4", "py-3", "text-left", "text-xs", "font-semibold", "uppercase", "tracking-wide", "text-slate-600"], [1, "px-4", "py-3", "text-right", "text-xs", "font-semibold", "uppercase", "tracking-wide", "text-slate-600"], ["class", "border-t border-slate-100 hover:bg-slate-50/50", 4, "ngFor", "ngForOf"], [1, "border-t", "border-slate-100", "hover:bg-slate-50/50"], [1, "px-4", "py-3"], ["class", "inline-flex items-center gap-1.5 rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700", 4, "ngIf"], ["class", "inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700", 4, "ngIf"], [1, "px-4", "py-3", "font-mono", "text-xs", "text-slate-600"], [1, "px-4", "py-3", "font-medium", "text-slate-900"], [1, "px-4", "py-3", "text-right", "font-semibold", 3, "ngClass"], [1, "inline-flex", "items-center", "gap-1.5", "rounded-full", "bg-red-50", "px-2.5", "py-1", "text-xs", "font-semibold", "text-red-700"], [1, "h-2", "w-2", "rounded-full", "bg-red-500"], [1, "inline-flex", "items-center", "gap-1.5", "rounded-full", "bg-amber-50", "px-2.5", "py-1", "text-xs", "font-semibold", "text-amber-700"], [1, "h-2", "w-2", "rounded-full", "bg-amber-500"], [1, "mt-4", "rounded-2xl", "bg-emerald-50", "p-6", "text-center", "ring-1", "ring-emerald-200"], [1, "text-sm", "font-semibold", "text-emerald-700"], [1, "mt-4"], ["baseChart", "", 3, "type", "data", "options"], [1, "mt-4", "py-8", "text-center", "text-sm", "text-slate-400"], [1, "mt-6"], [1, "mt-4", "overflow-auto", "rounded-2xl", "bg-white", "shadow-sm", "ring-1", "ring-slate-100"], [1, "px-4", "py-3", "text-right", "font-semibold", "text-slate-900"], [1, "px-4", "py-3", "text-right"], ["class", "font-semibold text-red-600", 4, "ngIf"], ["class", "text-xs text-slate-400", 4, "ngIf"], [1, "font-semibold", "text-red-600"], [1, "text-xs", "text-slate-400"]], template: function ProductDashboardPage_Template(rf, ctx) {
     if (rf & 1) {
       \u0275\u0275elementStart(0, "div", 0)(1, "div")(2, "h2", 1);
       \u0275\u0275text(3, "Product Dashboard");
@@ -75352,33 +75572,33 @@ var ProductDashboardPage = class _ProductDashboardPage {
       \u0275\u0275elementStart(80, "a", 40);
       \u0275\u0275text(81, "View All Alerts");
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(82, ProductDashboardPage_div_82_Template, 14, 1, "div", 41)(83, ProductDashboardPage_div_83_Template, 3, 0, "div", 42);
+      \u0275\u0275template(82, ProductDashboardPage_div_82_Template, 21, 10, "div", 41)(83, ProductDashboardPage_div_83_Template, 14, 1, "div", 42)(84, ProductDashboardPage_div_84_Template, 3, 0, "div", 43);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(84, "div", 43)(85, "section", 7)(86, "h4", 44);
-      \u0275\u0275text(87, "Stock by Category");
+      \u0275\u0275elementStart(85, "div", 44)(86, "section", 7)(87, "h4", 45);
+      \u0275\u0275text(88, "Stock by Category");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(88, "div", 16);
-      \u0275\u0275text(89, "Inventory distribution across categories");
+      \u0275\u0275elementStart(89, "div", 16);
+      \u0275\u0275text(90, "Inventory distribution across categories");
       \u0275\u0275elementEnd();
-      \u0275\u0275template(90, ProductDashboardPage_div_90_Template, 2, 3, "div", 45)(91, ProductDashboardPage_div_91_Template, 2, 0, "div", 46);
+      \u0275\u0275template(91, ProductDashboardPage_div_91_Template, 2, 3, "div", 46)(92, ProductDashboardPage_div_92_Template, 2, 0, "div", 47);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(92, "section", 7)(93, "h4", 44);
-      \u0275\u0275text(94, "Most Sold Products");
+      \u0275\u0275elementStart(93, "section", 7)(94, "h4", 45);
+      \u0275\u0275text(95, "Most Sold Products");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(95, "div", 16);
-      \u0275\u0275text(96, "Top 10 by total quantity sold (from sales)");
+      \u0275\u0275elementStart(96, "div", 16);
+      \u0275\u0275text(97, "Top 10 by total quantity sold (from sales)");
       \u0275\u0275elementEnd();
-      \u0275\u0275template(97, ProductDashboardPage_div_97_Template, 2, 3, "div", 45)(98, ProductDashboardPage_div_98_Template, 2, 0, "div", 46);
+      \u0275\u0275template(98, ProductDashboardPage_div_98_Template, 2, 3, "div", 46)(99, ProductDashboardPage_div_99_Template, 2, 0, "div", 47);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(99, "section", 7)(100, "h4", 44);
-      \u0275\u0275text(101, "Dead Stock");
+      \u0275\u0275elementStart(100, "section", 7)(101, "h4", 45);
+      \u0275\u0275text(102, "Dead Stock");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(102, "div", 16);
-      \u0275\u0275text(103, "Products not sold in 30+ days (still in inventory)");
+      \u0275\u0275elementStart(103, "div", 16);
+      \u0275\u0275text(104, "Products not sold in 30+ days (still in inventory)");
       \u0275\u0275elementEnd();
-      \u0275\u0275template(104, ProductDashboardPage_div_104_Template, 2, 3, "div", 45)(105, ProductDashboardPage_div_105_Template, 2, 0, "div", 46);
+      \u0275\u0275template(105, ProductDashboardPage_div_105_Template, 2, 3, "div", 46)(106, ProductDashboardPage_div_106_Template, 2, 0, "div", 47);
       \u0275\u0275elementEnd()();
-      \u0275\u0275template(106, ProductDashboardPage_div_106_Template, 21, 2, "div", 47);
+      \u0275\u0275template(107, ProductDashboardPage_div_107_Template, 21, 2, "div", 48);
     }
     if (rf & 2) {
       \u0275\u0275advance(6);
@@ -75390,7 +75610,7 @@ var ProductDashboardPage = class _ProductDashboardPage {
       \u0275\u0275advance(12);
       \u0275\u0275textInterpolate(ctx.totalProducts());
       \u0275\u0275advance(12);
-      \u0275\u0275textInterpolate(\u0275\u0275pipeBind1(34, 18, ctx.totalStockQty()));
+      \u0275\u0275textInterpolate(\u0275\u0275pipeBind1(34, 19, ctx.totalStockQty()));
       \u0275\u0275advance(13);
       \u0275\u0275textInterpolate(ctx.lowStockCount());
       \u0275\u0275advance(2);
@@ -75398,8 +75618,10 @@ var ProductDashboardPage = class _ProductDashboardPage {
       \u0275\u0275advance(9);
       \u0275\u0275textInterpolate(ctx.outOfStockCount());
       \u0275\u0275advance(12);
-      \u0275\u0275textInterpolate(\u0275\u0275pipeBind1(70, 20, ctx.inventoryValue()));
+      \u0275\u0275textInterpolate(\u0275\u0275pipeBind1(70, 21, ctx.inventoryValue()));
       \u0275\u0275advance(13);
+      \u0275\u0275property("ngIf", ctx.alerts().length > 0);
+      \u0275\u0275advance();
       \u0275\u0275property("ngIf", ctx.alerts().length > 0);
       \u0275\u0275advance();
       \u0275\u0275property("ngIf", ctx.alerts().length === 0 && !ctx.loading());
@@ -75542,8 +75764,44 @@ var ProductDashboardPage = class _ProductDashboardPage {
     <a class="text-sm font-semibold text-purple-900 hover:underline" routerLink="/expiry-alerts">View All Alerts</a>
   </div>
 
+  <!-- Alerts Pagination -->
+  <div class="mt-4 flex flex-wrap items-center justify-between gap-2" *ngIf="alerts().length > 0">
+    <div class="text-xs font-semibold text-slate-600">Total: {{ alerts().length }}</div>
+    <div class="flex items-center gap-2">
+      <label class="text-xs font-semibold text-slate-600">
+        Show
+        <select
+          class="ml-2 rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs"
+          [value]="alertsPageSize()"
+          (change)="setAlertsPageSize(($any($event.target)).value)"
+        >
+          <option [value]="5">5</option>
+          <option [value]="10">10</option>
+          <option [value]="20">20</option>
+          <option [value]="50">50</option>
+        </select>
+      </label>
+
+      <button
+        class="rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
+        (click)="alertsPrevPage()"
+        [disabled]="alertsPageIndex() === 0"
+      >
+        Prev
+      </button>
+      <div class="text-xs font-semibold text-slate-600">Page {{ alertsPageIndex() + 1 }} / {{ alertsTotalPages() }}</div>
+      <button
+        class="rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
+        (click)="alertsNextPage()"
+        [disabled]="alertsPageIndex() >= alertsTotalPages() - 1"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+
   <!-- Alerts Table -->
-  <div class="mt-4 overflow-auto rounded-2xl bg-white shadow-sm ring-1 ring-slate-100" *ngIf="alerts().length > 0">
+  <div class="mt-3 overflow-auto rounded-2xl bg-white shadow-sm ring-1 ring-slate-100" *ngIf="alerts().length > 0">
     <table class="w-full border-collapse text-sm">
       <thead class="bg-slate-50">
         <tr>
@@ -75554,7 +75812,7 @@ var ProductDashboardPage = class _ProductDashboardPage {
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let a of alerts()" class="border-t border-slate-100 hover:bg-slate-50/50">
+        <tr *ngFor="let a of displayedAlerts()" class="border-t border-slate-100 hover:bg-slate-50/50">
           <td class="px-4 py-3">
             <span
               *ngIf="a.status === 'out_of_stock'"

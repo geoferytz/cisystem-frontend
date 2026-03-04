@@ -66,6 +66,18 @@ export class ShellLayout {
     return url.startsWith('/product-dashboard') || url.startsWith('/products') || url.startsWith('/categories') || url.startsWith('/inventory') || url.startsWith('/stock-movements');
   });
 
+  salesExpanded = signal(false);
+  isSalesSection = computed(() => {
+    const url = this.currentUrl();
+    return url.startsWith('/sales') || url.startsWith('/my-sales');
+  });
+
+  financeExpanded = signal(false);
+  isFinanceSection = computed(() => {
+    const url = this.currentUrl();
+    return url.startsWith('/expenses') || url.startsWith('/expense-categories') || url.startsWith('/profit-management');
+  });
+
   user = signal<MeQueryResult['me']>(null);
   userMenuOpen = signal(false);
   notificationsOpen = signal(false);
@@ -255,6 +267,14 @@ export class ShellLayout {
 
   toggleProducts(): void {
     this.productsExpanded.set(!this.productsExpanded());
+  }
+
+  toggleSales(): void {
+    this.salesExpanded.set(!this.salesExpanded());
+  }
+
+  toggleFinance(): void {
+    this.financeExpanded.set(!this.financeExpanded());
   }
 
   toggleSidebar(): void {

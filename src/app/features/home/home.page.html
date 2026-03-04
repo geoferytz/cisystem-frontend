@@ -7,12 +7,12 @@
 
 <div class="mt-4 text-sm text-red-700" *ngIf="error()">{{ error() }}</div>
 
-<div class="mt-6">
-  <div class="flex flex-wrap justify-center gap-4">
+<div class="mt-6 mx-auto max-w-8xl px-4 sm:px-6 lg:px-8">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
     <ng-container *ngFor="let c of cards()">
       <a
         *ngIf="!c.hidden"
-        class="group relative flex h-28 w-full items-center justify-between gap-4 overflow-hidden rounded-xl border border-slate-200 bg-white px-5 py-5 shadow-sm hover:border-fuchsia-200 hover:shadow-md sm:h-32 sm:w-[340px]"
+        class="group relative flex h-28 w-full items-center justify-between gap-4 overflow-hidden rounded-xl border border-slate-200 bg-white px-5 py-5 shadow-sm hover:border-fuchsia-200 hover:shadow-md sm:h-32"
         [routerLink]="c.route"
       >
         <div class="pointer-events-none absolute -right-14 -top-14 text-purple-900/10">

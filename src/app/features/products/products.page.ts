@@ -233,7 +233,7 @@ export class ProductsPage {
       brand: p.brand ?? '',
       category: p.category ?? '',
       variant: p.variant ?? '',
-      unitOfMeasure: p.unitOfMeasure ?? '',
+      unitOfMeasure: p.unitOfMeasure,
       buyingPrice: p.buyingPrice ?? null,
       sellingPrice: p.sellingPrice ?? null
     });
