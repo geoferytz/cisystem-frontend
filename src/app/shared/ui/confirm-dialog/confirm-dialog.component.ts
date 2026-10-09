@@ -16,7 +16,7 @@ export class ConfirmDialogComponent {
   @Input() message = 'Are you sure?';
   @Input() confirmText = 'Confirm';
   @Input() cancelText = 'Cancel';
-  @Input() confirmButtonClass = 'bg-red-700 hover:bg-red-800';
+  @Input() confirmButtonClass = 'bg-[#B81104] hover:bg-[#7f0c03]';
 
   @Output() cancel = new EventEmitter<void>();
   @Output() confirm = new EventEmitter<void>();

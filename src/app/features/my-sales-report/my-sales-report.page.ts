@@ -6,6 +6,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { GraphqlService } from '../../core/graphql/graphql.service';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { PagerComponent } from '../../shared/ui/pager/pager.component';
 
 type MySaleLine = {
   id: string;
@@ -28,7 +30,7 @@ type MySalesQueryResult = { mySales: MySale[] };
 @Component({
   selector: 'cis-my-sales-report-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, MoneyPipe],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, MoneyPipe, TranslatePipe, PagerComponent],
   templateUrl: './my-sales-report.page.html',
   styleUrl: './my-sales-report.page.scss'
 })
@@ -93,11 +95,25 @@ export class MySalesReportPage {
     if (!date) return [];
     return this.sales().filter((s) => this.isSameDay(s.createdAt, date));
   });
+  dailyPageSize = signal(10);
+  dailyPageIndex = signal(0);
+  displayedDaily = computed(() => {
+    const size = this.dailyPageSize();
+    const start = this.dailyPageIndex() * size;
+    return this.dailySales().slice(start, start + size);
+  });
 
   monthlySales = computed(() => {
     const month = this.selectedMonth();
     if (!month) return [];
     return this.sales().filter((s) => this.isSameMonth(s.createdAt, month));
+  });
+  monthlyPageSize = signal(10);
+  monthlyPageIndex = signal(0);
+  displayedMonthly = computed(() => {
+    const size = this.monthlyPageSize();
+    const start = this.monthlyPageIndex() * size;
+    return this.monthlySales().slice(start, start + size);
   });
 
   private saleTotal(s: MySale): number {
@@ -111,3 +127,4 @@ export class MySalesReportPage {
     return this.saleTotal(s);
   }
 }
+

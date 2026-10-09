@@ -1,92 +1,100 @@
 <div class="space-y-4">
   <div class="flex flex-wrap items-end justify-between gap-3">
     <div>
-      <div class="text-xl font-bold text-slate-900">Profit Management</div>
-      <div class="text-sm text-slate-500">Net profit = gross profit - expenses</div>
+      <div class="text-xl font-bold text-slate-900 dark:text-slate-100">Profit Management</div>
+      <div class="text-sm text-slate-500 dark:text-slate-400">Net profit = gross profit - expenses</div>
     </div>
 
     <button
       type="button"
-      class="rounded-xl bg-indigo-950 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-900 disabled:cursor-not-allowed disabled:opacity-70"
+      class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white hover:bg-pink-600 disabled:cursor-not-allowed disabled:opacity-70"
       (click)="load()"
       [disabled]="loading()"
     >
-      Search
+    {{ 'common.refresh' | translate }}
     </button>
   </div>
 
-  <form class="grid grid-cols-1 gap-3 rounded-2xl bg-white p-4 ring-1 ring-slate-200 md:grid-cols-4">
-    <label class="grid gap-2 text-xs text-slate-700">
-      Mode
-      <select class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm" [formControl]="$any(form.controls.mode)">
-        <option value="DAY">Day</option>
-        <option value="MONTH">Month</option>
-        <option value="YEAR">Year</option>
+  <form class="grid grid-cols-1 gap-3 rounded-2xl bg-white dark:bg-slate-800 p-4 ring-1 ring-slate-200 dark:ring-slate-700 md:grid-cols-4">
+    <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+      {{ 'common.mode' | translate }}
+      <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" [formControl]="$any(form.controls.mode)">
+        <option value="DAY">{{ 'common.day' | translate }}</option>
+        <option value="MONTH">{{ 'common.month' | translate }}</option>
+        <option value="YEAR">{{ 'common.year' | translate }}</option>
       </select>
     </label>
 
-    <label class="grid gap-2 text-xs text-slate-700" *ngIf="form.getRawValue().mode === 'DAY'">
-      Date
-      <input type="date" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" [formControl]="$any(form.controls.date)" />
+    <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300" *ngIf="form.getRawValue().mode === 'DAY'">
+      {{ 'common.date' | translate }}
+      <input type="date" class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" [formControl]="$any(form.controls.date)" />
     </label>
 
-    <label class="grid gap-2 text-xs text-slate-700" *ngIf="form.getRawValue().mode !== 'DAY'">
-      Year
-      <input type="number" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" [formControl]="$any(form.controls.year)" />
+    <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300" *ngIf="form.getRawValue().mode !== 'DAY'">
+      {{ 'common.year' | translate }}
+      <input type="number" class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" [formControl]="$any(form.controls.year)" />
     </label>
 
-    <label class="grid gap-2 text-xs text-slate-700" *ngIf="form.getRawValue().mode === 'MONTH'">
-      Month (1-12)
-      <input type="number" min="1" max="12" class="rounded-xl border border-slate-200 px-3 py-2 text-sm" [formControl]="$any(form.controls.month)" />
+    <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300" *ngIf="form.getRawValue().mode === 'MONTH'">
+      {{ 'common.month' | translate }} (1-12)
+      <input type="number" min="1" max="12" class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" [formControl]="$any(form.controls.month)" />
     </label>
   </form>
 
-  <div *ngIf="error()" class="rounded-2xl bg-red-50 p-4 text-sm text-red-700 ring-1 ring-red-200">
+  <div *ngIf="error()" class="rounded-2xl bg-[#B81104]/10 dark:bg-red-900/20 p-4 text-sm text-[#B81104] dark:text-red-400 ring-1 ring-[#B81104]/25 dark:ring-red-700">
     {{ error() }}
   </div>
 
-  <div class="grid grid-cols-1 gap-3 md:grid-cols-3">
-    <div class="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
-      <div class="text-xs text-slate-500">Gross Profit</div>
-      <div class="mt-1 text-2xl font-extrabold text-slate-900">{{ totalGrossProfit() | money }}</div>
+  <div class="grid grid-cols-1 gap-3 md:grid-cols-4">
+    <div class="rounded-2xl bg-white dark:bg-slate-800 p-4 ring-1 ring-slate-200 dark:ring-slate-700">
+      <div class="text-xs text-slate-500 dark:text-slate-400">{{ 'common.sales' | translate }}</div>
+      <div class="mt-1 text-2xl font-extrabold text-slate-900 dark:text-slate-100">{{ totalSales() | money }}</div>
     </div>
-    <div class="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
-      <div class="text-xs text-slate-500">Expenses</div>
-      <div class="mt-1 text-2xl font-extrabold text-slate-900">{{ totalExpenses() | money }}</div>
+    <div class="rounded-2xl bg-white dark:bg-slate-800 p-4 ring-1 ring-slate-200 dark:ring-slate-700">
+      <div class="text-xs text-slate-500 dark:text-slate-400">{{ 'common.grossProfit' | translate }}</div>
+      <div class="mt-1 text-2xl font-extrabold text-slate-900 dark:text-slate-100">{{ totalGrossProfit() | money }}</div>
     </div>
-    <div class="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
-      <div class="text-xs text-slate-500">Net Profit</div>
+    <div class="rounded-2xl bg-white dark:bg-slate-800 p-4 ring-1 ring-slate-200 dark:ring-slate-700">
+      <div class="text-xs text-slate-500 dark:text-slate-400">{{ 'common.expenses' | translate }}</div>
+      <div class="mt-1 text-2xl font-extrabold text-slate-900 dark:text-slate-100">{{ totalExpenses() | money }}</div>
+    </div>
+    <div class="rounded-2xl bg-white dark:bg-slate-800 p-4 ring-1 ring-slate-200 dark:ring-slate-700">
+      <div class="text-xs text-slate-500 dark:text-slate-400">{{ 'common.netProfit' | translate }}</div>
       <div
         class="mt-1 text-2xl font-extrabold"
-        [ngClass]="netProfitIsPositive() ? 'text-emerald-700' : 'text-red-700'"
+        [ngClass]="netProfitIsPositive() ? 'text-pink-500 dark:text-pink-400' : 'text-[#B81104] dark:text-red-400'"
       >
         {{ totalNetProfit() | money }}
       </div>
     </div>
   </div>
 
-  <div class="overflow-x-auto rounded-2xl bg-white ring-1 ring-slate-200">
+  <cis-pager class="block" [total]="rows().length" [(pageSize)]="pageSize" [(pageIndex)]="pageIndex" />
+
+  <div class="mt-3 overflow-x-auto rounded-2xl bg-white dark:bg-slate-800 ring-1 ring-slate-200 dark:ring-slate-700">
     <table class="min-w-full text-sm">
-      <thead class="bg-slate-50 text-left text-xs text-slate-500">
+      <thead class="bg-slate-50 dark:bg-slate-700 text-left text-xs text-slate-500 dark:text-slate-300">
         <tr>
-          <th class="px-4 py-3">Period</th>
-          <th class="px-4 py-3">Gross Profit</th>
-          <th class="px-4 py-3">Expenses</th>
-          <th class="px-4 py-3">Net Profit</th>
+          <th class="px-4 py-3">{{ 'common.period' | translate }}</th>
+          <th class="px-4 py-3">{{ 'common.sales' | translate }}</th>
+          <th class="px-4 py-3">{{ 'common.grossProfit' | translate }}</th>
+          <th class="px-4 py-3">{{ 'common.expenses' | translate }}</th>
+          <th class="px-4 py-3">{{ 'common.netProfit' | translate }}</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngIf="loading()">
-          <td class="px-4 py-4 text-slate-500" colspan="4">Loading...</td>
+          <td class="px-4 py-4 text-slate-500 dark:text-slate-400" colspan="5">{{ 'common.loading' | translate }}...</td>
         </tr>
         <tr *ngIf="!loading() && rows().length === 0">
-          <td class="px-4 py-4 text-slate-500" colspan="4">No data</td>
+          <td class="px-4 py-4 text-slate-500 dark:text-slate-400" colspan="5">{{ 'common.noData' | translate }}</td>
         </tr>
-        <tr *ngFor="let r of rows()" class="border-t border-slate-100">
-          <td class="px-4 py-3 font-medium text-slate-900">{{ r.label }}</td>
-          <td class="px-4 py-3">{{ r.grossProfit | money }}</td>
-          <td class="px-4 py-3">{{ r.expenses | money }}</td>
-          <td class="px-4 py-3" [ngClass]="r.netProfit >= 0 ? 'text-emerald-700' : 'text-red-700'">{{ r.netProfit | money }}</td>
+        <tr *ngFor="let r of displayedRows()" class="border-t border-slate-100 dark:border-slate-700">
+          <td class="px-4 py-3 font-medium text-slate-900 dark:text-slate-300">{{ r.label }}</td>
+          <td class="px-4 py-3 text-slate-900 dark:text-slate-300">{{ r.sales | money }}</td>
+          <td class="px-4 py-3 text-slate-900 dark:text-slate-300">{{ r.grossProfit | money }}</td>
+          <td class="px-4 py-3 text-slate-900 dark:text-slate-300">{{ r.expenses | money }}</td>
+          <td class="px-4 py-3" [ngClass]="r.netProfit >= 0 ? 'text-pink-500 dark:text-pink-400' : 'text-[#B81104] dark:text-red-400'">{{ r.netProfit | money }}</td>
         </tr>
       </tbody>
     </table>

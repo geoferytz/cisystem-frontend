@@ -1,10 +1,15 @@
-import { Component, DestroyRef, computed, signal } from '@angular/core';
+import { Component, DestroyRef, HostListener, computed, inject, signal } from '@angular/core';
+import { A11yModule } from '@angular/cdk/a11y';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/auth/auth.service';
 import { GraphqlService } from '../../core/graphql/graphql.service';
 import { ShellHeaderComponent } from './shell-header.component';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { PendingReceivingService } from '../../shared/services/pending-receiving.service';
+import { BranchContext } from '../../shared/services/branch-context.service';
+import { ResponsiveTablesDirective } from '../../shared/ui/table/table-shell.component';
 
 type MeQueryResult = {
   me: {
@@ -48,7 +53,8 @@ type UsersQueryResult = {
 @Component({
   selector: 'cis-shell',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet, ShellHeaderComponent],
+  imports: [CommonModule, A11yModule, RouterLink, RouterLinkActive, RouterOutlet, ShellHeaderComponent, TranslatePipe],
+  hostDirectives: [ResponsiveTablesDirective],
   templateUrl: './shell.layout.html',
   styleUrl: './shell.layout.scss'
 })
@@ -59,11 +65,12 @@ export class ShellLayout {
   isHome = computed(() => this.currentUrl() === '/home' || this.currentUrl().startsWith('/home?'));
 
   sidebarOpen = signal(true);
+  isMobile = signal(false);
 
   productsExpanded = signal(false);
   isProductsSection = computed(() => {
     const url = this.currentUrl();
-    return url.startsWith('/product-dashboard') || url.startsWith('/products') || url.startsWith('/categories') || url.startsWith('/inventory') || url.startsWith('/stock-movements');
+    return url.startsWith('/product-dashboard') || url.startsWith('/products') || url.startsWith('/categories') || url.startsWith('/stock-movements') || url.startsWith('/transfers') || url.startsWith('/expiry-alerts');
   });
 
   salesExpanded = signal(false);
@@ -82,6 +89,11 @@ export class ShellLayout {
   userMenuOpen = signal(false);
   notificationsOpen = signal(false);
   notificationsCount = signal(0);
+  private readonly pendingReceiving = inject(PendingReceivingService);
+  private readonly branchCtx = inject(BranchContext);
+  pendingReceivingCount = this.pendingReceiving.count;
+  langMenuOpen = signal(false);
+  branchMenuOpen = signal(false);
 
   myPermissions = signal<UserPermission[]>([]);
 
@@ -108,20 +120,34 @@ export class ShellLayout {
     private readonly router: Router,
     private readonly destroyRef: DestroyRef
   ) {
-    if (typeof window !== 'undefined' && window.innerWidth < 768) {
-      this.sidebarOpen.set(false);
+    if (typeof window !== 'undefined') {
+      const viewport = window.matchMedia('(max-width: 767px)');
+      const updateViewport = () => {
+        this.isMobile.set(viewport.matches);
+        this.sidebarOpen.set(!viewport.matches);
+        this.closeSections();
+      };
+      updateViewport();
+      viewport.addEventListener('change', updateViewport);
+      this.destroyRef.onDestroy(() => viewport.removeEventListener('change', updateViewport));
     }
     this.currentUrl.set(this.router.url);
     this.router.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((e) => {
       if (e instanceof NavigationEnd) {
         this.currentUrl.set(e.urlAfterRedirects);
+        this.closeMenus();
+        this.closeSections();
+        if (this.isMobile()) this.closeSidebar();
+        if (this.isAuthed()) this.loadPendingReceiving();
       }
     });
 
     if (this.isAuthed()) {
       this.loadMe();
       this.loadMyPermissions();
+      this.loadPendingReceiving();
       this.refreshNotifications();
+      this.branchCtx.load();
     }
   }
 
@@ -249,6 +275,8 @@ export class ShellLayout {
     this.userMenuOpen.set(!this.userMenuOpen());
     if (this.userMenuOpen()) {
       this.notificationsOpen.set(false);
+      this.langMenuOpen.set(false);
+      this.branchMenuOpen.set(false);
     }
   }
 
@@ -256,6 +284,8 @@ export class ShellLayout {
     this.notificationsOpen.set(!this.notificationsOpen());
     if (this.notificationsOpen()) {
       this.userMenuOpen.set(false);
+      this.langMenuOpen.set(false);
+      this.branchMenuOpen.set(false);
       this.refreshNotifications();
     }
   }
@@ -263,6 +293,26 @@ export class ShellLayout {
   closeMenus(): void {
     this.userMenuOpen.set(false);
     this.notificationsOpen.set(false);
+    this.langMenuOpen.set(false);
+    this.branchMenuOpen.set(false);
+  }
+
+  toggleLangMenu(): void {
+    this.langMenuOpen.set(!this.langMenuOpen());
+    if (this.langMenuOpen()) {
+      this.userMenuOpen.set(false);
+      this.notificationsOpen.set(false);
+      this.branchMenuOpen.set(false);
+    }
+  }
+
+  toggleBranchMenu(): void {
+    this.branchMenuOpen.set(!this.branchMenuOpen());
+    if (this.branchMenuOpen()) {
+      this.userMenuOpen.set(false);
+      this.notificationsOpen.set(false);
+      this.langMenuOpen.set(false);
+    }
   }
 
   toggleProducts(): void {
@@ -278,31 +328,51 @@ export class ShellLayout {
   }
 
   toggleSidebar(): void {
+    this.closeMenus();
     this.sidebarOpen.set(!this.sidebarOpen());
+    if (!this.sidebarOpen()) this.closeSections();
   }
 
   closeSidebar(): void {
     this.sidebarOpen.set(false);
+    this.closeSections();
+  }
+
+  private closeSections(): void {
+    this.productsExpanded.set(false);
+    this.salesExpanded.set(false);
+    this.financeExpanded.set(false);
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    this.closeMenus();
+    this.closeSections();
+    if (this.isMobile()) this.closeSidebar();
+  }
+
+  loadPendingReceiving(): void {
+    this.pendingReceiving.refresh();
   }
 
   refreshNotifications(): void {
-    const expiryQuery = `query Expiry($days: Int!) { expiryAlerts(days: $days) { productId } }`;
-    const lowStockQuery = `query LowStock($threshold: Int!) { lowStockAlerts(threshold: $threshold) { productId } }`;
+    const expiryQuery = `query Expiry($days: Int!, $branch: String) { expiryAlerts(days: $days, branch: $branch) { productId } }`;
+    const lowStockQuery = `query LowStock($threshold: Int!, $branch: String) { lowStockAlerts(threshold: $threshold, branch: $branch) { productId } }`;
 
-    this.gql.request<ExpiryAlertsQueryResult>(expiryQuery, { days: 30 }).subscribe({
+    this.gql.request<ExpiryAlertsQueryResult>(expiryQuery, { days: 30, branch: this.branchCtx.effective() }).subscribe({
       next: (res) => {
         const expiryCount = res.expiryAlerts.length;
-        this.gql.request<LowStockAlertsQueryResult>(lowStockQuery, { threshold: 10 }).subscribe({
+        this.gql.request<LowStockAlertsQueryResult>(lowStockQuery, { threshold: 10, branch: this.branchCtx.effective() }).subscribe({
           next: (ls) => {
-            this.notificationsCount.set(expiryCount + ls.lowStockAlerts.length);
+            this.notificationsCount.set(expiryCount + ls.lowStockAlerts.length + this.pendingReceivingCount());
           },
           error: () => {
-            this.notificationsCount.set(expiryCount);
+            this.notificationsCount.set(expiryCount + this.pendingReceivingCount());
           }
         });
       },
       error: () => {
-        this.notificationsCount.set(0);
+        this.notificationsCount.set(this.pendingReceivingCount());
       }
     });
   }

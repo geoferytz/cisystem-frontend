@@ -1,0 +1,187 @@
+<div class="flex flex-wrap items-center justify-between gap-3">
+  <div class="flex items-center gap-3">
+    <a routerLink="/inventory" class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600" aria-label="Back to inventory">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+    </a>
+    <div>
+      <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">Inventory Analytics</h2>
+      <p class="text-xs text-slate-500 dark:text-slate-400">Stock performance, aging and recommendations</p>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-1 rounded-xl bg-slate-100 p-1 dark:bg-slate-700">
+    <button type="button" class="rounded-lg px-3 py-1.5 text-xs font-semibold" [class.bg-white]="period() === 'weekly'" [class.text-slate-900]="period() === 'weekly'" [class.shadow-sm]="period() === 'weekly'" [class.text-slate-600]="period() !== 'weekly'" [class.dark:bg-slate-800]="period() === 'weekly'" [class.dark:text-slate-100]="period() === 'weekly'" [class.dark:text-slate-300]="period() !== 'weekly'" (click)="setPeriod('weekly')">Weekly</button>
+    <button type="button" class="rounded-lg px-3 py-1.5 text-xs font-semibold" [class.bg-white]="period() === 'monthly'" [class.text-slate-900]="period() === 'monthly'" [class.shadow-sm]="period() === 'monthly'" [class.text-slate-600]="period() !== 'monthly'" [class.dark:bg-slate-800]="period() === 'monthly'" [class.dark:text-slate-100]="period() === 'monthly'" [class.dark:text-slate-300]="period() !== 'monthly'" (click)="setPeriod('monthly')">Monthly</button>
+    <button type="button" class="rounded-lg px-3 py-1.5 text-xs font-semibold" [class.bg-white]="period() === 'yearly'" [class.text-slate-900]="period() === 'yearly'" [class.shadow-sm]="period() === 'yearly'" [class.text-slate-600]="period() !== 'yearly'" [class.dark:bg-slate-800]="period() === 'yearly'" [class.dark:text-slate-100]="period() === 'yearly'" [class.dark:text-slate-300]="period() !== 'yearly'" (click)="setPeriod('yearly')">Yearly</button>
+  </div>
+</div>
+
+<div class="mt-3 text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">{{ error() }}</div>
+
+<div class="mt-4 flex flex-wrap gap-2 border-b border-slate-200 pb-2 dark:border-slate-700">
+  <button type="button" class="rounded-xl px-3 py-2 text-sm font-semibold" [class.bg-[#6c151e]]="tab() === 'overview'" [class.text-white]="tab() === 'overview'" [class.text-slate-600]="tab() !== 'overview'" [class.dark:text-slate-300]="tab() !== 'overview'" [class.hover:bg-slate-100]="tab() !== 'overview'" [class.dark:hover:bg-slate-700]="tab() !== 'overview'" (click)="setTab('overview')">Overview</button>
+  <button type="button" class="rounded-xl px-3 py-2 text-sm font-semibold" [class.bg-[#6c151e]]="tab() === 'classification'" [class.text-white]="tab() === 'classification'" [class.text-slate-600]="tab() !== 'classification'" [class.dark:text-slate-300]="tab() !== 'classification'" [class.hover:bg-slate-100]="tab() !== 'classification'" [class.dark:hover:bg-slate-700]="tab() !== 'classification'" (click)="setTab('classification')">Classification</button>
+  <button type="button" class="rounded-xl px-3 py-2 text-sm font-semibold" [class.bg-[#6c151e]]="tab() === 'aging'" [class.text-white]="tab() === 'aging'" [class.text-slate-600]="tab() !== 'aging'" [class.dark:text-slate-300]="tab() !== 'aging'" [class.hover:bg-slate-100]="tab() !== 'aging'" [class.dark:hover:bg-slate-700]="tab() !== 'aging'" (click)="setTab('aging')">Stock Aging</button>
+  <button type="button" class="rounded-xl px-3 py-2 text-sm font-semibold" [class.bg-[#6c151e]]="tab() === 'recommendations'" [class.text-white]="tab() === 'recommendations'" [class.text-slate-600]="tab() !== 'recommendations'" [class.dark:text-slate-300]="tab() !== 'recommendations'" [class.hover:bg-slate-100]="tab() !== 'recommendations'" [class.dark:hover:bg-slate-700]="tab() !== 'recommendations'" (click)="setTab('recommendations')">Strategic Recommendations</button>
+</div>
+
+<div class="mt-3 text-sm text-slate-500 dark:text-slate-400" *ngIf="loading()">Loading analytics…</div>
+
+<!-- Overview -->
+<section *ngIf="tab() === 'overview' && !loading()" class="mt-4 grid gap-4">
+  <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+    <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100 dark:bg-slate-800 dark:ring-slate-700">
+      <div class="text-xs font-semibold text-slate-500 dark:text-slate-400">Products Tracked</div>
+      <div class="mt-1 text-2xl font-extrabold text-slate-900 dark:text-slate-100">{{ stats().length }}</div>
+    </div>
+    <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100 dark:bg-slate-800 dark:ring-slate-700">
+      <div class="text-xs font-semibold text-slate-500 dark:text-slate-400">Units On Hand</div>
+      <div class="mt-1 text-2xl font-extrabold text-slate-900 dark:text-slate-100">{{ totalUnits() }}</div>
+    </div>
+    <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100 dark:bg-slate-800 dark:ring-slate-700">
+      <div class="text-xs font-semibold text-slate-500 dark:text-slate-400">Stock Value</div>
+      <div class="mt-1 text-2xl font-extrabold text-slate-900 dark:text-slate-100">{{ (stockValue() ?? 0) | money }}</div>
+    </div>
+    <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100 dark:bg-slate-800 dark:ring-slate-700">
+      <div class="text-xs font-semibold text-slate-500 dark:text-slate-400">Units Sold ({{ period() }})</div>
+      <div class="mt-1 text-2xl font-extrabold text-slate-900 dark:text-slate-100">{{ unitsSold() }}</div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+    <div class="rounded-2xl bg-emerald-50 p-4 ring-1 ring-emerald-100 dark:bg-emerald-900/20 dark:ring-emerald-800">
+      <div class="text-xs font-semibold text-emerald-800 dark:text-emerald-300">Fast Moving</div>
+      <div class="mt-1 text-2xl font-extrabold text-emerald-900 dark:text-emerald-200">{{ fastCount() }}</div>
+    </div>
+    <div class="rounded-2xl bg-amber-50 p-4 ring-1 ring-amber-100 dark:bg-amber-900/20 dark:ring-amber-800">
+      <div class="text-xs font-semibold text-amber-800 dark:text-amber-300">Slow Moving</div>
+      <div class="mt-1 text-2xl font-extrabold text-amber-900 dark:text-amber-200">{{ slowCount() }}</div>
+    </div>
+    <div class="rounded-2xl bg-[#B81104]/10 p-4 ring-1 ring-[#B81104]/20">
+      <div class="text-xs font-semibold text-red-800 dark:text-red-300">Dead Stock</div>
+      <div class="mt-1 text-2xl font-extrabold text-red-900 dark:text-red-200">{{ deadCount() }}</div>
+    </div>
+    <div class="rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200 dark:bg-slate-800 dark:ring-slate-700">
+      <div class="text-xs font-semibold text-slate-500 dark:text-slate-400">No Movement</div>
+      <div class="mt-1 text-2xl font-extrabold text-slate-700 dark:text-slate-200">{{ idleCount() }}</div>
+    </div>
+  </div>
+
+  <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100 dark:bg-slate-800 dark:ring-slate-700">
+    <h3 class="text-sm font-semibold text-slate-900 dark:text-slate-100">Stock Aging Snapshot</h3>
+    <div class="mt-3 flex flex-wrap gap-2">
+      <span *ngFor="let b of agingBuckets()" class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ring-1" [class]="agingBucketBadge(b.bucket)">
+        {{ b.bucket }}: {{ b.qty }} pcs
+      </span>
+      <span *ngIf="!agingBuckets().length" class="text-xs text-slate-500 dark:text-slate-400">No stock on hand.</span>
+    </div>
+  </div>
+</section>
+
+<!-- Classification -->
+<section *ngIf="tab() === 'classification' && !loading()" class="mt-4">
+  <div class="flex flex-wrap gap-2">
+    <button type="button" class="rounded-full px-3 py-1.5 text-xs font-semibold ring-1" [class.bg-slate-900]="classFilter() === 'all'" [class.text-white]="classFilter() === 'all'" [class.ring-slate-900]="classFilter() === 'all'" [class.bg-white]="classFilter() !== 'all'" [class.text-slate-600]="classFilter() !== 'all'" [class.ring-slate-200]="classFilter() !== 'all'" [class.dark:bg-slate-100]="classFilter() === 'all'" [class.dark:text-slate-900]="classFilter() === 'all'" [class.dark:bg-slate-800]="classFilter() !== 'all'" [class.dark:text-slate-300]="classFilter() !== 'all'" [class.dark:ring-slate-600]="classFilter() !== 'all'" (click)="setClassFilter('all')">All Classification ({{ stats().length }})</button>
+    <button type="button" class="rounded-full px-3 py-1.5 text-xs font-semibold ring-1" [class.bg-emerald-600]="classFilter() === 'fast'" [class.text-white]="classFilter() === 'fast'" [class.ring-emerald-600]="classFilter() === 'fast'" [class.bg-white]="classFilter() !== 'fast'" [class.text-emerald-700]="classFilter() !== 'fast'" [class.ring-emerald-200]="classFilter() !== 'fast'" [class.dark:bg-emerald-800]="classFilter() !== 'fast'" [class.dark:text-emerald-300]="classFilter() !== 'fast'" [class.dark:ring-emerald-700]="classFilter() !== 'fast'" (click)="setClassFilter('fast')">Fast Moving ({{ fastCount() }})</button>
+    <button type="button" class="rounded-full px-3 py-1.5 text-xs font-semibold ring-1" [class.bg-amber-500]="classFilter() === 'slow'" [class.text-white]="classFilter() === 'slow'" [class.ring-amber-500]="classFilter() === 'slow'" [class.bg-white]="classFilter() !== 'slow'" [class.text-amber-700]="classFilter() !== 'slow'" [class.ring-amber-200]="classFilter() !== 'slow'" [class.dark:bg-amber-800]="classFilter() !== 'slow'" [class.dark:text-amber-300]="classFilter() !== 'slow'" [class.dark:ring-amber-700]="classFilter() !== 'slow'" (click)="setClassFilter('slow')">Slow Moving ({{ slowCount() }})</button>
+    <button type="button" class="rounded-full px-3 py-1.5 text-xs font-semibold ring-1" [class.bg-[#B81104]]="classFilter() === 'dead'" [class.text-white]="classFilter() === 'dead'" [class.ring-[#B81104]]="classFilter() === 'dead'" [class.bg-white]="classFilter() !== 'dead'" [class.text-red-700]="classFilter() !== 'dead'" [class.ring-red-200]="classFilter() !== 'dead'" [class.dark:bg-slate-800]="classFilter() !== 'dead'" [class.dark:text-red-300]="classFilter() !== 'dead'" [class.dark:ring-red-700]="classFilter() !== 'dead'" (click)="setClassFilter('dead')">Dead Stock ({{ deadCount() }})</button>
+  </div>
+
+  <cis-pager class="mt-3 block" [total]="filteredClass().length" [(pageSize)]="classPageSize" [(pageIndex)]="classPageIndex" />
+
+  <div class="mt-3 overflow-auto rounded-2xl bg-white shadow-sm ring-1 ring-slate-100 dark:bg-slate-800 dark:ring-slate-700">
+    <table class="w-full border-collapse text-sm">
+      <thead class="bg-slate-50 dark:bg-slate-700">
+        <tr>
+          <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.sku' | translate }}</th>
+          <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.product' | translate }}</th>
+          <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">Classification</th>
+          <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">On Hand</th>
+          <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">Sold ({{ period() }})</th>
+          <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">Days of Stock</th>
+          <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">Stock Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of displayedClass()" class="border-t border-slate-100 dark:border-slate-700">
+          <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ s.sku }}</td>
+          <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ s.productName }}</td>
+          <td class="px-3 py-2"><span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ring-1" [class]="classBadge(s.stockClass)">{{ classLabel(s.stockClass) }}</span></td>
+          <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ s.qtyOnHand }}</td>
+          <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ s.soldQty }}</td>
+          <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ s.daysSupply !== null ? (s.daysSupply | number:'1.0-0') : '—' }}</td>
+          <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ s.stockValue | money }}</td>
+        </tr>
+        <tr *ngIf="!displayedClass().length">
+          <td colspan="7" class="px-3 py-4 text-center text-sm text-slate-500 dark:text-slate-400">No products in this classification.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Stock Aging -->
+<section *ngIf="tab() === 'aging' && !loading()" class="mt-4">
+  <div class="flex flex-wrap gap-2">
+    <span *ngFor="let b of agingBuckets()" class="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-semibold ring-1" [class]="agingBucketBadge(b.bucket)">{{ b.bucket }}: {{ b.qty }} pcs</span>
+  </div>
+
+  <cis-pager class="mt-3 block" [total]="aging().length" [(pageSize)]="agingPageSize" [(pageIndex)]="agingPageIndex" />
+
+  <div class="mt-3 overflow-auto rounded-2xl bg-white shadow-sm ring-1 ring-slate-100 dark:bg-slate-800 dark:ring-slate-700">
+    <table class="w-full border-collapse text-sm">
+      <thead class="bg-slate-50 dark:bg-slate-700">
+        <tr>
+          <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.sku' | translate }}</th>
+          <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.product' | translate }}</th>
+          <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.batch' | translate }}</th>
+          <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.location' | translate }}</th>
+          <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">Received</th>
+          <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">Days in Stock</th>
+          <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">Age Bucket</th>
+          <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.qty' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let a of displayedAging()" class="border-t border-slate-100 dark:border-slate-700">
+          <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ a.sku }}</td>
+          <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ a.productName }}</td>
+          <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ a.batchNumber }}</td>
+          <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ a.location }}</td>
+          <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ a.receivedAt ? (a.receivedAt | date:'dd MMM yyyy') : '—' }}</td>
+          <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ a.daysInStock ?? '—' }}</td>
+          <td class="px-3 py-2"><span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ring-1" [class]="agingBucketBadge(a.bucket)">{{ a.bucket }}</span></td>
+          <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ a.qtyOnHand }}</td>
+        </tr>
+        <tr *ngIf="!displayedAging().length">
+          <td colspan="8" class="px-3 py-4 text-center text-sm text-slate-500 dark:text-slate-400">No stock on hand.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Recommendations -->
+<section *ngIf="tab() === 'recommendations' && !loading()" class="mt-4">
+  <div class="flex flex-wrap gap-2">
+    <button type="button" class="rounded-full px-3 py-1.5 text-xs font-semibold ring-1" [class.bg-slate-900]="recFilter() === 'all'" [class.text-white]="recFilter() === 'all'" [class.ring-slate-900]="recFilter() === 'all'" [class.bg-white]="recFilter() !== 'all'" [class.text-slate-600]="recFilter() !== 'all'" [class.ring-slate-200]="recFilter() !== 'all'" [class.dark:bg-slate-100]="recFilter() === 'all'" [class.dark:text-slate-900]="recFilter() === 'all'" [class.dark:bg-slate-800]="recFilter() !== 'all'" [class.dark:text-slate-300]="recFilter() !== 'all'" [class.dark:ring-slate-600]="recFilter() !== 'all'" (click)="setRecFilter('all')">All Priority ({{ recommendations().length }})</button>
+    <button type="button" class="rounded-full px-3 py-1.5 text-xs font-semibold ring-1" [class.bg-[#B81104]]="recFilter() === 'high'" [class.text-white]="recFilter() === 'high'" [class.ring-[#B81104]]="recFilter() === 'high'" [class.bg-white]="recFilter() !== 'high'" [class.text-red-700]="recFilter() !== 'high'" [class.ring-red-200]="recFilter() !== 'high'" [class.dark:bg-slate-800]="recFilter() !== 'high'" [class.dark:text-red-300]="recFilter() !== 'high'" [class.dark:ring-red-700]="recFilter() !== 'high'" (click)="setRecFilter('high')">High Priority</button>
+    <button type="button" class="rounded-full px-3 py-1.5 text-xs font-semibold ring-1" [class.bg-amber-500]="recFilter() === 'medium'" [class.text-white]="recFilter() === 'medium'" [class.ring-amber-500]="recFilter() === 'medium'" [class.bg-white]="recFilter() !== 'medium'" [class.text-amber-700]="recFilter() !== 'medium'" [class.ring-amber-200]="recFilter() !== 'medium'" [class.dark:bg-amber-800]="recFilter() !== 'medium'" [class.dark:text-amber-300]="recFilter() !== 'medium'" [class.dark:ring-amber-700]="recFilter() !== 'medium'" (click)="setRecFilter('medium')">Medium Priority</button>
+    <button type="button" class="rounded-full px-3 py-1.5 text-xs font-semibold ring-1" [class.bg-sky-600]="recFilter() === 'low'" [class.text-white]="recFilter() === 'low'" [class.ring-sky-600]="recFilter() === 'low'" [class.bg-white]="recFilter() !== 'low'" [class.text-sky-700]="recFilter() !== 'low'" [class.ring-sky-200]="recFilter() !== 'low'" [class.dark:bg-sky-800]="recFilter() !== 'low'" [class.dark:text-sky-300]="recFilter() !== 'low'" [class.dark:ring-sky-700]="recFilter() !== 'low'" (click)="setRecFilter('low')">Low Priority</button>
+  </div>
+
+  <cis-pager class="mt-3 block" [total]="filteredRecs().length" [(pageSize)]="recPageSize" [(pageIndex)]="recPageIndex" />
+
+  <div class="mt-3 grid gap-2">
+    <div *ngFor="let r of displayedRecs()" class="flex items-start gap-3 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100 dark:bg-slate-800 dark:ring-slate-700">
+      <span class="mt-0.5 inline-flex shrink-0 items-center rounded-full px-2 py-1 text-xs font-semibold uppercase ring-1" [class]="priorityBadge(r.priority)">{{ r.priority }}</span>
+      <div class="min-w-0">
+        <div class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ r.title }} — {{ r.productName }} <span class="text-xs font-normal text-slate-500 dark:text-slate-400">({{ r.sku }})</span></div>
+        <div class="mt-1 text-xs text-slate-600 dark:text-slate-400">{{ r.detail }}</div>
+      </div>
+    </div>
+    <div *ngIf="!displayedRecs().length" class="rounded-2xl bg-white p-4 text-center text-sm text-slate-500 shadow-sm ring-1 ring-slate-100 dark:bg-slate-800 dark:text-slate-400 dark:ring-slate-700">
+      No recommendations — inventory looks healthy for this period.
+    </div>
+  </div>
+</section>

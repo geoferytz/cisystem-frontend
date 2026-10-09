@@ -1,8 +1,13 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { GraphqlService } from '../../core/graphql/graphql.service';
+import { BranchContext } from '../../shared/services/branch-context.service';
 import { inject } from '@angular/core';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { PendingRepurchasesComponent } from '../purchasing/pending-repurchases.component';
+import { RowActionsMenuComponent } from '../../shared/ui/row-actions-menu/row-actions-menu.component';
 
 type InventoryItem = {
   id: string;
@@ -39,7 +44,7 @@ type LowStockBatchAlertsQueryResult = {
 @Component({
   selector: 'cis-inventory-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslatePipe, PendingRepurchasesComponent, RowActionsMenuComponent],
   templateUrl: './inventory.page.html',
   styleUrl: './inventory.page.scss'
 })
@@ -47,6 +52,20 @@ export class InventoryPage {
   loading = signal(false);
   error = signal<string | null>(null);
   items = signal<InventoryItem[]>([]);
+
+  pageSize = signal(10);
+  pageIndex = signal(0);
+
+  displayedItems = computed(() => {
+    const all = this.items();
+    const size = this.pageSize();
+    const start = this.pageIndex() * size;
+    return all.slice(start, start + size);
+  });
+
+  totalPages = computed(() => {
+    return Math.max(1, Math.ceil(this.items().length / this.pageSize()));
+  });
 
   adjustDialogOpen = signal(false);
   pendingAdjust = signal<InventoryItem | null>(null);
@@ -56,7 +75,13 @@ export class InventoryPage {
 
   lowStockKeys = signal<Set<string>>(new Set());
 
+  analyticsTotalUnits = computed(() => this.items().reduce((sum, i) => sum + Number(i.qtyOnHand ?? 0), 0));
+  analyticsProducts = computed(() => new Set(this.items().map((i) => i.productId)).size);
+  analyticsBatches = computed(() => new Set(this.items().map((i) => i.batchId)).size);
+  analyticsLowStock = computed(() => this.lowStockKeys().size);
+
   private readonly fb = inject(FormBuilder);
+  private readonly branchCtx = inject(BranchContext);
 
   filterForm = this.fb.group({
     query: [''],
@@ -66,9 +91,12 @@ export class InventoryPage {
   });
 
   adjustForm = this.fb.group({
-    delta: [0 as number, [Validators.required]],
+    delta: [null as number | null, [Validators.required]],
+    location: ['', [Validators.required]],
     note: ['']
   });
+
+  adjustError = signal<string | null>(null);
 
   constructor(private readonly gql: GraphqlService) {
     this.load();
@@ -76,7 +104,8 @@ export class InventoryPage {
 
   openAdjust(i: InventoryItem): void {
     this.pendingAdjust.set(i);
-    this.adjustForm.reset({ delta: 0, note: '' });
+    this.adjustError.set(null);
+    this.adjustForm.reset({ delta: null, location: i.location, note: '' });
     this.adjustDialogOpen.set(true);
   }
 
@@ -88,11 +117,25 @@ export class InventoryPage {
   confirmAdjust(): void {
     const row = this.pendingAdjust();
     if (!row) return;
-    if (this.adjustForm.invalid) return;
+    if (this.adjustForm.invalid) {
+      this.adjustForm.markAllAsTouched();
+      this.adjustError.set('Enter a quantity change and a location.');
+      return;
+    }
 
     const raw = this.adjustForm.getRawValue();
     const delta = Number(raw.delta ?? 0);
-    if (!delta) return;
+    if (!delta || !Number.isSafeInteger(delta)) {
+      this.adjustError.set('Enter a whole-number change (use negative to subtract).');
+      return;
+    }
+
+    const location = (raw.location ?? '').trim();
+    if (location === row.location && row.qtyOnHand + delta < 0) {
+      this.adjustError.set(`Only ${row.qtyOnHand} in stock here — the result cannot be negative.`);
+      return;
+    }
+    this.adjustError.set(null);
 
     this.loading.set(true);
     this.error.set(null);
@@ -107,7 +150,7 @@ export class InventoryPage {
       .request<AdjustInventoryMutationResult>(mutation, {
         input: {
           batchId: row.batchId,
-          location: row.location,
+          location,
           delta,
           note: raw.note || null
         }
@@ -120,8 +163,7 @@ export class InventoryPage {
           this.load();
         },
         error: (e: unknown) => {
-          this.error.set(e instanceof Error ? e.message : 'Failed to adjust inventory');
-          this.showToast('Failed to adjust inventory', 'error');
+          this.adjustError.set(e instanceof Error ? e.message : 'Failed to adjust inventory');
           this.loading.set(false);
         }
       });
@@ -166,12 +208,14 @@ export class InventoryPage {
       .request<InventoryQueryResult>(q, {
         filter: {
           query: query || null,
-          includeZero: !!includeZero
+          includeZero: !!includeZero,
+          branch: this.branchCtx.effective()
         }
       })
       .subscribe({
         next: (res) => {
           this.items.set(res.inventory);
+          this.pageIndex.set(0);
 
           const threshold = Number(lowStockThreshold ?? 0);
           if (Number.isFinite(threshold) && threshold > 0) {
@@ -189,16 +233,33 @@ export class InventoryPage {
       });
   }
 
+  setPageSize(size: number | string): void {
+    const next = Number(size);
+    if (!Number.isFinite(next) || next <= 0) return;
+    this.pageSize.set(next);
+    this.pageIndex.set(0);
+  }
+
+  prevPage(): void {
+    const idx = this.pageIndex();
+    if (idx > 0) this.pageIndex.set(idx - 1);
+  }
+
+  nextPage(): void {
+    const idx = this.pageIndex();
+    if (idx < this.totalPages() - 1) this.pageIndex.set(idx + 1);
+  }
+
   isLowStock(i: InventoryItem): boolean {
     return this.lowStockKeys().has(this.lowStockKey(i.batchId, i.location));
   }
 
   private loadLowStockAlerts(threshold: number): void {
-    const q = `query LowStockBatchAlerts($threshold: Int!) {
-      lowStockBatchAlerts(threshold: $threshold) { batchId location qtyOnHand threshold }
+    const q = `query LowStockBatchAlerts($threshold: Int!, $branch: String) {
+      lowStockBatchAlerts(threshold: $threshold, branch: $branch) { batchId location qtyOnHand threshold }
     }`;
 
-    this.gql.request<LowStockBatchAlertsQueryResult>(q, { threshold }).subscribe({
+    this.gql.request<LowStockBatchAlertsQueryResult>(q, { threshold, branch: this.branchCtx.effective() }).subscribe({
       next: (res) => {
         const set = new Set<string>();
         for (const a of res.lowStockBatchAlerts ?? []) {
@@ -230,10 +291,10 @@ export class InventoryPage {
 
   statusClasses(i: InventoryItem): string {
     const s = this.statusLabel(i);
-    if (s === 'Expired') return 'bg-red-50 text-red-800 ring-red-200';
+    if (s === 'Expired') return 'bg-[#B81104]/10 text-red-800 ring-[#B81104]/25';
     if (s === 'Near expiry') return 'bg-amber-50 text-amber-900 ring-amber-200';
     if (s === 'Out of stock') return 'bg-slate-100 text-slate-700 ring-slate-200';
-    return 'bg-emerald-50 text-emerald-900 ring-emerald-200';
+    return 'bg-[#FFFACD] text-emerald-900 ring-pink-500/25';
   }
 
   private startOfDay(d: Date): Date {
@@ -254,3 +315,4 @@ export class InventoryPage {
     return this.startOfDay(d);
   }
 }
+

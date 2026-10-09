@@ -2,9 +2,13 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GraphqlService } from '../../core/graphql/graphql.service';
+import { BranchContext } from '../../shared/services/branch-context.service';
 import { ProductFormComponent, ProductFormValue } from './product-form/product-form.component';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
+import { RowActionsMenuComponent } from '../../shared/ui/row-actions-menu/row-actions-menu.component';
 import { PermissionService } from '../../shared/services/permission.service';
+import { PendingReceivingService } from '../../shared/services/pending-receiving.service';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
 
 type Product = {
   id: string;
@@ -66,7 +70,7 @@ type UpdateBatchNumberMutationResult = {
 @Component({
   selector: 'cis-products-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ProductFormComponent, MoneyPipe],
+  imports: [CommonModule, ReactiveFormsModule, ProductFormComponent, MoneyPipe, TranslatePipe, RowActionsMenuComponent],
   templateUrl: './products.page.html',
   styleUrl: './products.page.scss'
 })
@@ -77,7 +81,7 @@ export class ProductsPage {
   error = signal<string | null>(null);
   products = signal<Product[]>([]);
 
-  pageSize = signal(20);
+  pageSize = signal(10);
   pageIndex = signal(0);
 
   displayedProducts = computed(() => {
@@ -96,6 +100,7 @@ export class ProductsPage {
 
   categories = signal<Category[]>([]);
   searchQuery = signal('');
+  statusFilter = signal<'active' | 'inactive' | 'all'>('active');
 
   editingId = signal<string | null>(null);
   editingBatchId = signal<string | null>(null);
@@ -110,6 +115,8 @@ export class ProductsPage {
   createDialogOpen = signal(false);
 
   private readonly fb = inject(FormBuilder);
+  private readonly branchCtx = inject(BranchContext);
+  private readonly pendingReceiving = inject(PendingReceivingService);
 
   editForm = this.fb.group({
     sku: ['', [Validators.required]],
@@ -171,7 +178,13 @@ export class ProductsPage {
       }
     }`;
     const q = this.searchQuery().trim();
-    const variables = q ? { filter: { query: q } } : { filter: null };
+    const status = this.statusFilter();
+    const variables = {
+      filter: {
+        query: q || null,
+        active: status === 'all' ? null : status === 'active'
+      }
+    };
 
     this.gql.request<ProductsQueryResult>(query, variables).subscribe({
       next: (res) => {
@@ -188,6 +201,11 @@ export class ProductsPage {
 
   onSearch(value: string): void {
     this.searchQuery.set(value);
+    this.load();
+  }
+
+  setStatusFilter(value: string): void {
+    this.statusFilter.set(value === 'inactive' || value === 'all' ? value : 'active');
     this.load();
   }
 
@@ -354,12 +372,42 @@ export class ProductsPage {
           }
           this.deleteDialogOpen.set(false);
           this.pendingDelete.set(null);
-          this.showToast('Product deleted successfully', 'success');
+          this.showToast('Product deactivated — hidden until reactivated', 'success');
           this.load();
         },
         error: (e: unknown) => {
           this.error.set(e instanceof Error ? e.message : 'Failed to delete');
           this.showToast('Failed to delete product', 'error');
+          this.loading.set(false);
+        }
+      });
+  }
+
+  activate(p: Product): void {
+    if (!this.perm.canEdit('PRODUCTS') || this.loading()) return;
+
+    this.loading.set(true);
+    this.error.set(null);
+
+    const mutation = `mutation SetStatus($input: SetProductStatusInput!) {
+      setProductStatus(input: $input) { id active }
+    }`;
+
+    this.gql
+      .request<SetProductStatusMutationResult>(mutation, {
+        input: {
+          id: p.id,
+          active: true
+        }
+      })
+      .subscribe({
+        next: () => {
+          this.showToast('Product activated', 'success');
+          this.load();
+        },
+        error: (e: unknown) => {
+          this.error.set(e instanceof Error ? e.message : 'Failed to activate');
+          this.showToast('Failed to activate product', 'error');
           this.loading.set(false);
         }
       });
@@ -402,49 +450,55 @@ export class ProductsPage {
       variant: value.variant,
       unitOfMeasure: value.unitOfMeasure,
       buyingPrice: value.buyingPrice,
-      sellingPrice: value.sellingPrice
+      sellingPrice: value.sellingPrice,
+      active: false,
+      units: value.units
     };
 
     const mutation = `mutation Create($input: CreateProductInput!) { createProduct(input: $input) { id sku } }`;
 
     this.gql.request<CreateProductMutationResult>(mutation, { input: productInput }).subscribe({
-      next: (res) => {
-        const batchNumber = (value.batchNumber ?? '').trim();
-        const expiryDate = (value.expiryDate ?? '').trim();
-        const location = (value.location ?? '').trim();
-        const shouldCreateBatch = batchNumber.length > 0 && expiryDate.length > 0;
-
-        if (!shouldCreateBatch) {
-          this.createDialogOpen.set(false);
-          this.load();
-          return;
-        }
-
-        const createBatchMutation = `mutation CreateBatch($input: CreateBatchInput!) { createBatch(input: $input) { id } }`;
-        const createBatchInput = {
-          productId: res.createProduct.id,
-          batchNumber,
-          expiryDate,
-          costPrice: value.buyingPrice ?? 0,
-          quantityReceived: 0,
-          location: location.length ? location : null
-        };
-
-        this.gql.request<CreateBatchMutationResult>(createBatchMutation, { input: createBatchInput }).subscribe({
-          next: () => {
-            this.createDialogOpen.set(false);
-            this.load();
-          },
-          error: (e: unknown) => {
-            this.error.set(e instanceof Error ? e.message : 'Batch creation failed');
-            this.loading.set(false);
-          }
-        });
-      },
+      next: (res) => this.queueForReceiving(res.createProduct.id, value),
       error: (e: unknown) => {
         this.error.set(e instanceof Error ? e.message : 'Failed to create');
         this.loading.set(false);
       }
     });
   }
+
+  private queueForReceiving(productId: string, value: ProductFormValue): void {
+    const mutation = `mutation QueueReceiving($input: SubmitRepurchaseInput!) {
+      submitRepurchase(input: $input) { id }
+    }`;
+
+    this.gql.request<{ submitRepurchase: { id: string } }>(mutation, {
+      input: {
+        id: crypto.randomUUID(),
+        activation: true,
+        branch: this.branchCtx.writeBranch(),
+        lines: [{
+          productId,
+          quantity: value.initialQuantity ?? 0,
+          buyingPrice: value.buyingPrice ?? 0,
+          sellingPrice: value.sellingPrice ?? 0,
+          batchNumber: (value.batchNumber ?? '').trim() || null,
+          expiryDate: (value.expiryDate ?? '').trim() || null,
+          location: (value.location ?? '').trim() || null
+        }]
+      }
+    }).subscribe({
+      next: () => {
+        this.createDialogOpen.set(false);
+        this.showToast('Product saved — pending receiving', 'success');
+        this.pendingReceiving.refresh();
+        this.load();
+      },
+      error: (e: unknown) => {
+        this.createDialogOpen.set(false);
+        this.showToast(e instanceof Error ? e.message : 'Product saved but could not be queued for receiving', 'error');
+        this.load();
+      }
+    });
+  }
 }
+

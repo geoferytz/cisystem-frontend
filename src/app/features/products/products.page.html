@@ -1,46 +1,55 @@
 <div class="flex items-center justify-between">
-  <h2 class="text-xl font-semibold text-slate-900">Products</h2>
+  <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">Products</h2>
 </div>
 
 <div class="mt-4 grid grid-cols-1 gap-4">
-  <section class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
+  <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
     <div class="flex items-center justify-between">
-      <h3 class="text-base font-semibold text-slate-900">List</h3>
+      <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'common.list' | translate }}</h3>
       <div class="flex items-center gap-2">
         <button
           *ngIf="perm.canCreate('PRODUCTS')"
-          class="rounded-xl bg-indigo-950 px-3 py-2 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+          class="rounded-xl bg-pink-500 px-3 py-2 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
           (click)="openCreate()"
           [disabled]="loading()"
         >
-          Add Product
+          {{ 'common.add' | translate }} {{ 'common.product' | translate }}
         </button>
       </div>
     </div>
 
-    <div class="mt-3 grid gap-2 sm:grid-cols-[1fr_auto]">
+    <div class="mt-3 grid gap-2 sm:grid-cols-[1fr_auto_auto]">
       <input
-        class="rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:border-purple-500"
+        class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
         [value]="searchQuery()"
         (input)="onSearch(($any($event.target)).value)"
-        placeholder="Search by product name, SKU, or barcode"
+        placeholder="{{ 'common.searchProductSkuBarcode' | translate }}"
       />
+      <select
+        class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100"
+        [value]="statusFilter()"
+        (change)="setStatusFilter(($any($event.target)).value)"
+      >
+        <option value="active">{{ 'common.active' | translate }}</option>
+        <option value="inactive">{{ 'common.inactive' | translate }}</option>
+        <option value="all">{{ 'common.all' | translate }}</option>
+      </select>
       <button
-        class="rounded-xl bg-indigo-950 px-3 py-2 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+        class="rounded-xl bg-pink-500 px-3 py-2 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
         (click)="load()"
         [disabled]="loading()"
       >
-        Search
+        {{ 'common.search' | translate }}
       </button>
     </div>
 
     <div class="mt-3 flex flex-wrap items-center justify-between gap-2">
-      <div class="text-xs font-semibold text-slate-600">Total: {{ products().length }}</div>
+      <div class="text-xs font-semibold text-slate-600 dark:text-slate-400">{{ 'common.total' | translate }}: {{ products().length }}</div>
       <div class="flex items-center gap-2">
-        <label class="text-xs font-semibold text-slate-600">
-          Show
+        <label class="text-xs font-semibold text-slate-600 dark:text-slate-400">
+          {{ 'common.show' | translate }}
           <select
-            class="ml-2 rounded-lg border border-slate-200 bg-white px-2 py-1 text-xs"
+            class="ml-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-xs text-slate-900 dark:text-slate-100"
             [value]="pageSize()"
             (change)="setPageSize(($any($event.target)).value)"
           >
@@ -52,78 +61,78 @@
         </label>
 
         <button
-          class="rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
+          class="rounded-lg bg-slate-100 dark:bg-slate-700 px-2 py-1 text-xs font-semibold text-slate-700 dark:text-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
           (click)="prevPage()"
           [disabled]="pageIndex() === 0"
         >
-          Prev
+          {{ 'common.prev' | translate }}
         </button>
-        <div class="text-xs font-semibold text-slate-600">Page {{ pageIndex() + 1 }} / {{ totalPages() }}</div>
+        <div class="text-xs font-semibold text-slate-600 dark:text-slate-400">{{ 'common.page' | translate }} {{ pageIndex() + 1 }} / {{ totalPages() }}</div>
         <button
-          class="rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-60"
+          class="rounded-lg bg-slate-100 dark:bg-slate-700 px-2 py-1 text-xs font-semibold text-slate-700 dark:text-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
           (click)="nextPage()"
           [disabled]="pageIndex() >= totalPages() - 1"
         >
-          Next
+          {{ 'common.next' | translate }}
         </button>
       </div>
     </div>
 
-    <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100">
+    <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
       <table class="w-full border-collapse text-sm">
-        <thead class="bg-slate-50">
+        <thead class="bg-slate-50 dark:bg-slate-700">
           <tr>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">SKU</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Barcode</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Batch</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Name</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Brand</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Category</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Buying</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Selling</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Units</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Status</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Actions</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.sku' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">Barcode</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.batch' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.name' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">Brand</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.category' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">Buying</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">Selling</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">Units</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.status' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.actions' | translate }}</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let p of displayedProducts()" class="border-t border-slate-100">
-            <td class="px-3 py-2">
+          <tr *ngFor="let p of displayedProducts()" class="border-t border-slate-100 dark:border-slate-700">
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
               <ng-container *ngIf="editingId() !== p.id; else editSku">
                 {{ p.sku }}
               </ng-container>
               <ng-template #editSku>
                 <div [formGroup]="editForm">
                   <input
-                    class="w-full rounded-lg border border-slate-200 px-2 py-1 text-sm outline-none focus:border-purple-500"
+                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
                     formControlName="sku"
                   />
                 </div>
               </ng-template>
             </td>
 
-            <td class="px-3 py-2">
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
               <ng-container *ngIf="editingId() !== p.id; else editBarcode">
                 {{ p.barcode || '-' }}
               </ng-container>
               <ng-template #editBarcode>
                 <div [formGroup]="editForm">
                   <input
-                    class="w-full rounded-lg border border-slate-200 px-2 py-1 text-sm outline-none focus:border-purple-500"
+                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
                     formControlName="barcode"
                   />
                 </div>
               </ng-template>
             </td>
 
-            <td class="px-3 py-2">
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
               <ng-container *ngIf="editingId() !== p.id; else editBatch">
                 {{ latestBatchNumber(p) }}
               </ng-container>
               <ng-template #editBatch>
                 <div [formGroup]="editForm">
                   <input
-                    class="w-full rounded-lg border border-slate-200 px-2 py-1 text-sm outline-none focus:border-purple-500"
+                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
                     formControlName="batchNumber"
                     [placeholder]="latestBatchNumber(p) === '-' ? 'No batch' : ''"
                     [readOnly]="latestBatchNumber(p) === '-'"
@@ -132,59 +141,59 @@
               </ng-template>
             </td>
 
-            <td class="px-3 py-2">
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
               <ng-container *ngIf="editingId() !== p.id; else editName">
                 {{ p.name }}
               </ng-container>
               <ng-template #editName>
                 <div [formGroup]="editForm">
                   <input
-                    class="w-full rounded-lg border border-slate-200 px-2 py-1 text-sm outline-none focus:border-purple-500"
+                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
                     formControlName="name"
                   />
                 </div>
               </ng-template>
             </td>
 
-            <td class="px-3 py-2">
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
               <ng-container *ngIf="editingId() !== p.id; else editBrand">
                 {{ p.brand || '-' }}
               </ng-container>
               <ng-template #editBrand>
                 <div [formGroup]="editForm">
                   <input
-                    class="w-full rounded-lg border border-slate-200 px-2 py-1 text-sm outline-none focus:border-purple-500"
+                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
                     formControlName="brand"
                   />
                 </div>
               </ng-template>
             </td>
 
-            <td class="px-3 py-2">
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
               <ng-container *ngIf="editingId() !== p.id; else editCategory">
                 {{ p.category || '-' }}
               </ng-container>
               <ng-template #editCategory>
                 <div [formGroup]="editForm">
                   <select
-                    class="w-full rounded-lg border border-slate-200 px-2 py-1 text-sm outline-none focus:border-purple-500"
+                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
                     formControlName="category"
                   >
-                    <option value="">Select category</option>
+                    <option value="">{{ 'common.selectCategory' | translate }}</option>
                     <option *ngFor="let c of categories()" [value]="c.name">{{ c.name }}</option>
                   </select>
                 </div>
               </ng-template>
             </td>
 
-            <td class="px-3 py-2">
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
               <ng-container *ngIf="editingId() !== p.id; else editBuying">
                 {{ p.buyingPrice | money }}
               </ng-container>
               <ng-template #editBuying>
                 <div [formGroup]="editForm">
                   <input
-                    class="w-full rounded-lg border border-slate-200 px-2 py-1 text-sm outline-none focus:border-purple-500"
+                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
                     type="number"
                     formControlName="buyingPrice"
                   />
@@ -192,28 +201,28 @@
               </ng-template>
             </td>
 
-            <td class="px-3 py-2">
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
               <ng-container *ngIf="editingId() !== p.id; else editSelling">
                 {{ p.sellingPrice | money }}
               </ng-container>
               <ng-template #editSelling>
                 <div [formGroup]="editForm">
                   <input
-                    class="w-full rounded-lg border border-slate-200 px-2 py-1 text-sm outline-none focus:border-purple-500"
+                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
                     type="number"
                     formControlName="sellingPrice"
                   />
                 </div>
               </ng-template>
             </td>
-            <td class="px-3 py-2">
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
               <ng-container *ngIf="editingId() !== p.id; else editunitOfMeasure">
                 {{ p.unitOfMeasure ?? '-' }}
               </ng-container>
               <ng-template #editunitOfMeasure>
                 <div [formGroup]="editForm">
                   <input
-                    class="w-full rounded-lg border border-slate-200 px-2 py-1 text-sm outline-none focus:border-purple-500"
+                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
                     type="string"
                     formControlName="unitOfMeasure"
                   />
@@ -221,49 +230,62 @@
               </ng-template>
             </td>
             <td class="px-3 py-2">
-              <span class="text-slate-800" [class.text-red-700]="!p.active">
-                {{ p.active ? 'Active' : 'Inactive' }}
+              <span class="text-slate-800 dark:text-slate-200" [class.text-[#B81104]]="!p.active">
+                {{ p.active ? ('common.active' | translate) : ('common.inactive' | translate) }}
               </span>
             </td>
 
             <td class="px-3 py-2">
-              <div class="flex gap-2">
-                <ng-container *ngIf="editingId() !== p.id; else editActions">
+              <ng-container *ngIf="editingId() !== p.id; else editActions">
+                <cis-row-actions>
                   <button
                     *ngIf="perm.canEdit('PRODUCTS')"
-                    class="rounded-lg bg-indigo-950 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                    class="cis-row-action"
                     (click)="startEdit(p)"
                     [disabled]="loading()"
                   >
-                    Edit
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                    {{ 'common.edit' | translate }}
                   </button>
                   <button
-                    *ngIf="perm.canDelete('PRODUCTS')"
-                    class="rounded-lg bg-red-700 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                    *ngIf="perm.canEdit('PRODUCTS') && !p.active"
+                    class="cis-row-action"
+                    (click)="activate(p)"
+                    [disabled]="loading()"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    {{ 'common.activate' | translate }}
+                  </button>
+                  <button
+                    *ngIf="perm.canDelete('PRODUCTS') && p.active"
+                    class="cis-row-action cis-row-action-danger"
                     (click)="delete(p)"
                     [disabled]="loading()"
                   >
-                    Delete
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                    {{ 'common.delete' | translate }}
                   </button>
-                </ng-container>
+                </cis-row-actions>
+              </ng-container>
 
-                <ng-template #editActions>
+              <ng-template #editActions>
+                <div class="flex gap-2">
                   <button
                     class="rounded-lg bg-emerald-700 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
                     (click)="saveEdit()"
                     [disabled]="loading() || editForm.invalid"
                   >
-                    Save
+                    {{ 'common.save' | translate }}
                   </button>
                   <button
-                    class="rounded-lg bg-slate-700 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                    class="rounded-lg bg-slate-700 dark:bg-slate-600 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
                     (click)="cancelEdit()"
                     [disabled]="loading()"
                   >
-                    Cancel
+                    {{ 'common.close' | translate }}
                   </button>
-                </ng-template>
-              </div>
+                </div>
+              </ng-template>
             </td>
           </tr>
         </tbody>
@@ -272,13 +294,13 @@
   </section>
 </div>
 
-<div *ngIf="createDialogOpen()" class="fixed inset-0 z-40">
+<div *ngIf="createDialogOpen()" class="cis-modal-overlay fixed inset-0 z-40">
   <div class="absolute inset-0 bg-slate-900/40" (click)="cancelCreate()"></div>
   <div class="absolute inset-0 flex items-center justify-center p-4">
-    <div class="w-full max-w-2xl rounded-2xl bg-white p-5 shadow-xl ring-1 ring-slate-200">
+    <div class="w-full max-w-2xl rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700">
       <div class="flex items-center justify-between">
-        <div class="text-base font-semibold text-slate-900">Add Product</div>
-        <button class="text-sm font-semibold text-slate-600 hover:text-slate-900" (click)="cancelCreate()">Close</button>
+        <div class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'common.add' | translate }} {{ 'common.product' | translate }}</div>
+        <button class="rounded-xl bg-slate-100 dark:bg-slate-700 px-3 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200" (click)="cancelCreate()">✕</button>
       </div>
 
       <div class="mt-4">
@@ -303,43 +325,43 @@
 >
   <div
     class="flex items-start gap-3 rounded-xl px-4 py-3 text-sm font-medium shadow-lg ring-1"
-    [class.bg-emerald-50]="toastVariant() === 'success'"
+    [class.bg-[#FFFACD]]="toastVariant() === 'success'"
     [class.text-emerald-900]="toastVariant() === 'success'"
-    [class.ring-emerald-200]="toastVariant() === 'success'"
-    [class.bg-red-50]="toastVariant() === 'error'"
+    [class.ring-pink-500/25]="toastVariant() === 'success'"
+    [class.bg-[#B81104]/10]="toastVariant() === 'error'"
     [class.text-red-900]="toastVariant() === 'error'"
-    [class.ring-red-200]="toastVariant() === 'error'"
+    [class.ring-[#B81104]/25]="toastVariant() === 'error'"
   >
     <div class="flex-1">{{ toastMessage() }}</div>
-    <button class="text-xs font-semibold opacity-80 hover:opacity-100" (click)="dismissToast()">Close</button>
+    <button class="text-xs font-semibold opacity-80 hover:opacity-100" (click)="dismissToast()">{{ 'common.close' | translate }}</button>
   </div>
 </div>
 
-<div *ngIf="deleteDialogOpen()" class="fixed inset-0 z-40">
+<div *ngIf="deleteDialogOpen()" class="cis-modal-overlay fixed inset-0 z-40">
   <div class="absolute inset-0 bg-slate-900/40" (click)="cancelDelete()"></div>
   <div class="absolute inset-0 flex items-center justify-center p-4">
-    <div class="w-full max-w-md rounded-2xl bg-white p-5 shadow-xl ring-1 ring-slate-200">
-      <div class="text-base font-semibold text-slate-900">Confirm delete</div>
-      <div class="mt-2 text-sm text-slate-600">
+    <div class="w-full max-w-md rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700">
+      <div class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'common.delete' | translate }}</div>
+      <div class="mt-2 text-sm text-slate-600 dark:text-slate-400">
         Are you sure you want to delete
-        <span class="font-semibold text-slate-900">{{ pendingDelete()?.name }}</span>?
-        The product will be marked as inactive.
+        <span class="font-semibold text-slate-900 dark:text-slate-100">{{ pendingDelete()?.name }}</span>?
+        The product will be deactivated and hidden everywhere until it is reactivated.
       </div>
 
       <div class="mt-5 flex justify-end gap-2">
         <button
-          class="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-70"
+          class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-70"
           (click)="cancelDelete()"
           [disabled]="loading()"
         >
-          Cancel
+          {{ 'common.close' | translate }}
         </button>
         <button
-          class="rounded-xl bg-red-700 px-4 py-2 text-sm font-semibold text-white hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-70"
+          class="rounded-xl bg-[#B81104] px-4 py-2 text-sm font-semibold text-white hover:bg-[#7f0c03] disabled:cursor-not-allowed disabled:opacity-70"
           (click)="confirmDelete()"
           [disabled]="loading()"
         >
-          Delete
+          {{ 'common.delete' | translate }}
         </button>
       </div>
     </div>

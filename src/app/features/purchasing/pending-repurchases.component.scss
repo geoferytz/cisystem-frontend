@@ -1,0 +1,32 @@
+:host { display: block; color: var(--cis-text); }
+.rp-panel { padding: 22px; border: 1px solid var(--cis-border); border-radius: 20px; background: var(--cis-surface); }
+.rp-panel-flat { border: 0; padding: 0; margin-top: 20px; background: transparent; }
+h3 { font-size: 18px; font-weight: 750; }
+h4 { font-size: 14px; font-weight: 700; overflow-wrap: anywhere; }
+p, small, label { font-size: 12px; color: var(--cis-muted); line-height: 1.6; }
+p { margin: 8px 0; }
+button { min-height: 44px; border-radius: 10px; padding: 8px 14px; font-size: 12px; font-weight: 650; background: var(--cis-page); color: var(--cis-primary-strong); }
+button.primary { background: var(--cis-primary); color: white; }
+button.primary:hover:not(:disabled) { background: var(--cis-primary-hover); }
+button:disabled { cursor: not-allowed; opacity: .55; }
+.rp-heading, .rp-actions { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.rp-actions { justify-content: flex-end; }
+.rp-badge { display: inline-block; font-size: 11px; padding: 5px 10px; border-radius: 20px; background: var(--cis-primary-soft); color: var(--cis-primary-strong); }
+.rp-notice { padding: 12px; background: var(--cis-primary-soft); border-radius: 12px; color: var(--cis-primary-strong); }
+.rp-error { color: #b91c1c; padding: 10px; border: 1px solid currentColor; border-radius: 10px; }
+:host-context(.dark) .rp-error { color: #fca5a5; }
+.rp-empty { padding: 20px 0; text-align: center; }
+.rp-pending { padding: 16px 0; border-top: 1px solid var(--cis-border); margin-top: 14px; }
+summary { cursor: pointer; font-size: 12px; padding: 10px 0; color: var(--cis-primary-strong); }
+.rp-order-line { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 8px 0; font-size: 12px; }
+.rp-order-line small { display: block; }
+label { display: grid; gap: 5px; margin-bottom: 12px; }
+input { width: 100%; min-width: 0; min-height: 44px; border: 1px solid var(--cis-border); border-radius: 10px; padding: 8px 10px; background: var(--cis-surface); color: var(--cis-text); }
+.rp-cart-line { border-top: 1px solid var(--cis-border); padding: 16px 0; }
+.rp-cart-line strong { font-size: 13px; overflow-wrap: anywhere; }
+.rp-prices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+@media (max-width: 767px) {
+  .rp-panel { padding: 16px; }
+  .rp-prices { grid-template-columns: minmax(0, 1fr); }
+  input { font-size: 16px; }
+}

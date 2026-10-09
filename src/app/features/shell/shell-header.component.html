@@ -1,22 +1,87 @@
-<header class="relative z-40 mb-4 flex items-center gap-3">
+<header class="relative z-40 mb-4 flex flex-wrap items-center gap-1 rounded-2xl bg-white dark:bg-slate-800 px-2 py-3 sm:gap-3 sm:px-4 shadow-sm ring-1 ring-slate-200 dark:ring-slate-700">
   <button
     *ngIf="showSidebarToggle"
     type="button"
     (click)="$event.stopPropagation(); onToggleSidebar()"
-    class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50"
+    class="inline-flex h-10 w-10 items-center justify-center rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
     aria-label="Toggle navigation"
+    aria-controls="main-sidebar"
+    [attr.aria-expanded]="sidebarOpen"
   >
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5">
       <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
     </svg>
   </button>
 
-  <div class="ml-auto flex items-center justify-end gap-3">
+  <a routerLink="/home" class="text-sm font-bold text-primary-800 dark:text-primary-200 md:hidden">NABOO</a>
+
+  <div class="ml-auto flex items-center justify-end gap-1 sm:gap-3">
+    <div class="relative" (click)="$event.stopPropagation()">
+      <button
+        type="button"
+        (click)="toggleTheme()"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
+        aria-label="Toggle theme"
+      >
+        <svg *ngIf="!isDark()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        <svg *ngIf="isDark()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="relative hidden md:block" (click)="$event.stopPropagation()">
+      <button
+        type="button"
+        (click)="toggleFullscreen()"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
+        aria-label="Toggle fullscreen"
+      >
+        <svg *ngIf="!isFullscreen()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+        </svg>
+        <svg *ngIf="isFullscreen()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="relative" (click)="$event.stopPropagation()">
+      <button
+        type="button"
+        (click)="onToggleLangMenu()"
+        class="inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
+      >
+        <span>{{ currentLang() | uppercase }}</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      <div *ngIf="langMenuOpen" class="absolute right-0 z-50 mt-2 w-32 rounded-2xl bg-white dark:bg-slate-800 p-2 shadow-lg ring-1 ring-slate-200 dark:ring-slate-700">
+        <button
+          *ngFor="let lang of availableLangs"
+          type="button"
+          (click)="$event.stopPropagation(); setLang(lang)"
+          class="flex w-full items-center justify-between rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700"
+          [class.bg-slate-100]="currentLang() === lang"
+          [class.dark:bg-slate-700]="currentLang() === lang"
+        >
+          <span>{{ lang | uppercase }}</span>
+          <svg *ngIf="currentLang() === lang" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-emerald-600">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
     <div class="relative" (click)="$event.stopPropagation()">
       <button
         type="button"
         (click)="onToggleNotifications()"
-        class="relative inline-flex h-10 w-10 items-center justify-center rounded-xl bg-white text-slate-700 shadow-sm ring-1 ring-slate-200 hover:bg-slate-50"
+        class="relative inline-flex h-10 w-10 items-center justify-center rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
         aria-label="Notifications"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5">
@@ -29,7 +94,7 @@
 
         <span
           *ngIf="notificationsCount > 0"
-          class="absolute -right-1 -top-1 inline-flex min-w-[18px] items-center justify-center rounded-full bg-red-600 px-1.5 py-0.5 text-[10px] font-bold leading-none text-white"
+          class="absolute -right-1 -top-1 inline-flex min-w-[18px] items-center justify-center rounded-full bg-[#B81104] px-1.5 py-0.5 text-[10px] font-bold leading-none text-white"
         >
           {{ notificationsCount }}
         </span>
@@ -37,20 +102,78 @@
 
       <div
         *ngIf="notificationsOpen"
-        class="absolute right-0 z-50 mt-2 w-80 rounded-2xl bg-white p-3 shadow-lg ring-1 ring-slate-200"
+        class="absolute right-0 z-50 mt-2 w-80 rounded-2xl bg-white dark:bg-slate-800 p-3 shadow-lg ring-1 ring-slate-200 dark:ring-slate-700"
       >
-        <div class="text-sm font-semibold text-slate-900">Notifications</div>
-        <div class="mt-1 text-xs text-slate-600">
-          Expiry (30 days) + Low stock (threshold 10)
+        <div class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ 'header.notifications' | translate }}</div>
+        <div class="mt-1 text-xs text-slate-600 dark:text-slate-400">
+          {{ 'header.notificationsHelp' | translate }}
         </div>
-        <div class="mt-3 rounded-xl bg-slate-50 p-3 text-sm text-slate-700">
-          Total: <span class="font-semibold">{{ notificationsCount }}</span>
+        <div class="mt-3 rounded-xl bg-slate-50 dark:bg-slate-700 p-3 text-sm text-slate-700 dark:text-slate-200">
+          {{ 'header.total' | translate }}: <span class="font-semibold">{{ notificationsCount }}</span>
         </div>
         <a
           routerLink="/expiry-alerts"
-          class="mt-3 block rounded-xl bg-indigo-950 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-purple-900"
+          class="mt-3 block rounded-xl bg-pink-500 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-pink-600"
           (click)="onCloseMenus()"
-          >View Alerts</a>
+          >{{ 'header.viewAlerts' | translate }}</a>
+      </div>
+    </div>
+
+    <div *ngIf="isAuthed && branchCtx.loaded()" class="flex items-center">
+      <span
+        *ngIf="branchCtx.locked()"
+        class="inline-flex items-center gap-1.5 rounded-xl bg-teal-50 dark:bg-teal-900/40 px-3 py-2 text-xs font-bold text-teal-700 dark:text-teal-300 ring-1 ring-teal-200 dark:ring-teal-700"
+        title="{{ 'common.branch' | translate }}"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V5a2 2 0 012-2h10a2 2 0 012 2v16M9 21v-6h6v6" />
+        </svg>
+        {{ branchCtx.me()?.branchName || branchCtx.lockedCode() }}
+      </span>
+
+      <div *ngIf="!branchCtx.locked() && branchCtx.options().length" class="relative" (click)="$event.stopPropagation()">
+        <button
+          type="button"
+          (click)="onToggleBranchMenu()"
+          class="inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
+          aria-label="{{ 'common.branch' | translate }}"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V5a2 2 0 012-2h10a2 2 0 012 2v16M9 21v-6h6v6" />
+          </svg>
+          <!-- <span>{{ branchCtx.selected() || ('common.all' | translate) }}</span> -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <div *ngIf="branchMenuOpen" class="absolute right-0 z-50 mt-2 w-56 rounded-2xl bg-white dark:bg-slate-800 p-2 shadow-lg ring-1 ring-slate-200 dark:ring-slate-700">
+          <button
+            type="button"
+            (click)="$event.stopPropagation(); selectBranch(null)"
+            class="flex w-full items-center justify-between rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700"
+            [class.bg-slate-100]="branchCtx.selected() == null"
+            [class.dark:bg-slate-700]="branchCtx.selected() == null"
+          >
+            <span>{{ 'common.allBranches' | translate }}</span>
+            <svg *ngIf="branchCtx.selected() == null" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-emerald-600">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </button>
+          <button
+            *ngFor="let b of branchCtx.options()"
+            type="button"
+            (click)="$event.stopPropagation(); selectBranch(b.code)"
+            class="flex w-full items-center justify-between rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700"
+            [class.bg-slate-100]="branchCtx.selected() === b.code"
+            [class.dark:bg-slate-700]="branchCtx.selected() === b.code"
+          >
+            <span>{{ b.name }} ({{ b.code }})</span>
+            <svg *ngIf="branchCtx.selected() === b.code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-emerald-600">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -58,69 +181,61 @@
       <button
         type="button"
         (click)="onToggleUserMenu()"
-        class="inline-flex items-center gap-3 rounded-xl bg-white px-3 py-2 text-left shadow-sm ring-1 ring-slate-200 hover:bg-slate-50"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
+        aria-label="{{ user?.name || ('header.user' | translate) }}"
       >
-        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-950 text-sm font-bold text-white">
+        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-pink-500 text-sm font-bold text-white">
           {{ (user?.name?.slice(0, 1) || 'U') }}
         </div>
-        <div class="hidden sm:block">
-          <div class="text-sm font-semibold text-slate-900">
-            {{ user?.name || 'User' }}
-          </div>
-          <div class="text-xs text-slate-600">{{ user?.email || '' }}</div>
-        </div>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-slate-500">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
       </button>
 
       <div
         *ngIf="userMenuOpen"
-        class="absolute right-0 z-50 mt-2 w-64 rounded-2xl bg-white p-2 shadow-lg ring-1 ring-slate-200"
+        class="absolute right-0 z-50 mt-2 w-64 rounded-2xl bg-white dark:bg-slate-800 p-2 shadow-lg ring-1 ring-slate-200 dark:ring-slate-700"
       >
         <div class="px-3 py-2">
-          <div class="text-sm font-semibold text-slate-900">{{ user?.name || 'User' }}</div>
-          <div class="text-xs text-slate-600">{{ user?.email || '' }}</div>
+          <div class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ user?.name || ('header.user' | translate) }}</div>
+          <div class="text-xs text-slate-600 dark:text-slate-400">{{ user?.email || '' }}</div>
         </div>
-        <div class="my-1 h-px bg-slate-100"></div>
+        <div class="my-1 h-px bg-slate-100 dark:bg-slate-700"></div>
 
         <button
           type="button"
-          class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700"
           (click)="onCloseMenus(); onChangePassword()"
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-slate-500">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-slate-500 dark:text-slate-400">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3z" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 19v-1a6 6 0 0112 0v1" />
           </svg>
-          Change Password
+          {{ 'header.changePassword' | translate }}
         </button>
 
         <button
           *ngIf="user?.roles?.includes('ADMIN')"
           type="button"
-          class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700"
           (click)="onCloseMenus(); onResetUserPassword()"
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-slate-500">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-slate-500 dark:text-slate-400">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v4" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 14h.01" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
           </svg>
-          Reset User Password
+          {{ 'header.resetUserPassword' | translate }}
         </button>
 
         <button
           type="button"
-          class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700"
           (click)="onCloseMenus(); onLogout()"
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-slate-500">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-slate-500 dark:text-slate-400">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10 16l4-4-4-4" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M14 12H3" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 19V5a2 2 0 00-2-2h-6" />
           </svg>
-          Logout
+          {{ 'header.logout' | translate }}
         </button>
       </div>
     </div>

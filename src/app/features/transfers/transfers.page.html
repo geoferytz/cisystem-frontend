@@ -1,0 +1,278 @@
+<div class="flex items-center justify-between">
+  <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">{{ 'nav.transfers' | translate }}</h2>
+  <button *ngIf="perm.canCreate('TRANSFERS')" class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white" type="button" (click)="openCreate()">
+    {{ 'transfers.new' | translate }}
+  </button>
+</div>
+
+<div class="mt-4 flex flex-wrap items-center gap-3">
+  <input
+    class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e] w-64"
+    [value]="query()"
+    (input)="setQuery($any($event.target).value)"
+    placeholder="{{ 'common.search' | translate }}"
+  />
+  <div class="flex gap-1">
+    <button
+      *ngFor="let s of ['', 'PENDING', 'DISPATCHED', 'RECEIVED', 'CANCELLED']"
+      type="button"
+      class="rounded-lg px-3 py-1.5 text-xs font-semibold"
+      [class.bg-teal-600]="statusFilter() === s"
+      [class.text-white]="statusFilter() === s"
+      [class.bg-slate-100]="statusFilter() !== s"
+      [class.dark:bg-slate-700]="statusFilter() !== s"
+      [class.text-slate-700]="statusFilter() !== s"
+      [class.dark:text-slate-300]="statusFilter() !== s"
+      (click)="setStatus(s)"
+    >{{ s === '' ? ('common.all' | translate) : s }}</button>
+  </div>
+</div>
+
+<div class="mt-4 grid grid-cols-1 gap-4">
+  <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
+    <cis-pager class="mt-1 block" [total]="transfers().length" [(pageSize)]="pageSize" [(pageIndex)]="pageIndex" />
+
+    <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+      <table class="w-full border-collapse text-sm">
+        <thead class="bg-slate-50 dark:bg-slate-700">
+          <tr>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'transfers.reference' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'transfers.route' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.items' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.status' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.date' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.actions' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let t of displayedTransfers()" class="border-t border-slate-100 dark:border-slate-700">
+            <td class="px-3 py-2">
+              <span class="font-mono text-xs font-semibold text-slate-700 dark:text-slate-300">{{ t.reference || ('#' + t.id) }}</span>
+            </td>
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
+              {{ branchName(t.fromBranch) }} <span class="text-slate-400">→</span> {{ branchName(t.toBranch) }}
+            </td>
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ t.lines.length }} · {{ totalQty(t) }} {{ 'common.pcs' | translate }}</td>
+            <td class="px-3 py-2">
+              <span class="rounded-full px-2 py-0.5 text-[10px] font-bold" [ngClass]="statusClass(t.status)">{{ t.status }}</span>
+            </td>
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ t.createdAt | date:'yyyy-MM-dd HH:mm' }}</td>
+            <td class="px-3 py-2">
+              <cis-row-actions>
+                <button class="cis-row-action" (click)="openDetails(t)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                  {{ 'common.details' | translate }}
+                </button>
+                <button *ngIf="canDispatch(t)" class="cis-row-action" (click)="askAction(t, 'dispatch')" [disabled]="loading()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m0 0l-6-6m6 6l-6 6" /></svg>
+                  {{ 'transfers.dispatch' | translate }}
+                </button>
+                <button *ngIf="canReceive(t)" class="cis-row-action" (click)="askAction(t, 'receive')" [disabled]="loading()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                  {{ 'transfers.receive' | translate }}
+                </button>
+                <button *ngIf="canCancel(t)" class="cis-row-action cis-row-action-danger" (click)="askAction(t, 'cancel')" [disabled]="loading()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                  {{ 'common.cancel' | translate }}
+                </button>
+              </cis-row-actions>
+            </td>
+          </tr>
+          <tr *ngIf="!loading() && !transfers().length">
+            <td colspan="6" class="px-3 py-6 text-center text-sm text-slate-500 dark:text-slate-400">{{ 'common.noData' | translate }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-3 text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">{{ error() }}</div>
+    <div class="mt-3 text-sm text-emerald-600 dark:text-emerald-400" *ngIf="success()">{{ success() }}</div>
+  </section>
+</div>
+
+<!-- Create transfer modal -->
+<div *ngIf="createOpen()" class="cis-modal-overlay fixed inset-0 z-50">
+  <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-[2px]" (click)="closeCreate()"></div>
+  <div class="absolute inset-0 flex items-end justify-center sm:items-center sm:p-4">
+    <div class="flex w-full max-h-[94vh] flex-col rounded-t-3xl bg-white dark:bg-slate-800 shadow-2xl ring-1 ring-slate-200 dark:ring-slate-700 sm:max-w-2xl sm:rounded-2xl" (click)="$event.stopPropagation()">
+
+      <!-- Header -->
+      <div class="flex items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-700 px-5 py-4">
+        <div class="flex items-center gap-3">
+          <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-teal-50 dark:bg-teal-900/40 text-teal-600 dark:text-teal-300">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13m0 0l-3-3m3 3l-3 3M16 17H3m0 0l3 3m-3-3l3-3" />
+            </svg>
+          </span>
+          <div>
+            <div class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'transfers.new' | translate }}</div>
+            <div class="text-xs text-slate-500 dark:text-slate-400">{{ 'transfers.subtitle' | translate }}</div>
+          </div>
+        </div>
+        <button class="grid h-9 w-9 place-items-center rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600" type="button" (click)="closeCreate()" aria-label="{{ 'common.close' | translate }}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      </div>
+
+      <!-- Body -->
+      <form class="flex-1 overflow-y-auto px-5 py-4" [formGroup]="form" (ngSubmit)="submitCreate()">
+        <div class="grid gap-5">
+
+          <!-- Route -->
+          <div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{{ 'transfers.route' | translate }}</div>
+            <div class="mt-2 grid gap-2 sm:grid-cols-[1fr_auto_1fr] sm:items-end">
+              <label class="grid gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300">
+                {{ 'transfers.from' | translate }}
+                <select class="w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2.5 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900/50 disabled:opacity-60" formControlName="fromBranch" [disabled]="branchCtx.locked()" (change)="onFromChange()">
+                  <option *ngFor="let b of branchCtx.options()" [value]="b.code">{{ b.name }} ({{ b.code }})</option>
+                </select>
+              </label>
+              <span class="hidden h-10 w-10 place-items-center self-end rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 sm:grid">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m0 0l-4-4m4 4l-4 4" /></svg>
+              </span>
+              <label class="grid gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300">
+                {{ 'transfers.to' | translate }}
+                <select class="w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2.5 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900/50" formControlName="toBranch">
+                  <option value="" disabled>{{ 'transfers.chooseDestination' | translate }}</option>
+                  <option *ngFor="let b of branchCtx.options()" [value]="b.code" [disabled]="b.code === form.getRawValue().fromBranch">{{ b.name }} ({{ b.code }})</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <!-- Stock -->
+          <div class="rounded-2xl bg-slate-50 dark:bg-slate-700/40 p-4 ring-1 ring-slate-100 dark:ring-slate-600">
+            <div class="flex items-center justify-between">
+              <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{{ 'transfers.addStock' | translate }}</div>
+              <span *ngIf="lines().length" class="rounded-full bg-teal-100 dark:bg-teal-900/50 px-2 py-0.5 text-[10px] font-bold text-teal-700 dark:text-teal-300">
+                {{ lines().length }} · {{ linesTotalQty() }} {{ 'common.pcs' | translate }}
+              </span>
+            </div>
+
+            <div class="mt-3 grid gap-2 sm:grid-cols-[1fr_110px_auto]">
+              <select class="w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2.5 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900/50" formControlName="batchId" (change)="onBatchSelect()">
+                <option [ngValue]="null" disabled>{{ sourceLoading() ? ('common.loading' | translate) : ('transfers.chooseBatch' | translate) }}</option>
+                <option *ngFor="let i of sourceStock()" [ngValue]="+i.batchId">
+                  {{ i.productName }} ({{ i.sku }}) · {{ i.batchNumber }} · {{ i.expiryDate }} · {{ i.qtyOnHand }} {{ 'common.pcs' | translate }}
+                </option>
+              </select>
+              <input type="number" min="1" [max]="selectedBatchMax()" placeholder="{{ 'common.qty' | translate }}" class="w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2.5 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900/50" formControlName="quantity" />
+              <button type="button" class="inline-flex items-center justify-center gap-1.5 rounded-xl bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-teal-700" (click)="addLine()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14M5 12h14" /></svg>
+                {{ 'common.add' | translate }}
+              </button>
+            </div>
+            <div *ngIf="selectedBatchMax() != null" class="mt-1.5 text-[11px] font-medium text-teal-600 dark:text-teal-400">
+              {{ 'transfers.available' | translate }}: {{ selectedBatchMax() }} {{ 'common.pcs' | translate }}
+            </div>
+
+            <!-- Lines -->
+            <div *ngIf="lines().length" class="mt-3 grid gap-1.5">
+              <div *ngFor="let l of lines()" class="flex items-center gap-3 rounded-xl bg-white dark:bg-slate-800 px-3 py-2 ring-1 ring-slate-100 dark:ring-slate-600">
+                <span class="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-teal-50 dark:bg-teal-900/40 text-teal-600 dark:text-teal-300">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4v10l8 4 8-4V7z" /><path stroke-linecap="round" stroke-linejoin="round" d="M4 7l8 4 8-4" /></svg>
+                </span>
+                <div class="min-w-0 flex-1">
+                  <div class="truncate text-sm font-medium text-slate-900 dark:text-slate-100">{{ l.label }}</div>
+                </div>
+                <span class="shrink-0 rounded-lg bg-slate-100 dark:bg-slate-700 px-2 py-1 text-xs font-bold text-slate-700 dark:text-slate-200">× {{ l.quantity }}</span>
+                <button type="button" class="grid h-7 w-7 shrink-0 place-items-center rounded-lg text-slate-400 hover:bg-red-50 hover:text-[#B81104] dark:hover:bg-red-900/30 dark:hover:text-red-400" (click)="removeLine(l.batchId)" aria-label="{{ 'common.remove' | translate }}">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+              </div>
+            </div>
+            <div *ngIf="!lines().length" class="mt-3 rounded-xl border border-dashed border-slate-300 dark:border-slate-600 px-3 py-4 text-center text-xs text-slate-500 dark:text-slate-400">
+              {{ 'transfers.noLines' | translate }}
+            </div>
+          </div>
+
+          <!-- Note -->
+          <label class="grid gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300">
+            {{ 'transfers.note' | translate }}
+            <input placeholder="{{ 'transfers.notePlaceholder' | translate }}" class="w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2.5 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900/50" formControlName="note" />
+          </label>
+
+          <div class="flex items-center gap-2 rounded-xl bg-red-50 dark:bg-red-900/20 px-3 py-2 text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /></svg>
+            {{ error() }}
+          </div>
+        </div>
+      </form>
+
+      <!-- Footer -->
+      <div class="flex items-center justify-between gap-3 border-t border-slate-100 dark:border-slate-700 px-5 py-3.5">
+        <div class="text-xs text-slate-500 dark:text-slate-400">
+          <ng-container *ngIf="lines().length">{{ lines().length }} {{ 'common.items' | translate }} · <span class="font-bold text-slate-700 dark:text-slate-200">{{ linesTotalQty() }} {{ 'common.pcs' | translate }}</span></ng-container>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2.5 text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600" (click)="closeCreate()">
+            {{ 'common.close' | translate }}
+          </button>
+          <button class="inline-flex items-center gap-1.5 rounded-xl bg-pink-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-pink-600 disabled:cursor-not-allowed disabled:opacity-60" type="button" (click)="submitCreate()" [disabled]="!lines().length || form.getRawValue().toBranch === '' || loading()">
+            <svg *ngIf="!loading()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13m0 0l-3-3m3 3l-3 3M16 17H3m0 0l3 3m-3-3l3-3" /></svg>
+            {{ loading() ? ('common.saving' | translate) : ('transfers.create' | translate) }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Details modal -->
+<div *ngIf="detailsOpen() && viewing()" class="cis-modal-overlay fixed inset-0 z-50">
+  <div class="absolute inset-0 bg-slate-900/40" (click)="closeDetails()"></div>
+  <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div class="w-full max-w-xl rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700 max-h-[90vh] overflow-auto" (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between">
+        <div class="text-base font-semibold text-slate-900 dark:text-slate-100">
+          {{ viewing()!.reference || ('#' + viewing()!.id) }}
+          <span class="ml-2 rounded-full px-2 py-0.5 text-[10px] font-bold" [ngClass]="statusClass(viewing()!.status)">{{ viewing()!.status }}</span>
+        </div>
+        <button class="rounded-xl bg-slate-100 dark:bg-slate-700 px-3 py-2 text-xs font-semibold text-slate-800 dark:text-slate-200" type="button" (click)="closeDetails()">✕</button>
+      </div>
+
+      <div class="mt-3 text-sm text-slate-700 dark:text-slate-300">
+        {{ branchName(viewing()!.fromBranch) }} <span class="text-slate-400">→</span> {{ branchName(viewing()!.toBranch) }}
+        <div *ngIf="viewing()!.note" class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ viewing()!.note }}</div>
+      </div>
+
+      <table class="mt-3 w-full border-collapse text-sm">
+        <thead>
+          <tr class="text-left text-xs text-slate-500 dark:text-slate-400">
+            <th class="py-1">{{ 'common.product' | translate }}</th>
+            <th class="py-1">{{ 'common.batch' | translate }}</th>
+            <th class="py-1 text-right">{{ 'common.quantity' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let l of viewing()!.lines" class="border-t border-slate-100 dark:border-slate-700">
+            <td class="py-1.5 text-slate-900 dark:text-slate-300">{{ l.productName }} ({{ l.sku }})</td>
+            <td class="py-1.5 text-slate-900 dark:text-slate-300">{{ l.batchNumber }}</td>
+            <td class="py-1.5 text-right text-slate-900 dark:text-slate-300">{{ l.quantity }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="mt-3 grid gap-1 text-xs text-slate-500 dark:text-slate-400">
+        <div>{{ 'common.created' | translate }}: {{ viewing()!.createdAt | date:'yyyy-MM-dd HH:mm' }} · {{ viewing()!.createdBy }}</div>
+        <div *ngIf="viewing()!.dispatchedAt">{{ 'transfers.dispatched' | translate }}: {{ viewing()!.dispatchedAt | date:'yyyy-MM-dd HH:mm' }} · {{ viewing()!.dispatchedBy }}</div>
+        <div *ngIf="viewing()!.receivedAt">{{ 'transfers.received' | translate }}: {{ viewing()!.receivedAt | date:'yyyy-MM-dd HH:mm' }} · {{ viewing()!.receivedBy }}</div>
+      </div>
+
+      <div class="mt-4 flex items-center justify-end gap-2" *ngIf="canDispatch(viewing()!) || canReceive(viewing()!) || canCancel(viewing()!)">
+        <button *ngIf="canDispatch(viewing()!)" type="button" class="rounded-xl bg-sky-600 px-4 py-2 text-sm font-semibold text-white" (click)="closeDetails(); askAction(viewing()!, 'dispatch')">{{ 'transfers.dispatch' | translate }}</button>
+        <button *ngIf="canReceive(viewing()!)" type="button" class="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white" (click)="closeDetails(); askAction(viewing()!, 'receive')">{{ 'transfers.receive' | translate }}</button>
+        <button *ngIf="canCancel(viewing()!)" type="button" class="rounded-xl bg-slate-200 dark:bg-slate-600 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200" (click)="closeDetails(); askAction(viewing()!, 'cancel')">{{ 'common.cancel' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<cis-confirm-dialog
+  [open]="confirmOpen()"
+  title="Stock Transfer"
+  [message]="confirmMessage()"
+  [confirmText]="confirmAction() === 'cancel' ? ('common.cancel' | translate) : ('common.confirm' | translate)"
+  (cancel)="cancelConfirm()"
+  (confirm)="runAction()"
+></cis-confirm-dialog>

@@ -1,17 +1,25 @@
-<div class="min-h-screen bg-slate-50">
+<div class="min-h-screen bg-slate-50 dark:bg-slate-900">
   <div
     class="grid min-h-screen grid-cols-1"
     [ngClass]="{ 'md:grid-cols-[260px_1fr]': !isHome() && sidebarOpen() }"
   >
     <div
-      *ngIf="!isHome() && sidebarOpen()"
+      *ngIf="isMobile() && sidebarOpen()"
       class="fixed inset-0 z-40 bg-slate-900/40 md:hidden"
       (click)="closeSidebar()"
     ></div>
 
     <aside
-      *ngIf="!isHome()"
-      class="z-50 flex flex-col bg-gradient-to-b from-indigo-950 via-purple-900 to-fuchsia-700 text-white p-4 md:p-5 md:static md:translate-x-0"
+      *ngIf="!isHome() || isMobile()"
+      id="main-sidebar"
+      aria-label="Main navigation"
+      [attr.role]="isMobile() ? 'dialog' : null"
+      [attr.aria-modal]="isMobile() && sidebarOpen() ? true : null"
+      [attr.inert]="isMobile() && !sidebarOpen() ? '' : null"
+      [cdkTrapFocus]="isMobile() && sidebarOpen()"
+      [cdkTrapFocusAutoCapture]="isMobile() && sidebarOpen()"
+      [class.cis-sidebar-open]="isMobile() && sidebarOpen()"
+      class="cis-sidebar z-50 flex flex-col bg-primary-700 dark:bg-primary-950 text-white p-4 md:p-5 md:static md:translate-x-0"
       [ngClass]="{
         'fixed inset-y-0 left-0 w-[260px] transform transition-transform duration-200 ease-out': true,
         'md:hidden': !sidebarOpen(),
@@ -19,48 +27,62 @@
         'translate-x-0': sidebarOpen()
       }"
     >
-      <div class="flex items-start justify-between gap-2">
-        <a routerLink="/home" class="block flex-1 rounded-2xl bg-white/10 p-4 ring-1 ring-white/10 hover:bg-white/15">
-          <div class="flex items-center gap-3">
-            <div class="grid h-10 w-10 place-items-center rounded-2xl bg-white/15 ring-1 ring-white/10">
-              <img src="/GYLA-LOGO.png" alt="GYLA Cosmetics" class="h-8 w-8 object-contain" />
-            </div>
-            <div class="min-w-0">
-              <div class="text-sm font-semibold text-purple-100/90">GYLA COSMETICS</div>
-              <div class="text-lg font-extrabold tracking-wide leading-tight">CIS Admin</div>
-            </div>
-          </div>
+      <button type="button" class="mb-2 ml-auto flex h-11 w-11 items-center justify-center rounded-xl hover:bg-white/15 md:hidden" (click)="closeSidebar()" aria-label="Close navigation" cdkFocusInitial>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6" /></svg>
+      </button>
+      <div class="flex flex-col items-center justify-center gap-1.5 py-5">
+        <a routerLink="/home" class="block">
+          <img src="/NABO.png" alt="NABOO" class="h-9 w-auto object-contain" />
         </a>
+        <span class="text-[11px] font-medium text-white/70">Sales &amp; Management System</span>
       </div>
 
-      <nav class="mt-5 grid gap-1">
+      <hr class="mx-1 border-0 border-t border-white/20" />
+
+      <nav class="mt-4 grid gap-1">
         <a
           routerLink="/dashboard"
-          routerLinkActive="bg-white/15"
+          routerLinkActive="cis-nav-active"
           [routerLinkActiveOptions]="{ exact: true }"
-          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
+          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-primary-600">
           <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 11l9-8 9 8v10a2 2 0 01-2 2H5a2 2 0 01-2-2V11z" />
             </svg>
           </span>
-          <span>Dashboard</span>
+          <span>{{ 'nav.dashboard' | translate }}</span>
+        </a>
+
+        <a
+          *ngIf="canView('SALES') || canView('EXPENSES')"
+          routerLink="/counter"
+          routerLinkActive="cis-nav-active"
+          ariaCurrentWhenActive="page"
+          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-primary-600">
+          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4" aria-hidden="true"><path d="M5 3h14v12H5zM8 6h8M8 10h2m4 0h2M3 15h18v6H3zM9 18h6" /></svg>
+          </span>
+          <span>{{ 'nav.counter' | translate }}</span>
         </a>
 
         <!-- Products with flyout popup -->
         <div class="relative">
           <a
-            routerLink="/product-dashboard"
+            [routerLink]="isMobile() ? null : '/product-dashboard'"
+            [attr.role]="isMobile() ? 'button' : null"
+            [attr.tabindex]="isMobile() ? 0 : null"
+            [attr.aria-expanded]="productsExpanded()"
+            (keydown.enter)="isMobile() && toggleProducts()"
             (click)="toggleProducts(); $event.stopPropagation()"
-            class="grid w-full grid-cols-[44px_1fr_auto] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10 cursor-pointer"
-            [ngClass]="{ 'bg-white/15': isProductsSection() || productsExpanded() }">
-            <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+            class="grid w-full grid-cols-[44px_1fr_auto] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-primary-600 cursor-pointer"
+            [ngClass]="{ 'cis-nav-active': isProductsSection() || productsExpanded() }">
+            <span class="relative grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M20 13V7a2 2 0 00-2-2H6a2 2 0 00-2 2v6" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 13h16v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6z" />
               </svg>
             </span>
-            <span>Products</span>
+            <span>{{ 'nav.productDashboard' | translate }}</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 transition-transform duration-200"
               [ngClass]="{ 'rotate-90': productsExpanded() }">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
@@ -70,93 +92,125 @@
           <!-- Flyout backdrop (click to close) -->
           <div
             *ngIf="productsExpanded()"
-            class="fixed inset-0 z-[60]"
+            class="fixed inset-0 z-[60] hidden md:block"
             (click)="toggleProducts()">
           </div>
 
           <!-- Flyout popup -->
           <div
             *ngIf="productsExpanded()"
-            class="absolute left-full top-0 z-[61] ml-2 w-56 rounded-xl bg-white shadow-xl ring-1 ring-slate-200 overflow-hidden"
+            class="cis-sidebar-flyout absolute left-full top-0 z-[61] ml-2 w-56 rounded-xl bg-white dark:bg-slate-800 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700 overflow-hidden"
             (click)="$event.stopPropagation()">
 
-            <div class="border-b border-slate-100 px-4 py-3">
-              <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Products</div>
+            <div class="border-b border-slate-100 dark:border-slate-700 px-4 py-3">
+              <div class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{{ 'nav.productDashboard' | translate }}</div>
             </div>
 
             <div class="grid gap-0.5 p-2">
+              <a *ngIf="isMobile()" routerLink="/product-dashboard" class="rounded-lg px-3 py-2 text-sm font-semibold text-primary-700 dark:text-primary-200">{{ 'nav.overview' | translate }}</a>
               <a
                 *ngIf="canView('PRODUCTS')"
                 routerLink="/products"
-                routerLinkActive="bg-indigo-50 text-indigo-900 font-semibold"
+                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
                 [routerLinkActiveOptions]="{ exact: true }"
                 (click)="toggleProducts()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-purple-600">
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-purple-600 dark:text-purple-400">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M20 13V7a2 2 0 00-2-2H6a2 2 0 00-2 2v6" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M4 13h16v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6z" />
                 </svg>
-                <span>Products</span>
+                <span>{{ 'nav.products' | translate }}</span>
               </a>
 
               <a
                 *ngIf="canView('CATEGORIES')"
                 routerLink="/categories"
-                routerLinkActive="bg-indigo-50 text-indigo-900 font-semibold"
+                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
                 [routerLinkActiveOptions]="{ exact: true }"
                 (click)="toggleProducts()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-emerald-600">
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-emerald-600 dark:text-emerald-400">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
-                <span>Categories</span>
-              </a>
-
-              <a
-                *ngIf="canView('INVENTORY')"
-                routerLink="/inventory"
-                routerLinkActive="bg-indigo-50 text-indigo-900 font-semibold"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="toggleProducts()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-amber-600">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4v10l8 4 8-4V7z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 7l8 4 8-4" />
-                </svg>
-                <span>Inventory</span>
+                <span>{{ 'nav.categories' | translate }}</span>
               </a>
 
               <a
                 *ngIf="canView('STOCK_MOVEMENTS')"
                 routerLink="/stock-movements"
-                routerLinkActive="bg-indigo-50 text-indigo-900 font-semibold"
+                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
                 [routerLinkActiveOptions]="{ exact: true }"
                 (click)="toggleProducts()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-sky-600">
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-sky-600 dark:text-sky-400">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13M8 12h13M8 17h13" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h.01M3 12h.01M3 17h.01" />
                 </svg>
-                <span>Stock Movements</span>
+                <span>{{ 'nav.stockMovements' | translate }}</span>
+              </a>
+
+              <a
+                *ngIf="canView('TRANSFERS')"
+                routerLink="/transfers"
+                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="toggleProducts()"
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-teal-600 dark:text-teal-400">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13m0 0l-3-3m3 3l-3 3M16 17H3m0 0l3 3m-3-3l3-3" />
+                </svg>
+                <span>{{ 'nav.transfers' | translate }}</span>
+              </a>
+
+              <a
+                routerLink="/expiry-alerts"
+                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="toggleProducts()"
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-amber-600 dark:text-amber-400">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                </svg>
+                <span>{{ 'nav.expiryAlerts' | translate }}</span>
               </a>
             </div>
           </div>
         </div>
 
         <a
+          *ngIf="canView('INVENTORY')"
+          routerLink="/inventory"
+          routerLinkActive="cis-nav-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-primary-600">
+          <span class="relative grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4v10l8 4 8-4V7z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 7l8 4 8-4" />
+            </svg>
+            <span
+              *ngIf="pendingReceivingCount()"
+              class="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-red-500 px-0.5 text-[9px] font-bold leading-none text-white ring-2 ring-primary-700"
+            >{{ pendingReceivingCount() }}</span>
+          </span>
+          <span>{{ 'nav.inventory' | translate }}</span>
+        </a>
+
+        <a
           *ngIf="canView('PURCHASING')"
           routerLink="/purchasing"
-          routerLinkActive="bg-white/15"
+          routerLinkActive="cis-nav-active"
           [routerLinkActiveOptions]="{ exact: true }"
-          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
+          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-primary-600">
           <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M7 13l-1.5 7h13L17 13" />
             </svg>
           </span>
-          <span>Purchasing</span>
+          <span>{{ 'nav.purchasing' | translate }}</span>
         </a>
 
         <!-- Sales with flyout popup -->
@@ -164,8 +218,8 @@
           <button
             type="button"
             (click)="toggleSales(); $event.stopPropagation()"
-            class="grid w-full grid-cols-[44px_1fr_auto] items-center rounded-xl px-3 py-2 text-left text-sm text-purple-50 hover:bg-white/10"
-            [ngClass]="{ 'bg-white/15': isSalesSection() || salesExpanded() }">
+            class="grid w-full grid-cols-[44px_1fr_auto] items-center rounded-xl px-3 py-2 text-left text-sm text-purple-50 hover:bg-primary-600"
+            [ngClass]="{ 'cis-nav-active': isSalesSection() || salesExpanded() }">
             <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
@@ -173,7 +227,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" />
               </svg>
             </span>
-            <span>Sales</span>
+            <span>{{ 'nav.sales' | translate }}</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 transition-transform duration-200"
               [ngClass]="{ 'rotate-90': salesExpanded() }">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
@@ -183,48 +237,48 @@
           <!-- Flyout backdrop (click to close) -->
           <div
             *ngIf="salesExpanded()"
-            class="fixed inset-0 z-[60]"
+            class="fixed inset-0 z-[60] hidden md:block"
             (click)="toggleSales()">
           </div>
 
           <!-- Flyout popup -->
           <div
             *ngIf="salesExpanded()"
-            class="absolute left-full top-0 z-[61] ml-2 w-56 rounded-xl bg-white shadow-xl ring-1 ring-slate-200 overflow-hidden"
+            class="cis-sidebar-flyout absolute left-full top-0 z-[61] ml-2 w-56 rounded-xl bg-white dark:bg-slate-800 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700 overflow-hidden"
             (click)="$event.stopPropagation()">
 
-            <div class="border-b border-slate-100 px-4 py-3">
-              <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Sales</div>
+            <div class="border-b border-slate-100 dark:border-slate-700 px-4 py-3">
+              <div class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{{ 'nav.sales' | translate }}</div>
             </div>
 
             <div class="grid gap-0.5 p-2">
               <a
                 *ngIf="canView('SALES')"
                 routerLink="/sales"
-                routerLinkActive="bg-indigo-50 text-indigo-900 font-semibold"
+                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
                 [routerLinkActiveOptions]="{ exact: true }"
                 (click)="toggleSales()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-emerald-600">
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-emerald-600 dark:text-emerald-400">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" />
                 </svg>
-                <span>Sales</span>
+                <span>{{ 'nav.sales' | translate }}</span>
               </a>
 
               <a
                 *ngIf="canView('MY_SALES')"
                 routerLink="/my-sales"
-                routerLinkActive="bg-indigo-50 text-indigo-900 font-semibold"
+                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
                 [routerLinkActiveOptions]="{ exact: true }"
                 (click)="toggleSales()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-purple-600">
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-purple-600 dark:text-purple-400">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 14l2 2 4-4" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M7 3h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" />
                 </svg>
-                <span>My Sales</span>
+                <span>{{ 'nav.mySales' | translate }}</span>
               </a>
             </div>
           </div>
@@ -235,8 +289,8 @@
           <button
             type="button"
             (click)="toggleFinance(); $event.stopPropagation()"
-            class="grid w-full grid-cols-[44px_1fr_auto] items-center rounded-xl px-3 py-2 text-left text-sm text-purple-50 hover:bg-white/10"
-            [ngClass]="{ 'bg-white/15': isFinanceSection() || financeExpanded() }">
+            class="grid w-full grid-cols-[44px_1fr_auto] items-center rounded-xl px-3 py-2 text-left text-sm text-purple-50 hover:bg-primary-600"
+            [ngClass]="{ 'cis-nav-active': isFinanceSection() || financeExpanded() }">
             <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
@@ -244,7 +298,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" />
               </svg>
             </span>
-            <span>Finance</span>
+            <span>{{ 'nav.finance' | translate }}</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 transition-transform duration-200"
               [ngClass]="{ 'rotate-90': financeExpanded() }">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
@@ -254,101 +308,87 @@
           <!-- Flyout backdrop (click to close) -->
           <div
             *ngIf="financeExpanded()"
-            class="fixed inset-0 z-[60]"
+            class="fixed inset-0 z-[60] hidden md:block"
             (click)="toggleFinance()">
           </div>
 
           <!-- Flyout popup -->
           <div
             *ngIf="financeExpanded()"
-            class="absolute left-full top-0 z-[61] ml-2 w-56 rounded-xl bg-white shadow-xl ring-1 ring-slate-200 overflow-hidden"
+            class="cis-sidebar-flyout absolute left-full top-0 z-[61] ml-2 w-56 rounded-xl bg-white dark:bg-slate-800 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700 overflow-hidden"
             (click)="$event.stopPropagation()">
 
-            <div class="border-b border-slate-100 px-4 py-3">
-              <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Finance</div>
+            <div class="border-b border-slate-100 dark:border-slate-700 px-4 py-3">
+              <div class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{{ 'nav.finance' | translate }}</div>
             </div>
 
             <div class="grid gap-0.5 p-2">
               <a
                 *ngIf="canView('EXPENSES')"
                 routerLink="/expenses"
-                routerLinkActive="bg-indigo-50 text-indigo-900 font-semibold"
+                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
                 [routerLinkActiveOptions]="{ exact: true }"
                 (click)="toggleFinance()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-emerald-600">
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-emerald-600 dark:text-emerald-400">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
                 </svg>
-                <span>Expenses</span>
+                <span>{{ 'nav.expenses' | translate }}</span>
               </a>
 
               <a
                 *ngIf="canView('EXPENSE_CATEGORIES')"
                 routerLink="/expense-categories"
-                routerLinkActive="bg-indigo-50 text-indigo-900 font-semibold"
+                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
                 [routerLinkActiveOptions]="{ exact: true }"
                 (click)="toggleFinance()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-amber-600">
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-amber-600 dark:text-amber-400">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
-                <span>Expense Categories</span>
+                <span>{{ 'nav.expenseCategories' | translate }}</span>
               </a>
 
               <a
                 *ngIf="canView('PROFIT_MANAGEMENT')"
                 routerLink="/profit-management"
-                routerLinkActive="bg-indigo-50 text-indigo-900 font-semibold"
+                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
                 [routerLinkActiveOptions]="{ exact: true }"
                 (click)="toggleFinance()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 hover:bg-slate-50">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-purple-600">
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-purple-600 dark:text-purple-400">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M7 15l3-3 3 2 5-6" />
                 </svg>
-                <span>Profit Management</span>
+                <span>{{ 'nav.profitManagement' | translate }}</span>
               </a>
             </div>
           </div>
         </div>
 
-          <a
-          routerLink="/expiry-alerts"
-          routerLinkActive="bg-white/15"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
-          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-            </svg>
-          </span>
-          <span>Expiry & Alerts</span>
-        </a>
-
         <a
           *ngIf="canView('REPORTS')"
           routerLink="/reports"
-          routerLinkActive="bg-white/15"
+          routerLinkActive="cis-nav-active"
           [routerLinkActiveOptions]="{ exact: true }"
-          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
+          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-primary-600">
           <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M7 15l3-3 3 2 5-6" />
             </svg>
           </span>
-          <span>Reports</span>
+          <span>{{ 'nav.reports' | translate }}</span>
         </a>
 
 
         <a
           *ngIf="canView('USERS_ROLES')"
           routerLink="/users"
-          routerLinkActive="bg-white/15"
+          routerLinkActive="cis-nav-active"
           [routerLinkActiveOptions]="{ exact: true }"
-          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-white/10">
+          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-primary-600">
           <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1" />
@@ -358,9 +398,25 @@
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 12a4 4 0 100-8 4 4 0 000 8z" />
             </svg>
           </span>
-          <span>Users & Roles</span>
+          <span>{{ 'nav.usersRoles' | translate }}</span>
         </a>
-        
+
+        <a
+          *ngIf="canView('BRANCHES')"
+          routerLink="/branches"
+          routerLinkActive="cis-nav-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-purple-50 hover:bg-primary-600">
+          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 9l1.5-5h15L21 9" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 9v11a1 1 0 001 1h16a1 1 0 001-1V9" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 9h18M9 21v-7h6v7" />
+            </svg>
+          </span>
+          <span>{{ 'nav.branches' | translate }}</span>
+        </a>
+
       </nav>
 
       <!-- <button
@@ -373,80 +429,109 @@
 
       <div class="mt-auto pt-6">
         <div class="text-center text-[11px] text-purple-100/90">
-          © {{ currentYear }} Cosmetics Co. All rights reserved.
+          © {{ currentYear }} {{ 'common.footer' | translate }}
         </div>
       </div>
     </aside>
 
-    <main class="p-4 md:p-6" (click)="closeMenus()">
+    <main class="cis-system flex min-h-screen flex-col p-4 md:p-6 dark:bg-slate-900" (click)="closeMenus()">
       <app-shell-header
         [user]="user()"
         [isAuthed]="isAuthed()"
-        [showSidebarToggle]="!isHome()"
+        [showSidebarToggle]="!isHome() || isMobile()"
         [sidebarOpen]="sidebarOpen()"
         [notificationsCount]="notificationsCount()"
         [notificationsOpen]="notificationsOpen()"
         [userMenuOpen]="userMenuOpen()"
+        [langMenuOpen]="langMenuOpen()"
+        [branchMenuOpen]="branchMenuOpen()"
         (toggleSidebar)="toggleSidebar()"
         (toggleNotifications)="toggleNotifications()"
         (toggleUserMenu)="toggleUserMenu()"
+        (toggleLangMenu)="toggleLangMenu()"
+        (toggleBranchMenu)="toggleBranchMenu()"
         (closeMenus)="closeMenus()"
         (logout)="logout()"
         (changePassword)="openChangePassword()"
         (resetUserPassword)="openResetUserPassword()"
       />
 
-      <router-outlet />
+      <div class="flex-1">
+        <router-outlet />
+      </div>
+
+      <footer *ngIf="isHome()" class="mt-8 text-center text-xs text-slate-500 dark:text-slate-400">
+        © {{ currentYear }} {{ 'common.footer' | translate }}
+      </footer>
     </main>
   </div>
+
+  <nav class="cis-bottom-nav" aria-label="Mobile navigation">
+    <a routerLink="/home" routerLinkActive="cis-bottom-active" ariaCurrentWhenActive="page" [routerLinkActiveOptions]="{ exact: true }" aria-label="Home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3V10Z" /><path d="M9 20v-7h6v7" /></svg>
+      <span>{{ 'nav.home' | translate }}</span>
+    </a>
+    <a routerLink="/dashboard" routerLinkActive="cis-bottom-active" ariaCurrentWhenActive="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z" /></svg>
+      <span>{{ 'nav.dashboard' | translate }}</span>
+    </a>
+    <a *ngIf="canView('SALES') || canView('EXPENSES')" routerLink="/counter" routerLinkActive="cis-bottom-active" ariaCurrentWhenActive="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 3h14v12H5zM8 6h8M8 10h2m4 0h2M3 15h18v6H3zM9 18h6" /></svg>
+      <span>{{ 'nav.counter' | translate }}</span>
+    </a>
+    <button type="button" (click)="toggleSidebar()" [attr.aria-expanded]="sidebarOpen()" aria-controls="main-sidebar" aria-label="Open navigation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+      <span>{{ 'nav.menu' | translate }}</span>
+    </button>
+  </nav>
 </div>
 
-<div *ngIf="changePasswordOpen()" class="fixed inset-0 z-50">
+<div *ngIf="changePasswordOpen()" class="cis-modal-overlay fixed inset-0 z-50">
   <div class="absolute inset-0 bg-slate-900/40" (click)="closeChangePassword()"></div>
   <div class="absolute inset-0 flex items-center justify-center p-4">
-    <div class="w-full max-w-sm rounded-2xl bg-white p-5 shadow-xl ring-1 ring-slate-200" (click)="$event.stopPropagation()">
-      <div class="text-base font-semibold text-slate-900">Change password</div>
-      <div class="mt-1 text-xs text-slate-500">Enter your current password and a new password.</div>
+    <div class="w-full max-w-sm rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700" (click)="$event.stopPropagation()">
+      <div class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'modal.changePassword.title' | translate }}</div>
+      <div class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ 'modal.changePassword.help' | translate }}</div>
 
       <div class="mt-4 grid gap-3">
-        <label class="grid gap-2 text-xs text-slate-700">
-          Current password
+        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+          {{ 'modal.changePassword.currentPassword' | translate }}
           <input
             type="password"
-            class="rounded-xl border border-slate-200 px-3 py-2 text-sm"
+            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100"
             [value]="changePasswordCurrent()"
             (input)="changePasswordCurrent.set(($any($event.target).value))"
           />
         </label>
 
-        <label class="grid gap-2 text-xs text-slate-700">
-          New password
+        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+          {{ 'modal.changePassword.newPassword' | translate }}
           <input
             type="password"
-            class="rounded-xl border border-slate-200 px-3 py-2 text-sm"
+            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100"
             [value]="changePasswordNew()"
             (input)="changePasswordNew.set(($any($event.target).value))"
           />
         </label>
 
-        <div class="text-sm text-red-700" *ngIf="changePasswordError()">{{ changePasswordError() }}</div>
-        <div class="text-sm text-emerald-700" *ngIf="changePasswordSuccess()">{{ changePasswordSuccess() }}</div>
+        <div class="text-sm text-red-700 dark:text-red-400" *ngIf="changePasswordError()">{{ changePasswordError() }}</div>
+        <div class="text-sm text-emerald-700 dark:text-emerald-400" *ngIf="changePasswordSuccess()">{{ changePasswordSuccess() }}</div>
 
         <div class="mt-1 flex items-center justify-end gap-2">
           <button
             type="button"
-            class="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-200"
+            class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600"
             (click)="closeChangePassword()"
           >
-            Cancel
+            {{ 'common.cancel' | translate }}
           </button>
           <button
             type="button"
-            class="rounded-xl bg-indigo-950 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+            class="rounded-xl bg-purple-600 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
             (click)="submitChangePassword()"
             [disabled]="changePasswordLoading()"
           >
-            Update
+            {{ 'modal.changePassword.update' | translate }}
           </button>
         </div>
       </div>
@@ -454,54 +539,54 @@
   </div>
 </div>
 
-<div *ngIf="resetUserPasswordOpen()" class="fixed inset-0 z-50">
+<div *ngIf="resetUserPasswordOpen()" class="cis-modal-overlay fixed inset-0 z-50">
   <div class="absolute inset-0 bg-slate-900/40" (click)="closeResetUserPassword()"></div>
   <div class="absolute inset-0 flex items-center justify-center p-4">
-    <div class="w-full max-w-md rounded-2xl bg-white p-5 shadow-xl ring-1 ring-slate-200" (click)="$event.stopPropagation()">
-      <div class="text-base font-semibold text-slate-900">Reset user password</div>
-      <div class="mt-1 text-xs text-slate-500">Admin only. Choose a user and set a new password.</div>
+    <div class="w-full max-w-md rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700" (click)="$event.stopPropagation()">
+      <div class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'modal.resetPassword.title' | translate }}</div>
+      <div class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ 'modal.resetPassword.help' | translate }}</div>
 
       <div class="mt-4 grid gap-3">
-        <label class="grid gap-2 text-xs text-slate-700">
-          User
+        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+          {{ 'modal.resetPassword.user' | translate }}
           <select
-            class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"
+            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100"
             [value]="resetUserId()"
             (change)="resetUserId.set(($any($event.target).value))"
           >
-            <option value="">Select user</option>
+            <option value="">{{ 'modal.resetPassword.selectUser' | translate }}</option>
             <option *ngFor="let u of adminUsers()" [value]="u.id">{{ u.name }} ({{ u.email }})</option>
           </select>
         </label>
 
-        <label class="grid gap-2 text-xs text-slate-700">
-          New password
+        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+          {{ 'modal.resetPassword.newPassword' | translate }}
           <input
             type="password"
-            class="rounded-xl border border-slate-200 px-3 py-2 text-sm"
+            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100"
             [value]="resetNewPassword()"
             (input)="resetNewPassword.set(($any($event.target).value))"
           />
         </label>
 
-        <div class="text-sm text-red-700" *ngIf="resetUserPasswordError()">{{ resetUserPasswordError() }}</div>
-        <div class="text-sm text-emerald-700" *ngIf="resetUserPasswordSuccess()">{{ resetUserPasswordSuccess() }}</div>
+        <div class="text-sm text-red-700 dark:text-red-400" *ngIf="resetUserPasswordError()">{{ resetUserPasswordError() }}</div>
+        <div class="text-sm text-emerald-700 dark:text-emerald-400" *ngIf="resetUserPasswordSuccess()">{{ resetUserPasswordSuccess() }}</div>
 
         <div class="mt-1 flex items-center justify-end gap-2">
           <button
             type="button"
-            class="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-200"
+            class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600"
             (click)="closeResetUserPassword()"
           >
-            Cancel
+            {{ 'common.cancel' | translate }}
           </button>
           <button
             type="button"
-            class="rounded-xl bg-indigo-950 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+            class="rounded-xl bg-purple-600 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
             (click)="submitResetUserPassword()"
             [disabled]="resetUserPasswordLoading()"
           >
-            Reset
+            {{ 'modal.resetPassword.reset' | translate }}
           </button>
         </div>
       </div>

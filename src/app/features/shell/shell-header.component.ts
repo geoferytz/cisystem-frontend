@@ -1,6 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ThemeService } from '../../core/theme/theme.service';
+import { BranchContext } from '../../shared/services/branch-context.service';
+import { TranslationService } from '../../core/i18n/translation.service';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
 
 type ShellHeaderUser = {
   id: string;
@@ -12,10 +16,14 @@ type ShellHeaderUser = {
 @Component({
   selector: 'app-shell-header',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslatePipe],
   templateUrl: './shell-header.component.html'
 })
 export class ShellHeaderComponent {
+  private themeService = inject(ThemeService);
+  private translationService = inject(TranslationService);
+  readonly branchCtx = inject(BranchContext);
+
   @Input({ required: true }) user: ShellHeaderUser = null;
   @Input({ required: true }) isAuthed = false;
 
@@ -25,6 +33,8 @@ export class ShellHeaderComponent {
   @Input({ required: true }) notificationsCount = 0;
   @Input({ required: true }) notificationsOpen = false;
   @Input({ required: true }) userMenuOpen = false;
+  @Input({ required: true }) langMenuOpen = false;
+  @Input({ required: true }) branchMenuOpen = false;
 
   @Output() toggleNotifications = new EventEmitter<void>();
   @Output() toggleUserMenu = new EventEmitter<void>();
@@ -34,6 +44,22 @@ export class ShellHeaderComponent {
   @Output() logout = new EventEmitter<void>();
 
   @Output() toggleSidebar = new EventEmitter<void>();
+  @Output() toggleLangMenu = new EventEmitter<void>();
+  @Output() toggleBranchMenu = new EventEmitter<void>();
+
+  currentLang = this.translationService.currentLang;
+  availableLangs = this.translationService.availableLangs;
+  isDark = this.themeService.isDark;
+  isFullscreen = signal(false);
+
+  onToggleBranchMenu(): void {
+    this.toggleBranchMenu.emit();
+  }
+
+  selectBranch(code: string | null): void {
+    this.branchCtx.select(code);
+    location.reload();
+  }
 
   onToggleNotifications(): void {
     this.toggleNotifications.emit();
@@ -61,5 +87,30 @@ export class ShellHeaderComponent {
 
   onToggleSidebar(): void {
     this.toggleSidebar.emit();
+  }
+
+  onToggleLangMenu(): void {
+    this.toggleLangMenu.emit();
+  }
+
+  setLang(lang: string): void {
+    this.translationService.setLanguage(lang);
+    this.closeMenus.emit();
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
+  }
+
+  toggleFullscreen(): void {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().then(() => {
+        this.isFullscreen.set(true);
+      }).catch(() => {});
+    } else {
+      document.exitFullscreen().then(() => {
+        this.isFullscreen.set(false);
+      }).catch(() => {});
+    }
   }
 }

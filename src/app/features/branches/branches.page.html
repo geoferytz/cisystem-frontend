@@ -1,0 +1,154 @@
+<div class="flex items-center justify-between">
+  <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">{{ 'nav.branches' | translate }}</h2>
+  <button *ngIf="perm.canCreate('BRANCHES')" class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white" type="button" (click)="openCreate()">
+    {{ 'common.add' | translate }} {{ 'common.branch' | translate }}
+  </button>
+</div>
+
+<div *ngIf="modalOpen()" class="cis-modal-overlay fixed inset-0 z-50">
+  <div class="absolute inset-0 bg-slate-900/40" (click)="closeModal()"></div>
+  <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div class="w-full max-w-md rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700" (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between">
+        <div class="text-base font-semibold text-slate-900 dark:text-slate-100">
+          {{ editingId() ? ('common.edit' | translate) : ('common.add' | translate) }} {{ 'common.branch' | translate }}
+        </div>
+        <button class="rounded-xl bg-slate-100 dark:bg-slate-700 px-3 py-2 text-xs font-semibold text-slate-800 dark:text-slate-200" type="button" (click)="closeModal()">✕</button>
+      </div>
+
+      <form class="mt-4 grid gap-3" [formGroup]="form" (ngSubmit)="save()">
+        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+          {{ 'common.code' | translate }}
+          <input
+            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e] uppercase"
+            formControlName="code"
+            placeholder="e.g. BR2"
+          />
+        </label>
+
+        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+          {{ 'common.name' | translate }}
+          <input
+            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
+            formControlName="name"
+          />
+        </label>
+
+        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+          {{ 'common.address' | translate }}
+          <input
+            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
+            formControlName="address"
+          />
+        </label>
+
+        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+          {{ 'common.phone' | translate }}
+          <input
+            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
+            formControlName="phone"
+          />
+        </label>
+
+        <label *ngIf="editingId()" class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+          {{ 'common.status' | translate }}
+          <select
+            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
+            formControlName="active"
+          >
+            <option [ngValue]="true">{{ 'common.active' | translate }}</option>
+            <option [ngValue]="false">{{ 'common.inactive' | translate }}</option>
+          </select>
+        </label>
+
+        <div class="text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">{{ error() }}</div>
+
+        <div class="mt-2 flex items-center justify-end gap-2">
+          <button
+            type="button"
+            class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600"
+            (click)="closeModal()"
+          >
+            {{ 'common.close' | translate }}
+          </button>
+          <button
+            class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+            type="submit"
+            [disabled]="form.invalid || loading()"
+          >
+            {{ loading() ? ('common.saving' | translate) : ('common.save' | translate) }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-1">
+  <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
+    <div class="flex items-center justify-between">
+      <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'common.list' | translate }}</h3>
+    </div>
+
+    <cis-pager class="mt-3 block" [total]="branches().length" [(pageSize)]="pageSize" [(pageIndex)]="pageIndex" />
+
+    <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+      <table class="w-full border-collapse text-sm">
+        <thead class="bg-slate-50 dark:bg-slate-700">
+          <tr>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.code' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.name' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.address' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.phone' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.status' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.actions' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let b of displayedBranches()" class="border-t border-slate-100 dark:border-slate-700">
+            <td class="px-3 py-2">
+              <span class="font-mono text-xs font-semibold text-slate-700 dark:text-slate-300">{{ b.code }}</span>
+            </td>
+            <td class="px-3 py-2">
+              <span class="text-slate-900 dark:text-slate-300">{{ b.name }}</span>
+              <span *ngIf="b.main" class="ml-2 rounded-full bg-teal-100 dark:bg-teal-900/40 px-2 py-0.5 text-[10px] font-bold uppercase text-teal-700 dark:text-teal-300">{{ 'common.main' | translate }}</span>
+            </td>
+            <td class="px-3 py-2">
+              <span class="text-slate-900 dark:text-slate-300">{{ b.address || '-' }}</span>
+            </td>
+            <td class="px-3 py-2">
+              <span class="text-slate-900 dark:text-slate-300">{{ b.phone || '-' }}</span>
+            </td>
+            <td class="px-3 py-2">
+              <span class="text-slate-800 dark:text-slate-300" [class.text-[#B81104]]="!b.active" [class.dark:text-red-400]="!b.active">
+                {{ b.active ? ('common.active' | translate) : ('common.inactive' | translate) }}
+              </span>
+            </td>
+            <td class="px-3 py-2">
+              <cis-row-actions>
+                <button
+                  *ngIf="perm.canEdit('BRANCHES')"
+                  class="cis-row-action"
+                  (click)="openEdit(b)"
+                  [disabled]="loading()"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                  {{ 'common.edit' | translate }}
+                </button>
+                <button
+                  *ngIf="perm.canDelete('BRANCHES') && !b.main"
+                  class="cis-row-action cis-row-action-danger"
+                  (click)="delete(b)"
+                  [disabled]="loading()"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                  {{ 'common.delete' | translate }}
+                </button>
+              </cis-row-actions>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

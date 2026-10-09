@@ -1,1 +1,89 @@
+:host aside nav .cis-nav-active {
+  background-color: var(--cis-primary-soft);
+  color: var(--cis-primary-strong);
+  font-weight: 600;
+}
 
+.cis-system {
+  min-width: 0;
+}
+
+.cis-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .cis-system {
+    padding: 0 12px calc(88px + env(safe-area-inset-bottom));
+  }
+
+  app-shell-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    display: block;
+    padding-top: env(safe-area-inset-top);
+    background: var(--cis-page);
+  }
+
+  .cis-sidebar {
+    width: min(300px, 88vw);
+    height: 100dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-top: max(16px, env(safe-area-inset-top));
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+
+  .cis-sidebar-flyout {
+    position: static;
+    width: 100%;
+    margin: 6px 0;
+    box-shadow: none;
+  }
+
+  .cis-bottom-nav {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 30;
+    display: flex;
+    padding: 6px max(8px, env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+    border-top: 1px solid var(--cis-border);
+    background: var(--cis-surface);
+    box-shadow: 0 -4px 18px rgba(var(--cis-primary-rgb), 0.08);
+  }
+
+  .cis-bottom-nav > a,
+  .cis-bottom-nav > button {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    min-height: 54px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    border-radius: 12px;
+    padding: 4px;
+    color: var(--cis-muted);
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .cis-bottom-nav svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .cis-bottom-nav .cis-bottom-active {
+    background: var(--cis-primary-soft);
+    color: var(--cis-primary-strong);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cis-sidebar {
+    transition: none;
+  }
+}

@@ -4,6 +4,8 @@ import { Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../core/auth/auth.service';
 import { GraphqlService } from '../../core/graphql/graphql.service';
+import { TranslationService } from '../../core/i18n/translation.service';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
 
 type MeQueryResult = {
   me: {
@@ -49,7 +51,7 @@ type MyPermissionsQueryResult = {
 @Component({
   selector: 'cis-home-page',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslatePipe],
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss'
 })
@@ -68,90 +70,101 @@ export class HomePage {
     return Boolean(p?.canView);
   };
 
-  cards = computed<HomeCard[]>(() => [
-    {
-      title: 'Products',
-      icon: 'products',
-      description: 'Manage products, categories and batches.',
-      route: '/product-dashboard',
-      hidden: !this.canView('PRODUCTS')
-    },
-    {
-      title: 'Inventory',
-      icon: 'inventory',
-      description: 'View stock by product, batch and location.',
-      route: '/inventory',
-      hidden: !this.canView('INVENTORY')
-    },
-    {
-      title: 'Stock Movements',
-      icon: 'stockMovements',
-      description: 'Track transfers and adjustments.',
-      route: '/stock-movements',
-      hidden: !this.canView('STOCK_MOVEMENTS')
-    },
-    {
-      title: 'Purchasing',
-      icon: 'purchasing',
-      description: 'Record purchases and receive stock.',
-      route: '/purchasing',
-      hidden: !this.canView('PURCHASING')
-    },
-    {
-      title: 'Sales',
-      icon: 'sales',
-      description: 'Create sales and auto-pick FEFO stock.',
-      route: '/sales',
-      hidden: !this.canView('SALES')
-    },
-    {
-      title: 'My Sales',
-      icon: 'mySales',
-      description: 'Manual sales entry and daily/monthly totals.',
-      route: '/my-sales',
-      hidden: !this.canView('MY_SALES')
-    },
-    {
-      title: 'Expiry & Alerts',
-      icon: 'expiryAlerts',
-      description: 'Expiry and low-stock notifications.',
-      route: '/expiry-alerts',
-      hidden: !this.canView('INVENTORY')
-    },
-    {
-      title: 'Expenses',
-      icon: 'expenses',
-      description: 'Record and track daily expenses.',
-      route: '/expenses',
-      hidden: !this.canView('EXPENSES')
-    },
-    {
-      title: 'Reports',
-      icon: 'reports',
-      description: 'Sales, profit and movement reports.',
-      route: '/reports',
-      hidden: !this.canView('REPORTS')
-    },
-    {
-      title: 'Profit Management',
-      icon: 'profitManagement',
-      description: 'Track profits, margins and analysis.',
-      route: '/profit-management',
-      hidden: !this.canView('PROFIT_MANAGEMENT')
-    },
-    {
-      title: 'Users & Roles',
-      icon: 'users',
-      description: 'Manage users, roles and access.',
-      route: '/users',
-      hidden: !this.canView('USERS_ROLES')
-    }
-  ]);
+  cards = computed<HomeCard[]>(() => {
+    this.translation.currentLang();
+    return [
+      {
+        title: this.translation.translate('nav.counter'),
+        icon: 'sales',
+        description: this.translation.translate('home.counter.description'),
+        route: '/counter',
+        hidden: !this.canView('SALES') && !this.canView('EXPENSES')
+      },
+      {
+        title: this.translation.translate('nav.products'),
+        icon: 'products',
+        description: this.translation.translate('home.products.description'),
+        route: '/product-dashboard',
+        hidden: !this.canView('PRODUCTS')
+      },
+      {
+        title: this.translation.translate('nav.inventory'),
+        icon: 'inventory',
+        description: this.translation.translate('home.inventory.description'),
+        route: '/inventory',
+        hidden: !this.canView('INVENTORY')
+      },
+      {
+        title: this.translation.translate('nav.stockMovements'),
+        icon: 'stockMovements',
+        description: this.translation.translate('home.stockMovements.description'),
+        route: '/stock-movements',
+        hidden: !this.canView('STOCK_MOVEMENTS')
+      },
+      {
+        title: this.translation.translate('nav.purchasing'),
+        icon: 'purchasing',
+        description: this.translation.translate('home.purchasing.description'),
+        route: '/purchasing',
+        hidden: !this.canView('PURCHASING')
+      },
+      {
+        title: this.translation.translate('nav.sales'),
+        icon: 'sales',
+        description: this.translation.translate('home.sales.description'),
+        route: '/sales',
+        hidden: !this.canView('SALES')
+      },
+      {
+        title: this.translation.translate('nav.mySales'),
+        icon: 'mySales',
+        description: this.translation.translate('home.mySales.description'),
+        route: '/my-sales',
+        hidden: !this.canView('MY_SALES')
+      },
+      {
+        title: this.translation.translate('nav.expiryAlerts'),
+        icon: 'expiryAlerts',
+        description: this.translation.translate('home.expiryAlerts.description'),
+        route: '/expiry-alerts',
+        hidden: !this.canView('INVENTORY')
+      },
+      {
+        title: this.translation.translate('nav.expenses'),
+        icon: 'expenses',
+        description: this.translation.translate('home.expenses.description'),
+        route: '/expenses',
+        hidden: !this.canView('EXPENSES')
+      },
+      {
+        title: this.translation.translate('nav.reports'),
+        icon: 'reports',
+        description: this.translation.translate('home.reports.description'),
+        route: '/reports',
+        hidden: !this.canView('REPORTS')
+      },
+      {
+        title: this.translation.translate('nav.profitManagement'),
+        icon: 'profitManagement',
+        description: this.translation.translate('home.profitManagement.description'),
+        route: '/profit-management',
+        hidden: !this.canView('PROFIT_MANAGEMENT')
+      },
+      {
+        title: this.translation.translate('nav.usersRoles'),
+        icon: 'users',
+        description: this.translation.translate('home.usersRoles.description'),
+        route: '/users',
+        hidden: !this.canView('USERS_ROLES')
+      }
+    ];
+  });
 
   constructor(
     private readonly gql: GraphqlService,
     private readonly auth: AuthService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly translation: TranslationService
   ) {
     this.loadMe();
     this.loadMyPermissions();
@@ -187,3 +200,4 @@ export class HomePage {
     this.router.navigateByUrl('/login');
   }
 }
+

@@ -1,0 +1,121 @@
+{
+  "configVersion": 1,
+  "timestamp": 1789589338397,
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/GYLA-LOGO.png",
+        "/chunk-2VMXMS7J.js",
+        "/chunk-A2VC7KAU.js",
+        "/chunk-ERC3PRNE.js",
+        "/chunk-EVBT4WEM.js",
+        "/chunk-GR277TJB.js",
+        "/chunk-MFMECFI6.js",
+        "/chunk-OFBJRBRX.js",
+        "/chunk-RUEA55MH.js",
+        "/chunk-Y6DZIIFW.js",
+        "/chunk-YNNJBVAH.js",
+        "/chunk-ZEDTOXTS.js",
+        "/icon.png",
+        "/index.html",
+        "/main-O26SF2MW.js",
+        "/manifest.webmanifest",
+        "/polyfills-5CFQRCPP.js",
+        "/pwa-icon.svg",
+        "/styles-HOWVMU3G.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "images",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/LOGOZ.png",
+        "/NABO.png",
+        "/NABOO.png",
+        "/favicon.ico",
+        "/g.jpeg",
+        "/grace.jpeg",
+        "/icone.png",
+        "/logo.png"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/GYLA-LOGO.png": "4914a0ef84c357a5648ada3b1537d1d76337f37d",
+    "/LOGOZ.png": "8200e50681dae6be0fdb58f51ea18cea747bf868",
+    "/NABO.png": "878b972b7054c3a98ac8eb5930769ff1e2f6cac2",
+    "/NABOO.png": "0ce41917d3e3c6752c3494f82912611f3caf58e9",
+    "/chunk-2VMXMS7J.js": "0d4757e86a4cf693bbbe3dce3ba35dde955dfad4",
+    "/chunk-A2VC7KAU.js": "c0af0090d4dd8d6548fdeb43b6ab3b8b055eb7fe",
+    "/chunk-ERC3PRNE.js": "f905233a4e32bb6ae926c96168f24e4feeba9dab",
+    "/chunk-EVBT4WEM.js": "83cf0983734faeb41bb0ac7ee35be615d5a05d47",
+    "/chunk-GR277TJB.js": "4921aab95de6cfa99314da7278c3a227580edb53",
+    "/chunk-MFMECFI6.js": "7b46d9cecaebc757a88a37a37592b29af4ae2d88",
+    "/chunk-OFBJRBRX.js": "2b94bcd5eb7f326cff4933408e3adabe4c7c82c4",
+    "/chunk-RUEA55MH.js": "c7a129513f41c0954ecf7002dd222b00f038b71c",
+    "/chunk-Y6DZIIFW.js": "5b6523944a4fca9a0077c7fbef3464cdbc03a270",
+    "/chunk-YNNJBVAH.js": "f911a45b3ac0d33add88d777cec00de5199b590f",
+    "/chunk-ZEDTOXTS.js": "f757761e13305aa7e53fe45dc8064d0cc16a19c6",
+    "/favicon.ico": "9c39f434fe1261f68c5e3eefdf734630d99c5670",
+    "/g.jpeg": "e596414c489301050108f8f95ce58f3ab375782f",
+    "/grace.jpeg": "16b21c774f64dc44a32ce9778820cff1b438b79b",
+    "/icon.png": "4289e4b41c5cac9537d948ff6d86d538cbc34080",
+    "/icone.png": "63167441d28804bf1c2c0957938709ab9ec60263",
+    "/index.html": "422df1dde0826c80bf2e2b5b8ed0bdd23ae459f8",
+    "/logo.png": "528ec429eae2d2e5913c2bc1ee8420636da1eea8",
+    "/main-O26SF2MW.js": "88d7d7d893982f59161991afaca9b3253040697c",
+    "/manifest.webmanifest": "bd0a71215dd634abce71a50ff1134eb7587e1e8e",
+    "/polyfills-5CFQRCPP.js": "f2241e9a25858f895ce299d15f6f22e849e2fd72",
+    "/pwa-icon.svg": "c69cfc6fe939dbe827b0e53599fb4c2c1eb54b8e",
+    "/styles-HOWVMU3G.css": "64a3add2f54aa670ed8a406ff16fe2c5326190bc"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/graphql$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/graphql\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/api$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/api\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}

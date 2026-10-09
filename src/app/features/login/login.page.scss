@@ -1,52 +1,448 @@
+:host {
+  display: block;
+}
 
-.cis-login-hero {
-  background:
-    radial-gradient(2px 2px at 20% 30%, rgba(255, 255, 255, 0.7) 50%, transparent 52%),
-    radial-gradient(1.5px 1.5px at 70% 20%, rgba(255, 255, 255, 0.55) 50%, transparent 52%),
-    radial-gradient(1.5px 1.5px at 50% 55%, rgba(255, 255, 255, 0.45) 50%, transparent 52%),
-    radial-gradient(1px 1px at 85% 60%, rgba(255, 255, 255, 0.35) 50%, transparent 52%),
-    linear-gradient(135deg, #0b0b3b 0%, #3b1365 45%, #6b21a8 100%);
+.cis-login-shell {
+  position: relative;
+  min-height: 100vh;
+  width: 100vw;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 32px;
+  background: #5b121a;
+}
+
+.cis-bg-shapes {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cis-shape {
+  position: absolute;
+  display: block;
+}
+
+.cis-shape-circle {
+  width: 420px;
+  height: 420px;
+  top: -140px;
+  left: -120px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, rgba(201, 127, 96, 0.35), rgba(201, 127, 96, 0.06) 68%);
+  animation: cis-float 12s ease-in-out infinite;
+}
+
+.cis-shape-circle-2 {
+  width: 320px;
+  height: 320px;
+  bottom: -110px;
+  right: -90px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 60% 40%, rgba(245, 218, 191, 0.28), rgba(245, 218, 191, 0.05) 70%);
+  animation: cis-float 14s ease-in-out infinite reverse;
+}
+
+.cis-shape-blob {
+  width: 260px;
+  height: 260px;
+  top: 12%;
+  right: 8%;
+  border-radius: 42% 58% 62% 38% / 46% 42% 58% 54%;
+  background: rgba(255, 255, 255, 0.08);
+  animation: cis-morph 16s ease-in-out infinite;
+}
+
+.cis-shape-blob-2 {
+  width: 200px;
+  height: 200px;
+  bottom: 14%;
+  left: 6%;
+  border-radius: 58% 42% 40% 60% / 50% 58% 42% 50%;
+  border: 2px solid rgba(245, 218, 191, 0.28);
+  animation: cis-morph 18s ease-in-out infinite reverse, cis-float 11s ease-in-out infinite;
+}
+
+.cis-shape-ring {
+  width: 120px;
+  height: 120px;
+  top: 58%;
+  left: 44%;
+  border-radius: 50%;
+  border: 14px solid rgba(255, 255, 255, 0.07);
+  animation: cis-spin 24s linear infinite;
+}
+
+.cis-shape-dot {
+  width: 16px;
+  height: 16px;
+  top: 26%;
+  left: 38%;
+  border-radius: 50%;
+  background: rgba(245, 218, 191, 0.55);
+  box-shadow:
+    60px 90px 0 -4px rgba(255, 255, 255, 0.3),
+    140px -60px 0 -6px rgba(245, 218, 191, 0.4),
+    -80px 160px 0 -5px rgba(245, 218, 191, 0.35);
+  animation: cis-float 9s ease-in-out infinite;
+}
+
+@keyframes cis-float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(18px, -24px); }
+}
+
+@keyframes cis-morph {
+  0%, 100% { border-radius: 42% 58% 62% 38% / 46% 42% 58% 54%; transform: rotate(0deg); }
+  50% { border-radius: 58% 42% 40% 60% / 54% 58% 42% 46%; transform: rotate(14deg); }
+}
+
+@keyframes cis-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cis-shape { animation: none; }
+}
+
+.cis-lang-toggle {
+  position: fixed;
+  top: max(20px, env(safe-area-inset-top));
+  right: max(20px, env(safe-area-inset-right));
+  z-index: 10;
+  display: flex;
+  gap: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  padding: 4px;
+  background: rgba(26, 5, 8, 0.35);
+  backdrop-filter: blur(8px);
+}
+
+.cis-lang-toggle button {
+  min-width: 44px;
+  min-height: 32px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.cis-lang-toggle button.active {
+  background: #ffffff;
+  color: #5b121a;
+}
+
+.cis-login-split {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: stretch;
+  width: min(1080px, 100%);
+  min-height: 560px;
+}
+
+.cis-divider {
+  width: 1px;
+  margin: 0 8px;
+  background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.4) 20%, rgba(255, 255, 255, 0.4) 80%, transparent);
+}
+
+.cis-form-side {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 56px;
+}
+
+.cis-form-content {
+  width: 100%;
+  max-width: 340px;
+}
+
+.cis-form-heading {
+  margin-bottom: 30px;
+}
+
+.cis-form-heading h1 {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(36px, 4vw, 50px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.cis-form-heading p {
+  margin: 10px 0 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cis-login-form {
+  display: grid;
+  gap: 14px;
+}
+
+.cis-login-form input[type='email'],
+.cis-password-field input {
+  width: 100%;
+  height: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 12px;
+  padding: 0 16px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 14px;
+  outline: none;
+  backdrop-filter: blur(6px);
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.cis-login-form input::placeholder,
+.cis-password-field input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.cis-login-form input:focus,
+.cis-password-field input:focus {
+  border-color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.12);
+}
+
+.cis-password-field {
   position: relative;
 }
 
-.cis-login-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 80% 25%, rgba(255, 255, 255, 0.9) 0 6px, transparent 7px),
-    linear-gradient(120deg, rgba(236, 72, 153, 0.65) 0%, rgba(168, 85, 247, 0.18) 55%, transparent 75%);
-  opacity: 0.9;
+.cis-password-field input {
+  padding-right: 48px;
 }
 
-.cis-login-hero::after {
-  content: '';
+.cis-password-toggle {
   position: absolute;
-  left: 24px;
-  bottom: 18px;
-  width: 70px;
-  height: 120px;
-  background:
-    linear-gradient(180deg, rgba(236, 72, 153, 0.0) 0%, rgba(236, 72, 153, 0.0) 24%, rgba(236, 72, 153, 0.75) 100%);
-  clip-path: polygon(
-    44% 0%,
-    56% 0%,
-    62% 10%,
-    60% 18%,
-    58% 18%,
-    58% 28%,
-    70% 34%,
-    70% 40%,
-    58% 40%,
-    58% 100%,
-    42% 100%,
-    42% 40%,
-    30% 40%,
-    30% 34%,
-    42% 28%,
-    42% 18%,
-    40% 18%,
-    38% 10%
-  );
-  opacity: 0.9;
+  top: 50%;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+  transform: translateY(-50%);
+}
+
+.cis-password-toggle:hover {
+  color: #ffffff;
+}
+
+.cis-password-toggle svg {
+  width: 17px;
+  height: 17px;
+}
+
+.cis-form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 12px;
+}
+
+.cis-form-actions label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.cis-form-actions input[type='checkbox'] {
+  accent-color: #f5dabf;
+}
+
+.cis-form-actions button {
+  border: 0;
+  background: transparent;
+  color: #f5dabf;
+  font-weight: 700;
+}
+
+.cis-form-actions button:hover {
+  text-decoration: underline;
+}
+
+.cis-switch-account {
+  border: 0;
+  background: transparent;
+  color: #f5dabf;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.cis-switch-account:hover {
+  text-decoration: underline;
+}
+
+.cis-error {
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(254, 202, 202, 0.16);
+  border: 1px solid rgba(254, 202, 202, 0.35);
+  color: #fecaca;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.cis-session-notice {
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(254, 243, 199, 0.16);
+  border: 1px solid rgba(254, 243, 199, 0.35);
+  color: #fde68a;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.cis-submit {
+  height: 50px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--cis-primary-soft);
+  color: var(--cis-primary-strong);
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  box-shadow: 0 15px 30px rgba(26, 5, 8, 0.35);
+  transition: background 160ms ease, transform 120ms ease;
+}
+
+.cis-submit:hover:not(:disabled) {
+  background: #f5dabf;
+  transform: translateY(-1px);
+}
+
+.cis-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.cis-form-note {
+  margin-top: 20px;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 12px;
+  text-align: center;
+}
+
+.cis-brand-side {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 56px;
+}
+
+.cis-brand-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.cis-brand-logo {
+  display: block;
+  height: 84px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 24px rgba(26, 5, 8, 0.4));
+}
+
+.cis-brand-title {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.cis-contact {
+  margin-top: 26px;
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+
+.cis-contact-label {
+  color: #f5dabf;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.cis-contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  opacity: 0.92;
+}
+
+.cis-contact-link:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.cis-contact-link svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 860px) {
+  .cis-login-shell {
+    padding: 18px;
+  }
+
+  .cis-login-form input {
+    font-size: 16px;
+  }
+
+  .cis-login-split {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    gap: 0;
+  }
+
+  .cis-divider {
+    width: auto;
+    height: 1px;
+    margin: 8px 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4) 20%, rgba(255, 255, 255, 0.4) 80%, transparent);
+  }
+
+  .cis-form-side {
+    padding: 40px 28px 30px;
+    order: 1;
+  }
+
+  .cis-brand-side {
+    padding: 30px 28px 40px;
+    order: 2;
+  }
+
+  .cis-brand-logo {
+    height: 60px;
+  }
 }

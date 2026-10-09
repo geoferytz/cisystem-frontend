@@ -2,10 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GraphqlService } from '../../core/graphql/graphql.service';
+import { BranchContext } from '../../shared/services/branch-context.service';
 import { BaseChartDirective } from 'ng2-charts';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { forkJoin } from 'rxjs';
 import type { ChartConfiguration, ChartData } from 'chart.js';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
 
 type InventoryValuationQueryResult = {
   inventoryValuation: {
@@ -101,7 +103,7 @@ type ExpensesQueryResult = {
 @Component({
   selector: 'cis-dashboard-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, BaseChartDirective, MoneyPipe],
+  imports: [CommonModule, ReactiveFormsModule, BaseChartDirective, MoneyPipe, TranslatePipe],
   templateUrl: './dashboard.page.html',
   styleUrl: './dashboard.page.scss'
 })
@@ -111,6 +113,7 @@ export class DashboardPage {
 
   private readonly fb = inject(FormBuilder);
   private readonly gql = inject(GraphqlService);
+  private readonly branchCtx = inject(BranchContext);
 
   totalStockValue = signal<number | null>(null);
   productsCount = signal<number>(0);
@@ -160,8 +163,8 @@ export class DashboardPage {
       {
         label: 'Net Profit',
         data: this.profit7DaysData(),
-        borderColor: '#4f46e5',
-        backgroundColor: 'rgba(79,70,229,0.15)',
+        borderColor: '#6c151e',
+        backgroundColor: 'rgba(13,148,136,0.15)',
         tension: 0.25,
         fill: true
       }
@@ -188,7 +191,7 @@ export class DashboardPage {
       {
         label: 'Qty Sold',
         data: this.topProductsQty(),
-        backgroundColor: 'rgba(147,51,234,0.75)'
+        backgroundColor: 'rgba(13,148,136,0.85)'
       }
     ]
   }));
@@ -209,7 +212,7 @@ export class DashboardPage {
     datasets: [
       {
         data: this.expenseBreakdownValues(),
-        backgroundColor: ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#64748b']
+        backgroundColor: ['#6c151e', '#9a4444', '#f2b45f', '#c97f60', '#ee8b83', '#8acb88', '#4a0f16']
       }
     ]
   }));
@@ -232,8 +235,8 @@ export class DashboardPage {
     this.loadMe();
     this.loadMyPermissions();
 
-    const qVal = `query { inventoryValuation { totalStockValue } }`;
-    this.gql.request<InventoryValuationQueryResult>(qVal).subscribe({
+    const qVal = `query Val($branch: String) { inventoryValuation(branch: $branch) { totalStockValue } }`;
+    this.gql.request<InventoryValuationQueryResult>(qVal, { branch: this.branchCtx.effective() }).subscribe({
       next: (res) => this.totalStockValue.set(res.inventoryValuation.totalStockValue),
       error: () => {}
     });
@@ -250,11 +253,11 @@ export class DashboardPage {
       error: () => {}
     });
 
-    const qAlerts = `query DashboardAlerts($days: Int!, $threshold: Int!) {
-      expiryAlerts(days: $days) { productId }
-      lowStockAlerts(threshold: $threshold) { productId }
+    const qAlerts = `query DashboardAlerts($days: Int!, $threshold: Int!, $branch: String) {
+      expiryAlerts(days: $days, branch: $branch) { productId }
+      lowStockAlerts(threshold: $threshold, branch: $branch) { productId }
     }`;
-    this.gql.request<AlertsQueryResult>(qAlerts, { days: 30, threshold: 10 }).subscribe({
+    this.gql.request<AlertsQueryResult>(qAlerts, { days: 30, threshold: 10, branch: this.branchCtx.effective() }).subscribe({
       next: (res) => {
         this.expiryCount.set(res.expiryAlerts.length);
         this.lowStockCount.set(res.lowStockAlerts.length);
@@ -406,3 +409,4 @@ export class DashboardPage {
     return `${pct}%`;
   }
 }
+

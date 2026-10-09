@@ -1,8 +1,12 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GraphqlService } from '../../core/graphql/graphql.service';
+import { BranchContext } from '../../shared/services/branch-context.service';
 import { PermissionService } from '../../shared/services/permission.service';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { RowActionsMenuComponent } from '../../shared/ui/row-actions-menu/row-actions-menu.component';
+import { PagerComponent } from '../../shared/ui/pager/pager.component';
 
 type AdminUser = {
   id: string;
@@ -11,6 +15,9 @@ type AdminUser = {
   plainPassword?: string | null;
   active: boolean;
   roles: string[];
+  branchId?: string | null;
+  branchCode?: string | null;
+  branchName?: string | null;
 };
 
 type UsersQueryResult = {
@@ -52,7 +59,7 @@ type SetUserPermissionsMutationResult = {
 @Component({
   selector: 'cis-users-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, RowActionsMenuComponent, PagerComponent],
   templateUrl: './users.page.html',
   styleUrl: './users.page.scss'
 })
@@ -64,6 +71,13 @@ export class UsersPage {
   success = signal<string | null>(null);
 
   users = signal<AdminUser[]>([]);
+  pageSize = signal(10);
+  pageIndex = signal(0);
+  displayedUsers = computed(() => {
+    const size = this.pageSize();
+    const start = this.pageIndex() * size;
+    return this.users().slice(start, start + size);
+  });
   roles = signal<string[]>([]);
 
   createOpen = signal(false);
@@ -89,23 +103,28 @@ export class UsersPage {
     { key: 'EXPENSE_CATEGORIES', label: 'Expense Categories' },
     { key: 'REPORTS', label: 'Reports' },
     { key: 'PROFIT_MANAGEMENT', label: 'Profit Management' },
-    { key: 'USERS_ROLES', label: 'Users & Roles' }
+    { key: 'USERS_ROLES', label: 'Users & Roles' },
+    { key: 'BRANCHES', label: 'Branches' },
+    { key: 'TRANSFERS', label: 'Transfers' }
   ];
 
   private readonly fb = inject(FormBuilder);
+  readonly branchCtx = inject(BranchContext);
 
   form = this.fb.group({
     name: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required]],
-    role: ['STOREKEEPER', [Validators.required]]
+    role: ['STOREKEEPER', [Validators.required]],
+    branchId: [null as string | null]
   });
 
   editForm = this.fb.group({
     name: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     password: [''],
-    role: ['STOREKEEPER', [Validators.required]]
+    role: ['STOREKEEPER', [Validators.required]],
+    branchId: [null as string | null]
   });
 
   constructor(private readonly gql: GraphqlService) {
@@ -242,7 +261,7 @@ export class UsersPage {
     this.error.set(null);
     this.success.set(null);
 
-    const qUsers = `query { users { id name email plainPassword active roles } }`;
+    const qUsers = `query { users { id name email plainPassword active roles branchId branchCode branchName } }`;
     const qRoles = `query { roles }`;
 
     this.gql.request<UsersQueryResult>(qUsers).subscribe({
@@ -272,7 +291,7 @@ export class UsersPage {
     const role = String(raw.role || '').trim();
     const roles = role ? [role] : [];
 
-    const mutation = `mutation CreateUser($input: CreateUserInput!) { createUser(input: $input) { id name email plainPassword active roles } }`;
+    const mutation = `mutation CreateUser($input: CreateUserInput!) { createUser(input: $input) { id name email plainPassword active roles branchId branchCode branchName } }`;
 
     this.gql
       .request<CreateUserResult>(mutation, {
@@ -280,7 +299,8 @@ export class UsersPage {
           name: raw.name,
           email: raw.email,
           password: raw.password,
-          roles
+          roles,
+          branchId: raw.branchId || null
         }
       })
       .subscribe({
@@ -302,7 +322,8 @@ export class UsersPage {
       name: user.name,
       email: user.email,
       password: '',
-      role: user.roles[0] ?? 'STOREKEEPER'
+      role: user.roles[0] ?? 'STOREKEEPER',
+      branchId: user.branchId ?? null
     });
     this.error.set(null);
     this.success.set(null);
@@ -326,7 +347,7 @@ export class UsersPage {
     const roles = role ? [role] : [];
     const password = (raw.password || '').trim();
 
-    const mutation = `mutation UpdateUser($input: UpdateUserInput!) { updateUser(input: $input) { id name email plainPassword active roles } }`;
+    const mutation = `mutation UpdateUser($input: UpdateUserInput!) { updateUser(input: $input) { id name email plainPassword active roles branchId branchCode branchName } }`;
 
     this.gql
       .request<UpdateUserResult>(mutation, {
@@ -335,7 +356,8 @@ export class UsersPage {
           name: raw.name,
           email: raw.email,
           password: password || null,
-          roles
+          roles,
+          branchId: raw.branchId || null
         }
       })
       .subscribe({
@@ -385,3 +407,4 @@ export class UsersPage {
       });
   }
 }
+

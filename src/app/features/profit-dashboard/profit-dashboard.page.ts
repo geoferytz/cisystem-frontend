@@ -5,6 +5,8 @@ import { GraphqlService } from '../../core/graphql/graphql.service';
 import { forkJoin } from 'rxjs';
 import { BaseChartDirective } from 'ng2-charts';
 import type { ChartConfiguration, ChartData } from 'chart.js';
+import { MoneyPipe } from '../../shared/pipes/money.pipe';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
 
 type DailySalesReportItem = {
   productId: string;
@@ -52,7 +54,7 @@ type ExpensesQueryResult = {
 @Component({
   selector: 'cis-profit-dashboard-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, BaseChartDirective],
+  imports: [CommonModule, ReactiveFormsModule, BaseChartDirective, MoneyPipe, TranslatePipe],
   templateUrl: './profit-dashboard.page.html',
   styleUrl: './profit-dashboard.page.scss'
 })
@@ -89,8 +91,8 @@ export class ProfitDashboardPage {
       {
         label: 'Net Profit',
         data: this.profit7DaysData(),
-        borderColor: '#4f46e5',
-        backgroundColor: 'rgba(79,70,229,0.15)',
+        borderColor: '#6c151e',
+        backgroundColor: 'rgba(13,148,136,0.15)',
         tension: 0.25,
         fill: true
       }
@@ -117,7 +119,7 @@ export class ProfitDashboardPage {
       {
         label: 'Qty Sold',
         data: this.topProductsQty(),
-        backgroundColor: 'rgba(147,51,234,0.75)'
+        backgroundColor: 'rgba(13,148,136,0.85)'
       }
     ]
   }));
@@ -138,7 +140,7 @@ export class ProfitDashboardPage {
     datasets: [
       {
         data: this.expenseBreakdownValues(),
-        backgroundColor: ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#64748b']
+        backgroundColor: ['#6c151e', '#9a4444', '#f2b45f', '#c97f60', '#ee8b83', '#8acb88', '#4a0f16']
       }
     ]
   }));
@@ -251,3 +253,4 @@ export class ProfitDashboardPage {
     });
   }
 }
+

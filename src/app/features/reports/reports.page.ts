@@ -1,9 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 import { GraphqlService } from '../../core/graphql/graphql.service';
+import { BranchContext } from '../../shared/services/branch-context.service';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { PagerComponent } from '../../shared/ui/pager/pager.component';
 
 type InventoryValuation = {
   totalStockValue: number;
@@ -55,7 +58,7 @@ type DailySalesReportQueryResult = {
 @Component({
   selector: 'cis-reports-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MoneyPipe],
+  imports: [CommonModule, ReactiveFormsModule, MoneyPipe, TranslatePipe, PagerComponent],
   templateUrl: './reports.page.html',
   styleUrl: './reports.page.scss'
 })
@@ -64,11 +67,21 @@ export class ReportsPage {
   error = signal<string | null>(null);
 
   valuation = signal<InventoryValuation | null>(null);
-  movements = signal<StockMovement[]>([]);
+  allMovements = signal<StockMovement[]>([]);
+  currentPage = signal(1);
+  pageSize = signal(10);
 
   dailySales = signal<DailySalesReport | null>(null);
+  dailyItemsPageSize = signal(10);
+  dailyItemsPageIndex = signal(0);
+  displayedDailyItems = computed(() => {
+    const size = this.dailyItemsPageSize();
+    const start = this.dailyItemsPageIndex() * size;
+    return (this.dailySales()?.items ?? []).slice(start, start + size);
+  });
 
   private readonly fb = inject(FormBuilder);
+  private readonly branchCtx = inject(BranchContext);
 
   auditForm = this.fb.group({
     type: [''],
@@ -88,8 +101,8 @@ export class ReportsPage {
     this.loading.set(true);
     this.error.set(null);
 
-    const qVal = `query { inventoryValuation { totalStockValue } }`;
-    this.gql.request<InventoryValuationQueryResult>(qVal).subscribe({
+    const qVal = `query Val($branch: String) { inventoryValuation(branch: $branch) { totalStockValue } }`;
+    this.gql.request<InventoryValuationQueryResult>(qVal, { branch: this.branchCtx.effective() }).subscribe({
       next: (res) => this.valuation.set(res.inventoryValuation),
       error: () => {}
     });
@@ -110,8 +123,8 @@ export class ReportsPage {
       return;
     }
 
-    const q = `query DailySales($date: String!) {
-      dailySalesReport(date: $date) {
+    const q = `query DailySales($date: String!, $branch: String) {
+      dailySalesReport(date: $date, branch: $branch) {
         date
         totalSalesAmount
         totalCostAmount
@@ -120,7 +133,7 @@ export class ReportsPage {
       }
     }`;
 
-    this.gql.request<DailySalesReportQueryResult>(q, { date }).subscribe({
+    this.gql.request<DailySalesReportQueryResult>(q, { date, branch: this.branchCtx.effective() }).subscribe({
       next: (res) => {
         this.dailySales.set(res.dailySalesReport);
         this.loading.set(false);
@@ -154,7 +167,8 @@ export class ReportsPage {
       })
       .subscribe({
         next: (res) => {
-          this.movements.set(res.movementAuditReport);
+          this.allMovements.set(res.movementAuditReport);
+          this.currentPage.set(1);
           this.loading.set(false);
         },
         error: (e: unknown) => {
@@ -163,4 +177,29 @@ export class ReportsPage {
         }
       });
   }
+
+  get movements(): StockMovement[] {
+    const start = (this.currentPage() - 1) * this.pageSize();
+    const end = start + this.pageSize();
+    return this.allMovements().slice(start, end);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.allMovements().length / this.pageSize());
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage.set(page);
+    }
+  }
+
+  nextPage(): void {
+    this.goToPage(this.currentPage() + 1);
+  }
+
+  previousPage(): void {
+    this.goToPage(this.currentPage() - 1);
+  }
 }
+

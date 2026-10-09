@@ -1,0 +1,40 @@
+<section class="rp-panel" [class.rp-panel-flat]="flat" *ngIf="visible()">
+  <div class="rp-heading">
+    <div><h3>{{ title }}</h3><p>{{ subtitle }}</p></div>
+    <div class="rp-actions">
+      <button type="button" (click)="refresh()" [disabled]="busy()">Refresh</button>
+    </div>
+  </div>
+  <p class="rp-notice" role="status" *ngIf="notice()">{{ notice() }}</p>
+  <p class="rp-error" role="alert" *ngIf="error() && !receiptOrder()">{{ error() }}</p>
+  <p class="rp-empty" *ngIf="!pending().length">{{ emptyText }}</p>
+  <article class="rp-pending" *ngFor="let order of pending()">
+    <div class="rp-heading">
+      <div><strong>{{ order.supplier || 'Repurchase order' }}</strong><p>{{ order.invoiceNumber || order.id.slice(0, 8) }} · {{ order.createdAt | date:'medium' }}</p></div>
+      <span class="rp-badge">{{ order.activation ? 'New product — pending receipt' : 'Pending receipt' }}</span>
+      <strong>{{ orderTotal(order.lines) | money }}</strong>
+      <button type="button" class="primary" *ngIf="perm.canCreate('PURCHASING')" [disabled]="busy()" (click)="openReceipt(order)">Receive</button>
+    </div>
+    <details><summary>View {{ order.lines.length }} product(s)</summary>
+      <div class="rp-order-line" *ngFor="let line of order.lines">
+        <span>{{ line.productName }} <small>{{ line.sku }}</small></span>
+        <span>{{ line.quantity }} pcs · Buying {{ line.buyingPrice | money }} · Selling {{ line.sellingPrice | money }}</span>
+      </div>
+    </details>
+  </article>
+</section>
+
+<cis-modal [open]="!!receiptOrder()" title="Receive repurchase order" maxWidthClass="max-w-3xl" (close)="!busy() && receiptOrder.set(null)">
+  <div class="rp-receipt">
+    <p>Confirm the full delivery below. This will add stock to MAIN and apply the order's price changes. Use a new batch code for each product and enter its actual expiry date.</p>
+    <article class="rp-cart-line" *ngFor="let line of receiptLines">
+      <strong>{{ line.productName }}</strong><p>{{ line.quantity }} pcs · Buying {{ line.buyingPrice | money }} · Selling {{ line.sellingPrice | money }}</p>
+      <div class="rp-prices">
+        <label>Batch code<input [(ngModel)]="line.batchNumber" maxlength="80" [disabled]="busy()" /></label>
+        <label>Expiry date<input type="date" [(ngModel)]="line.expiryDate" [disabled]="busy()" /></label>
+      </div>
+    </article>
+    <p class="rp-error" role="alert" *ngIf="error()">{{ error() }}</p>
+    <div class="rp-actions"><button type="button" [disabled]="busy()" (click)="receiptOrder.set(null)">Close</button><button type="button" class="primary" [disabled]="busy()" (click)="receiveOrder()">{{ busy() ? 'Receiving…' : 'Confirm receipt & add stock' }}</button></div>
+  </div>
+</cis-modal>

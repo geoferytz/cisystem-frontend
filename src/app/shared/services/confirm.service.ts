@@ -15,7 +15,7 @@ const initialState: ConfirmState = {
   message: 'Are you sure?',
   confirmText: 'Confirm',
   cancelText: 'Cancel',
-  confirmButtonClass: 'bg-red-700 hover:bg-red-800'
+  confirmButtonClass: 'bg-[#B81104] hover:bg-[#7f0c03]'
 };
 
 @Injectable({ providedIn: 'root' })

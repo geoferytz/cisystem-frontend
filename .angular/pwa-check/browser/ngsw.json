@@ -1,0 +1,95 @@
+{
+  "configVersion": 1,
+  "timestamp": 1789466579610,
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/GYLA-LOGO.png",
+        "/icon.png",
+        "/index.html",
+        "/main-VBMTN6AU.js",
+        "/manifest.webmanifest",
+        "/polyfills-5CFQRCPP.js",
+        "/pwa-icon.svg",
+        "/styles-VEJBU4YK.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "images",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/LOGOZ.png",
+        "/favicon.ico",
+        "/g.jpeg",
+        "/grace.jpeg",
+        "/icone.png",
+        "/logo.png"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/GYLA-LOGO.png": "4914a0ef84c357a5648ada3b1537d1d76337f37d",
+    "/LOGOZ.png": "8200e50681dae6be0fdb58f51ea18cea747bf868",
+    "/favicon.ico": "9c39f434fe1261f68c5e3eefdf734630d99c5670",
+    "/g.jpeg": "e596414c489301050108f8f95ce58f3ab375782f",
+    "/grace.jpeg": "16b21c774f64dc44a32ce9778820cff1b438b79b",
+    "/icon.png": "4289e4b41c5cac9537d948ff6d86d538cbc34080",
+    "/icone.png": "63167441d28804bf1c2c0957938709ab9ec60263",
+    "/index.html": "e78d8244764881f9b1452d2534866eb7254880fd",
+    "/logo.png": "528ec429eae2d2e5913c2bc1ee8420636da1eea8",
+    "/main-VBMTN6AU.js": "94e58ce187f3a0c694197f64a25ea8e9d4b1e926",
+    "/manifest.webmanifest": "3e10b116316b15dcaa64cecb4ba73d37a1341598",
+    "/polyfills-5CFQRCPP.js": "f2241e9a25858f895ce299d15f6f22e849e2fd72",
+    "/pwa-icon.svg": "be6fb838dce77f691b416ef8c072a3d46dca7b23",
+    "/styles-VEJBU4YK.css": "36052960c954df126f7514a4424a49b20165a864"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/graphql$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/graphql\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/api$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/api\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}

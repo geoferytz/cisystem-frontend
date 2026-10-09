@@ -1,0 +1,15 @@
+:host,
+.cis-table-surface {
+  display: block;
+  min-width: 0;
+}
+
+.cis-table-content {
+  overflow-x: auto;
+}
+
+@media (max-width: 767px) {
+  .cis-table-surface {
+    padding: 12px;
+  }
+}

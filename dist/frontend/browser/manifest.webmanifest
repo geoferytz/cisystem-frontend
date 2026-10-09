@@ -1,0 +1,20 @@
+{
+  "id": "/",
+  "name": "Naboo Sales & Management System",
+  "short_name": "NABOO",
+  "description": "Manage inventory, sales, and reports with Naboo Sales & Management System.",
+  "lang": "en",
+  "start_url": "/home",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#6d8765",
+  "background_color": "#f7f5fc",
+  "icons": [
+    {
+      "src": "iconz.png",
+      "sizes": "2080x1784",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

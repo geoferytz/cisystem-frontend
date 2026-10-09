@@ -1,8 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GraphqlService } from '../../core/graphql/graphql.service';
 import { PermissionService } from '../../shared/services/permission.service';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { RowActionsMenuComponent } from '../../shared/ui/row-actions-menu/row-actions-menu.component';
+import { PagerComponent } from '../../shared/ui/pager/pager.component';
 
 type Category = {
   id: string;
@@ -30,7 +33,7 @@ type DeleteCategoryMutationResult = {
 @Component({
   selector: 'cis-categories-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, RowActionsMenuComponent, PagerComponent],
   templateUrl: './categories.page.html',
   styleUrl: './categories.page.scss'
 })
@@ -40,6 +43,13 @@ export class CategoriesPage {
   loading = signal(false);
   error = signal<string | null>(null);
   categories = signal<Category[]>([]);
+  pageSize = signal(10);
+  pageIndex = signal(0);
+  displayedCategories = computed(() => {
+    const size = this.pageSize();
+    const start = this.pageIndex() * size;
+    return this.categories().slice(start, start + size);
+  });
 
   createOpen = signal(false);
 
@@ -179,3 +189,4 @@ export class CategoriesPage {
     });
   }
 }
+

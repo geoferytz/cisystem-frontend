@@ -1,125 +1,151 @@
 <div class="flex items-center">
-  <h2 class="text-xl font-semibold text-slate-900">Reports</h2>
+  <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">Reports</h2>
 </div>
 
 <div class="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-[360px_1fr]">
-  <section class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
-    <h3 class="text-base font-semibold text-slate-900">Inventory Valuation</h3>
-    <div class="mt-3 rounded-xl bg-slate-50 p-4 ring-1 ring-slate-100">
-      <div class="text-xs text-slate-500">Total stock value (cost)</div>
-      <div class="mt-1 text-2xl font-extrabold text-slate-900">
+  <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
+    <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">Inventory Valuation</h3>
+    <div class="mt-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 p-4 ring-1 ring-slate-100 dark:ring-slate-600">
+      <div class="text-xs text-slate-500 dark:text-slate-400">Total stock value (cost)</div>
+      <div class="mt-1 text-2xl font-extrabold text-slate-900 dark:text-slate-100">
         {{ (valuation()?.totalStockValue ?? 0) | money }}
       </div>
     </div>
   </section>
 
-  <section class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100">
+  <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
     <div class="flex items-center justify-between">
-      <h3 class="text-base font-semibold text-slate-900">Daily Sales Report</h3>
-      <button class="rounded-xl bg-indigo-950 px-3 py-2 text-xs font-semibold text-white" (click)="loadDailySales()">
-        Apply
+      <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">Daily Sales Report</h3>
+      <button class="rounded-xl bg-pink-500 px-3 py-2 text-xs font-semibold text-white" (click)="loadDailySales()">
+        {{ 'common.apply' | translate }}
       </button>
     </div>
 
     <form class="mt-3 grid gap-3 sm:grid-cols-[220px_auto]" [formGroup]="dailySalesForm" (ngSubmit)="loadDailySales()">
-      <label class="grid gap-2 text-xs text-slate-700">
-        Date
-        <input class="rounded-xl border border-slate-200 px-3 py-2 text-sm" type="date" formControlName="date" />
+      <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+        {{ 'common.date' | translate }}
+        <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="date" formControlName="date" />
       </label>
       <div class="grid grid-cols-3 gap-3">
-        <div class="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-100">
-          <div class="text-xs text-slate-500">Total sales</div>
-          <div class="mt-1 text-lg font-extrabold text-slate-900">{{ (dailySales()?.totalSalesAmount ?? 0) | money }}</div>
+        <div class="rounded-xl bg-slate-50 dark:bg-slate-700/50 p-3 ring-1 ring-slate-100 dark:ring-slate-600">
+          <div class="text-xs text-slate-500 dark:text-slate-400">Total sales</div>
+          <div class="mt-1 text-lg font-extrabold text-slate-900 dark:text-slate-100">{{ (dailySales()?.totalSalesAmount ?? 0) | money }}</div>
         </div>
-        <div class="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-100">
-          <div class="text-xs text-slate-500">Total profit</div>
-          <div class="mt-1 text-lg font-extrabold text-slate-900">{{ (dailySales()?.totalProfitAmount ?? 0) | money }}</div>
+        <div class="rounded-xl bg-slate-50 dark:bg-slate-700/50 p-3 ring-1 ring-slate-100 dark:ring-slate-600">
+          <div class="text-xs text-slate-500 dark:text-slate-400">Total profit</div>
+          <div class="mt-1 text-lg font-extrabold text-slate-900 dark:text-slate-100">{{ (dailySales()?.totalProfitAmount ?? 0) | money }}</div>
         </div>
-        <div class="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-100">
-          <div class="text-xs text-slate-500">Total cost</div>
-          <div class="mt-1 text-lg font-extrabold text-slate-900">{{ (dailySales()?.totalCostAmount ?? 0) | money }}</div>
+        <div class="rounded-xl bg-slate-50 dark:bg-slate-700/50 p-3 ring-1 ring-slate-100 dark:ring-slate-600">
+          <div class="text-xs text-slate-500 dark:text-slate-400">Total cost</div>
+          <div class="mt-1 text-lg font-extrabold text-slate-900 dark:text-slate-100">{{ (dailySales()?.totalCostAmount ?? 0) | money }}</div>
         </div>
       </div>
     </form>
 
-    <div class="mt-3 text-sm text-red-700" *ngIf="error()">{{ error() }}</div>
+    <div class="mt-3 text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">{{ error() }}</div>
 
-    <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100">
+    <cis-pager class="mt-3 block" [total]="dailySales()?.items?.length ?? 0" [(pageSize)]="dailyItemsPageSize" [(pageIndex)]="dailyItemsPageIndex" />
+
+    <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
       <table class="w-full border-collapse text-sm">
-        <thead class="bg-slate-50">
+        <thead class="bg-slate-50 dark:bg-slate-700">
           <tr>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">SKU</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Product</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600">Qty</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600">Sales</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600">Cost</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600">Profit</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.sku' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.product' | translate }}</th>
+            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.qty' | translate }}</th>
+            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.sales' | translate }}</th>
+            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.cost' | translate }}</th>
+            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.profit' | translate }}</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let r of (dailySales()?.items ?? [])" class="border-t border-slate-100">
-            <td class="px-3 py-2">{{ r.sku }}</td>
-            <td class="px-3 py-2">{{ r.productName }}</td>
-            <td class="px-3 py-2 text-right font-semibold">{{ r.quantitySold }}</td>
-            <td class="px-3 py-2 text-right">{{ r.salesAmount | money }}</td>
-            <td class="px-3 py-2 text-right">{{ r.costAmount | money }}</td>
-            <td class="px-3 py-2 text-right font-semibold">{{ r.profitAmount | money }}</td>
+          <tr *ngFor="let r of displayedDailyItems()" class="border-t border-slate-100 dark:border-slate-700">
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ r.sku }}</td>
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ r.productName }}</td>
+            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ r.quantitySold }}</td>
+            <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ r.salesAmount | money }}</td>
+            <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ r.costAmount | money }}</td>
+            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ r.profitAmount | money }}</td>
           </tr>
         </tbody>
       </table>
     </div>
   </section>
 
-  <section class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-100 xl:col-span-2">
+  <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700 xl:col-span-2">
     <div class="flex items-center justify-between">
-      <h3 class="text-base font-semibold text-slate-900">Movement Audit</h3>
-      <button class="rounded-xl bg-indigo-950 px-3 py-2 text-xs font-semibold text-white" (click)="loadAudit()">
-        Apply
+      <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">Movement Audit</h3>
+      <button class="rounded-xl bg-pink-500 px-3 py-2 text-xs font-semibold text-white" (click)="loadAudit()">
+        {{ 'common.apply' | translate }}
       </button>
     </div>
 
     <form class="mt-3 grid gap-3 sm:grid-cols-3" [formGroup]="auditForm" (ngSubmit)="loadAudit()">
-      <label class="grid gap-2 text-xs text-slate-700">
-        Type (optional)
-        <input class="rounded-xl border border-slate-200 px-3 py-2 text-sm" formControlName="type" placeholder="IN/OUT/LOSS" />
+      <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+        {{ 'common.type' | translate }} (optional)
+        <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="type" placeholder="IN/OUT/LOSS" />
       </label>
-      <label class="grid gap-2 text-xs text-slate-700">
-        From (Instant e.g. 2026-01-01T00:00:00Z)
-        <input class="rounded-xl border border-slate-200 px-3 py-2 text-sm" formControlName="from" />
+      <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+        {{ 'common.from' | translate }} (Instant e.g. 2026-01-01T00:00:00Z)
+        <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="from" />
       </label>
-      <label class="grid gap-2 text-xs text-slate-700">
-        To (Instant e.g. 2026-12-31T23:59:59Z)
-        <input class="rounded-xl border border-slate-200 px-3 py-2 text-sm" formControlName="to" />
+      <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+        {{ 'common.to' | translate }} (Instant e.g. 2026-12-31T23:59:59Z)
+        <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="to" />
       </label>
     </form>
 
-    <div class="mt-3 text-sm text-red-700" *ngIf="error()">{{ error() }}</div>
+    <div class="mt-3 text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">{{ error() }}</div>
 
-    <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100">
+    <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
       <table class="w-full border-collapse text-sm">
-        <thead class="bg-slate-50">
+        <thead class="bg-slate-50 dark:bg-slate-700">
           <tr>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Date</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Type</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">SKU</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Product</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Batch</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600">Qty</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">By</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.date' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.type' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.sku' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.product' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.batch' | translate }}</th>
+            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.qty' | translate }}</th>
+            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.by' | translate }}</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let m of movements()" class="border-t border-slate-100">
-            <td class="px-3 py-2">{{ m.createdAt }}</td>
-            <td class="px-3 py-2 font-semibold">{{ m.type }}</td>
-            <td class="px-3 py-2">{{ m.sku }}</td>
-            <td class="px-3 py-2">{{ m.productName }}</td>
-            <td class="px-3 py-2">{{ m.batchNumber }}</td>
-            <td class="px-3 py-2 text-right font-semibold">{{ m.quantity }}</td>
-            <td class="px-3 py-2">{{ m.createdBy || '-' }}</td>
+          <tr *ngFor="let m of movements" class="border-t border-slate-100 dark:border-slate-700">
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ m.createdAt }}</td>
+            <td class="px-3 py-2 font-semibold text-slate-900 dark:text-slate-300">{{ m.type }}</td>
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ m.sku }}</td>
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ m.productName }}</td>
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ m.batchNumber }}</td>
+            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ m.quantity }}</td>
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ m.createdBy || '-' }}</td>
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <div class="mt-3 flex items-center justify-between" *ngIf="totalPages > 1">
+      <div class="text-xs text-slate-600 dark:text-slate-400">
+        {{ 'common.page' | translate }} {{ currentPage() }} {{ 'common.of' | translate }} {{ totalPages }} ({{ allMovements().length }} {{ 'common.total' | translate }})
+      </div>
+      <div class="flex gap-2">
+        <button
+          type="button"
+          class="rounded-xl bg-slate-100 dark:bg-slate-700 px-3 py-2 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
+          (click)="previousPage()"
+          [disabled]="currentPage() === 1"
+        >
+          {{ 'common.previous' | translate }}
+        </button>
+        <button
+          type="button"
+          class="rounded-xl bg-slate-100 dark:bg-slate-700 px-3 py-2 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
+          (click)="nextPage()"
+          [disabled]="currentPage() === totalPages"
+        >
+          {{ 'common.next' | translate }}
+        </button>
+      </div>
     </div>
   </section>
 </div>

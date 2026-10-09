@@ -6,6 +6,9 @@ import { RouterLink } from '@angular/router';
 import { GraphqlService } from '../../core/graphql/graphql.service';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { PermissionService } from '../../shared/services/permission.service';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { RowActionsMenuComponent } from '../../shared/ui/row-actions-menu/row-actions-menu.component';
+import { PagerComponent } from '../../shared/ui/pager/pager.component';
 
 type MySaleLine = {
   id: string;
@@ -31,7 +34,7 @@ type DeleteMySaleMutationResult = { deleteMySale: boolean };
 @Component({
   selector: 'cis-my-sales-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, MoneyPipe],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, MoneyPipe, TranslatePipe, RowActionsMenuComponent, PagerComponent],
   templateUrl: './my-sales.page.html',
   styleUrl: './my-sales.page.scss'
 })
@@ -50,6 +53,13 @@ export class MySalesPage {
   pendingDeleteSaleId = signal<string | null>(null);
 
   sales = signal<MySale[]>([]);
+  pageSize = signal(10);
+  pageIndex = signal(0);
+  displayedSales = computed(() => {
+    const size = this.pageSize();
+    const start = this.pageIndex() * size;
+    return this.sales().slice(start, start + size);
+  });
 
   private readonly fb = inject(FormBuilder);
   private readonly gql = inject(GraphqlService);
@@ -290,3 +300,4 @@ export class MySalesPage {
     });
   }
 }
+

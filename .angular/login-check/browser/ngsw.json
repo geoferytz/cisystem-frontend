@@ -1,0 +1,107 @@
+{
+  "configVersion": 1,
+  "timestamp": 1789577758796,
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/GYLA-LOGO.png",
+        "/chunk-2VMXMS7J.js",
+        "/chunk-3VNJREVE.js",
+        "/chunk-3W5HN2C2.js",
+        "/chunk-EVBT4WEM.js",
+        "/chunk-YNNJBVAH.js",
+        "/chunk-ZEDTOXTS.js",
+        "/icon.png",
+        "/index.html",
+        "/main-ONHONDTE.js",
+        "/manifest.webmanifest",
+        "/polyfills-5CFQRCPP.js",
+        "/pwa-icon.svg",
+        "/styles-WXOX2BH2.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "images",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/LOGOZ.png",
+        "/favicon.ico",
+        "/g.jpeg",
+        "/grace.jpeg",
+        "/icone.png",
+        "/logo.png"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/GYLA-LOGO.png": "4914a0ef84c357a5648ada3b1537d1d76337f37d",
+    "/LOGOZ.png": "8200e50681dae6be0fdb58f51ea18cea747bf868",
+    "/chunk-2VMXMS7J.js": "0d4757e86a4cf693bbbe3dce3ba35dde955dfad4",
+    "/chunk-3VNJREVE.js": "83b9d62434ce79c0f40cfd262e4d3e9958cf0b9a",
+    "/chunk-3W5HN2C2.js": "969e6bf93256a1a76ee06ed2b8a8204f37eeae12",
+    "/chunk-EVBT4WEM.js": "83cf0983734faeb41bb0ac7ee35be615d5a05d47",
+    "/chunk-YNNJBVAH.js": "f911a45b3ac0d33add88d777cec00de5199b590f",
+    "/chunk-ZEDTOXTS.js": "f757761e13305aa7e53fe45dc8064d0cc16a19c6",
+    "/favicon.ico": "9c39f434fe1261f68c5e3eefdf734630d99c5670",
+    "/g.jpeg": "e596414c489301050108f8f95ce58f3ab375782f",
+    "/grace.jpeg": "16b21c774f64dc44a32ce9778820cff1b438b79b",
+    "/icon.png": "4289e4b41c5cac9537d948ff6d86d538cbc34080",
+    "/icone.png": "63167441d28804bf1c2c0957938709ab9ec60263",
+    "/index.html": "3b980294c8da0d2e16c55126199109760d7cf150",
+    "/logo.png": "528ec429eae2d2e5913c2bc1ee8420636da1eea8",
+    "/main-ONHONDTE.js": "02fe1d509478d4185b0e42690076b7035b9a33a9",
+    "/manifest.webmanifest": "3e10b116316b15dcaa64cecb4ba73d37a1341598",
+    "/polyfills-5CFQRCPP.js": "f2241e9a25858f895ce299d15f6f22e849e2fd72",
+    "/pwa-icon.svg": "be6fb838dce77f691b416ef8c072a3d46dca7b23",
+    "/styles-WXOX2BH2.css": "fac3b7f6ae8e20191ba68ca5a73b34c0371a5492"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/graphql$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/graphql\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/api$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/api\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}

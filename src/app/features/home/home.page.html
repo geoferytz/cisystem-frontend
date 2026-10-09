@@ -1,21 +1,21 @@
-<div class="flex items-center justify-between">
-  <div>
-    <h2 class="text-xl font-semibold text-slate-900">Home</h2>
-    <div class="mt-1 text-xs text-slate-500" *ngIf="me() as u">Logged in as {{ u.name }} ({{ u.email }})</div>
+<!-- <div class="cis-home-shell"> -->
+  <div class="cis-home-header">
+    <!-- <div>
+      <h2 class="dark:text-white">Home</h2>
+      <div *ngIf="me() as u" class="dark:text-slate-400">Logged in as {{ u.name }} ({{ u.email }})</div>
+    </div> -->
   </div>
-</div>
 
-<div class="mt-4 text-sm text-red-700" *ngIf="error()">{{ error() }}</div>
+  <div class="cis-home-error dark:text-red-400" *ngIf="error()">{{ error() }}</div>
 
-<div class="mt-6 mx-auto max-w-8xl px-4 sm:px-6 lg:px-8">
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+  <div class="cis-home-grid">
     <ng-container *ngFor="let c of cards()">
       <a
         *ngIf="!c.hidden"
-        class="group relative flex h-28 w-full items-center justify-between gap-4 overflow-hidden rounded-xl border border-slate-200 bg-white px-5 py-5 shadow-sm hover:border-fuchsia-200 hover:shadow-md sm:h-32"
+        class="cis-home-tile group"
         [routerLink]="c.route"
       >
-        <div class="pointer-events-none absolute -right-14 -top-14 text-purple-900/10">
+        <div class="cis-home-tile-watermark dark:text-pink-500/15">
           <svg
             *ngIf="c.icon === 'products'"
             viewBox="0 0 24 24"
@@ -34,7 +34,7 @@
             fill="none"
             stroke="currentColor"
             stroke-width="2"
-            class="h-40 w-40"
+            class="h-40 w-40 dark:text-pink-500/15"
           >
             <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4v10l8 4 8-4V7z" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18" />
@@ -47,7 +47,7 @@
             fill="none"
             stroke="currentColor"
             stroke-width="2"
-            class="h-40 w-40"
+            class="h-40 w-40 dark:text-pink-500/15"
           >
             <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13M8 12h13M8 17h13" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h.01M3 12h.01M3 17h.01" />
@@ -59,7 +59,7 @@
             fill="none"
             stroke="currentColor"
             stroke-width="2"
-            class="h-40 w-40"
+            class="h-40 w-40 dark:text-pink-500/15"
           >
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M7 13l-1.5 7h13L17 13" />
@@ -71,7 +71,7 @@
             fill="none"
             stroke="currentColor"
             stroke-width="2"
-            class="h-40 w-40"
+            class="h-40 w-40 dark:text-pink-500/15"
           >
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
@@ -84,7 +84,7 @@
             fill="none"
             stroke="currentColor"
             stroke-width="2"
-            class="h-40 w-40"
+            class="h-40 w-40 dark:text-pink-500/15"
           >
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 14l2 2 4-4" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M7 3h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" />
@@ -96,7 +96,7 @@
             fill="none"
             stroke="currentColor"
             stroke-width="2"
-            class="h-40 w-40"
+            class="h-40 w-40 dark:text-pink-500/15"
           >
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
@@ -108,7 +108,7 @@
             fill="none"
             stroke="currentColor"
             stroke-width="2"
-            class="h-40 w-40"
+            class="h-40 w-40 dark:text-pink-500/15"
           >
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
@@ -120,7 +120,7 @@
             fill="none"
             stroke="currentColor"
             stroke-width="2"
-            class="h-40 w-40"
+            class="h-40 w-40 dark:text-pink-500/15"
           >
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M7 15l3-3 3 2 5-6" />
@@ -132,7 +132,7 @@
             fill="none"
             stroke="currentColor"
             stroke-width="2"
-            class="h-40 w-40"
+            class="h-40 w-40 dark:text-pink-500/15"
           >
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
@@ -146,7 +146,7 @@
             fill="none"
             stroke="currentColor"
             stroke-width="2"
-            class="h-40 w-40"
+            class="h-40 w-40 dark:text-pink-500/15"
           >
             <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 20H2v-2a4 4 0 014-4h1" />
@@ -156,8 +156,8 @@
           </svg>
         </div>
 
-        <div class="flex min-w-0 items-center gap-4">
-          <span class="grid h-14 w-14 shrink-0 place-items-center rounded-xl bg-indigo-950 text-white shadow-sm ring-1 ring-purple-600/30 group-hover:bg-purple-900">
+        <div class="cis-home-tile-content">
+          <span class="cis-home-tile-icon">
                 <svg
                   *ngIf="c.icon === 'products'"
                   viewBox="0 0 24 24"
@@ -298,12 +298,12 @@
                 </svg>
           </span>
 
-          <div class="min-w-0">
-            <div class="truncate text-base font-semibold text-slate-900 group-hover:text-purple-900">{{ c.title }}</div>
-            <div class="mt-1 text-xs text-slate-500">{{ c.description }}</div>
+          <div class="cis-home-tile-copy">
+            <div class="dark:text-white">{{ c.title }}</div>
+            <p class="dark:text-slate-400">{{ c.description }}</p>
           </div>
         </div>
       </a>
     </ng-container>
   </div>
-</div>
+<!-- </div> -->

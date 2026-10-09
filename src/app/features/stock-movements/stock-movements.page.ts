@@ -1,7 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { GraphqlService } from '../../core/graphql/graphql.service';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
 
 type StockMovement = {
   id: string;
@@ -25,7 +26,7 @@ type StockMovementsQueryResult = {
 @Component({
   selector: 'cis-stock-movements-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './stock-movements.page.html',
   styleUrl: './stock-movements.page.scss'
 })
@@ -33,6 +34,19 @@ export class StockMovementsPage {
   loading = signal(false);
   error = signal<string | null>(null);
   items = signal<StockMovement[]>([]);
+
+  pageSize = signal(10);
+  pageIndex = signal(0);
+
+  displayedItems = computed(() => {
+    const all = this.items();
+    const size = this.pageSize();
+    const idx = this.pageIndex();
+    const start = idx * size;
+    return all.slice(start, start + size);
+  });
+
+  totalPages = computed(() => Math.ceil(this.items().length / this.pageSize()));
 
   private readonly fb = inject(FormBuilder);
 
@@ -67,6 +81,7 @@ export class StockMovementsPage {
       .subscribe({
         next: (res) => {
           this.items.set(res.stockMovements);
+          this.pageIndex.set(0);
           this.loading.set(false);
         },
         error: (e: unknown) => {
@@ -75,4 +90,19 @@ export class StockMovementsPage {
         }
       });
   }
+
+  prevPage(): void {
+    this.pageIndex.update(v => Math.max(0, v - 1));
+  }
+
+  nextPage(): void {
+    this.pageIndex.update(v => Math.min(this.totalPages() - 1, v + 1));
+  }
+
+  setPageSize(size: number | string): void {
+    const next = typeof size === 'string' ? parseInt(size, 10) : size;
+    this.pageSize.set(next);
+    this.pageIndex.set(0);
+  }
 }
+

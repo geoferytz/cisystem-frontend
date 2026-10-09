@@ -2,9 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GraphqlService } from '../../core/graphql/graphql.service';
+import { BranchContext } from '../../shared/services/branch-context.service';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { PermissionService } from '../../shared/services/permission.service';
 import { forkJoin } from 'rxjs';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { RowActionsMenuComponent } from '../../shared/ui/row-actions-menu/row-actions-menu.component';
+import { PagerComponent } from '../../shared/ui/pager/pager.component';
 
 type ExpenseCategory = {
   id: string;
@@ -46,7 +50,7 @@ type DeleteExpenseMutationResult = {
 @Component({
   selector: 'cis-expenses-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MoneyPipe],
+  imports: [CommonModule, ReactiveFormsModule, MoneyPipe, TranslatePipe, RowActionsMenuComponent, PagerComponent],
   templateUrl: './expenses.page.html',
   styleUrl: './expenses.page.scss'
 })
@@ -79,6 +83,7 @@ export class ExpensesPage {
   ];
 
   private readonly fb = inject(FormBuilder);
+  private readonly branchCtx = inject(BranchContext);
 
   headerForm = this.fb.group({
     date: ['', [Validators.required]]
@@ -152,6 +157,14 @@ export class ExpensesPage {
 
     items.sort((a, b) => String(b.date).localeCompare(String(a.date)));
     return items;
+  });
+
+  pageSize = signal(10);
+  pageIndex = signal(0);
+  displayedGroups = computed(() => {
+    const size = this.pageSize();
+    const start = this.pageIndex() * size;
+    return this.groupedByDay().slice(start, start + size);
   });
 
   toggleDetails(date: string): void {
@@ -310,7 +323,7 @@ export class ExpensesPage {
       }
     }`;
 
-    this.gql.request<ExpensesQueryResult>(query, { filter: null }).subscribe({
+    this.gql.request<ExpensesQueryResult>(query, { filter: { branch: this.branchCtx.effective() } }).subscribe({
       next: (res) => {
         this.expenses.set(res.expenses ?? []);
         this.loading.set(false);
@@ -404,7 +417,8 @@ export class ExpensesPage {
             categoryId: l.categoryId,
             description: l.description || null,
             amount: Number(l.amount ?? 0),
-            paymentMethod: l.paymentMethod
+            paymentMethod: l.paymentMethod,
+            branch: this.branchCtx.writeBranch()
           }
         })
       );
@@ -462,3 +476,4 @@ export class ExpensesPage {
     });
   }
 }
+

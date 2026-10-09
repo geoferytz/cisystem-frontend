@@ -2,8 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { GraphqlService } from '../../core/graphql/graphql.service';
+import { BranchContext } from '../../shared/services/branch-context.service';
 import { BaseChartDirective } from 'ng2-charts';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
+import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { PagerComponent } from '../../shared/ui/pager/pager.component';
 import { forkJoin } from 'rxjs';
 import type { ChartConfiguration, ChartData } from 'chart.js';
 
@@ -70,12 +73,13 @@ type InventoryValuationResult = { inventoryValuation: { totalStockValue: number 
 @Component({
   selector: 'cis-product-dashboard-page',
   standalone: true,
-  imports: [CommonModule, RouterLink, BaseChartDirective, MoneyPipe],
+  imports: [CommonModule, RouterLink, BaseChartDirective, MoneyPipe, TranslatePipe, PagerComponent],
   templateUrl: './product-dashboard.page.html',
   styleUrl: './product-dashboard.page.scss'
 })
 export class ProductDashboardPage {
   private readonly gql = inject(GraphqlService);
+  private readonly branchCtx = inject(BranchContext);
 
   loading = signal(false);
   error = signal<string | null>(null);
@@ -123,7 +127,7 @@ export class ProductDashboardPage {
           '#3b82f6',
           '#8b5cf6',
           '#ef4444',
-          '#14b8a6',
+          '#9a4444',
           '#f97316',
           '#64748b'
         ]
@@ -165,6 +169,13 @@ export class ProductDashboardPage {
 
   // Chart 3: Dead Stock
   deadStockItems = signal<DeadStockItem[]>([]);
+  deadStockPageSize = signal(10);
+  deadStockPageIndex = signal(0);
+  displayedDeadStock = computed(() => {
+    const all = this.deadStockItems();
+    const start = this.deadStockPageIndex() * this.deadStockPageSize();
+    return all.slice(start, start + this.deadStockPageSize());
+  });
   deadStockLabels = signal<string[]>([]);
   deadStockValues = signal<number[]>([]);
 
@@ -200,19 +211,20 @@ export class ProductDashboardPage {
     this.error.set(null);
 
     const qProducts = `query { products { id sku name category buyingPrice sellingPrice active } }`;
-    const qInventory = `query { inventory(filter: { includeZero: true }) { id productId sku productName batchId batchNumber qtyOnHand } }`;
-    const qSales = `query { salesOrders { id soldAt lines { productId productName quantity } } }`;
-    const qLowStock = `query($threshold: Int!) { lowStockAlerts(threshold: $threshold) { productId sku productName qtyOnHand threshold } }`;
-    const qValuation = `query { inventoryValuation { totalStockValue } }`;
+    const qInventory = `query Inv($branch: String) { inventory(filter: { includeZero: true, branch: $branch }) { id productId sku productName batchId batchNumber qtyOnHand } }`;
+    const qSales = `query Sales($branch: String) { salesOrders(branch: $branch) { id soldAt lines { productId productName quantity } } }`;
+    const qLowStock = `query LowStock($threshold: Int!, $branch: String) { lowStockAlerts(threshold: $threshold, branch: $branch) { productId sku productName qtyOnHand threshold } }`;
+    const qValuation = `query Val($branch: String) { inventoryValuation(branch: $branch) { totalStockValue } }`;
 
     forkJoin({
       products: this.gql.request<ProductsQueryResult>(qProducts),
-      inventory: this.gql.request<InventoryQueryResult>(qInventory),
-      sales: this.gql.request<SalesOrdersQueryResult>(qSales),
+      inventory: this.gql.request<InventoryQueryResult>(qInventory, { branch: this.branchCtx.effective() }),
+      sales: this.gql.request<SalesOrdersQueryResult>(qSales, { branch: this.branchCtx.effective() }),
       lowStock: this.gql.request<LowStockAlertsResult>(qLowStock, {
-        threshold: this.lowStockThreshold
+        threshold: this.lowStockThreshold,
+        branch: this.branchCtx.effective()
       }),
-      valuation: this.gql.request<InventoryValuationResult>(qValuation)
+      valuation: this.gql.request<InventoryValuationResult>(qValuation, { branch: this.branchCtx.effective() })
     }).subscribe({
       next: ({ products, inventory, sales, lowStock, valuation }) => {
         this.processData(products, inventory, sales, lowStock, valuation);
