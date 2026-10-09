@@ -31,5 +31,12 @@ COPY --from=build /app/dist/my-naboo/browser \
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
+<<<<<<< HEAD
 
 CMD ["nginx", "-g", "daemon off;"]
+=======
+CMD ["nginx", "-g", "daemon off;"]
+
+
+
+>>>>>>> 809626543b9803ce0908b778cf47fdadd9764dcf
