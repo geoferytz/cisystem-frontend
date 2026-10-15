@@ -35,7 +35,7 @@ $ImageName    = 'geofrey2025/cisystem-frontend'
 $VersionFile  = '.frontend-version'
 $SshHost      = 'root@164.68.122.5'               # Contabo
 $RemoteScript = '/tmp/remote-deploy-frontend.sh'
-$PublicUrl    = 'http://164.68.122.5/'
+$PublicUrl    = 'https://naboo.co.tz/'
 
 function Step([string]$m) { Write-Host "[*] $m" -ForegroundColor Cyan }
 function Fail([string]$m) { Write-Host "`n[FAILED] $m" -ForegroundColor Red; exit 1 }
