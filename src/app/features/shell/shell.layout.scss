@@ -1,7 +1,25 @@
 :host aside nav .cis-nav-active {
+  background-color: #ffffff;
+  color: var(--cis-primary);
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(29, 26, 66, 0.18);
+}
+
+:host aside nav .cis-nav-active > span:first-child {
   background-color: var(--cis-primary-soft);
-  color: var(--cis-primary-strong);
-  font-weight: 600;
+  box-shadow: none;
+}
+
+:host-context(.dark) aside nav .cis-nav-active {
+  background-color: var(--cis-surface);
+  color: #ffffff;
+}
+
+@media (min-width: 768px) {
+  .cis-sidebar {
+    border-radius: 0 28px 28px 0;
+    box-shadow: 6px 0 24px rgba(var(--cis-primary-rgb), 0.25);
+  }
 }
 
 .cis-system {

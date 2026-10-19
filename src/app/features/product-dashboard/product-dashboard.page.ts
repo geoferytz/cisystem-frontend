@@ -127,7 +127,7 @@ export class ProductDashboardPage {
           '#3b82f6',
           '#8b5cf6',
           '#ef4444',
-          '#9a4444',
+          '#8f86e3',
           '#f97316',
           '#64748b'
         ]

@@ -10,7 +10,7 @@
   place-items: center;
   overflow: hidden;
   padding: 32px;
-  background: #5b121a;
+  background: #5f52c7;
 }
 
 .cis-bg-shapes {
@@ -135,7 +135,7 @@
 
 .cis-lang-toggle button.active {
   background: #ffffff;
-  color: #5b121a;
+  color: #5f52c7;
 }
 
 .cis-login-split {
@@ -218,6 +218,38 @@
   box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.12);
 }
 
+.cis-field {
+  display: grid;
+  gap: 6px;
+}
+
+.cis-login-form input[aria-invalid='true'] {
+  border-color: rgba(254, 202, 202, 0.85);
+}
+
+.cis-field-error,
+.cis-field-hint {
+  padding-left: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.cis-field-error {
+  color: #fecaca;
+}
+
+.cis-field-hint {
+  color: #fde68a;
+}
+
+.cis-locked-email {
+  overflow: hidden;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .cis-password-field {
   position: relative;
 }
@@ -264,13 +296,13 @@
 }
 
 .cis-form-actions input[type='checkbox'] {
-  accent-color: #f5dabf;
+  accent-color: #e7e5fb;
 }
 
 .cis-form-actions button {
   border: 0;
   background: transparent;
-  color: #f5dabf;
+  color: #e7e5fb;
   font-weight: 700;
 }
 
@@ -281,7 +313,7 @@
 .cis-switch-account {
   border: 0;
   background: transparent;
-  color: #f5dabf;
+  color: #e7e5fb;
   font-size: 12px;
   font-weight: 700;
   text-align: center;
@@ -325,7 +357,7 @@
 }
 
 .cis-submit:hover:not(:disabled) {
-  background: #f5dabf;
+  background: #e7e5fb;
   transform: translateY(-1px);
 }
 
@@ -381,7 +413,7 @@
 }
 
 .cis-contact-label {
-  color: #f5dabf;
+  color: #e7e5fb;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.16em;

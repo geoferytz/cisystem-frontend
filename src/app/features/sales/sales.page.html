@@ -83,7 +83,7 @@
         <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
           {{ 'common.productSearch' | translate }}
           <input
-            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
+            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
             [value]="productQuery()"
             (input)="productQuery.set(($any($event.target)).value)"
             placeholder="{{ 'common.searchProductSku' | translate }}"
@@ -95,7 +95,7 @@
         <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
           {{ 'common.productName' | translate }}
           <select
-            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
+            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
             formControlName="productId"
             (change)="onProductChanged()"
           >
@@ -218,7 +218,7 @@
         </svg>
         <input
           type="text"
-          class="w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 pl-9 pr-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
+          class="w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 pl-9 pr-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
           [value]="query()"
           (input)="onQueryChange($any($event.target).value)"
           placeholder="{{ 'sales.searchPlaceholder' | translate }}"
@@ -226,7 +226,7 @@
       </div>
       <input
         type="date"
-        class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
+        class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
         [value]="dateFilter()"
         (change)="onDateChange($any($event.target).value)"
         aria-label="{{ 'common.date' | translate }}"
@@ -407,7 +407,7 @@
     {{ 'sales.adminCode' | translate }}
     <input
       type="password"
-      class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
+      class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
       [value]="adminCode()"
       (input)="adminCode.set($any($event.target).value)"
       (keydown.enter)="confirmAdminCodeDelete()"

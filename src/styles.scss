@@ -11,7 +11,7 @@
     --cis-primary-hover: theme('colors.primary.600');
     --cis-primary-strong: theme('colors.primary.800');
     --cis-primary-soft: theme('colors.primary.100');
-    --cis-primary-rgb: 108, 21, 30;
+    --cis-primary-rgb: 115, 103, 216;
     --cis-accent: theme('colors.primary.300');
     --cis-page: theme('colors.slate.50');
     --cis-surface: #ffffff;
@@ -69,12 +69,160 @@
   color: #ffffff;
 }
 
+.cis-system table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.cis-system table > thead > tr > th {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cis-system table > thead > tr > th:first-child {
+  border-top-left-radius: 14px;
+}
+
+.cis-system table > thead > tr > th:last-child {
+  border-top-right-radius: 14px;
+}
+
+app-root table > tbody > tr > td {
+  border-bottom: 1px solid var(--cis-border);
+}
+
 app-root table > tbody > tr:nth-child(even) {
-  background-color: var(--cis-page);
+  background-color: rgba(var(--cis-primary-rgb), 0.035);
 }
 
 app-root table > tbody > tr:hover {
   background-color: var(--cis-row-hover);
+}
+
+/* Page titles: bold, uppercase, brand purple */
+.cis-system h2.text-xl {
+  color: var(--cis-primary);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.dark .cis-system h2.text-xl {
+  color: var(--cis-primary-strong);
+}
+
+/* Cards: white, rounded, soft lavender shadow */
+.cis-system :is(.rounded-2xl, .rounded-xl).bg-white.shadow-sm,
+.cis-table-surface,
+app-shell-header > header {
+  box-shadow: 0 8px 24px rgba(var(--cis-primary-rgb), 0.08);
+}
+
+.cis-system :is(.rounded-2xl, .rounded-xl).bg-white.shadow-sm,
+.cis-table-surface {
+  border-radius: 20px;
+}
+
+/* Stat/KPI cards: colourful pastel tones.
+   Add .cis-stat-grid to a grid of white cards; tones rotate automatically,
+   or pin one with data-tone="violet|green|orange|teal|pink|blue|red". */
+.cis-stat-grid > .bg-white {
+  --stat: 115, 103, 216;
+  --stat-ink: 79, 67, 168;
+  --stat-from: #f4f2ff;
+  --stat-to: #e2defc;
+}
+
+.cis-stat-grid > .bg-white:nth-child(6n + 2) { --stat: 34, 181, 115; --stat-ink: 21, 128, 61; --stat-from: #ecfbf3; --stat-to: #d2f4e1; }
+.cis-stat-grid > .bg-white:nth-child(6n + 3) { --stat: 245, 158, 11; --stat-ink: 180, 83, 9; --stat-from: #fff6e8; --stat-to: #ffe6c4; }
+.cis-stat-grid > .bg-white:nth-child(6n + 4) { --stat: 20, 184, 196; --stat-ink: 14, 116, 144; --stat-from: #e8fafb; --stat-to: #ccf1f4; }
+.cis-stat-grid > .bg-white:nth-child(6n + 5) { --stat: 236, 72, 153; --stat-ink: 190, 24, 93; --stat-from: #fff0f6; --stat-to: #ffd9e8; }
+.cis-stat-grid > .bg-white:nth-child(6n + 6) { --stat: 59, 130, 246; --stat-ink: 29, 78, 216; --stat-from: #edf4ff; --stat-to: #d8e6ff; }
+
+.cis-stat-grid > .bg-white[data-tone='violet'] { --stat: 115, 103, 216; --stat-ink: 79, 67, 168; --stat-from: #f4f2ff; --stat-to: #e2defc; }
+.cis-stat-grid > .bg-white[data-tone='green'] { --stat: 34, 181, 115; --stat-ink: 21, 128, 61; --stat-from: #ecfbf3; --stat-to: #d2f4e1; }
+.cis-stat-grid > .bg-white[data-tone='orange'] { --stat: 245, 158, 11; --stat-ink: 180, 83, 9; --stat-from: #fff6e8; --stat-to: #ffe6c4; }
+.cis-stat-grid > .bg-white[data-tone='teal'] { --stat: 20, 184, 196; --stat-ink: 14, 116, 144; --stat-from: #e8fafb; --stat-to: #ccf1f4; }
+.cis-stat-grid > .bg-white[data-tone='pink'] { --stat: 236, 72, 153; --stat-ink: 190, 24, 93; --stat-from: #fff0f6; --stat-to: #ffd9e8; }
+.cis-stat-grid > .bg-white[data-tone='blue'] { --stat: 59, 130, 246; --stat-ink: 29, 78, 216; --stat-from: #edf4ff; --stat-to: #d8e6ff; }
+.cis-stat-grid > .bg-white[data-tone='red'] { --stat: 239, 68, 68; --stat-ink: 185, 28, 28; --stat-from: #fff1f1; --stat-to: #ffdcdc; }
+
+.cis-system .cis-stat-grid > .bg-white {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--stat-from), var(--stat-to));
+  box-shadow: 0 10px 24px rgba(var(--stat), 0.16), inset 0 0 0 1px rgba(var(--stat), 0.18);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.cis-system .cis-stat-grid > .bg-white:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(var(--stat), 0.24), inset 0 0 0 1px rgba(var(--stat), 0.28);
+}
+
+.cis-system .cis-stat-grid > .bg-white::after {
+  content: '';
+  position: absolute;
+  top: -34px;
+  right: -34px;
+  width: 110px;
+  height: 110px;
+  border-radius: 9999px;
+  background: rgba(var(--stat), 0.14);
+  pointer-events: none;
+}
+
+.cis-system .cis-stat-grid > .bg-white > * {
+  position: relative;
+  z-index: 1;
+}
+
+.cis-system .cis-stat-grid > .bg-white > div.text-xs:first-child,
+.cis-system .cis-stat-grid > .bg-white .text-xs.font-semibold {
+  color: rgb(var(--stat-ink));
+  font-weight: 700;
+}
+
+.cis-system .cis-stat-grid > .bg-white .h-10.w-10 {
+  background: rgba(255, 255, 255, 0.8);
+  color: rgb(var(--stat-ink));
+  box-shadow: 0 4px 10px rgba(var(--stat), 0.2);
+}
+
+.dark .cis-system .cis-stat-grid > .bg-white {
+  background: linear-gradient(135deg, rgba(var(--stat), 0.26), rgba(var(--stat), 0.08)), var(--cis-surface);
+}
+
+.dark .cis-system .cis-stat-grid > .bg-white > div.text-xs:first-child,
+.dark .cis-system .cis-stat-grid > .bg-white .text-xs.font-semibold,
+.dark .cis-system .cis-stat-grid > .bg-white .h-10.w-10 {
+  color: rgb(var(--stat));
+}
+
+.dark .cis-system .cis-stat-grid > .bg-white .h-10.w-10 {
+  background: rgba(var(--stat), 0.18);
+}
+
+/* Primary actions: pill buttons with brand glow */
+.cis-system button:is(.bg-pink-500, .bg-primary-500, .bg-primary-600, .bg-purple-500, .bg-purple-600):not(:disabled) {
+  border-radius: 9999px;
+  box-shadow: 0 6px 14px rgba(var(--cis-primary-rgb), 0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cis-system button:is(.bg-pink-500, .bg-primary-500, .bg-primary-600, .bg-purple-500, .bg-purple-600):not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(var(--cis-primary-rgb), 0.35);
+}
+
+/* Search / filter inputs: pill shaped like the design */
+.cis-system input[placeholder]:not([type='checkbox']):not([type='radio']):not([type='number']):not([type='date']) {
+  border-radius: 9999px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .cis-system :is(input, select, textarea):focus {

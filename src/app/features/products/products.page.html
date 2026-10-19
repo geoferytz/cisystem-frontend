@@ -20,7 +20,7 @@
 
     <div class="mt-3 grid gap-2 sm:grid-cols-[1fr_auto_auto]">
       <input
-        class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
+        class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
         [value]="searchQuery()"
         (input)="onSearch(($any($event.target)).value)"
         placeholder="{{ 'common.searchProductSkuBarcode' | translate }}"
@@ -104,7 +104,7 @@
               <ng-template #editSku>
                 <div [formGroup]="editForm">
                   <input
-                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
+                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
                     formControlName="sku"
                   />
                 </div>
@@ -118,7 +118,7 @@
               <ng-template #editBarcode>
                 <div [formGroup]="editForm">
                   <input
-                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
+                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
                     formControlName="barcode"
                   />
                 </div>
@@ -132,7 +132,7 @@
               <ng-template #editBatch>
                 <div [formGroup]="editForm">
                   <input
-                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
+                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
                     formControlName="batchNumber"
                     [placeholder]="latestBatchNumber(p) === '-' ? 'No batch' : ''"
                     [readOnly]="latestBatchNumber(p) === '-'"
@@ -148,7 +148,7 @@
               <ng-template #editName>
                 <div [formGroup]="editForm">
                   <input
-                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
+                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
                     formControlName="name"
                   />
                 </div>
@@ -162,7 +162,7 @@
               <ng-template #editBrand>
                 <div [formGroup]="editForm">
                   <input
-                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
+                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
                     formControlName="brand"
                   />
                 </div>
@@ -176,7 +176,7 @@
               <ng-template #editCategory>
                 <div [formGroup]="editForm">
                   <select
-                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
+                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
                     formControlName="category"
                   >
                     <option value="">{{ 'common.selectCategory' | translate }}</option>
@@ -193,7 +193,7 @@
               <ng-template #editBuying>
                 <div [formGroup]="editForm">
                   <input
-                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
+                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
                     type="number"
                     formControlName="buyingPrice"
                   />
@@ -208,7 +208,7 @@
               <ng-template #editSelling>
                 <div [formGroup]="editForm">
                   <input
-                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
+                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
                     type="number"
                     formControlName="sellingPrice"
                   />
@@ -222,7 +222,7 @@
               <ng-template #editunitOfMeasure>
                 <div [formGroup]="editForm">
                   <input
-                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#6c151e]"
+                    class="w-full rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
                     type="string"
                     formControlName="unitOfMeasure"
                   />

@@ -45,12 +45,12 @@
     {{ error() }}
   </div>
 
-  <div class="grid grid-cols-1 gap-3 md:grid-cols-4">
-    <div class="rounded-2xl bg-white dark:bg-slate-800 p-4 ring-1 ring-slate-200 dark:ring-slate-700">
+  <div class="cis-stat-grid grid grid-cols-1 gap-3 md:grid-cols-4">
+    <div data-tone="blue" class="rounded-2xl bg-white dark:bg-slate-800 p-4 ring-1 ring-slate-200 dark:ring-slate-700">
       <div class="text-xs text-slate-500 dark:text-slate-400">{{ 'common.sales' | translate }}</div>
       <div class="mt-1 text-2xl font-extrabold text-slate-900 dark:text-slate-100">{{ totalSales() | money }}</div>
     </div>
-    <div class="rounded-2xl bg-white dark:bg-slate-800 p-4 ring-1 ring-slate-200 dark:ring-slate-700">
+    <div data-tone="violet" class="rounded-2xl bg-white dark:bg-slate-800 p-4 ring-1 ring-slate-200 dark:ring-slate-700">
       <div class="text-xs text-slate-500 dark:text-slate-400">{{ 'common.grossProfit' | translate }}</div>
       <div class="mt-1 text-2xl font-extrabold text-slate-900 dark:text-slate-100">{{ totalGrossProfit() | money }}</div>
     </div>
@@ -58,11 +58,11 @@
       <div class="text-xs text-slate-500 dark:text-slate-400">{{ 'common.expenses' | translate }}</div>
       <div class="mt-1 text-2xl font-extrabold text-slate-900 dark:text-slate-100">{{ totalExpenses() | money }}</div>
     </div>
-    <div class="rounded-2xl bg-white dark:bg-slate-800 p-4 ring-1 ring-slate-200 dark:ring-slate-700">
+    <div [attr.data-tone]="netProfitIsPositive() ? 'green' : 'red'" class="rounded-2xl bg-white dark:bg-slate-800 p-4 ring-1 ring-slate-200 dark:ring-slate-700">
       <div class="text-xs text-slate-500 dark:text-slate-400">{{ 'common.netProfit' | translate }}</div>
       <div
         class="mt-1 text-2xl font-extrabold"
-        [ngClass]="netProfitIsPositive() ? 'text-pink-500 dark:text-pink-400' : 'text-[#B81104] dark:text-red-400'"
+        [ngClass]="netProfitIsPositive() ? 'text-emerald-700 dark:text-emerald-400' : 'text-[#B81104] dark:text-red-400'"
       >
         {{ totalNetProfit() | money }}
       </div>

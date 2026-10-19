@@ -51,25 +51,33 @@
 }
 
 .cis-home-tile {
+  --tile: 115, 103, 216;
+  --tile-deep: 78, 67, 168;
   position: relative;
   display: flex;
   min-height: 150px;
   align-items: center;
   justify-content: space-between;
   overflow: hidden;
-  border: 1px solid var(--cis-border);
+  border: 1px solid rgba(var(--tile), 0.22);
   border-radius: 24px;
-  background: linear-gradient(135deg, var(--cis-surface), var(--cis-page));
+  background: linear-gradient(135deg, var(--cis-surface), rgba(var(--tile), 0.12));
   padding: 22px;
   color: inherit;
   text-decoration: none;
-  box-shadow: 0 18px 45px rgba(var(--cis-primary-rgb), 0.08);
+  box-shadow: 0 18px 45px rgba(var(--tile), 0.12);
   transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
+.cis-home-tile:nth-child(6n + 2) { --tile: 34, 181, 115; --tile-deep: 21, 128, 61; }
+.cis-home-tile:nth-child(6n + 3) { --tile: 245, 158, 11; --tile-deep: 194, 65, 12; }
+.cis-home-tile:nth-child(6n + 4) { --tile: 20, 184, 196; --tile-deep: 14, 116, 144; }
+.cis-home-tile:nth-child(6n + 5) { --tile: 236, 72, 153; --tile-deep: 190, 24, 93; }
+.cis-home-tile:nth-child(6n + 6) { --tile: 59, 130, 246; --tile-deep: 29, 78, 216; }
+
 .cis-home-tile:hover {
-  border-color: var(--cis-accent);
-  box-shadow: 0 24px 60px rgba(var(--cis-primary-rgb), 0.16);
+  border-color: rgba(var(--tile), 0.5);
+  box-shadow: 0 24px 60px rgba(var(--tile), 0.24);
   transform: translateY(-3px);
 }
 
@@ -77,7 +85,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(var(--cis-primary-rgb), 0.04), rgba(var(--cis-primary-rgb), 0.12));
+  background: linear-gradient(135deg, rgba(var(--tile), 0.06), rgba(var(--tile), 0.18));
   opacity: 0;
   transition: opacity 180ms ease;
 }
@@ -90,7 +98,7 @@
   position: absolute;
   top: -58px;
   right: -54px;
-  color: rgba(var(--cis-primary-rgb), 0.1);
+  color: rgba(var(--tile), 0.14);
   pointer-events: none;
 }
 
@@ -110,9 +118,9 @@
   flex-shrink: 0;
   place-items: center;
   border-radius: 18px;
-  background: linear-gradient(135deg, var(--cis-primary), #4a0f16);
+  background: linear-gradient(135deg, rgb(var(--tile)), rgb(var(--tile-deep)));
   color: #ffffff;
-  box-shadow: 0 14px 28px rgba(var(--cis-primary-rgb), 0.24);
+  box-shadow: 0 14px 28px rgba(var(--tile), 0.3);
 }
 
 .cis-home-tile-copy {
@@ -130,7 +138,7 @@
 }
 
 .cis-home-tile:hover .cis-home-tile-copy div {
-  color: var(--cis-primary-strong);
+  color: rgb(var(--tile-deep));
 }
 
 .cis-home-tile-copy p {

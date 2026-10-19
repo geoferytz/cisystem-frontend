@@ -62,7 +62,7 @@
           <small *ngIf="product.daysToExpiry !== null" [class.text-[#B81104]]="product.daysToExpiry <= 7" [class.dark:text-red-400]="product.daysToExpiry <= 7">
             {{ 'common.expiresIn' | translate }} {{ product.daysToExpiry }} {{ 'common.days' | translate }}
           </small>
-          <span *ngIf="product.suggestedSellingPrice !== null" class="counter-product-price" style="font-size: 0.8rem; color: #6c151e;">
+          <span *ngIf="product.suggestedSellingPrice !== null" class="counter-product-price" style="font-size: 0.8rem; color: #7367d8;">
             {{ 'common.suggested' | translate }} {{ product.suggestedSellingPrice | money }}
           </span>
           <span class="counter-product-bottom">

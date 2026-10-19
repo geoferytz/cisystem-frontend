@@ -9,8 +9,8 @@
   </div>
 
   <div class="cis-lang-toggle" role="group" aria-label="Language">
-    <button type="button" [class.active]="currentLang() === 'en'" (click)="setLanguage('en')">EN</button>
-    <button type="button" [class.active]="currentLang() === 'sw'" (click)="setLanguage('sw')">SW</button>
+    <button type="button" [class.active]="currentLang() === 'en'" [attr.aria-pressed]="currentLang() === 'en'" (click)="setLanguage('en')">EN</button>
+    <button type="button" [class.active]="currentLang() === 'sw'" [attr.aria-pressed]="currentLang() === 'sw'" (click)="setLanguage('sw')">SW</button>
   </div>
 
   <div class="cis-login-split">
@@ -20,7 +20,7 @@
         <h2 class="cis-brand-title">Sales &amp; Management System</h2>
 
         <div class="cis-contact">
-          <span class="cis-contact-label">Contact us</span>
+          <span class="cis-contact-label">{{ 'login.contactUs' | translate }}</span>
           <a class="cis-contact-link" href="mailto:info@naboocosmetics.com">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -44,20 +44,50 @@
         <div class="cis-form-heading">
           <h1>{{ 'login.hi' | translate }}</h1>
           <p>{{ 'login.welcome' | translate }}</p>
+          <p class="cis-locked-email" *ngIf="lockedEmail() as email">{{ email }}</p>
         </div>
 
-        <form class="cis-login-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <form class="cis-login-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
 
-          <input *ngIf="!lockedEmail()" type="email" placeholder="{{ 'common.email' | translate }}" formControlName="email" autocomplete="username" />
+          <div class="cis-field" *ngIf="!lockedEmail()">
+            <input
+              #emailInput
+              type="email"
+              inputmode="email"
+              autocapitalize="none"
+              spellcheck="false"
+              placeholder="{{ 'common.email' | translate }}"
+              [attr.aria-label]="'common.email' | translate"
+              formControlName="email"
+              autocomplete="username"
+              [attr.aria-invalid]="showError('email')"
+              [attr.aria-describedby]="showError('email') ? 'login-email-error' : null" />
+            <div id="login-email-error" class="cis-field-error" *ngIf="showError('email')">
+              {{ (form.controls.email.hasError('required') ? 'login.emailRequired' : 'login.emailInvalid') | translate }}
+            </div>
+          </div>
 
-          <div class="cis-password-field">
-            <input [type]="showPassword() ? 'text' : 'password'" placeholder="{{ 'common.password' | translate }}" formControlName="password" autocomplete="current-password" [attr.autofocus]="lockedEmail() ? true : null" />
+          <div class="cis-field">
+            <div class="cis-password-field">
+              <input
+                #passwordInput
+                [type]="showPassword() ? 'text' : 'password'"
+                placeholder="{{ 'common.password' | translate }}"
+                [attr.aria-label]="'common.password' | translate"
+                formControlName="password"
+                autocomplete="current-password"
+                (keydown)="checkCapsLock($event)"
+                (keyup)="checkCapsLock($event)"
+                (blur)="capsLock.set(false)"
+                [attr.aria-invalid]="showError('password')"
+                [attr.aria-describedby]="showError('password') ? 'login-password-error' : null" />
 
-            <button
-              type="button"
-              class="cis-password-toggle"
-              (click)="togglePasswordVisibility()"
-              [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'">
+              <button
+                type="button"
+                class="cis-password-toggle"
+                (click)="togglePasswordVisibility()"
+                [attr.aria-pressed]="showPassword()"
+                [attr.aria-label]="(showPassword() ? 'login.hidePassword' : 'login.showPassword') | translate">
               <svg *ngIf="!showPassword()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -68,7 +98,10 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6.228 6.228C4.407 7.5 3.089 9.487 2.458 12c1.274 4.057 5.064 7 9.542 7 1.505 0 2.94-.332 4.228-.928" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.88 4.24A9.952 9.952 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.967 9.967 0 01-3.274 4.504" />
               </svg>
-            </button>
+              </button>
+            </div>
+            <div id="login-password-error" class="cis-field-error" *ngIf="showError('password')">{{ 'login.passwordRequired' | translate }}</div>
+            <div class="cis-field-hint" role="status" *ngIf="capsLock()">{{ 'login.capsLock' | translate }}</div>
           </div>
 
           <div class="cis-form-actions">
@@ -76,19 +109,21 @@
               <input type="checkbox" formControlName="remember" />
               {{ 'login.remember' | translate }}
             </label>
-            <button type="button">{{ 'login.forgot' | translate }}</button>
+            <button type="button" [attr.aria-expanded]="showForgotHint()" (click)="showForgotHint.set(!showForgotHint())">{{ 'login.forgot' | translate }}</button>
           </div>
 
+          <div class="cis-session-notice" role="status" *ngIf="showForgotHint()">{{ 'login.forgotHint' | translate }}</div>
+
           <button type="button" class="cis-switch-account" *ngIf="lockedEmail()" (click)="useDifferentAccount()">
-            Sign in with a different account
+            {{ 'login.differentAccount' | translate }}
           </button>
 
           <div class="cis-session-notice" role="status" *ngIf="sessionExpired()">
-            {{ lockedEmail() ? 'Your session has expired. Enter your password to continue.' : 'Your session has expired. Please sign in again.' }}
+            {{ (lockedEmail() ? 'login.sessionLocked' : 'login.sessionExpired') | translate }}
           </div>
-          <div class="cis-error" *ngIf="error()">{{ error() }}</div>
+          <div class="cis-error" role="alert" *ngIf="error()">{{ error()! | translate }}</div>
 
-          <button class="cis-submit" type="submit" [disabled]="form.invalid || loading()">
+          <button class="cis-submit" type="submit" [disabled]="loading()" [attr.aria-busy]="loading()">
             {{ loading() ? ('login.wait' | translate) : ('login.submit' | translate) }}
           </button>
         </form>

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/shared/ui/table/table-shell.component.scss"],
+  "sourcesContent": [":host,\r\n.cis-table-surface {\r\n  display: block;\r\n  min-width: 0;\r\n}\r\n\r\n.cis-table-content {\r\n  overflow-x: auto;\r\n}\r\n\r\n@media (max-width: 767px) {\r\n  .cis-table-surface {\r\n    padding: 12px;\r\n  }\r\n}\r\n"],
+  "mappings": ";AAAA;AAAA,CAAA;AAEE,WAAA;AACA,aAAA;;AAGF,CAAA;AACE,cAAA;;AAGF,OAAA,CAAA,SAAA,EAAA;AACE,GAXF;AAYI,aAAA;;;",
+  "names": []
+}

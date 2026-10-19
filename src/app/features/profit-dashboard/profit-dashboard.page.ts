@@ -91,7 +91,7 @@ export class ProfitDashboardPage {
       {
         label: 'Net Profit',
         data: this.profit7DaysData(),
-        borderColor: '#6c151e',
+        borderColor: '#7367d8',
         backgroundColor: 'rgba(13,148,136,0.15)',
         tension: 0.25,
         fill: true
@@ -140,7 +140,7 @@ export class ProfitDashboardPage {
     datasets: [
       {
         data: this.expenseBreakdownValues(),
-        backgroundColor: ['#6c151e', '#9a4444', '#f2b45f', '#c97f60', '#ee8b83', '#8acb88', '#4a0f16']
+        backgroundColor: ['#7367d8', '#8f86e3', '#f2b45f', '#b0a9ee', '#ee8b83', '#8acb88', '#4e43a8']
       }
     ]
   }));

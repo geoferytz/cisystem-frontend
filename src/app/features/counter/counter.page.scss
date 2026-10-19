@@ -13,7 +13,7 @@ small, .counter-hint, .counter-heading p, .counter-section-heading p { font-size
 .counter-actions, .counter-overview { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .counter-overview { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .counter-action { justify-content: start; padding: 24px; border-radius: 22px; text-align: left; }
-.sale-action { background: linear-gradient(120deg, #6c151e, #4a0f16); color: white; }
+.sale-action { background: linear-gradient(120deg, #7367d8, #4e43a8); color: white; }
 .sale-action small { color: inherit; }
 .counter-panel, .expense-action, .counter-overview > div, .counter-product { border: 1px solid var(--cis-border); background: var(--cis-surface); }
 .counter-action-icon { display: grid; place-items: center; flex: 0 0 54px; height: 54px; border-radius: 16px; background: #ffffff24; }
@@ -30,7 +30,7 @@ small, .counter-hint, .counter-heading p, .counter-section-heading p { font-size
 .counter-workspace { display: grid; grid-template-columns: minmax(0, 1fr) 350px; gap: 20px; align-items: start; }
 .counter-button { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 15px; border-radius: 12px; font-size: 12px; font-weight: 700; }
 .counter-button.primary { color: white; background: var(--cis-primary); }
-.counter-button.primary:not(:disabled):hover { background: #5b121a; }
+.counter-button.primary:not(:disabled):hover { background: #5f52c7; }
 .counter-button.secondary { background: var(--cis-page); color: var(--cis-primary-strong); border: 1px solid var(--cis-border); }
 button:disabled { cursor: not-allowed; opacity: .5; }
 .counter-catalog-tools { display: flex; align-items: end; flex-wrap: wrap; gap: 10px; margin: 20px 0 14px; }
