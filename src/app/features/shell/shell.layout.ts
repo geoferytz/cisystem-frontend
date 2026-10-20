@@ -6,6 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/auth/auth.service';
 import { GraphqlService } from '../../core/graphql/graphql.service';
 import { ShellHeaderComponent } from './shell-header.component';
+import { ToastsComponent } from '../../shared/ui/toasts/toasts.component';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { PendingReceivingService } from '../../shared/services/pending-receiving.service';
 import { BranchContext } from '../../shared/services/branch-context.service';
@@ -53,7 +54,7 @@ type UsersQueryResult = {
 @Component({
   selector: 'cis-shell',
   standalone: true,
-  imports: [CommonModule, A11yModule, RouterLink, RouterLinkActive, RouterOutlet, ShellHeaderComponent, TranslatePipe],
+  imports: [CommonModule, A11yModule, RouterLink, RouterLinkActive, RouterOutlet, ShellHeaderComponent, ToastsComponent, TranslatePipe],
   hostDirectives: [ResponsiveTablesDirective],
   templateUrl: './shell.layout.html',
   styleUrl: './shell.layout.scss'
@@ -70,7 +71,7 @@ export class ShellLayout {
   productsExpanded = signal(false);
   isProductsSection = computed(() => {
     const url = this.currentUrl();
-    return url.startsWith('/product-dashboard') || url.startsWith('/products') || url.startsWith('/categories') || url.startsWith('/stock-movements') || url.startsWith('/transfers') || url.startsWith('/expiry-alerts');
+    return url.startsWith('/product-dashboard') || url.startsWith('/products') || url.startsWith('/categories') || url.startsWith('/expiry-alerts');
   });
 
   salesExpanded = signal(false);
@@ -356,6 +357,10 @@ export class ShellLayout {
   }
 
   refreshNotifications(): void {
+    if (!this.canView('EXPIRY_ALERTS')) {
+      this.notificationsCount.set(this.pendingReceivingCount());
+      return;
+    }
     const expiryQuery = `query Expiry($days: Int!, $branch: String) { expiryAlerts(days: $days, branch: $branch) { productId } }`;
     const lowStockQuery = `query LowStock($threshold: Int!, $branch: String) { lowStockAlerts(threshold: $threshold, branch: $branch) { productId } }`;
 

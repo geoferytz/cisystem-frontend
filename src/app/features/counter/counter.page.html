@@ -8,20 +8,26 @@
     <span class="counter-connection" [class.is-offline]="!pwa.online()"><span></span>{{ pwa.online() ? 'Connected' : 'Offline' }}</span>
   </header>
 
-  <div class="counter-notice success" role="status" *ngIf="success()">{{ success() }} <a *ngIf="perm.canView('SALES')" routerLink="/sales">View sales</a></div>
   <div class="counter-notice error" role="alert" *ngIf="actionError() && !checkoutOpen()">{{ actionError() }}</div>
 
   <section class="counter-actions" aria-label="Counter actions">
-    <button class="counter-action sale-action" type="button" data-counter-action="sale" (click)="openSale()" [disabled]="busy() || !perm.canCreate('SALES')">
+    <button class="counter-action sale-action" type="button" data-counter-action="sale" (click)="openSale()" [disabled]="busy() || !canSell()">
       <span class="counter-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 3h2l3 12h10l3-9H6M9 20h.01M18 20h.01M12 8h5m-2.5-2.5v5" /></svg></span>
       <span><strong>New Sale</strong><small>Browse products, build a cart, and checkout.</small></span>
       <span class="counter-arrow" aria-hidden="true">→</span>
     </button>
-    <button class="counter-action expense-action" type="button" data-counter-action="expense" (click)="openExpense()" [disabled]="busy() || !perm.canCreate('EXPENSES')">
-      <span class="counter-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3ZM9 7h6M9 11h6M9 15h3" /></svg></span>
-      <span><strong>New Expenses</strong><small>Record an expense without leaving the counter.</small></span>
-      <span class="counter-arrow" aria-hidden="true">→</span>
-    </button>
+    <div class="counter-action-pair" [class.single]="!perm.canView('SALES')">
+      <button class="counter-action expense-action" type="button" data-counter-action="expense" (click)="openExpense()" [disabled]="busy() || !canExpense()">
+        <span class="counter-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3ZM9 7h6M9 11h6M9 15h3" /></svg></span>
+        <span><strong>New Expenses</strong><small>Record an expense without leaving the counter.</small></span>
+        <span class="counter-arrow" aria-hidden="true">→</span>
+      </button>
+      <a class="counter-action viewsales-action" [class.success-state]="!!success()" routerLink="/sales" *ngIf="perm.canView('SALES')" role="status">
+        <span class="counter-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path *ngIf="success()" d="m5 13 4 4L19 7" /><ng-container *ngIf="!success()"><path d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" /><path d="M12 6v2m0 10v2" /><path d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" /></ng-container></svg></span>
+        <span><strong>{{ success() || 'View Sales' }}</strong><small>{{ success() ? 'Tap here to open the sales page.' : 'See all sales, customers and debts.' }}</small></span>
+        <span class="counter-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
   </section>
 
   <section class="counter-overview" aria-label="Counter overview">
@@ -79,9 +85,26 @@
     <aside #cartPanel class="counter-cart counter-panel scroll-mt-28" aria-label="Sales cart">
       <div class="counter-section-heading"><div><h2>Sales cart</h2><p>{{ cartVersion() === null ? 'New transaction' : 'Resumed held sale' }}</p></div><span class="counter-count">{{ itemCount() }}</span></div>
       <form class="counter-customer-form" [formGroup]="headerForm">
-        <label>Customer <small>(optional)</small><input formControlName="customer" maxlength="200" placeholder="Walk-in customer" [readonly]="busy()" /></label>
-        <label>Reference <small>(optional)</small><input formControlName="referenceNumber" maxlength="120" placeholder="Order or receipt reference" [readonly]="busy()" /></label>
+        <label>
+          {{ 'common.customer' | translate }} <small>(optional — {{ 'customers.walkIn' | translate }} if empty)</small>
+          <select formControlName="customerId" [disabled]="busy()">
+            <option [ngValue]="null">{{ 'customers.walkIn' | translate }}</option>
+            <option *ngFor="let c of customers()" [ngValue]="c.id">{{ c.name }}<span *ngIf="c.phone"> · {{ c.phone }}</span></option>
+          </select>
+        </label>
+        <div class="counter-new-customer" *ngIf="!newCustomerOpen()">
+          <button type="button" class="counter-link" (click)="newCustomerOpen.set(true)" [disabled]="busy()">{{ 'customers.newInline' | translate }}</button>
+        </div>
+        <label>Reference <small>(optional — auto)</small><input formControlName="referenceNumber" maxlength="120" placeholder="Auto (e.g. 201026-0001)" [readonly]="busy()" /></label>
       </form>
+      <div class="counter-new-customer-form" *ngIf="newCustomerOpen()" [formGroup]="newCustomerForm">
+        <input formControlName="name" maxlength="200" placeholder="{{ 'customers.name' | translate }} *" />
+        <input formControlName="phone" maxlength="40" placeholder="{{ 'customers.phone' | translate }}" />
+        <div class="counter-new-customer-actions">
+          <button type="button" class="counter-button secondary" (click)="newCustomerOpen.set(false)" [disabled]="newCustomerBusy()">{{ 'common.cancel' | translate }}</button>
+          <button type="button" class="counter-button primary" (click)="createCustomerInline()" [disabled]="newCustomerBusy() || newCustomerForm.invalid">{{ newCustomerBusy() ? '…' : ('customers.createInline' | translate) }}</button>
+        </div>
+      </div>
       <div class="counter-empty" *ngIf="!lines().length"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 3h2l3 12h10l3-9H6M9 20h.01M18 20h.01" /></svg><h3>Your cart is ready</h3><p>Select a product to start this sale.</p></div>
       <div class="counter-cart-lines">
         <article class="counter-cart-line" *ngFor="let line of lines()">
@@ -116,7 +139,7 @@
           <td><span>{{ cart.updatedAt | date:'dd MMM, HH:mm' }}</span></td>
           <td><strong>{{ cart.total | money }}</strong></td>
           <td><span class="counter-status">On hold</span></td>
-          <td><cis-row-actions><button type="button" class="cis-row-action" (click)="openSale(cart)" [disabled]="busy() || !perm.canCreate('SALES')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 4l14 8-14 8V4z" /></svg>Resume</button><button type="button" class="cis-row-action cis-row-action-danger" *ngIf="perm.canDelete('SALES')" (click)="cancelTarget.set(cart)" [disabled]="busy()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Cancel</button></cis-row-actions></td>
+          <td><cis-row-actions><button type="button" class="cis-row-action" (click)="openSale(cart)" [disabled]="busy() || !canSell()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 4l14 8-14 8V4z" /></svg>Resume</button><button type="button" class="cis-row-action cis-row-action-danger" *ngIf="canDeleteCarts()" (click)="cancelTarget.set(cart)" [disabled]="busy()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Cancel</button></cis-row-actions></td>
         </tr></tbody>
       </table>
     </div>
@@ -125,10 +148,41 @@
 </div>
 
 <cis-modal [open]="checkoutOpen()" title="Complete this sale" maxWidthClass="max-w-md" (close)="!busy() && checkoutOpen.set(false)">
-  <div class="counter-checkout-summary"><span>Total to collect</span><strong>{{ total() | money }}</strong><p>{{ itemCount() }} items · {{ headerForm.controls.customer.value || 'Walk-in customer' }}</p></div>
+  <div class="counter-checkout-summary">
+    <span>Subtotal</span><strong>{{ total() | money }}</strong>
+    <p>{{ itemCount() }} items · {{ headerForm.controls.customer.value || 'Walk-in customer' }}</p>
+  </div>
+  <label class="counter-discount">
+    <span>{{ 'common.discount' | translate }} (TSH)</span>
+    <input type="number" min="0" step="0.01" [formControl]="discountControl" [readonly]="busy()" placeholder="0.00" />
+  </label>
+  <div class="counter-checkout-summary payable"><span>{{ 'common.totalToCollect' | translate }}</span><strong aria-live="polite">{{ payable() | money }}</strong></div>
+  <div class="counter-payment-row">
+    <label class="counter-discount">
+      <span>{{ 'customers.paymentMethod' | translate }}</span>
+      <select [ngModel]="paymentMethod()" (ngModelChange)="paymentMethod.set($event)" [disabled]="busy()">
+        <option value="CASH">Cash</option>
+        <option value="M-PESA">M-Pesa</option>
+        <option value="AIRTEL_MONEY">Airtel Money</option>
+        <option value="TIGO_PESA">Tigo-Pesa</option>
+        <option value="CARD">Card</option>
+        <option value="BANK">Bank</option>
+        <option value="OTHER">Other</option>
+      </select>
+    </label>
+    <label class="counter-discount">
+      <span>{{ 'customers.receivedAmount' | translate }} (TSH)</span>
+      <input type="number" min="0" step="0.01" [ngModel]="amountReceived()" (ngModelChange)="amountReceived.set($event == null || $event === '' ? null : +$event)" [readonly]="busy()" placeholder="{{ payable() }}" />
+    </label>
+  </div>
+  <div class="counter-notice warning" role="status" *ngIf="debtPreview() > 0">
+    {{ debtPreview() | money }} {{ 'customers.debtNote' | translate }}
+  </div>
+  <div class="counter-notice error" role="alert" *ngIf="discountError()">{{ discountError() }}</div>
+  <div class="counter-notice warning" role="alert" *ngIf="debtPreview() > 0 && !headerForm.controls.customerId.value">Select a registered customer to sell on debt.</div>
   <p class="counter-hint">Confirm that payment has been collected before completing this sale. This records the sale and deducts stock; it does not process an online payment.</p>
   <div class="counter-notice error" role="alert" *ngIf="actionError()">{{ actionError() }}</div>
-  <div class="counter-modal-actions"><button type="button" class="counter-button secondary" (click)="checkoutOpen.set(false)" [disabled]="busy()">Back to cart</button><button type="button" class="counter-button primary" (click)="completeSale()" [disabled]="busy() || !pwa.online()">{{ busy() ? 'Completing…' : 'Payment received · Complete sale' }}</button></div>
+  <div class="counter-modal-actions"><button type="button" class="counter-button secondary" (click)="checkoutOpen.set(false)" [disabled]="busy()">Back to cart</button><button type="button" class="counter-button primary" (click)="completeSale()" [disabled]="busy() || !pwa.online() || !!discountError() || (debtPreview() > 0 && !headerForm.controls.customerId.value)">{{ busy() ? 'Completing…' : 'Payment received · Complete sale' }}</button></div>
 </cis-modal>
 
 <cis-modal [open]="expenseOpen()" title="New Expenses" maxWidthClass="max-w-lg" (close)="!busy() && expenseOpen.set(false)">

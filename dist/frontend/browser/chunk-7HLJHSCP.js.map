@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/shared/pipes/money.pipe.ts"],
-  "sourcesContent": ["import { formatNumber } from '@angular/common';\r\nimport { inject, LOCALE_ID, Pipe, type PipeTransform } from '@angular/core';\r\n\r\n@Pipe({\r\n  name: 'money',\r\n  standalone: true\r\n})\r\nexport class MoneyPipe implements PipeTransform {\r\n  private readonly locale = inject(LOCALE_ID);\r\n\r\n  transform(value: number | string | null | undefined, currency?: string): string {\r\n    if (value === null || value === undefined || value === '') {\r\n      return '-';\r\n    }\r\n\r\n    const n = typeof value === 'string' ? Number(value) : value;\r\n    if (!Number.isFinite(n)) {\r\n      return '-';\r\n    }\r\n\r\n    const formatted = formatNumber(n, this.locale, '1.2-2');\r\n    const c = String(currency ?? 'TSH').trim();\r\n    return c ? `${formatted} ${c}` : formatted;\r\n  }\r\n}\r\n"],
-  "mappings": ";;;;;;;;;;AAOM,IAAO,YAAP,MAAO,WAAS;EACH,SAAS,OAAO,SAAS;EAE1C,UAAU,OAA2C,UAAiB;AACpE,QAAI,UAAU,QAAQ,UAAU,UAAa,UAAU,IAAI;AACzD,aAAO;IACT;AAEA,UAAM,IAAI,OAAO,UAAU,WAAW,OAAO,KAAK,IAAI;AACtD,QAAI,CAAC,OAAO,SAAS,CAAC,GAAG;AACvB,aAAO;IACT;AAEA,UAAM,YAAY,aAAa,GAAG,KAAK,QAAQ,OAAO;AACtD,UAAM,IAAI,OAAO,YAAY,KAAK,EAAE,KAAI;AACxC,WAAO,IAAI,GAAG,SAAS,IAAI,CAAC,KAAK;EACnC;;qCAhBW,YAAS;EAAA;oFAAT,YAAS,MAAA,KAAA,CAAA;;;sEAAT,WAAS,CAAA;UAJrB;WAAK;MACJ,MAAM;MACN,YAAY;KACb;;;",
-  "names": []
-}

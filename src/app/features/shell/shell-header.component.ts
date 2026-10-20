@@ -31,6 +31,7 @@ export class ShellHeaderComponent {
   @Input({ required: true }) sidebarOpen = true;
 
   @Input({ required: true }) notificationsCount = 0;
+  @Input() canViewAlerts = false;
   @Input({ required: true }) notificationsOpen = false;
   @Input({ required: true }) userMenuOpen = false;
   @Input({ required: true }) langMenuOpen = false;

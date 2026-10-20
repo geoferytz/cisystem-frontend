@@ -42,13 +42,18 @@ type SalesOrderLine = {
 type SalesOrder = {
   id: string;
   customer?: string | null;
+  customerId?: string | number | null;
   referenceNumber?: string | null;
   soldAt: string;
   soldBy?: string | null;
+  discount?: number | null;
+  paymentMethod?: string | null;
+  amountReceived?: number | null;
   lines: SalesOrderLine[];
 };
 
 type SalesOrdersQueryResult = { salesOrders: SalesOrder[] };
+type CustomerPayment = { id: string; salesOrderId: string; amount: number; paidAt: string };
 type CreateSaleMutationResult = { createSale: SalesOrder };
 type ProductsQueryResult = { products: Product[] };
 
@@ -136,7 +141,7 @@ export class SalesPage {
   createOpen = signal(false);
 
   editingOrderId = signal<string | null>(null);
-  detailsOrderId = signal<string | null>(null);
+
 
   confirmDeleteOpen = signal(false);
   pendingDeleteOrderId = signal<string | null>(null);
@@ -172,8 +177,17 @@ export class SalesPage {
 
   headerForm = this.fb.group({
     customer: [''],
-    referenceNumber: ['']
+    customerId: [null as number | null],
+    referenceNumber: [''],
+    discount: [0 as number | null],
+    paymentMethod: ['CASH'],
+    amountReceived: [null as number | null]
   });
+
+  customers = signal<Array<{ id: number; name: string; phone?: string | null }>>([]);
+  newCustomerOpen = signal(false);
+  newCustomerBusy = signal(false);
+  newCustomerForm = this.fb.nonNullable.group({ name: ['', [Validators.required, Validators.maxLength(200)]], phone: ['', [Validators.maxLength(40)]] });
 
   lineForm = this.fb.group({
     productId: [null as number | null, [Validators.required, Validators.min(1)]],
@@ -187,7 +201,49 @@ export class SalesPage {
   constructor(private readonly gql: GraphqlService) {
     this.perm.load();
     this.loadProducts();
+    this.loadCustomers();
     this.load();
+  }
+
+  loadCustomers(): void {
+    this.gql.request<{ customers: Array<{ id: number; name: string; phone?: string | null }> }>(
+      'query Customers($query: String) { customers(query: $query) { id name phone } }',
+      { query: null }
+    ).subscribe({
+      next: (res) => this.customers.set(res.customers ?? []),
+      error: () => {}
+    });
+  }
+
+  customerName(id: number | null): string {
+    return this.customers().find((c) => Number(c.id) === Number(id))?.name || '';
+  }
+
+  createCustomerInline(): void {
+    if (this.newCustomerBusy() || this.newCustomerForm.invalid) {
+      this.newCustomerForm.markAllAsTouched();
+      return;
+    }
+    this.newCustomerBusy.set(true);
+    const v = this.newCustomerForm.getRawValue();
+    this.gql.request<{ createCustomer: { id: number; name: string } }>(
+      'mutation CreateCustomer($input: CreateCustomerInput!) { createCustomer(input: $input) { id name } }',
+      { input: { name: v.name.trim(), phone: v.phone.trim() || null } }
+    ).subscribe({
+      next: (res) => {
+        const c = res.createCustomer;
+        this.customers.update((list) => [c, ...list]);
+        this.headerForm.controls.customerId.setValue(Number(c.id));
+        this.headerForm.controls.customer.setValue(c.name);
+        this.newCustomerForm.reset({ name: '', phone: '' });
+        this.newCustomerOpen.set(false);
+        this.newCustomerBusy.set(false);
+      },
+      error: (e: unknown) => {
+        this.newCustomerBusy.set(false);
+        this.error.set(e instanceof Error ? e.message : 'Failed to register customer');
+      }
+    });
   }
 
   openDeleteConfirm(id: string): void {
@@ -232,18 +288,103 @@ export class SalesPage {
     this.deleteSale(id, code);
   }
 
+  detailsOrder = signal<SalesOrder | null>(null);
+  detailsPayments = signal<CustomerPayment[]>([]);
+  payOpen = signal(false);
+  paying = signal(false);
+
+  paymentForm = this.fb.group({
+    amount: [null as number | null, [Validators.required, Validators.min(0.01)]],
+    paidAt: ['', [Validators.required]]
+  });
+
+  orderDebt(o: SalesOrder): number {
+    const net = this.saleTotalValue(o);
+    const received = o.amountReceived == null ? net : Math.max(0, Number(o.amountReceived));
+    return Math.max(0, net - received);
+  }
+
+  orderPayments(o: SalesOrder): CustomerPayment[] {
+    return this.detailsPayments().filter((p) => String(p.salesOrderId) === String(o.id));
+  }
+
   toggleDetails(o: SalesOrder): void {
-    const id = String(o.id);
-    this.detailsOrderId.set(this.detailsOrderId() === id ? null : id);
+    this.detailsOrder.set(o);
+    this.payOpen.set(false);
+    this.detailsPayments.set([]);
+    this.paymentForm.reset({ amount: null, paidAt: new Date().toISOString().slice(0, 10) });
+    if (o.customerId != null) {
+      this.loadPayments(o.customerId);
+    }
+  }
+
+  closeDetails(): void {
+    this.detailsOrder.set(null);
+    this.detailsPayments.set([]);
+    this.payOpen.set(false);
+  }
+
+  private loadPayments(customerId: string | number): void {
+    this.gql
+      .request<{ customerPayments: CustomerPayment[] }>(
+        'query CustomerPayments($customerId: ID!) { customerPayments(customerId: $customerId) { id salesOrderId amount paidAt } }',
+        { customerId: String(customerId) }
+      )
+      .subscribe({
+        next: (res) => this.detailsPayments.set(res.customerPayments ?? []),
+        error: () => this.detailsPayments.set([])
+      });
+  }
+
+  openPay(): void {
+    const o = this.detailsOrder();
+    if (!o) return;
+    const debt = this.orderDebt(o);
+    this.paymentForm.reset({ amount: debt > 0 ? Math.round(debt * 100) / 100 : null, paidAt: new Date().toISOString().slice(0, 10) });
+    this.payOpen.set(true);
+  }
+
+  savePayment(): void {
+    const o = this.detailsOrder();
+    if (!o || o.customerId == null) return;
+    if (this.paymentForm.invalid) {
+      this.paymentForm.markAllAsTouched();
+      return;
+    }
+    const v = this.paymentForm.getRawValue();
+    if (v.amount == null || v.amount <= 0 || v.amount > this.orderDebt(o) + 0.001) {
+      this.error.set('Payment amount must be greater than zero and not exceed the outstanding debt');
+      return;
+    }
+    this.paying.set(true);
+    const paidAtIso = new Date(`${v.paidAt}T12:00:00`).toISOString();
+    this.gql
+      .request<{ recordCustomerPayment: CustomerPayment[] }>(
+        'mutation RecordCustomerPayment($customerId: ID!, $amount: Float!, $paidAt: String) { recordCustomerPayment(customerId: $customerId, amount: $amount, paidAt: $paidAt) { id salesOrderId amount paidAt } }',
+        { customerId: String(o.customerId), amount: v.amount, paidAt: paidAtIso }
+      )
+      .subscribe({
+        next: () => {
+          this.paying.set(false);
+          this.payOpen.set(false);
+          this.load();
+          this.loadPayments(o.customerId!);
+        },
+        error: (e: unknown) => {
+          this.error.set(e instanceof Error ? e.message : 'Failed to record payment');
+          this.paying.set(false);
+        }
+      });
   }
 
   openCreate(): void {
     this.error.set(null);
     this.editingOrderId.set(null);
-    this.headerForm.reset({ customer: '', referenceNumber: '' });
+    this.headerForm.reset({ customer: '', customerId: null, referenceNumber: '', discount: 0, paymentMethod: 'CASH', amountReceived: null });
     this.lineForm.reset({ productId: null, quantity: 1, unitPrice: 0, location: this.branchCtx.writeBranch() });
     this.lines.set([]);
     this.productQuery.set('');
+    this.newCustomerOpen.set(false);
     this.createOpen.set(true);
   }
 
@@ -252,7 +393,11 @@ export class SalesPage {
     this.editingOrderId.set(String(o.id));
     this.headerForm.reset({
       customer: o.customer ?? '',
-      referenceNumber: o.referenceNumber ?? ''
+      customerId: o.customerId != null ? Number(o.customerId) : null,
+      referenceNumber: o.referenceNumber ?? '',
+      discount: Number(o.discount ?? 0),
+      paymentMethod: o.paymentMethod ?? 'CASH',
+      amountReceived: o.amountReceived != null ? Number(o.amountReceived) : null
     });
     this.lineForm.reset({ productId: null, quantity: 1, unitPrice: 0, location: this.branchCtx.writeBranch() });
     this.lines.set(
@@ -320,8 +465,24 @@ export class SalesPage {
     return this.lines().reduce((sum, l) => sum + this.lineTotal(l.quantity, l.unitPrice), 0);
   }
 
+  discountValue(): number {
+    return Math.max(0, Number(this.headerForm.getRawValue().discount ?? 0) || 0);
+  }
+
+  discountError(): string | null {
+    const d = this.discountValue();
+    if (Number(this.headerForm.getRawValue().discount ?? 0) < 0) return 'Discount cannot be negative.';
+    if (d > this.grandTotal()) return 'Discount cannot exceed the sale total.';
+    return null;
+  }
+
+  netTotal(): number {
+    return Math.max(0, this.grandTotal() - this.discountValue());
+  }
+
   saleTotalValue(o: SalesOrder): number {
-    return (o.lines ?? []).reduce((sum, l) => sum + Number(l.quantity ?? 0) * Number(l.unitPrice ?? 0), 0);
+    const lines = (o.lines ?? []).reduce((sum, l) => sum + Number(l.quantity ?? 0) * Number(l.unitPrice ?? 0), 0);
+    return Math.max(0, lines - Number(o.discount ?? 0));
   }
 
   isToday(soldAt: string): boolean {
@@ -380,7 +541,7 @@ export class SalesPage {
   setTab(tab: 'all' | 'today' | 'week' | 'month' | 'pending'): void {
     this.activeTab.set(tab);
     this.pageIndex.set(0);
-    this.detailsOrderId.set(null);
+    this.detailsOrder.set(null);
   }
 
   tabClass(tab: string): string {
@@ -412,7 +573,7 @@ export class SalesPage {
     this.loading.set(true);
     this.error.set(null);
 
-    const q = `query SalesOrders($branch: String) { salesOrders(branch: $branch) { id customer referenceNumber soldAt soldBy lines { id productId sku productName quantity location unitPrice deductions { id batchId batchNumber expiryDate quantity } } } }`;
+    const q = `query SalesOrders($branch: String) { salesOrders(branch: $branch) { id customer customerId referenceNumber soldAt soldBy discount paymentMethod amountReceived lines { id productId sku productName quantity location unitPrice deductions { id batchId batchNumber expiryDate quantity } } } }`;
 
     this.gql.request<SalesOrdersQueryResult>(q, { branch: this.branchCtx.effective() }).subscribe({
       next: (res) => {
@@ -421,6 +582,10 @@ export class SalesPage {
           return t !== 0 ? t : Number(b.id) - Number(a.id);
         });
         this.orders.set(sorted);
+        const d = this.detailsOrder();
+        if (d) {
+          this.detailsOrder.set(sorted.find((o) => String(o.id) === String(d.id)) ?? null);
+        }
         this.loading.set(false);
       },
       error: (e: unknown) => {
@@ -489,17 +654,28 @@ export class SalesPage {
       this.error.set('Add at least one line');
       return;
     }
+    if (this.discountError()) {
+      this.error.set(this.discountError());
+      return;
+    }
+    const header = this.headerForm.getRawValue();
+    if (header.amountReceived != null && Number(header.amountReceived) < 0) {
+      this.error.set('Amount received cannot be negative');
+      return;
+    }
+    if (!header.customerId && header.amountReceived != null && Number(header.amountReceived) < this.netTotal()) {
+      this.error.set('Select a registered customer to sell on debt');
+      return;
+    }
 
     this.loading.set(true);
     this.error.set(null);
-
-    const header = this.headerForm.getRawValue();
 
     const editingId = this.editingOrderId();
     if (editingId) {
       const mutation = `mutation UpdateSale($input: UpdateSaleInput!) {
         updateSale(input: $input) {
-          id soldAt
+          id soldAt discount customerId paymentMethod amountReceived
           lines { id productId sku productName quantity location unitPrice deductions { id batchId batchNumber expiryDate quantity } }
         }
       }`;
@@ -508,8 +684,12 @@ export class SalesPage {
         .request<{ updateSale: SalesOrder }>(mutation, {
           input: {
             id: editingId,
-            customer: header.customer || null,
+            customer: this.customerName(Number(header.customerId)) || null,
+            customerId: header.customerId,
             referenceNumber: header.referenceNumber || null,
+            discount: this.discountValue() || null,
+            paymentMethod: header.paymentMethod || 'CASH',
+            amountReceived: header.amountReceived != null ? Number(header.amountReceived) : null,
             lines: this.lines()
           }
         })
@@ -531,7 +711,7 @@ export class SalesPage {
 
     const mutation = `mutation CreateSale($input: CreateSaleInput!) {
       createSale(input: $input) {
-        id soldAt
+        id soldAt discount customerId paymentMethod amountReceived
         lines { id productId sku productName quantity location unitPrice deductions { id batchId batchNumber expiryDate quantity } }
       }
     }`;
@@ -539,8 +719,12 @@ export class SalesPage {
     this.gql
       .request<CreateSaleMutationResult>(mutation, {
         input: {
-          customer: header.customer || null,
+          customer: this.customerName(Number(header.customerId)) || null,
+          customerId: header.customerId,
           referenceNumber: header.referenceNumber || null,
+          discount: this.discountValue() || null,
+          paymentMethod: header.paymentMethod || 'CASH',
+          amountReceived: header.amountReceived != null ? Number(header.amountReceived) : null,
           lines: this.lines()
         }
       })

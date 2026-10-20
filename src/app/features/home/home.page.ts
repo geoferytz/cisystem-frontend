@@ -22,6 +22,8 @@ type HomeCard = {
     | 'products'
     | 'inventory'
     | 'stockMovements'
+    | 'transfers'
+    | 'customers'
     | 'purchasing'
     | 'sales'
     | 'mySales'
@@ -78,7 +80,7 @@ export class HomePage {
         icon: 'sales',
         description: this.translation.translate('home.counter.description'),
         route: '/counter',
-        hidden: !this.canView('SALES') && !this.canView('EXPENSES')
+        hidden: !this.canView('COUNTER') && !this.canView('SALES') && !this.canView('EXPENSES')
       },
       {
         title: this.translation.translate('nav.products'),
@@ -102,6 +104,13 @@ export class HomePage {
         hidden: !this.canView('STOCK_MOVEMENTS')
       },
       {
+        title: this.translation.translate('nav.transfers'),
+        icon: 'transfers',
+        description: this.translation.translate('home.transfers.description'),
+        route: '/transfers',
+        hidden: !this.canView('TRANSFERS')
+      },
+      {
         title: this.translation.translate('nav.purchasing'),
         icon: 'purchasing',
         description: this.translation.translate('home.purchasing.description'),
@@ -123,11 +132,18 @@ export class HomePage {
         hidden: !this.canView('MY_SALES')
       },
       {
+        title: this.translation.translate('nav.customers'),
+        icon: 'customers',
+        description: this.translation.translate('home.customers.description'),
+        route: '/customers',
+        hidden: !this.canView('CUSTOMERS')
+      },
+      {
         title: this.translation.translate('nav.expiryAlerts'),
         icon: 'expiryAlerts',
         description: this.translation.translate('home.expiryAlerts.description'),
         route: '/expiry-alerts',
-        hidden: !this.canView('INVENTORY')
+        hidden: !this.canView('EXPIRY_ALERTS')
       },
       {
         title: this.translation.translate('nav.expenses'),

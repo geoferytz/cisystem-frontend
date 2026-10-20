@@ -92,12 +92,15 @@ export class UsersPage {
   permissions = signal<UserPermission[]>([]);
 
   readonly modules: Array<{ key: string; label: string }> = [
+    { key: 'COUNTER', label: 'Counter' },
     { key: 'PRODUCTS', label: 'Products' },
     { key: 'CATEGORIES', label: 'Categories' },
     { key: 'INVENTORY', label: 'Inventory' },
     { key: 'STOCK_MOVEMENTS', label: 'Stock Movements' },
+    { key: 'EXPIRY_ALERTS', label: 'Expiry & Alerts' },
     { key: 'SALES', label: 'Sales' },
     { key: 'MY_SALES', label: 'My Sales' },
+    { key: 'CUSTOMERS', label: 'Customers' },
     { key: 'PURCHASING', label: 'Purchasing' },
     { key: 'EXPENSES', label: 'Expenses' },
     { key: 'EXPENSE_CATEGORIES', label: 'Expense Categories' },

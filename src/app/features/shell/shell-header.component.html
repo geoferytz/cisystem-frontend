@@ -77,7 +77,7 @@
       </div>
     </div>
 
-    <div class="relative" (click)="$event.stopPropagation()">
+    <div class="relative" (click)="$event.stopPropagation()" *ngIf="canViewAlerts || notificationsCount > 0">
       <button
         type="button"
         (click)="onToggleNotifications()"
@@ -105,13 +105,14 @@
         class="absolute right-0 z-50 mt-2 w-80 rounded-2xl bg-white dark:bg-slate-800 p-3 shadow-lg ring-1 ring-slate-200 dark:ring-slate-700"
       >
         <div class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ 'header.notifications' | translate }}</div>
-        <div class="mt-1 text-xs text-slate-600 dark:text-slate-400">
+        <div class="mt-1 text-xs text-slate-600 dark:text-slate-400" *ngIf="canViewAlerts">
           {{ 'header.notificationsHelp' | translate }}
         </div>
         <div class="mt-3 rounded-xl bg-slate-50 dark:bg-slate-700 p-3 text-sm text-slate-700 dark:text-slate-200">
           {{ 'header.total' | translate }}: <span class="font-semibold">{{ notificationsCount }}</span>
         </div>
         <a
+          *ngIf="canViewAlerts"
           routerLink="/expiry-alerts"
           class="mt-3 block rounded-xl bg-pink-500 px-3 py-2 text-center text-sm font-semibold text-white hover:bg-pink-600"
           (click)="onCloseMenus()"

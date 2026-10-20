@@ -54,7 +54,7 @@
         </a>
 
         <a
-          *ngIf="canView('SALES') || canView('EXPENSES')"
+          *ngIf="canView('COUNTER') || canView('SALES') || canView('EXPENSES')"
           routerLink="/counter"
           routerLinkActive="cis-nav-active"
           ariaCurrentWhenActive="page"
@@ -136,33 +136,7 @@
               </a>
 
               <a
-                *ngIf="canView('STOCK_MOVEMENTS')"
-                routerLink="/stock-movements"
-                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="toggleProducts()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-sky-600 dark:text-sky-400">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13M8 12h13M8 17h13" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h.01M3 12h.01M3 17h.01" />
-                </svg>
-                <span>{{ 'nav.stockMovements' | translate }}</span>
-              </a>
-
-              <a
-                *ngIf="canView('TRANSFERS')"
-                routerLink="/transfers"
-                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="toggleProducts()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-teal-600 dark:text-teal-400">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13m0 0l-3-3m3 3l-3 3M16 17H3m0 0l3 3m-3-3l3-3" />
-                </svg>
-                <span>{{ 'nav.transfers' | translate }}</span>
-              </a>
-
-              <a
+                *ngIf="canView('EXPIRY_ALERTS')"
                 routerLink="/expiry-alerts"
                 routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
                 [routerLinkActiveOptions]="{ exact: true }"
@@ -196,6 +170,35 @@
             >{{ pendingReceivingCount() }}</span>
           </span>
           <span>{{ 'nav.inventory' | translate }}</span>
+        </a>
+
+        <a
+          *ngIf="canView('STOCK_MOVEMENTS')"
+          routerLink="/stock-movements"
+          routerLinkActive="cis-nav-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
+          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13M8 12h13M8 17h13" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h.01M3 12h.01M3 17h.01" />
+            </svg>
+          </span>
+          <span>{{ 'nav.stockMovements' | translate }}</span>
+        </a>
+
+        <a
+          *ngIf="canView('TRANSFERS')"
+          routerLink="/transfers"
+          routerLinkActive="cis-nav-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
+          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13m0 0l-3-3m3 3l-3 3M16 17H3m0 0l3 3m-3-3l3-3" />
+            </svg>
+          </span>
+          <span>{{ 'nav.transfers' | translate }}</span>
         </a>
 
         <a
@@ -280,9 +283,24 @@
                 </svg>
                 <span>{{ 'nav.mySales' | translate }}</span>
               </a>
+
             </div>
           </div>
         </div>
+
+        <a
+          *ngIf="canView('CUSTOMERS')"
+          routerLink="/customers"
+          routerLinkActive="cis-nav-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
+          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-3-3h-1m-4 5v-2a3 3 0 00-3-3H7a3 3 0 00-3 3v2h10zm-7-9a3.5 3.5 0 110-7 3.5 3.5 0 010 7z" />
+            </svg>
+          </span>
+          <span>{{ 'nav.customers' | translate }}</span>
+        </a>
 
         <!-- Finance with flyout popup -->
         <div class="relative">
@@ -435,12 +453,14 @@
     </aside>
 
     <main class="cis-system flex min-h-screen flex-col p-4 md:p-6 dark:bg-slate-900" (click)="closeMenus()">
+      <cis-toasts />
       <app-shell-header
         [user]="user()"
         [isAuthed]="isAuthed()"
         [showSidebarToggle]="!isHome() || isMobile()"
         [sidebarOpen]="sidebarOpen()"
         [notificationsCount]="notificationsCount()"
+        [canViewAlerts]="canView('EXPIRY_ALERTS')"
         [notificationsOpen]="notificationsOpen()"
         [userMenuOpen]="userMenuOpen()"
         [langMenuOpen]="langMenuOpen()"

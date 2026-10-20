@@ -64,17 +64,61 @@
   <div class="text-xs text-slate-500 dark:text-slate-400">Expired batches are blocked automatically by backend.</div>
 
   <form class="mt-4 grid gap-3" [formGroup]="headerForm" (ngSubmit)="createSale()">
-    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
       <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-        {{ 'common.customer' | translate }}
-        <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="customer" />
+        {{ 'common.customer' | translate }} <small class="text-slate-400">({{ 'customers.walkIn' | translate }} if empty)</small>
+        <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="customerId">
+          <option [ngValue]="null">{{ 'customers.walkIn' | translate }}</option>
+          <option *ngFor="let c of customers()" [ngValue]="c.id">{{ c.name }}<span *ngIf="c.phone"> · {{ c.phone }}</span></option>
+        </select>
+        <button type="button" class="text-left text-xs font-semibold text-pink-600 dark:text-pink-400 hover:underline" (click)="newCustomerOpen.set(!newCustomerOpen())">
+          {{ 'customers.newInline' | translate }}
+        </button>
       </label>
       <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-        {{ 'common.reference' | translate }}
-        <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="referenceNumber" />
+        {{ 'common.reference' | translate }} <small class="text-slate-400">(auto)</small>
+        <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="referenceNumber" placeholder="Auto (e.g. 201026-0001)" />
+      </label>
+      <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+        {{ 'common.discount' | translate }} (TSH)
+        <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="number" min="0" step="0.01" formControlName="discount" />
+      </label>
+    </div>
+    <div class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+        {{ 'customers.paymentMethod' | translate }}
+        <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="paymentMethod">
+          <option value="CASH">Cash</option>
+          <option value="M-PESA">M-Pesa</option>
+          <option value="AIRTEL_MONEY">Airtel Money</option>
+          <option value="TIGO_PESA">Tigo-Pesa</option>
+          <option value="CARD">Card</option>
+          <option value="BANK">Bank</option>
+          <option value="OTHER">Other</option>
+        </select>
+      </label>
+      <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+        {{ 'customers.receivedAmount' | translate }} (TSH)
+        <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="number" min="0" step="0.01" formControlName="amountReceived" />
       </label>
     </div>
   </form>
+
+  <div class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2" *ngIf="newCustomerOpen()" [formGroup]="newCustomerForm">
+    <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+      {{ 'customers.name' | translate }} *
+      <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="name" />
+    </label>
+    <div class="grid grid-cols-[1fr_auto] items-end gap-2">
+      <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+        {{ 'customers.phone' | translate }}
+        <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="phone" />
+      </label>
+      <button type="button" class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white hover:bg-pink-600" (click)="createCustomerInline()" [disabled]="newCustomerBusy() || newCustomerForm.invalid">
+        {{ 'customers.createInline' | translate }}
+      </button>
+    </div>
+  </div>
 
   <div class="mt-4 rounded-xl bg-slate-50 dark:bg-slate-700 p-3 ring-1 ring-slate-100 dark:ring-slate-600">
     <h4 class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ 'common.addLine' | translate }}</h4>
@@ -165,8 +209,13 @@
     </div>
 
     <div class="mt-2 text-right text-sm font-semibold text-slate-700 dark:text-slate-300">
-      {{ 'common.grandTotal' | translate }}: <span class="text-slate-900 dark:text-slate-100">{{ grandTotal() | money}}</span>
+      {{ 'common.subtotal' | translate }}: <span class="text-slate-900 dark:text-slate-100">{{ grandTotal() | money}}</span>
+      <span class="mx-2 text-slate-400">·</span>
+      {{ 'common.discount' | translate }}: <span class="text-[#B81104] dark:text-red-400">-{{ discountValue() | money}}</span>
+      <span class="mx-2 text-slate-400">·</span>
+      {{ 'common.grandTotal' | translate }}: <span class="text-slate-900 dark:text-slate-100">{{ netTotal() | money}}</span>
     </div>
+    <div class="mt-1 text-right text-xs text-[#B81104] dark:text-red-400" *ngIf="discountError()">{{ discountError() }}</div>
   </div>
 
   <div class="mt-3 text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">{{ error() }}</div>
@@ -269,7 +318,7 @@
                     (click)="toggleDetails(o)"
                   >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
-                    {{ detailsOrderId() === o.id ? 'Hide details' : 'Details' }}
+                    {{ 'common.details' | translate }}
                   </button>
 
                   <button
@@ -295,38 +344,6 @@
               </td>
             </tr>
 
-            <tr *ngIf="detailsOrderId() === o.id" class="border-t border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-700/50">
-              <td class="px-3 py-3" colspan="6">
-                <div class="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                  <span
-                    class="inline-flex items-center rounded-full bg-pink-50 dark:bg-pink-900/30 px-2.5 py-1 text-[11px] font-semibold text-pink-700 dark:text-indigo-400 ring-1 ring-inset ring-pink-200 dark:ring-pink-700"
-                    >Sale details</span
-                  >
-                </div>
-                <div class="mt-2 overflow-auto rounded-xl bg-white dark:bg-slate-800 ring-1 ring-indigo-100 dark:ring-pink-700 border border-indigo-100 dark:border-indigo-700">
-                  <table class="w-full border-collapse text-xs">
-                    <thead class="bg-pink-50 dark:bg-pink-900/30">
-                      <tr>
-                        <th class="px-3 py-2 text-left font-semibold text-slate-600 dark:text-slate-300">{{ 'common.customer' | translate }}</th>
-                        <th class="px-3 py-2 text-left font-semibold text-slate-600 dark:text-slate-300">{{ 'common.product' | translate }}</th>
-                        <th class="px-3 py-2 text-left font-semibold text-slate-600 dark:text-slate-300">{{ 'common.location' | translate }}</th>
-                        <th class="px-3 py-2 text-right font-semibold text-slate-600 dark:text-slate-300">{{ 'common.quantity' | translate }}</th>
-                        <th class="px-3 py-2 text-right font-semibold text-slate-600 dark:text-slate-300">{{ 'common.price' | translate }}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let l of o.lines" class="border-t border-indigo-100 dark:border-indigo-700">
-                        <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ o.customer || '-' }}</td>
-                        <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ l.productName }}</td>
-                        <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ l.location || 'MAIN' }}</td>
-                        <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ l.quantity }}</td>
-                        <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ l.unitPrice | money }}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </td>
-            </tr>
           </ng-container>
 
           <tr *ngIf="!filteredOrders().length" class="border-t border-slate-100 dark:border-slate-700">
@@ -437,4 +454,111 @@
       {{ 'common.delete' | translate }}
     </button>
   </div>
+</cis-modal>
+
+<cis-modal
+  [open]="detailsOrder() !== null"
+  [title]="'common.details' | translate"
+  maxWidthClass="max-w-2xl"
+  (close)="closeDetails()"
+>
+  <ng-container *ngIf="detailsOrder() as o">
+    <div class="grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-slate-600 dark:text-slate-400">
+      <div><span class="font-semibold">{{ 'common.customer' | translate }}:</span> {{ o.customer || '-' }}</div>
+      <div><span class="font-semibold">{{ 'common.reference' | translate }}:</span> {{ o.referenceNumber || '-' }}</div>
+      <div><span class="font-semibold">{{ 'customers.date' | translate }}:</span> {{ o.soldAt }}</div>
+      <div><span class="font-semibold">{{ 'common.seller' | translate }}:</span> {{ o.soldBy || '-' }}</div>
+      <div *ngIf="o.paymentMethod"><span class="font-semibold">{{ 'customers.method' | translate }}:</span> {{ o.paymentMethod }}</div>
+      <div *ngIf="o.amountReceived != null"><span class="font-semibold">{{ 'customers.received' | translate }}:</span> {{ o.amountReceived | money }}</div>
+    </div>
+
+    <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+      <table class="w-full border-collapse text-xs">
+        <thead class="bg-slate-50 dark:bg-slate-700">
+          <tr>
+            <th class="px-3 py-2 text-left font-semibold text-slate-600 dark:text-slate-300">{{ 'common.product' | translate }}</th>
+            <th class="px-3 py-2 text-left font-semibold text-slate-600 dark:text-slate-300">{{ 'common.location' | translate }}</th>
+            <th class="px-3 py-2 text-right font-semibold text-slate-600 dark:text-slate-300">{{ 'common.quantity' | translate }}</th>
+            <th class="px-3 py-2 text-right font-semibold text-slate-600 dark:text-slate-300">{{ 'common.price' | translate }}</th>
+            <th class="px-3 py-2 text-right font-semibold text-slate-600 dark:text-slate-300">{{ 'common.total' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let l of o.lines" class="border-t border-slate-100 dark:border-slate-700">
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ l.productName }}</td>
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ l.location || 'MAIN' }}</td>
+            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ l.quantity }}</td>
+            <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ l.unitPrice | money }}</td>
+            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ lineTotal(l.quantity, l.unitPrice) | money }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-3 space-y-1 text-right text-xs font-semibold text-slate-700 dark:text-slate-300">
+      <div *ngIf="(o.discount ?? 0) > 0">
+        {{ 'common.discount' | translate }}: <span class="text-[#B81104] dark:text-red-400">-{{ (o.discount ?? 0) | money }}</span>
+      </div>
+      <div>{{ 'common.netTotal' | translate }}: <span class="text-slate-900 dark:text-slate-100">{{ saleTotalValue(o) | money }}</span></div>
+      <div *ngIf="orderDebt(o) > 0">
+        {{ 'customers.debt' | translate }}: <span class="text-[#B81104] dark:text-red-400">{{ orderDebt(o) | money }}</span>
+      </div>
+    </div>
+
+    <div class="mt-3 flex items-center justify-between gap-2">
+      <span
+        class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
+        [ngClass]="orderDebt(o) > 0 ? 'bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-300' : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'"
+      >
+        {{ orderDebt(o) > 0 ? ('customers.tabDebtors' | translate) : ('customers.paidBadge' | translate) }}
+      </span>
+      <button
+        *ngIf="orderDebt(o) > 0 && o.customerId != null && perm.canEdit('CUSTOMERS')"
+        type="button"
+        class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white hover:bg-pink-600"
+        (click)="openPay()"
+      >
+        {{ 'customers.addPayment' | translate }}
+      </button>
+    </div>
+
+    <form *ngIf="payOpen()" class="mt-3 grid gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-600 dark:bg-slate-700/50" [formGroup]="paymentForm" (ngSubmit)="savePayment()">
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+          {{ 'customers.paymentAmount' | translate }} * ({{ 'customers.debt' | translate }}: {{ orderDebt(o) | money }})
+          <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="number" min="0.01" step="0.01" formControlName="amount" />
+        </label>
+        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+          {{ 'customers.paymentDate' | translate }} *
+          <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="date" formControlName="paidAt" />
+        </label>
+      </div>
+      <div class="flex items-center justify-end gap-2">
+        <button type="button" class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200" (click)="payOpen.set(false)" [disabled]="paying()">{{ 'common.cancel' | translate }}</button>
+        <button type="submit" class="rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600" [disabled]="paying()">
+          {{ paying() ? ('common.loading' | translate) : ('customers.savePayment' | translate) }}
+        </button>
+      </div>
+    </form>
+
+    <div *ngIf="orderPayments(o).length" class="mt-3">
+      <div class="mb-1 text-xs font-semibold text-slate-600 dark:text-slate-400">{{ 'customers.paymentHistory' | translate }}</div>
+      <div class="overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+        <table class="w-full border-collapse text-xs">
+          <thead class="bg-slate-50 dark:bg-slate-700">
+            <tr>
+              <th class="px-3 py-2 text-left font-semibold text-slate-600 dark:text-slate-300">{{ 'customers.date' | translate }}</th>
+              <th class="px-3 py-2 text-right font-semibold text-slate-600 dark:text-slate-300">{{ 'customers.amount' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of orderPayments(o)" class="border-t border-slate-100 dark:border-slate-700">
+              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ p.paidAt | date:'yyyy-MM-dd' }}</td>
+              <td class="px-3 py-2 text-right font-semibold text-emerald-600 dark:text-emerald-400">{{ p.amount | money }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </ng-container>
 </cis-modal>

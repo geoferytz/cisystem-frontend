@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, ElementRef, HostListener, ViewChild, computed, effect, inject, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { GraphqlService } from '../../core/graphql/graphql.service';
@@ -30,7 +30,7 @@ const CART_FIELDS = 'id version customer referenceNumber createdAt updatedAt cre
 @Component({
   selector: 'cis-counter-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, MoneyPipe, ModalComponent, ConfirmDialogComponent, BarcodeScannerComponent, RowActionsMenuComponent, PagerComponent, TranslatePipe],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, MoneyPipe, ModalComponent, ConfirmDialogComponent, BarcodeScannerComponent, RowActionsMenuComponent, PagerComponent, TranslatePipe],
   templateUrl: './counter.page.html',
   styleUrl: './counter.page.scss'
 })
@@ -78,7 +78,32 @@ export class CounterPage {
       this.location.setValue(code);
     }
   });
-  readonly headerForm = this.fb.nonNullable.group({ customer: ['', Validators.maxLength(200)], referenceNumber: ['', Validators.maxLength(120)] });
+  readonly headerForm = this.fb.nonNullable.group({ customer: ['', Validators.maxLength(200)], customerId: [null as number | null], referenceNumber: ['', Validators.maxLength(120)] });
+  readonly customers = signal<Array<{ id: number; name: string; phone?: string | null }>>([]);
+  readonly newCustomerOpen = signal(false);
+  readonly newCustomerBusy = signal(false);
+  readonly newCustomerForm = this.fb.nonNullable.group({ name: ['', [Validators.required, Validators.maxLength(200)]], phone: ['', [Validators.maxLength(40)]] });
+  readonly paymentMethod = signal('CASH');
+  canSell = (): boolean => this.perm.canCreate('COUNTER') || this.perm.canCreate('SALES');
+  canViewSales = (): boolean => this.perm.canView('COUNTER') || this.perm.canView('SALES');
+  canDeleteCarts = (): boolean => this.perm.canDelete('COUNTER') || this.perm.canDelete('SALES');
+  canExpense = (): boolean => this.perm.canCreate('COUNTER') || this.perm.canCreate('EXPENSES');
+
+  readonly amountReceived = signal<number | null>(null);
+  readonly debtPreview = computed(() => {
+    const r = this.amountReceived();
+    if (r == null) return 0;
+    return Math.round(Math.max(0, this.payable() - r) * 10000) / 10000;
+  });
+  readonly discountControl = this.fb.nonNullable.control<number | null>(0);
+  readonly discountAmount = signal(0);
+  readonly payable = computed(() => Math.round(Math.max(0, this.total() - this.discountAmount()) * 10000) / 10000);
+  readonly discountError = computed(() => {
+    const d = this.discountAmount();
+    if (d < 0) return 'Discount cannot be negative.';
+    if (d > this.total()) return 'Discount cannot exceed the sale total.';
+    return null;
+  });
   readonly expenseForm = this.fb.nonNullable.group({
     date: [toIsoDate(new Date()), Validators.required],
     categoryId: ['', Validators.required],
@@ -116,11 +141,19 @@ export class CounterPage {
 
   constructor() {
     this.perm.load();
-    this.headerForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.dirty.set(true));
+    this.loadCustomers();
+    this.headerForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.dirty.set(true);
+      const v = this.headerForm.getRawValue();
+      if (v.customerId && v.customer !== this.customerName(v.customerId)) {
+        this.headerForm.controls.customer.setValue(this.customerName(v.customerId), { emitEvent: false });
+      }
+    });
+    this.discountControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(v => this.discountAmount.set(Number(v) || 0));
     effect(() => {
-      const canSell = this.perm.canCreate('SALES');
-      const canViewSales = this.perm.canView('SALES');
-      const canExpense = this.perm.canCreate('EXPENSES');
+      const canSell = this.canSell();
+      const canViewSales = this.canViewSales();
+      const canExpense = this.canExpense();
       untracked(() => {
         if (canSell) this.loadProducts();
         if (canViewSales) this.loadPending();
@@ -141,7 +174,7 @@ export class CounterPage {
   }
 
   loadPending(): void {
-    if (!this.perm.canView('SALES')) return;
+    if (!this.canViewSales()) return;
     this.pendingLoading.set(true);
     this.pendingError.set(null);
     this.gql.request<{ pendingCounterCarts: HeldCart[] }>(`query PendingCounterCarts { pendingCounterCarts { ${CART_FIELDS} } }`)
@@ -161,7 +194,7 @@ export class CounterPage {
   }
 
   openSale(cart: HeldCart | 'new' = 'new'): void {
-    if (this.busy() || !this.perm.canCreate('SALES')) return;
+    if (this.busy() || !this.canSell()) return;
     if (this.dirty() && this.lines().length) {
       this.discardTarget.set(cart);
       return;
@@ -309,7 +342,7 @@ export class CounterPage {
   }
 
   saveCart(checkout = false): void {
-    if (this.busy() || !this.perm.canCreate('SALES') || !this.pwa.online() || !this.lines().length) return;
+    if (this.busy() || !this.canSell() || !this.pwa.online() || !this.lines().length) return;
     this.headerForm.markAllAsTouched();
     if (this.headerForm.invalid) return;
     if (checkout && (this.stockIssues() || this.catalogLoading() || this.catalogError())) { this.actionError.set('Refresh products and check stock before checkout.'); return; }
@@ -336,10 +369,23 @@ export class CounterPage {
 
   completeSale(): void {
     if (this.busy() || !this.checkoutOpen() || this.cartVersion() === null || !this.pwa.online()) return;
+    if (this.discountError()) { this.actionError.set(this.discountError()); return; }
+    const customerId = this.headerForm.controls.customerId.value;
+    const received = this.amountReceived();
+    if (received != null && (!Number.isFinite(received) || received < 0)) { this.actionError.set('Amount received cannot be negative.'); return; }
+    if (this.debtPreview() > 0 && !customerId) { this.actionError.set('Select a registered customer to sell on debt.'); return; }
     this.busy.set(true);
     this.actionError.set(null);
     this.gql.request<{ checkoutCounterCart: { id: string } }>('mutation CheckoutCounterCart($input: CheckoutCounterCartInput!) { checkoutCounterCart(input: $input) { id } }', {
-      input: { id: this.cartId(), version: this.cartVersion(), expectedTotal: this.total() }
+      input: {
+        id: this.cartId(),
+        version: this.cartVersion(),
+        expectedTotal: this.total(),
+        discount: this.discountAmount() || null,
+        customerId,
+        paymentMethod: this.paymentMethod(),
+        amountReceived: received
+      }
     }).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.busy.set(false))).subscribe({
       next: data => {
         this.success.set(`Sale #${data.checkoutCounterCart.id} completed. Stock has been updated.`);
@@ -355,7 +401,7 @@ export class CounterPage {
 
   cancelHeldCart(): void {
     const cart = this.cancelTarget();
-    if (!cart || this.busy() || !this.pwa.online() || !this.perm.canDelete('SALES')) return;
+    if (!cart || this.busy() || !this.pwa.online() || !this.canDeleteCarts()) return;
     this.busy.set(true);
     this.cancelTarget.set(null);
     this.gql.request<{ cancelCounterCart: boolean }>('mutation CancelCounterCart($input: CounterCartVersionInput!) { cancelCounterCart(input: $input) }', { input: { id: cart.id, version: cart.version } })
@@ -366,7 +412,7 @@ export class CounterPage {
   }
 
   openExpense(): void {
-    if (this.busy() || !this.perm.canCreate('EXPENSES')) return;
+    if (this.busy() || !this.canExpense()) return;
     this.expenseError.set(null);
     this.expenseForm.reset({ date: toIsoDate(new Date()), categoryId: '', description: '', amount: 0, paymentMethod: 'CASH' });
     this.expenseOpen.set(true);
@@ -374,7 +420,7 @@ export class CounterPage {
   }
 
   saveExpense(): void {
-    if (this.busy() || !this.pwa.online() || !this.perm.canCreate('EXPENSES')) return;
+    if (this.busy() || !this.pwa.online() || !this.canExpense()) return;
     this.expenseForm.markAllAsTouched();
     if (this.expenseForm.invalid) return;
     const value = this.expenseForm.getRawValue();
@@ -408,7 +454,12 @@ export class CounterPage {
     this.cartVersion.set(cart.version);
     this.lines.set(cart.lines.map(line => ({ ...line })));
     this.location.setValue(cart.lines[0]?.location || this.branchCtx.writeBranch());
-    this.headerForm.reset({ customer: cart.customer || '', referenceNumber: cart.referenceNumber || '' }, { emitEvent: false });
+    const match = cart.customer ? this.customers().find(c => c.name === cart.customer) : null;
+    this.headerForm.reset({ customer: cart.customer || '', customerId: match ? Number(match.id) : null, referenceNumber: cart.referenceNumber || '' }, { emitEvent: false });
+    this.paymentMethod.set('CASH');
+    this.amountReceived.set(null);
+    this.discountControl.setValue(0, { emitEvent: false });
+    this.discountAmount.set(0);
     this.dirty.set(false);
   }
 
@@ -416,8 +467,50 @@ export class CounterPage {
     this.cartId.set(crypto.randomUUID());
     this.cartVersion.set(null);
     this.lines.set([]);
-    this.headerForm.reset({ customer: '', referenceNumber: '' }, { emitEvent: false });
+    this.headerForm.reset({ customer: '', customerId: null, referenceNumber: '' }, { emitEvent: false });
+    this.paymentMethod.set('CASH');
+    this.amountReceived.set(null);
+    this.discountControl.setValue(0, { emitEvent: false });
+    this.discountAmount.set(0);
     this.dirty.set(false);
+  }
+
+  customerName(id: number | null): string {
+    const c = this.customers().find(x => Number(x.id) === Number(id));
+    return c?.name || '';
+  }
+
+  loadCustomers(): void {
+    this.gql.request<{ customers: Array<{ id: number; name: string; phone?: string | null }> }>(
+      'query Customers($query: String) { customers(query: $query) { id name phone } }', { query: null }
+    ).subscribe({
+      next: (res) => this.customers.set(res.customers ?? []),
+      error: () => {}
+    });
+  }
+
+  createCustomerInline(): void {
+    if (this.newCustomerBusy() || this.newCustomerForm.invalid) { this.newCustomerForm.markAllAsTouched(); return; }
+    this.newCustomerBusy.set(true);
+    const v = this.newCustomerForm.getRawValue();
+    this.gql.request<{ createCustomer: { id: number; name: string } }>(
+      'mutation CreateCustomer($input: CreateCustomerInput!) { createCustomer(input: $input) { id name } }',
+      { input: { name: v.name.trim(), phone: v.phone.trim() || null } }
+    ).subscribe({
+      next: (res) => {
+        const c = res.createCustomer;
+        this.customers.update(list => [c, ...list]);
+        this.headerForm.controls.customerId.setValue(Number(c.id));
+        this.headerForm.controls.customer.setValue(c.name, { emitEvent: false });
+        this.newCustomerForm.reset({ name: '', phone: '' });
+        this.newCustomerOpen.set(false);
+        this.newCustomerBusy.set(false);
+      },
+      error: (e: unknown) => {
+        this.newCustomerBusy.set(false);
+        this.actionError.set(this.message(e, 'Failed to register customer'));
+      }
+    });
   }
 
   private message(error: unknown, fallback: string): string {
