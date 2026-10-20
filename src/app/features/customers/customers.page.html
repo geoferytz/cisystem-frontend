@@ -3,14 +3,6 @@
     <h2>{{ 'customers.title' | translate }}</h2>
     <p class="text-xs text-slate-500 dark:text-slate-400">{{ 'customers.subtitle' | translate }}</p>
   </div>
-  <button
-    type="button"
-    class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white hover:bg-pink-600"
-    (click)="openCreate()"
-    *ngIf="perm.canCreate('CUSTOMERS')"
-  >
-    + {{ 'customers.new' | translate }}
-  </button>
 </div>
 
 <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 cis-stat-grid">
@@ -71,6 +63,14 @@
         (input)="onQueryInput($any($event.target).value)"
         placeholder="{{ 'customers.search' | translate }}"
       />
+      <button
+        type="button"
+        class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white hover:bg-pink-600"
+        (click)="openCreate()"
+        *ngIf="perm.canCreate('CUSTOMERS')"
+      >
+        + {{ 'customers.new' | translate }}
+      </button>
     </div>
   </div>
 
