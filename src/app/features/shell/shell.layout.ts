@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/auth/auth.service';
+import { SessionService } from '../../core/auth/session.service';
 import { GraphqlService } from '../../core/graphql/graphql.service';
 import { ShellHeaderComponent } from './shell-header.component';
 import { ToastsComponent } from '../../shared/ui/toasts/toasts.component';
@@ -60,6 +61,8 @@ type UsersQueryResult = {
   styleUrl: './shell.layout.scss'
 })
 export class ShellLayout {
+  protected readonly session = inject(SessionService);
+
   isAuthed = computed(() => this.auth.isAuthenticated());
 
   currentUrl = signal<string>('/');

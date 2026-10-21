@@ -50,12 +50,16 @@ describe('SessionService', () => {
     expect(auth.isAuthenticated()).toBeTrue();
   });
 
-  it('expires after the idle limit', () => {
+  it('shows the expired dialog after the idle limit, then expires on confirm', () => {
     auth.setAccessToken(makeJwt(3600));
     session.start();
     const internals = session as unknown as { lastActivity: number; check(): void };
     internals.lastActivity = Date.now() - IDLE_LIMIT_MS - 1;
     internals.check();
+    expect(session.idleExpired()).toBeTrue();
+    expect(router.navigate).not.toHaveBeenCalled();
+    session.confirmExpire();
+    expect(session.idleExpired()).toBeFalse();
     expect(router.navigate).toHaveBeenCalledWith(['/login'], { queryParams: { session: 'expired' } });
   });
 

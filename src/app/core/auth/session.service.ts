@@ -1,4 +1,4 @@
-import { Injectable, NgZone, inject } from '@angular/core';
+import { Injectable, NgZone, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
 import { GraphqlService } from '../graphql/graphql.service';
@@ -15,6 +15,9 @@ export class SessionService {
   private readonly gql = inject(GraphqlService);
   private readonly router = inject(Router);
   private readonly zone = inject(NgZone);
+
+  /** True while the "session expired" popup is shown after the idle limit. */
+  readonly idleExpired = signal(false);
 
   private lastActivity = Date.now();
   private timer?: ReturnType<typeof setInterval>;
@@ -45,9 +48,21 @@ export class SessionService {
 
   private check(): void {
     if (!this.auth.accessToken()) return;
-    if (!this.auth.isAuthenticated() || Date.now() - this.lastActivity > IDLE_LIMIT_MS) {
+    if (!this.auth.isAuthenticated()) {
       this.expire();
+      return;
     }
+    if (Date.now() - this.lastActivity > IDLE_LIMIT_MS) {
+      // Show the session-expired popup; it stays until the user chooses to sign in again.
+      this.idleExpired.set(true);
+    }
+  }
+
+  /** Called from the popup: ends the session and routes to the login page. */
+  confirmExpire(): void {
+    if (!this.idleExpired()) return;
+    this.idleExpired.set(false);
+    this.expire();
   }
 
   private maybeRefresh(): void {
