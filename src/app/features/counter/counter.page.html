@@ -17,11 +17,16 @@
       <span class="counter-arrow" aria-hidden="true">→</span>
     </button>
     <div class="counter-action-pair" [class.single]="!perm.canView('SALES')">
-      <button class="counter-action expense-action" type="button" data-counter-action="expense" (click)="openExpense()" [disabled]="busy() || !canExpense()">
+      <button *ngIf="!expenseSuccess()" class="counter-action expense-action" type="button" data-counter-action="expense" (click)="openExpense()" [disabled]="busy() || !canExpense()">
         <span class="counter-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3ZM9 7h6M9 11h6M9 15h3" /></svg></span>
         <span><strong>New Expenses</strong><small>Record an expense without leaving the counter.</small></span>
         <span class="counter-arrow" aria-hidden="true">→</span>
       </button>
+      <a *ngIf="expenseSuccess()" class="counter-action expense-action success-state" routerLink="/expenses" role="status">
+        <span class="counter-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg></span>
+        <span><strong>{{ expenseSuccess() }}</strong><small>Tap here to open the expenses page.</small></span>
+        <span class="counter-arrow" aria-hidden="true">→</span>
+      </a>
       <a class="counter-action viewsales-action" [class.success-state]="!!success()" routerLink="/sales" *ngIf="perm.canView('SALES')" role="status">
         <span class="counter-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path *ngIf="success()" d="m5 13 4 4L19 7" /><ng-container *ngIf="!success()"><path d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" /><path d="M12 6v2m0 10v2" /><path d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" /></ng-container></svg></span>
         <span><strong>{{ success() || 'View Sales' }}</strong><small>{{ success() ? 'Tap here to open the sales page.' : 'See all sales, customers and debts.' }}</small></span>
@@ -92,6 +97,9 @@
             <option *ngFor="let c of customers()" [ngValue]="c.id">{{ c.name }}<span *ngIf="c.phone"> · {{ c.phone }}</span></option>
           </select>
         </label>
+        <div class="counter-notice warning" *ngIf="customerDebt() != null && headerForm.controls.customerId.value" role="status">
+          {{ customerName(headerForm.controls.customerId.value) }} · {{ 'customers.debt' | translate }}: {{ customerDebt() | money }}
+        </div>
         <div class="counter-new-customer" *ngIf="!newCustomerOpen()">
           <button type="button" class="counter-link" (click)="newCustomerOpen.set(true)" [disabled]="busy()">{{ 'customers.newInline' | translate }}</button>
         </div>

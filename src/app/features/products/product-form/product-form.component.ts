@@ -77,7 +77,7 @@ export class ProductFormComponent implements OnChanges {
   private readonly fb = inject(FormBuilder);
 
   form = this.fb.group({
-    sku: ['', [Validators.required]],
+    sku: [''],
     barcode: [''],
     name: ['', [Validators.required]],
     brand: [''],
@@ -207,7 +207,7 @@ export class ProductFormComponent implements OnChanges {
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      if (!this.form.controls.sku.valid || !this.form.controls.name.valid) {
+      if (!this.form.controls.name.valid) {
         this.activeTab.set(0);
       }
       return;

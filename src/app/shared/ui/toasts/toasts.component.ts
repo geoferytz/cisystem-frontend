@@ -13,7 +13,7 @@ import { ToastService } from '../../services/toast.service';
         *ngFor="let t of toast.toasts()"
         class="pointer-events-auto flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold shadow-lg ring-1"
         [ngClass]="{
-          'bg-emerald-600 text-white ring-emerald-700/40': t.type === 'success',
+          'bg-[#ffc145] text-slate-900 ring-amber-500/40': t.type === 'success',
           'bg-[#B81104] text-white ring-red-700/40': t.type === 'error',
           'bg-slate-800 text-white ring-slate-900/40': t.type === 'info'
         }"

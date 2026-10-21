@@ -56,6 +56,9 @@ export class CounterPage {
   readonly actionError = signal<string | null>(null);
   readonly expenseError = signal<string | null>(null);
   readonly success = signal<string | null>(null);
+  readonly expenseSuccess = signal<string | null>(null);
+  readonly customerDebt = signal<number | null>(null);
+  private lastDebtCustomerId: number | null = null;
   readonly dirty = signal(false);
   readonly search = signal('');
   readonly category = signal('');
@@ -148,6 +151,10 @@ export class CounterPage {
       if (v.customerId && v.customer !== this.customerName(v.customerId)) {
         this.headerForm.controls.customer.setValue(this.customerName(v.customerId), { emitEvent: false });
       }
+      if (v.customerId !== this.lastDebtCustomerId) {
+        this.lastDebtCustomerId = v.customerId;
+        this.loadCustomerDebt(v.customerId);
+      }
     });
     this.discountControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(v => this.discountAmount.set(Number(v) || 0));
     effect(() => {
@@ -205,6 +212,7 @@ export class CounterPage {
   private startSale(cart: HeldCart | 'new'): void {
     this.actionError.set(null);
     this.success.set(null);
+    this.expenseSuccess.set(null);
     this.search.set('');
     this.category.set('');
     this.visibleLimit.set(36);
@@ -430,7 +438,7 @@ export class CounterPage {
     this.gql.request<{ createExpense: { id: string } }>('mutation CounterCreateExpense($input: CreateExpenseInput!) { createExpense(input: $input) { id } }', {
       input: { ...value, description: value.description.trim() || null }
     }).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.busy.set(false))).subscribe({
-      next: () => { this.expenseOpen.set(false); this.success.set('Expense recorded successfully.'); },
+      next: () => { this.expenseOpen.set(false); this.expenseSuccess.set('Expense recorded successfully.'); },
       error: error => this.expenseError.set(this.message(error, 'Could not record this expense.'))
     });
   }
@@ -456,6 +464,8 @@ export class CounterPage {
     this.location.setValue(cart.lines[0]?.location || this.branchCtx.writeBranch());
     const match = cart.customer ? this.customers().find(c => c.name === cart.customer) : null;
     this.headerForm.reset({ customer: cart.customer || '', customerId: match ? Number(match.id) : null, referenceNumber: cart.referenceNumber || '' }, { emitEvent: false });
+    this.lastDebtCustomerId = match ? Number(match.id) : null;
+    this.loadCustomerDebt(this.lastDebtCustomerId);
     this.paymentMethod.set('CASH');
     this.amountReceived.set(null);
     this.discountControl.setValue(0, { emitEvent: false });
@@ -468,11 +478,24 @@ export class CounterPage {
     this.cartVersion.set(null);
     this.lines.set([]);
     this.headerForm.reset({ customer: '', customerId: null, referenceNumber: '' }, { emitEvent: false });
+    this.lastDebtCustomerId = null;
+    this.customerDebt.set(null);
     this.paymentMethod.set('CASH');
     this.amountReceived.set(null);
     this.discountControl.setValue(0, { emitEvent: false });
     this.discountAmount.set(0);
     this.dirty.set(false);
+  }
+
+  private loadCustomerDebt(customerId: number | null): void {
+    if (customerId == null) { this.customerDebt.set(null); return; }
+    this.gql.request<{ customerDebt: number }>(
+      'query CustomerDebt($customerId: ID!) { customerDebt(customerId: $customerId) }',
+      { customerId: String(customerId) }
+    ).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: r => { if (this.lastDebtCustomerId === customerId) this.customerDebt.set(r.customerDebt > 0 ? r.customerDebt : null); },
+      error: () => this.customerDebt.set(null)
+    });
   }
 
   customerName(id: number | null): string {

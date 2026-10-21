@@ -390,3 +390,30 @@ body:has(.cis-modal-overlay) {
     @apply text-[#B81104] dark:text-red-400;
   }
 }
+
+.cis-back-inline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: .9em;
+  height: .9em;
+  margin-right: .35em;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  vertical-align: -.05em;
+  border-radius: .3em;
+  opacity: .65;
+}
+
+.cis-back-inline:hover {
+  opacity: 1;
+  background: rgb(148 163 184 / .25);
+}
+
+.cis-back-inline svg {
+  width: 100%;
+  height: 100%;
+}

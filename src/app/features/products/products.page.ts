@@ -442,7 +442,7 @@ export class ProductsPage {
     this.error.set(null);
 
     const productInput = {
-      sku: value.sku,
+      sku: value.sku?.trim() || null,
       barcode: value.barcode,
       name: value.name,
       brand: value.brand,

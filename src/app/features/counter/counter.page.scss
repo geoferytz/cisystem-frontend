@@ -25,8 +25,8 @@ small, .counter-hint, .counter-heading p, .counter-section-heading p { font-size
 .counter-panel, .expense-action, .viewsales-action, .counter-overview > div, .counter-product { border: 1px solid var(--cis-border); background: var(--cis-surface); }
 .counter-action-icon { display: grid; place-items: center; flex: 0 0 54px; height: 54px; border-radius: 16px; background: #ffffff24; }
 .expense-action .counter-action-icon, .viewsales-action .counter-action-icon, .counter-product-monogram, .counter-count, .counter-add { background: var(--cis-primary-soft); color: var(--cis-primary-strong); }
-.viewsales-action.success-state { background: linear-gradient(120deg, #2fae74, #166747); border-color: transparent; color: white; }
-.viewsales-action.success-state .counter-action-icon { background: #ffffff24; color: white; }
+.viewsales-action.success-state, .expense-action.success-state { background: linear-gradient(120deg, #ffc145, #f0a21b); border-color: transparent; color: #1e293b; }
+.success-state .counter-action-icon { background: #1e293b14; color: #1e293b; }
 .counter-action-icon svg { width: 30px; height: 30px; }
 .counter-action strong { display: block; font-size: 21px; }
 .counter-action small { display: block; margin-top: 6px; }

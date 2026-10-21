@@ -185,6 +185,7 @@ export class SalesPage {
   });
 
   customers = signal<Array<{ id: number; name: string; phone?: string | null }>>([]);
+  customerDebt = signal<number | null>(null);
   newCustomerOpen = signal(false);
   newCustomerBusy = signal(false);
   newCustomerForm = this.fb.nonNullable.group({ name: ['', [Validators.required, Validators.maxLength(200)]], phone: ['', [Validators.maxLength(40)]] });
@@ -203,6 +204,18 @@ export class SalesPage {
     this.loadProducts();
     this.loadCustomers();
     this.load();
+  }
+
+  loadCustomerDebt(): void {
+    const id = this.headerForm.controls.customerId.value;
+    if (id == null) { this.customerDebt.set(null); return; }
+    this.gql.request<{ customerDebt: number }>(
+      'query CustomerDebt($customerId: ID!) { customerDebt(customerId: $customerId) }',
+      { customerId: String(id) }
+    ).subscribe({
+      next: r => this.customerDebt.set(r.customerDebt > 0 ? r.customerDebt : null),
+      error: () => this.customerDebt.set(null)
+    });
   }
 
   loadCustomers(): void {
@@ -234,6 +247,7 @@ export class SalesPage {
         const c = res.createCustomer;
         this.customers.update((list) => [c, ...list]);
         this.headerForm.controls.customerId.setValue(Number(c.id));
+        this.loadCustomerDebt();
         this.headerForm.controls.customer.setValue(c.name);
         this.newCustomerForm.reset({ name: '', phone: '' });
         this.newCustomerOpen.set(false);
@@ -336,6 +350,11 @@ export class SalesPage {
       });
   }
 
+  openPayFromRow(o: SalesOrder): void {
+    this.toggleDetails(o);
+    this.openPay();
+  }
+
   openPay(): void {
     const o = this.detailsOrder();
     if (!o) return;
@@ -385,6 +404,7 @@ export class SalesPage {
     this.lines.set([]);
     this.productQuery.set('');
     this.newCustomerOpen.set(false);
+    this.customerDebt.set(null);
     this.createOpen.set(true);
   }
 
@@ -399,6 +419,7 @@ export class SalesPage {
       paymentMethod: o.paymentMethod ?? 'CASH',
       amountReceived: o.amountReceived != null ? Number(o.amountReceived) : null
     });
+    this.loadCustomerDebt();
     this.lineForm.reset({ productId: null, quantity: 1, unitPrice: 0, location: this.branchCtx.writeBranch() });
     this.lines.set(
       (o.lines ?? []).map((l) => ({

@@ -72,7 +72,7 @@ type ProductsQueryResult = { products: ProductOption[] };
 
 type PurchaseLineInput = {
   productId: number;
-  batchNumber: string;
+  batchNumber: string | null;
   expiryDate: string;
   costPrice: number;
   quantityReceived: number;
@@ -156,7 +156,7 @@ export class PurchasingPage {
     productId: [null as number | null, [Validators.required]],
     measure: ['', [Validators.required]],
     unitSize: [1 as number | null, [Validators.required, Validators.min(1)]],
-    batchNumber: ['', [Validators.required]],
+    batchNumber: [''],
     expiryDate: ['', [Validators.required]],
     measurePrice: [0 as number, [Validators.required, Validators.min(0)]],
     measureQuantity: [1 as number, [Validators.required, Validators.min(1)]]
@@ -188,10 +188,7 @@ export class PurchasingPage {
       return;
     }
     this.lineForm.controls.measure.enable();
-    const batches = product.batches ?? [];
-    this.lineForm.patchValue({
-      batchNumber: batches.length ? batches[batches.length - 1].batchNumber : `${product.sku}-AUTO`
-    });
+    this.lineForm.patchValue({ batchNumber: '' });
     const first = this.measureOptions()[0];
     if (first) this.applyMeasure(first);
   }
@@ -330,11 +327,7 @@ export class PurchasingPage {
     const unitSize = Number(raw.unitSize ?? 0);
     if (!raw.productId || !unit || unitSize <= 0) return;
 
-    const product = this.selectedProduct();
-    const batches = product?.batches ?? [];
-    const batchNumber =
-      raw.batchNumber?.trim() ||
-      (batches.length ? batches[batches.length - 1].batchNumber : `${product?.sku ?? 'BATCH'}-AUTO`);
+    const batchNumber = raw.batchNumber?.trim() || null;
 
     const measureQty = Number(raw.measureQuantity ?? 0);
     const measurePrice = Number(raw.measurePrice ?? 0);

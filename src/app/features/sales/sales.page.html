@@ -67,10 +67,13 @@
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
       <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
         {{ 'common.customer' | translate }} <small class="text-slate-400">({{ 'customers.walkIn' | translate }} if empty)</small>
-        <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="customerId">
+        <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="customerId" (change)="loadCustomerDebt()">
           <option [ngValue]="null">{{ 'customers.walkIn' | translate }}</option>
           <option *ngFor="let c of customers()" [ngValue]="c.id">{{ c.name }}<span *ngIf="c.phone"> · {{ c.phone }}</span></option>
         </select>
+        <div class="text-xs font-semibold text-amber-600 dark:text-amber-400" *ngIf="customerDebt() != null">
+          {{ 'customers.debt' | translate }}: {{ customerDebt() | money }}
+        </div>
         <button type="button" class="text-left text-xs font-semibold text-pink-600 dark:text-pink-400 hover:underline" (click)="newCustomerOpen.set(!newCustomerOpen())">
           {{ 'customers.newInline' | translate }}
         </button>
@@ -322,6 +325,16 @@
                   </button>
 
                   <button
+                    *ngIf="orderDebt(o) > 0 && o.customerId != null && perm.canEdit('CUSTOMERS')"
+                    class="cis-row-action"
+                    type="button"
+                    (click)="openPayFromRow(o)"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2m0-8v2m0 10v2M20 12a8 8 0 11-16 0 8 8 0 0116 0z" /></svg>
+                    {{ 'customers.addPayment' | translate }}
+                  </button>
+
+                  <button
                     *ngIf="perm.canEdit('SALES')"
                     class="cis-row-action"
                     type="button"
@@ -386,10 +399,6 @@
       <div class="border-t border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-700/50 px-3 py-2 text-xs text-slate-500 dark:text-slate-400">
         {{ 'sales.pendingHelp' | translate }}
       </div>
-    </div>
-
-    <div class="mt-4 text-xs text-slate-500 dark:text-slate-400">
-      Tip: Stock deductions per line are stored in backend and visible in GraphQL response.
     </div>
   </section>
 </div>
@@ -458,7 +467,7 @@
 
 <cis-modal
   [open]="detailsOrder() !== null"
-  [title]="'common.details' | translate"
+  [title]="payOpen() ? ('common.payDebt' | translate) : ('common.details' | translate)"
   maxWidthClass="max-w-2xl"
   (close)="closeDetails()"
 >

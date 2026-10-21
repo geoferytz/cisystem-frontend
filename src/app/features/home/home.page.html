@@ -1,9 +1,10 @@
 <!-- <div class="cis-home-shell"> -->
   <div class="cis-home-header">
-    <!-- <div>
-      <h2 class="dark:text-white">Home</h2>
-      <div *ngIf="me() as u" class="dark:text-slate-400">Logged in as {{ u.name }} ({{ u.email }})</div>
-    </div> -->
+    <div class="cis-home-brand">
+      <span class="cis-home-brand-name">Gyla Cosmetics</span>
+      <span class="cis-home-brand-divider" aria-hidden="true">|</span>
+      <span class="cis-home-brand-tagline">Your Beauty, Our Duty</span>
+    </div>
   </div>
 
   <div class="cis-home-error dark:text-red-400" *ngIf="error()">{{ error() }}</div>

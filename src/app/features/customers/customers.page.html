@@ -103,9 +103,15 @@
             <td class="px-3 py-2 text-right">
               <cis-row-actions>
                 <button class="cis-row-action" type="button" (click)="toggleDetails(c)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
                   {{ 'common.details' | translate }}
                 </button>
+                <button *ngIf="customerStats(c).debt > 0 && perm.canEdit('CUSTOMERS')" class="cis-row-action" type="button" (click)="openPayFromRow(c)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2m0-8v2m0 10v2M20 12a8 8 0 11-16 0 8 8 0 0116 0z" /></svg>
+                  {{ 'customers.addPayment' | translate }}
+                </button>
                 <button *ngIf="perm.canEdit('CUSTOMERS')" class="cis-row-action" type="button" (click)="openEdit(c)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                   {{ 'common.edit' | translate }}
                 </button>
               </cis-row-actions>
@@ -167,7 +173,7 @@
 
 <cis-modal
   [open]="detailsCustomer() !== null"
-  [title]="'customers.recentSales' | translate"
+  [title]="payOpen() ? ('common.payDebt' | translate) : ('customers.recentSales' | translate)"
   maxWidthClass="max-w-2xl"
   (close)="closeDetails()"
 >

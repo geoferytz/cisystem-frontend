@@ -228,6 +228,11 @@ export class CustomersPage {
     this.selectedSale.set(o);
   }
 
+  openPayFromRow(c: Customer): void {
+    this.toggleDetails(c);
+    this.openPay();
+  }
+
   openPay(): void {
     const c = this.detailsCustomer();
     if (!c) return;
