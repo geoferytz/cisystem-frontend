@@ -18,6 +18,7 @@ type AdminUser = {
   branchId?: string | null;
   branchCode?: string | null;
   branchName?: string | null;
+  viewBranches?: string[];
 };
 
 type UsersQueryResult = {
@@ -101,6 +102,7 @@ export class UsersPage {
     { key: 'SALES', label: 'Sales' },
     { key: 'MY_SALES', label: 'My Sales' },
     { key: 'CUSTOMERS', label: 'Customers' },
+    { key: 'RETURNS', label: 'Returns' },
     { key: 'PURCHASING', label: 'Purchasing' },
     { key: 'EXPENSES', label: 'Expenses' },
     { key: 'EXPENSE_CATEGORIES', label: 'Expense Categories' },
@@ -130,6 +132,21 @@ export class UsersPage {
     branchId: [null as string | null]
   });
 
+  /** Extra branches the user may view read-only (excludes their home branch). */
+  viewBranchesSel = signal<Set<string>>(new Set());
+
+  toggleViewBranch(code: string): void {
+    const next = new Set(this.viewBranchesSel());
+    if (next.has(code)) next.delete(code); else next.add(code);
+    this.viewBranchesSel.set(next);
+  }
+
+  /** Branch options minus the chosen home branch — home already grants full access. */
+  viewBranchOptions(formBranchId: string | null | undefined) {
+    const home = this.branchCtx.options().find(b => b.id === formBranchId)?.code;
+    return this.branchCtx.options().filter(b => b.code !== home);
+  }
+
   constructor(private readonly gql: GraphqlService) {
     this.perm.load();
     this.load();
@@ -138,6 +155,7 @@ export class UsersPage {
   openCreate(): void {
     this.success.set(null);
     this.error.set(null);
+    this.viewBranchesSel.set(new Set());
     this.createOpen.set(true);
   }
 
@@ -264,7 +282,7 @@ export class UsersPage {
     this.error.set(null);
     this.success.set(null);
 
-    const qUsers = `query { users { id name email plainPassword active roles branchId branchCode branchName } }`;
+    const qUsers = `query { users { id name email plainPassword active roles branchId branchCode branchName viewBranches } }`;
     const qRoles = `query { roles }`;
 
     this.gql.request<UsersQueryResult>(qUsers).subscribe({
@@ -294,7 +312,7 @@ export class UsersPage {
     const role = String(raw.role || '').trim();
     const roles = role ? [role] : [];
 
-    const mutation = `mutation CreateUser($input: CreateUserInput!) { createUser(input: $input) { id name email plainPassword active roles branchId branchCode branchName } }`;
+    const mutation = `mutation CreateUser($input: CreateUserInput!) { createUser(input: $input) { id name email plainPassword active roles branchId branchCode branchName viewBranches } }`;
 
     this.gql
       .request<CreateUserResult>(mutation, {
@@ -303,7 +321,8 @@ export class UsersPage {
           email: raw.email,
           password: raw.password,
           roles,
-          branchId: raw.branchId || null
+          branchId: raw.branchId || null,
+          viewBranches: [...this.viewBranchesSel()]
         }
       })
       .subscribe({
@@ -328,6 +347,7 @@ export class UsersPage {
       role: user.roles[0] ?? 'STOREKEEPER',
       branchId: user.branchId ?? null
     });
+    this.viewBranchesSel.set(new Set(user.viewBranches ?? []));
     this.error.set(null);
     this.success.set(null);
     this.editOpen.set(true);
@@ -350,7 +370,7 @@ export class UsersPage {
     const roles = role ? [role] : [];
     const password = (raw.password || '').trim();
 
-    const mutation = `mutation UpdateUser($input: UpdateUserInput!) { updateUser(input: $input) { id name email plainPassword active roles branchId branchCode branchName } }`;
+    const mutation = `mutation UpdateUser($input: UpdateUserInput!) { updateUser(input: $input) { id name email plainPassword active roles branchId branchCode branchName viewBranches } }`;
 
     this.gql
       .request<UpdateUserResult>(mutation, {
@@ -360,7 +380,8 @@ export class UsersPage {
           email: raw.email,
           password: password || null,
           roles,
-          branchId: raw.branchId || null
+          branchId: raw.branchId || null,
+          viewBranches: [...this.viewBranchesSel()]
         }
       })
       .subscribe({

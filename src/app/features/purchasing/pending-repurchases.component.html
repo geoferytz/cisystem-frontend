@@ -26,11 +26,12 @@
 
 <cis-modal [open]="!!receiptOrder()" title="Receive repurchase order" maxWidthClass="max-w-3xl" (close)="!busy() && receiptOrder.set(null)">
   <div class="rp-receipt">
-    <p>Confirm the full delivery below. This will add stock to MAIN and apply the order's price changes. Use a new batch code for each product and enter its actual expiry date.</p>
+    <p>Confirm the delivery below. Stock will be added to <b>{{ receiptOrder()?.branch || 'MAIN' }}</b>. Adjust quantities if needed and enter each product's expiry date — leave batch empty for an auto-generated code.</p>
     <article class="rp-cart-line" *ngFor="let line of receiptLines">
-      <strong>{{ line.productName }}</strong><p>{{ line.quantity }} pcs · Buying {{ line.buyingPrice | money }} · Selling {{ line.sellingPrice | money }}</p>
+      <strong>{{ line.productName }}</strong><p>Buying {{ line.buyingPrice | money }} · Selling {{ line.sellingPrice | money }}</p>
       <div class="rp-prices">
-        <label>Batch code<input [(ngModel)]="line.batchNumber" maxlength="80" [disabled]="busy()" /></label>
+        <label>Qty<input type="number" min="1" [(ngModel)]="line.qty" [disabled]="busy()" /></label>
+        <label>Batch code <small>(auto if empty)</small><input [(ngModel)]="line.batchNumber" maxlength="80" [disabled]="busy()" /></label>
         <label>Expiry date<input type="date" [(ngModel)]="line.expiryDate" [disabled]="busy()" /></label>
       </div>
     </article>

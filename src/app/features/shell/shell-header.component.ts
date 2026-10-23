@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, signal, inject } from '@angular/core';
+import { Component, computed, EventEmitter, Input, Output, signal, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ThemeService } from '../../core/theme/theme.service';
 import { BranchContext } from '../../shared/services/branch-context.service';
@@ -52,6 +52,14 @@ export class ShellHeaderComponent {
   availableLangs = this.translationService.availableLangs;
   isDark = this.themeService.isDark;
   isFullscreen = signal(false);
+
+  /** Branches shown in the switcher: all for admins, home + view-only for locked users. */
+  menuBranches = computed(() => {
+    const opts = this.branchCtx.options();
+    if (!this.branchCtx.locked()) return opts;
+    const order = this.branchCtx.allowedCodes();
+    return order.map(code => opts.find(o => o.code === code)).filter((o): o is NonNullable<typeof o> => !!o);
+  });
 
   onToggleBranchMenu(): void {
     this.toggleBranchMenu.emit();

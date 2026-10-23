@@ -24,6 +24,7 @@ type HomeCard = {
     | 'stockMovements'
     | 'transfers'
     | 'customers'
+    | 'returns'
     | 'purchasing'
     | 'sales'
     | 'mySales'
@@ -86,7 +87,7 @@ export class HomePage {
         title: this.translation.translate('nav.products'),
         icon: 'products',
         description: this.translation.translate('home.products.description'),
-        route: '/product-dashboard',
+        route: '/products',
         hidden: !this.canView('PRODUCTS')
       },
       {
@@ -137,6 +138,13 @@ export class HomePage {
         description: this.translation.translate('home.customers.description'),
         route: '/customers',
         hidden: !this.canView('CUSTOMERS')
+      },
+      {
+        title: this.translation.translate('nav.returns'),
+        icon: 'returns',
+        description: this.translation.translate('home.returns.description'),
+        route: '/returns',
+        hidden: !(this.canView('RETURNS') || this.canView('SALES'))
       },
       {
         title: this.translation.translate('nav.expiryAlerts'),

@@ -5,11 +5,11 @@
 @defer (on immediate) {
   <cis-pending-repurchases
     class="mt-4"
-    kind="activation"
+    kind="all"
     [hideWhenEmpty]="true"
     title="Pending receiving"
-    subtitle="New products waiting for stock. Receive to add them to MAIN and activate for sale."
-    emptyText="No new products waiting to be received."
+    subtitle="Products waiting for stock. Receive to add them to their branch and make them sellable."
+    emptyText="No pending orders waiting to be received."
     (received)="load()"
   ></cis-pending-repurchases>
 }

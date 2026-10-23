@@ -15,6 +15,7 @@ type MeBranch = {
   branchId?: string | null;
   branchCode?: string | null;
   branchName?: string | null;
+  viewBranches?: string[] | null;
 } | null;
 
 const STORAGE_KEY = 'cisystem.branch';
@@ -41,15 +42,36 @@ export class BranchContext {
 
   readonly locked = computed(() => this.lockedCode() != null);
 
-  /** Effective branch for views: locked branch, selected branch, or null (all). */
-  readonly effective = computed(() => this.lockedCode() ?? this.selected());
+  /** Extra branches a locked user may browse read-only. */
+  readonly viewBranches = computed(() => this.me()?.viewBranches ?? []);
 
-  /** Branch to tag new writes with: effective branch or MAIN for unrestricted "all". */
-  readonly writeBranch = computed(() => this.effective() ?? 'MAIN');
+  /** Branches a locked user is allowed to see: home branch + view-only branches. */
+  readonly allowedCodes = computed<string[]>(() => {
+    const home = this.lockedCode();
+    if (!home) return this.options().map(b => b.code);
+    return [home, ...this.viewBranches().filter(c => c !== home)];
+  });
+
+  /** Effective branch for views: locked users see selected view-branch or home; admins see selected; null = all. */
+  readonly effective = computed(() => {
+    const locked = this.lockedCode();
+    if (!locked) return this.selected();
+    const sel = this.selected();
+    return sel && this.viewBranches().includes(sel) ? sel : locked;
+  });
+
+  /** True when a locked user is browsing a view-only branch (no writes allowed). */
+  readonly viewOnly = computed(() => {
+    const locked = this.lockedCode();
+    return locked != null && this.effective() !== locked;
+  });
+
+  /** Branch to tag new writes with: locked users always write to their home branch, even when browsing a view-only branch. */
+  readonly writeBranch = computed(() => this.lockedCode() ?? this.selected() ?? 'MAIN');
 
   load(): void {
     if (!this.auth.isAuthenticated()) return;
-    const q = `query BranchCtx { me { roles branchId branchCode branchName } branchOptions { id code name active main } }`;
+    const q = `query BranchCtx { me { roles branchId branchCode branchName viewBranches } branchOptions { id code name active main } }`;
     this.gql.request<{ me: MeBranch; branchOptions: BranchOption[] }>(q).subscribe({
       next: (res) => {
         this.me.set(res.me ?? null);

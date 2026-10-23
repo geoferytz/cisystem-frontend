@@ -1,0 +1,151 @@
+<div class="mb-4">
+  <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">{{ 'returns.pageTitle' | translate }}</h2>
+  <p class="text-xs text-slate-500 dark:text-slate-400">{{ 'returns.subtitle' | translate }}</p>
+</div>
+
+<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 cis-stat-grid">
+  <div class="rounded-xl bg-white dark:bg-slate-800 p-4 ring-1 ring-slate-100 dark:ring-slate-700">
+    <div class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'returns.stat.total' | translate }}</div>
+    <div class="mt-2 text-2xl font-extrabold text-slate-900 dark:text-slate-100">{{ statTotal() }}</div>
+  </div>
+  <div class="rounded-xl bg-white dark:bg-slate-800 p-4 ring-1 ring-slate-100 dark:ring-slate-700">
+    <div class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'returns.stat.value' | translate }}</div>
+    <div class="mt-2 text-2xl font-extrabold text-slate-900 dark:text-slate-100">{{ statValue() | money }}</div>
+  </div>
+  <div class="rounded-xl bg-white dark:bg-slate-800 p-4 ring-1 ring-slate-100 dark:ring-slate-700" data-tone="red">
+    <div class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'returns.stat.loss' | translate }}</div>
+    <div class="mt-2 text-2xl font-extrabold text-red-600 dark:text-red-400">{{ statLoss() | money }}</div>
+  </div>
+  <div class="rounded-xl bg-white dark:bg-slate-800 p-4 ring-1 ring-slate-100 dark:ring-slate-700">
+    <div class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'returns.stat.exchanges' | translate }}</div>
+    <div class="mt-2 text-2xl font-extrabold text-slate-900 dark:text-slate-100">{{ statExchanges() }}</div>
+  </div>
+</div>
+
+<div class="mt-4 rounded-xl bg-white dark:bg-slate-800 p-4 ring-1 ring-slate-100 dark:ring-slate-700">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <div class="flex gap-1 rounded-xl bg-slate-100 dark:bg-slate-700 p-1">
+      <button *ngFor="let t of ['all', 'return', 'exchange']" type="button" class="rounded-lg px-3 py-1.5 text-xs font-semibold"
+        [ngClass]="typeFilter() === t ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-slate-100 shadow' : 'text-slate-500 dark:text-slate-400'"
+        (click)="setType($any(t))">{{ (t === 'all' ? 'customers.tabAll' : t === 'return' ? 'returns.tabReturn' : 'returns.tabExchange') | translate }}</button>
+    </div>
+    <div class="flex flex-wrap items-center gap-3">
+      <div class="flex gap-1 rounded-xl bg-slate-100 dark:bg-slate-700 p-1">
+        <button *ngFor="let p of ['week', 'month', 'year', 'all']" type="button" class="rounded-lg px-2.5 py-1.5 text-[11px] font-semibold"
+          [ngClass]="period() === p ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-slate-100 shadow' : 'text-slate-500 dark:text-slate-400'"
+          (click)="setPeriod($any(p))">{{ ('customers.period.' + p) | translate }}</button>
+      </div>
+      <input class="w-56 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="text"
+        [ngModel]="query()" (ngModelChange)="setQuery($event)" placeholder="{{ 'common.search' | translate }}" />
+      <button type="button" class="rounded-xl bg-slate-100 dark:bg-slate-700 px-3 py-2 text-xs font-semibold text-slate-800 dark:text-slate-200" (click)="load()" [disabled]="loading()">{{ 'common.refresh' | translate }}</button>
+    </div>
+  </div>
+
+  <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+    <table class="w-full border-collapse text-sm">
+      <thead class="bg-slate-50 dark:bg-slate-700">
+        <tr>
+          <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.reference' | translate }}</th>
+          <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'customers.date' | translate }}</th>
+          <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'returns.type' | translate }}</th>
+          <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.customer' | translate }}</th>
+          <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'returns.original' | translate }}</th>
+          <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'returns.returnValue' | translate }}</th>
+          <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'returns.refund' | translate }}</th>
+          <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'returns.loss' | translate }}</th>
+          <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.actions' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of paged()" class="border-t border-slate-100 dark:border-slate-700">
+          <td class="px-3 py-2 font-semibold text-slate-900 dark:text-slate-100">{{ r.reference }}</td>
+          <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ r.returnedAt | date:'short' }}</td>
+          <td class="px-3 py-2">
+            <span class="inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold"
+              [ngClass]="r.isExchange ? 'bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300' : 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200'">
+              {{ (r.isExchange ? 'returns.tabExchange' : 'returns.tabReturn') | translate }}
+            </span>
+          </td>
+          <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ r.customer || '-' }}</td>
+          <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ r.originalReference || '#' + r.originalSalesOrderId }}</td>
+          <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ r.returnValue | money }}</td>
+          <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">
+            <ng-container *ngIf="r.isExchange; else refundCell">
+              <span [ngClass]="r.settlementAmount > 0 ? 'text-red-600 dark:text-red-400' : r.settlementAmount < 0 ? 'text-emerald-600 dark:text-emerald-400' : ''">{{ r.settlementAmount > 0 ? '+' : '' }}{{ r.settlementAmount | money }}</span>
+            </ng-container>
+            <ng-template #refundCell>{{ r.refundAmount | money }}<span *ngIf="r.debtCreditAmount > 0" class="block text-[11px] text-amber-600 dark:text-amber-400">{{ 'returns.debtCredit' | translate }}: {{ r.debtCreditAmount | money }}</span></ng-template>
+          </td>
+          <td class="px-3 py-2 text-right font-semibold" [ngClass]="r.lossAmount > 0 ? 'text-red-600 dark:text-red-400' : 'text-slate-400'">{{ r.lossAmount > 0 ? (r.lossAmount | money) : '-' }}</td>
+          <td class="px-3 py-2 text-right">
+            <cis-row-actions>
+              <button class="cis-row-action" type="button" (click)="details.set(r)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                {{ 'common.details' | translate }}
+              </button>
+            </cis-row-actions>
+          </td>
+        </tr>
+        <tr *ngIf="!filtered().length && !loading()" class="border-t border-slate-100 dark:border-slate-700">
+          <td class="px-3 py-6 text-center text-sm text-slate-600 dark:text-slate-400" colspan="9">{{ 'returns.empty' | translate }}</td>
+        </tr>
+        <tr *ngIf="loading()" class="border-t border-slate-100 dark:border-slate-700">
+          <td class="px-3 py-6 text-center text-sm text-slate-600 dark:text-slate-400" colspan="9">{{ 'common.loading' | translate }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <cis-pager class="mt-3 block" [total]="filtered().length" [(pageSize)]="pageSize" [(pageIndex)]="pageIndex" />
+  <div class="mt-3 text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">{{ error() }}</div>
+</div>
+
+<cis-modal [open]="details() !== null" [title]="details()?.reference ?? ''" maxWidthClass="max-w-2xl" (close)="details.set(null)">
+  <ng-container *ngIf="details() as r">
+    <div class="grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-slate-600 dark:text-slate-400">
+      <div><span class="font-semibold">{{ 'returns.type' | translate }}:</span> {{ (r.isExchange ? 'returns.tabExchange' : 'returns.tabReturn') | translate }}</div>
+      <div><span class="font-semibold">{{ 'customers.date' | translate }}:</span> {{ r.returnedAt | date:'medium' }}</div>
+      <div><span class="font-semibold">{{ 'common.customer' | translate }}:</span> {{ r.customer || '-' }}</div>
+      <div><span class="font-semibold">{{ 'common.seller' | translate }}:</span> {{ r.returnedBy || '-' }}</div>
+      <div><span class="font-semibold">{{ 'returns.original' | translate }}:</span> {{ r.originalReference || '#' + r.originalSalesOrderId }}</div>
+      <div *ngIf="r.exchangeReference"><span class="font-semibold">{{ 'returns.exchangeSale' | translate }}:</span> {{ r.exchangeReference }}</div>
+      <div *ngIf="r.reason" class="col-span-2"><span class="font-semibold">{{ 'returns.reason' | translate }}:</span> {{ r.reason }}</div>
+    </div>
+
+    <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+      <table class="w-full border-collapse text-xs">
+        <thead class="bg-slate-50 dark:bg-slate-700">
+          <tr>
+            <th class="px-3 py-2 text-left font-semibold text-slate-600 dark:text-slate-300">{{ 'common.product' | translate }}</th>
+            <th class="px-3 py-2 text-left font-semibold text-slate-600 dark:text-slate-300">Batch</th>
+            <th class="px-3 py-2 text-right font-semibold text-slate-600 dark:text-slate-300">{{ 'common.quantity' | translate }}</th>
+            <th class="px-3 py-2 text-right font-semibold text-slate-600 dark:text-slate-300">{{ 'common.price' | translate }}</th>
+            <th class="px-3 py-2 text-left font-semibold text-slate-600 dark:text-slate-300">{{ 'returns.condition' | translate }}</th>
+            <th class="px-3 py-2 text-right font-semibold text-slate-600 dark:text-slate-300">{{ 'returns.loss' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let l of r.lines" class="border-t border-slate-100 dark:border-slate-700">
+            <td class="px-3 py-2"><div class="font-semibold text-slate-900 dark:text-slate-100">{{ l.productName }}</div><div class="text-[11px] text-slate-500">{{ l.sku }}</div></td>
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ l.batchNumber || '-' }}</td>
+            <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ l.quantity }}</td>
+            <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ l.unitPrice | money }}</td>
+            <td class="px-3 py-2"><span class="inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold" [ngClass]="l.condition === 'RESALABLE' ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300' : 'bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-300'">{{ ('returns.cond.' + l.condition) | translate }}</span></td>
+            <td class="px-3 py-2 text-right" [ngClass]="l.lossAmount > 0 ? 'font-semibold text-red-600 dark:text-red-400' : 'text-slate-400'">{{ l.lossAmount > 0 ? (l.lossAmount | money) : '-' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-3 grid gap-1 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm dark:border-slate-600 dark:bg-slate-700/50">
+      <div class="flex justify-between"><span class="text-slate-600 dark:text-slate-400">{{ 'returns.returnValue' | translate }}</span><span class="font-semibold text-slate-900 dark:text-slate-100">{{ r.returnValue | money }}</span></div>
+      <div class="flex justify-between" *ngIf="r.lossAmount > 0"><span class="text-slate-600 dark:text-slate-400">{{ 'returns.loss' | translate }}</span><span class="font-semibold text-red-600 dark:text-red-400">{{ r.lossAmount | money }}</span></div>
+      <div class="flex justify-between" *ngIf="r.debtCreditAmount > 0"><span class="text-slate-600 dark:text-slate-400">{{ 'returns.debtCredit' | translate }}</span><span class="font-semibold text-amber-600 dark:text-amber-400">{{ r.debtCreditAmount | money }}</span></div>
+      <div class="flex justify-between" *ngIf="r.refundAmount > 0"><span class="text-slate-600 dark:text-slate-400">{{ 'returns.refund' | translate }} ({{ r.refundMethod }})</span><span class="font-semibold text-slate-900 dark:text-slate-100">{{ r.refundAmount | money }}</span></div>
+      <div class="flex justify-between" *ngIf="r.isExchange"><span class="text-slate-600 dark:text-slate-400">{{ 'returns.settlement' | translate }}</span>
+        <span class="font-bold" [ngClass]="r.settlementAmount > 0 ? 'text-red-600 dark:text-red-400' : r.settlementAmount < 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-900 dark:text-slate-100'">
+          {{ (r.settlementAmount > 0 ? 'returns.customerPays' : r.settlementAmount < 0 ? 'returns.shopRefunds' : 'returns.evenExchange') | translate }} {{ (r.settlementAmount < 0 ? -r.settlementAmount : r.settlementAmount) | money }}
+        </span>
+      </div>
+    </div>
+  </ng-container>
+</cis-modal>

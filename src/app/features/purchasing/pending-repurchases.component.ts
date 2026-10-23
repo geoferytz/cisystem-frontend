@@ -69,8 +69,9 @@ export class PendingRepurchasesComponent {
   openReceipt(order: RepurchaseOrder): void {
     this.error.set(null);
     this.receiptLines = order.lines.map(l => ({ ...l,
-      batchNumber: l.batchNumber?.trim() || `RP-${order.id.slice(0, 8)}-${l.productId}`,
-      expiryDate: l.expiryDate ?? '' }));
+      batchNumber: l.batchNumber?.trim() || '',
+      expiryDate: l.expiryDate ?? '',
+      qty: l.quantity }));
     this.receiptOrder.set(order);
   }
 
@@ -79,17 +80,17 @@ export class PendingRepurchasesComponent {
     if (!order || this.busy() || !this.perm.canCreate('PURCHASING')) return;
     const now = new Date();
     const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-    if (this.receiptLines.some(l => !l.batchNumber.trim() || l.batchNumber.trim().length > 80 || !/^\d{4}-\d{2}-\d{2}$/.test(l.expiryDate) || l.expiryDate < today)) {
-      this.error.set('Enter a batch code and a non-expired expiry date for every product.');
+    if (this.receiptLines.some(l => (l.batchNumber ?? '').trim().length > 80 || !/^\d{4}-\d{2}-\d{2}$/.test(l.expiryDate) || l.expiryDate < today || !(l.qty > 0))) {
+      this.error.set('Enter a quantity and a non-expired expiry date for every product.');
       return;
     }
     this.busy.set(true); this.error.set(null);
     this.gql.request<{ receiveRepurchase: RepurchaseOrder }>(`mutation ReceiveRepurchase($input: ReceiveRepurchaseOrderInput!) {
       receiveRepurchase(input: $input) { ${orderFields} }
-    }`, { input: { id: order.id, lines: this.receiptLines.map(({ productId, batchNumber, expiryDate }) => ({ productId, batchNumber, expiryDate })) } }).subscribe({
+    }`, { input: { id: order.id, lines: this.receiptLines.map(({ productId, batchNumber, expiryDate, qty }) => ({ productId, batchNumber: (batchNumber ?? '').trim() || null, expiryDate, quantity: Math.round(qty) })) } }).subscribe({
       next: () => {
         this.busy.set(false); this.receiptOrder.set(null);
-        this.notice.set('Purchase received. Inventory at MAIN and approved price changes have been updated.');
+        this.notice.set(`Purchase received. Inventory at ${order.branch || 'MAIN'} and approved price changes have been updated.`);
         this.refresh(); this.received.emit();
       },
       error: e => { this.busy.set(false); this.error.set(e instanceof Error ? e.message : 'Could not receive order. You can safely retry.'); }

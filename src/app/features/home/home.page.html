@@ -77,6 +77,17 @@
           </svg>
 
           <svg
+            *ngIf="c.icon === 'returns'"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            class="h-40 w-40 dark:text-pink-500/15"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 14 4 9l5-5" /><path stroke-linecap="round" stroke-linejoin="round" d="M4 9h11a5 5 0 0 1 0 10h-3" />
+          </svg>
+
+          <svg
             *ngIf="c.icon === 'purchasing'"
             viewBox="0 0 24 24"
             fill="none"
@@ -238,6 +249,17 @@
                   class="h-6 w-6"
                 >
                   <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-3-3h-1m-4 5v-2a3 3 0 00-3-3H7a3 3 0 00-3 3v2h10zm-7-9a3.5 3.5 0 110-7 3.5 3.5 0 010 7z" />
+                </svg>
+
+                <svg
+                  *ngIf="c.icon === 'returns'"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  class="h-6 w-6"
+                >
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 14 4 9l5-5" /><path stroke-linecap="round" stroke-linejoin="round" d="M4 9h11a5 5 0 0 1 0 10h-3" />
                 </svg>
 
                 <svg

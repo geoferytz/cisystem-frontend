@@ -22,6 +22,6 @@ export class PendingReceivingService {
   }
 
   sync(orders: PendingOrder[] | null | undefined): void {
-    this.count.set((orders ?? []).filter(o => o.activation).length);
+    this.count.set((orders ?? []).length);
   }
 }

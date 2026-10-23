@@ -13,9 +13,10 @@ export type RepurchaseLine = {
 export type RepurchaseOrder = {
   id: string; supplier: string | null; invoiceNumber: string | null; createdAt: string;
   createdBy: string | null; activation: boolean; receivedPurchaseId: string | null;
+  branch: string | null;
   lines: RepurchaseLine[];
 };
 
-export type ReceiptLine = RepurchaseLine & { batchNumber: string; expiryDate: string };
+export type ReceiptLine = RepurchaseLine & { batchNumber: string; expiryDate: string; qty: number };
 
-export const orderFields = 'id supplier invoiceNumber createdAt createdBy activation receivedPurchaseId lines { productId sku productName quantity buyingPrice sellingPrice batchNumber expiryDate location }';
+export const orderFields = 'id supplier invoiceNumber createdAt createdBy activation receivedPurchaseId branch lines { productId sku productName quantity buyingPrice sellingPrice batchNumber expiryDate location }';

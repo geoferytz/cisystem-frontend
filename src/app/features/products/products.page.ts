@@ -9,6 +9,7 @@ import { RowActionsMenuComponent } from '../../shared/ui/row-actions-menu/row-ac
 import { PermissionService } from '../../shared/services/permission.service';
 import { PendingReceivingService } from '../../shared/services/pending-receiving.service';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { TranslationService } from '../../core/i18n/translation.service';
 
 type Product = {
   id: string;
@@ -76,6 +77,7 @@ type UpdateBatchNumberMutationResult = {
 })
 export class ProductsPage {
   readonly perm = inject(PermissionService);
+  private readonly i18n = inject(TranslationService);
 
   loading = signal(false);
   error = signal<string | null>(null);
@@ -114,8 +116,21 @@ export class ProductsPage {
 
   createDialogOpen = signal(false);
 
+  // Register existing products into the selected branch
+  registerOpen = signal(false);
+  registerCandidates = signal<Product[]>([]);
+  registerSelected = signal<Set<string>>(new Set());
+  registerQty = signal<Record<string, number>>({});
+  registerSearch = signal('');
+  registerSaving = signal(false);
+  filteredRegisterCandidates = computed(() => {
+    const q = this.registerSearch().trim().toLowerCase();
+    return this.registerCandidates().filter(p =>
+      !q || [p.name, p.sku, p.barcode, p.brand, p.category].some(v => v?.toLowerCase().includes(q)));
+  });
+
   private readonly fb = inject(FormBuilder);
-  private readonly branchCtx = inject(BranchContext);
+  readonly branchCtx = inject(BranchContext);
   private readonly pendingReceiving = inject(PendingReceivingService);
 
   editForm = this.fb.group({
@@ -182,7 +197,8 @@ export class ProductsPage {
     const variables = {
       filter: {
         query: q || null,
-        active: status === 'all' ? null : status === 'active'
+        active: status === 'all' ? null : status === 'active',
+        branch: this.branchCtx.effective()
       }
     };
 
@@ -437,6 +453,107 @@ export class ProductsPage {
     this.error.set(null);
   }
 
+  // ---- Register existing products into the selected branch ----
+
+  openRegister(): void {
+    const branch = this.branchCtx.effective();
+    if (!branch) return;
+    this.registerOpen.set(true);
+    this.registerSelected.set(new Set());
+    this.registerSearch.set('');
+    // All products (unfiltered) minus the ones already in this branch = suggestions.
+    this.gql.request<ProductsQueryResult>(`query ProductsAll($filter: ProductFilter) {
+      products(filter: $filter) { id sku barcode name brand category active buyingPrice sellingPrice }
+    }`, { filter: { query: null, active: true, branch: null } }).subscribe({
+      next: (res) => {
+        const inBranch = new Set(this.products().map(p => String(p.id)));
+        this.registerCandidates.set((res.products ?? []).filter(p => !inBranch.has(String(p.id))));
+      },
+      error: () => this.registerCandidates.set([])
+    });
+  }
+
+  toggleRegister(id: string): void {
+    const next = new Set(this.registerSelected());
+    if (next.has(id)) next.delete(id); else next.add(id);
+    this.registerSelected.set(next);
+    if (next.has(id) && this.registerQty()[id] == null) {
+      this.registerQty.set({ ...this.registerQty(), [id]: 1 });
+    }
+  }
+
+  setRegisterQty(id: string, raw: string): void {
+    this.registerQty.set({ ...this.registerQty(), [id]: Number(raw) || 0 });
+  }
+
+  /** Registration lines valid for a receiving order: selected with qty > 0. */
+  private registerLines(branch: string) {
+    return [...this.registerSelected()]
+      .map(id => {
+        const p = this.registerCandidates().find(c => String(c.id) === String(id));
+        const quantity = Number(this.registerQty()[id] ?? 0);
+        return p && Number.isFinite(quantity) && quantity > 0
+          ? { productId: Number(id), quantity, buyingPrice: Number(p.buyingPrice ?? 0), sellingPrice: Number(p.sellingPrice ?? 0), location: branch }
+          : null;
+      })
+      .filter((l): l is NonNullable<typeof l> => l != null);
+  }
+
+  submitRegister(): void {
+    const branch = this.branchCtx.effective();
+    const ids = [...this.registerSelected()].map(Number).filter(Number.isFinite);
+    const lines = this.registerLines(branch ?? '');
+    if (!branch || !ids.length || this.registerSaving()) return;
+    this.registerSaving.set(true);
+    this.gql.request<{ registerProductsToBranch: number }>(`mutation RegisterToBranch($input: RegisterProductsToBranchInput!) {
+      registerProductsToBranch(input: $input)
+    }`, { input: { branch, productIds: ids } }).subscribe({
+      next: (res) => {
+        if (!lines.length) {
+          this.registerSaving.set(false);
+          this.registerOpen.set(false);
+          this.toastMessage.set(this.i18n.currentLang() === 'sw'
+            ? `Bidhaa ${res.registerProductsToBranch} zimesajiliwa kwenye branch ${branch}`
+            : `${res.registerProductsToBranch} product(s) registered to branch ${branch}`);
+          this.toastVariant.set('success');
+          this.load();
+          return;
+        }
+        // Queue a pending receiving so Inventory page can stock them into this branch.
+        this.gql.request<{ submitRepurchase: { id: string } }>(`mutation QueueReceiving($input: SubmitRepurchaseInput!) {
+          submitRepurchase(input: $input) { id }
+        }`, {
+          input: { id: crypto.randomUUID(), activation: false, branch, lines }
+        }).subscribe({
+          next: () => {
+            this.registerSaving.set(false);
+            this.registerOpen.set(false);
+            this.toastMessage.set(this.i18n.currentLang() === 'sw'
+              ? `Bidhaa ${res.registerProductsToBranch} zimesajiliwa — angalia receiving kwenye Inventory`
+              : `${res.registerProductsToBranch} product(s) registered — see pending receiving in Inventory`);
+            this.toastVariant.set('success');
+            this.pendingReceiving.refresh();
+            this.load();
+          },
+          error: () => {
+            this.registerSaving.set(false);
+            this.registerOpen.set(false);
+            this.toastMessage.set(this.i18n.currentLang() === 'sw'
+              ? 'Zimesajiliwa ila receiving haijafanikiwa — jaribu tena kwenye Purchasing'
+              : 'Registered, but the receiving order could not be queued — retry via Purchasing');
+            this.toastVariant.set('error');
+            this.load();
+          }
+        });
+      },
+      error: () => {
+        this.registerSaving.set(false);
+        this.toastMessage.set(this.i18n.currentLang() === 'sw' ? 'Imeshindwa kusajili bidhaa' : 'Could not register products to branch');
+        this.toastVariant.set('error');
+      }
+    });
+  }
+
   create(value: ProductFormValue): void {
     this.loading.set(true);
     this.error.set(null);
@@ -458,11 +575,28 @@ export class ProductsPage {
     const mutation = `mutation Create($input: CreateProductInput!) { createProduct(input: $input) { id sku } }`;
 
     this.gql.request<CreateProductMutationResult>(mutation, { input: productInput }).subscribe({
-      next: (res) => this.queueForReceiving(res.createProduct.id, value),
+      next: (res) => this.registerThenReceive(res.createProduct.id, value),
       error: (e: unknown) => {
         this.error.set(e instanceof Error ? e.message : 'Failed to create');
         this.loading.set(false);
       }
+    });
+  }
+
+  /** Register the new product to its chosen branch(es) first so it shows there immediately. */
+  private registerThenReceive(productId: string, value: ProductFormValue): void {
+    const branch = (value.location ?? '').trim() || this.branchCtx.writeBranch();
+    const branches = [...new Set([branch, ...(value.alsoRegisterMain && branch !== 'MAIN' ? ['MAIN'] : [])])];
+    this.registerAllBranches(productId, branches, 0, () => this.queueForReceiving(productId, value));
+  }
+
+  private registerAllBranches(productId: string, branches: string[], i: number, done: () => void): void {
+    if (i >= branches.length) { done(); return; }
+    this.gql.request<{ registerProductsToBranch: number }>(`mutation RegisterToBranch($input: RegisterProductsToBranchInput!) {
+      registerProductsToBranch(input: $input)
+    }`, { input: { branch: branches[i], productIds: [Number(productId)] } }).subscribe({
+      next: () => this.registerAllBranches(productId, branches, i + 1, done),
+      error: () => this.registerAllBranches(productId, branches, i + 1, done)
     });
   }
 

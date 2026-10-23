@@ -124,6 +124,17 @@
           </select>
         </label>
 
+        <div *ngIf="form.value.branchId" class="grid gap-1.5">
+          <div class="text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'users.viewBranches' | translate }}</div>
+          <div class="text-[11px] text-slate-500 dark:text-slate-400">{{ 'users.viewBranchesHelp' | translate }}</div>
+          <div class="flex flex-wrap gap-2">
+            <label *ngFor="let b of viewBranchOptions(form.value.branchId)" class="flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" [class.bg-pink-50]="viewBranchesSel().has(b.code)" [class.border-pink-300]="viewBranchesSel().has(b.code)">
+              <input type="checkbox" class="h-3.5 w-3.5 accent-pink-500" [checked]="viewBranchesSel().has(b.code)" (change)="toggleViewBranch(b.code)" />
+              {{ b.code }}
+            </label>
+          </div>
+        </div>
+
         <div class="text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">{{ error() }}</div>
         <div class="text-sm text-pink-500 dark:text-pink-400" *ngIf="success()">{{ success() }}</div>
 
@@ -254,6 +265,17 @@
             <option *ngFor="let b of branchCtx.options()" [ngValue]="b.id">{{ b.name }} ({{ b.code }})</option>
           </select>
         </label>
+
+        <div *ngIf="editForm.value.branchId" class="grid gap-1.5">
+          <div class="text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'users.viewBranches' | translate }}</div>
+          <div class="text-[11px] text-slate-500 dark:text-slate-400">{{ 'users.viewBranchesHelp' | translate }}</div>
+          <div class="flex flex-wrap gap-2">
+            <label *ngFor="let b of viewBranchOptions(editForm.value.branchId)" class="flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" [class.bg-pink-50]="viewBranchesSel().has(b.code)" [class.border-pink-300]="viewBranchesSel().has(b.code)">
+              <input type="checkbox" class="h-3.5 w-3.5 accent-pink-500" [checked]="viewBranchesSel().has(b.code)" (change)="toggleViewBranch(b.code)" />
+              {{ b.code }}
+            </label>
+          </div>
+        </div>
 
         <div class="text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">{{ error() }}</div>
 

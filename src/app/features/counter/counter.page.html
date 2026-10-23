@@ -32,6 +32,16 @@
         <span><strong>{{ success() || 'View Sales' }}</strong><small>{{ success() ? 'Tap here to open the sales page.' : 'See all sales, customers and debts.' }}</small></span>
         <span class="counter-arrow" aria-hidden="true">→</span>
       </a>
+      <button
+        *ngIf="lastSale()"
+        class="counter-action"
+        type="button"
+        (click)="printLastSale()"
+      >
+        <span class="counter-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></svg></span>
+        <span><strong>{{ 'sales.printReceipt' | translate }}</strong><small>{{ lastSale()?.referenceNumber || '#' + lastSale()?.id }}</small></span>
+        <span class="counter-arrow" aria-hidden="true">→</span>
+      </button>
     </div>
   </section>
 
@@ -88,7 +98,7 @@
     </div>
 
     <aside #cartPanel class="counter-cart counter-panel scroll-mt-28" aria-label="Sales cart">
-      <div class="counter-section-heading"><div><h2>Sales cart</h2><p>{{ cartVersion() === null ? 'New transaction' : 'Resumed held sale' }}</p></div><span class="counter-count">{{ itemCount() }}</span></div>
+      <div class="counter-section-heading"><div><h2>Sales cart</h2><p>{{ cartVersion() === null ? 'New transaction' : 'Resumed held sale' }}</p></div><div class="flex items-center gap-2"><button *ngIf="canReturn()" type="button" class="counter-button secondary" (click)="openFindSale()" [disabled]="busy()" title="{{ 'returns.action' | translate }}">↩ {{ 'returns.tabReturn' | translate }}</button><span class="counter-count">{{ itemCount() }}</span></div></div>
       <form class="counter-customer-form" [formGroup]="headerForm">
         <label>
           {{ 'common.customer' | translate }} <small>(optional — {{ 'customers.walkIn' | translate }} if empty)</small>
@@ -212,3 +222,30 @@
 <cis-barcode-scanner [open]="scannerOpen()" title="Scan product barcode" (scanned)="onScanned($event)" (close)="scannerOpen.set(false)" />
 
 <cis-confirm-dialog [open]="!!cancelTarget()" title="Cancel this held sale?" message="The cart will be removed from pending sales. No inventory or completed sales will be changed." confirmText="Cancel held sale" cancelText="Keep sale" (confirm)="cancelHeldCart()" (cancel)="cancelTarget.set(null)" />
+
+<cis-modal [open]="findSaleOpen()" [title]="'returns.findSale' | translate" maxWidthClass="max-w-md" (close)="findSaleOpen.set(false)">
+  <p class="counter-hint">{{ 'returns.findSaleHint' | translate }}</p>
+  <form class="mt-3 grid gap-3" (ngSubmit)="findSale()">
+    <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="text" [ngModel]="findSaleQuery()" (ngModelChange)="findSaleQuery.set($event)" name="ref" placeholder="211026-0002" autofocus />
+    <p class="counter-notice error" role="alert" *ngIf="findSaleError()">{{ findSaleError() }}</p>
+    <div class="counter-modal-actions">
+      <button type="button" class="counter-button secondary" (click)="findSaleOpen.set(false)">{{ 'common.cancel' | translate }}</button>
+      <button type="submit" class="counter-button primary" [disabled]="findSaleBusy() || !findSaleQuery().trim()">{{ findSaleBusy() ? '…' : ('returns.findSale' | translate) }}</button>
+    </div>
+  </form>
+</cis-modal>
+
+<cis-return-dialog
+  [open]="returnOrderId() !== null"
+  [salesOrderId]="returnOrderId()"
+  [isAdmin]="perm.isAdmin()"
+  [location]="location.value.trim() || branchCtx.writeBranch()"
+  (close)="returnOrderId.set(null)"
+  (completed)="onReturnCompleted($event)"
+/>
+
+<cis-receipt-dialog
+  [open]="receiptOpen()"
+  [order]="receiptOrder()"
+  (close)="receiptOpen.set(false)"
+/>

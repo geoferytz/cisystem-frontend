@@ -58,6 +58,10 @@ export const routes: Routes = [
         path: 'customers',
         loadComponent: () => import('./features/customers/customers.page').then(m => m.CustomersPage)
       },
+      {
+        path: 'returns',
+        loadComponent: () => import('./features/returns/returns.page').then(m => m.ReturnsPage)
+      },
       { path: 'my-sales', component: MySalesPage },
       { path: 'my-sales-report', component: MySalesReportPage },
       { path: 'expiry-alerts', component: ExpiryAlertsPage },

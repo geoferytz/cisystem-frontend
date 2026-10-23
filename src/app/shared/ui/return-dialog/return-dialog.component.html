@@ -1,0 +1,168 @@
+<cis-modal [open]="open" [title]="(mode() === 'return' ? 'returns.title' : 'returns.exchangeTitle') | translate" maxWidthClass="max-w-4xl" (close)="!saving() && close.emit()">
+  <!-- Mode tabs -->
+  <div class="flex gap-1 rounded-xl bg-slate-100 dark:bg-slate-700 p-1 w-fit">
+    <button type="button" class="rounded-lg px-4 py-1.5 text-xs font-semibold"
+      [ngClass]="mode() === 'return' ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-slate-100 shadow' : 'text-slate-500 dark:text-slate-400'"
+      (click)="setMode('return')">{{ 'returns.tabReturn' | translate }}</button>
+    <button type="button" class="rounded-lg px-4 py-1.5 text-xs font-semibold"
+      [ngClass]="mode() === 'exchange' ? 'bg-white dark:bg-slate-600 text-slate-900 dark:text-slate-100 shadow' : 'text-slate-500 dark:text-slate-400'"
+      (click)="setMode('exchange')">{{ 'returns.tabExchange' | translate }}</button>
+  </div>
+
+  <div *ngIf="loading()" class="mt-4 text-sm text-slate-500 dark:text-slate-400">{{ 'common.loading' | translate }}</div>
+
+  <ng-container *ngIf="sale() as s">
+    <!-- Sale header -->
+    <div class="mt-3 grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-slate-600 dark:text-slate-400 sm:grid-cols-4">
+      <div><span class="font-semibold">{{ 'common.reference' | translate }}:</span> {{ s.referenceNumber || '#' + s.salesOrderId }}</div>
+      <div><span class="font-semibold">{{ 'common.customer' | translate }}:</span> {{ s.customer || '-' }}</div>
+      <div><span class="font-semibold">{{ 'customers.date' | translate }}:</span> {{ s.soldAt | date:'medium' }}</div>
+      <div *ngIf="hasDebt()"><span class="font-semibold">{{ 'customers.debt' | translate }}:</span> <span class="text-red-600 dark:text-red-400">{{ s.customerDebt | money }}</span></div>
+    </div>
+
+    <!-- Window warning -->
+    <div *ngIf="!s.withinWindow" class="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:border-amber-700 dark:bg-amber-900/30 dark:text-amber-200">
+      {{ 'returns.windowPassed' | translate }} ({{ s.windowDays }} {{ 'returns.days' | translate }})
+      <label *ngIf="isAdmin" class="ml-3 inline-flex items-center gap-1.5 font-semibold">
+        <input type="checkbox" [ngModel]="overrideWindow()" (ngModelChange)="overrideWindow.set($event)" /> {{ 'returns.overrideWindow' | translate }}
+      </label>
+    </div>
+
+    <!-- Return lines -->
+    <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+      <table class="w-full border-collapse text-xs">
+        <thead class="bg-slate-50 dark:bg-slate-700">
+          <tr>
+            <th class="w-8 px-3 py-2"></th>
+            <th class="px-3 py-2 text-left font-semibold text-slate-600 dark:text-slate-300">{{ 'common.product' | translate }}</th>
+            <th class="px-3 py-2 text-right font-semibold text-slate-600 dark:text-slate-300">{{ 'returns.sold' | translate }}</th>
+            <th class="px-3 py-2 text-right font-semibold text-slate-600 dark:text-slate-300">{{ 'returns.returnable' | translate }}</th>
+            <th class="px-3 py-2 text-right font-semibold text-slate-600 dark:text-slate-300">{{ 'common.price' | translate }}</th>
+            <th class="px-3 py-2 text-right font-semibold text-slate-600 dark:text-slate-300">{{ 'returns.qtyToReturn' | translate }}</th>
+            <th class="px-3 py-2 text-left font-semibold text-slate-600 dark:text-slate-300">{{ 'returns.condition' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of rows(); let i = index" class="border-t border-slate-100 dark:border-slate-700" [class.opacity-50]="r.line.returnableQuantity <= 0">
+            <td class="px-3 py-2 text-center"><input type="checkbox" [checked]="r.selected" (change)="toggleRow(i)" [disabled]="r.line.returnableQuantity <= 0" /></td>
+            <td class="px-3 py-2">
+              <div class="font-semibold text-slate-900 dark:text-slate-100">{{ r.line.productName }}</div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400">{{ r.line.sku }}<span *ngIf="r.line.returnedQuantity > 0"> · {{ 'returns.alreadyReturned' | translate }}: {{ r.line.returnedQuantity }}</span></div>
+            </td>
+            <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ r.line.soldQuantity }}</td>
+            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ r.line.returnableQuantity }}</td>
+            <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ r.line.effectiveUnitPrice | money }}</td>
+            <td class="px-3 py-2 text-right">
+              <input type="number" min="0" [max]="r.line.returnableQuantity" class="w-20 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-right text-slate-900 dark:text-slate-100"
+                [ngModel]="r.qty" (ngModelChange)="setQty(i, $event)" [disabled]="!r.selected" />
+            </td>
+            <td class="px-3 py-2">
+              <select class="rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-slate-900 dark:text-slate-100" [ngModel]="r.condition" (ngModelChange)="setCondition(i, $event)" [disabled]="!r.selected">
+                <option value="RESALABLE">{{ 'returns.cond.RESALABLE' | translate }}</option>
+                <option value="DAMAGED">{{ 'returns.cond.DAMAGED' | translate }}</option>
+                <option value="EXPIRED">{{ 'returns.cond.EXPIRED' | translate }}</option>
+              </select>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">{{ 'returns.conditionHint' | translate }}</p>
+
+    <!-- Exchange: new products -->
+    <ng-container *ngIf="mode() === 'exchange'">
+      <div class="mt-4 text-sm font-semibold text-slate-900 dark:text-slate-100">{{ 'returns.newProducts' | translate }}</div>
+      <div class="relative mt-2">
+        <input type="text" class="w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100"
+          [ngModel]="productQuery()" (ngModelChange)="productQuery.set($event)" placeholder="{{ 'returns.searchProduct' | translate }}" />
+        <div *ngIf="productQuery().trim()" class="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-xl bg-white dark:bg-slate-800 shadow-lg ring-1 ring-slate-200 dark:ring-slate-700">
+          <button *ngFor="let p of filteredProducts()" type="button" class="flex w-full items-center justify-between px-3 py-2 text-left text-xs hover:bg-slate-50 dark:hover:bg-slate-700" (click)="addProduct(p)">
+            <span><span class="font-semibold text-slate-900 dark:text-slate-100">{{ p.name }}</span> <span class="text-slate-500">· {{ p.sku }}</span></span>
+            <span class="font-semibold text-slate-700 dark:text-slate-300">{{ p.sellingPrice | money }}</span>
+          </button>
+          <div *ngIf="!filteredProducts().length" class="px-3 py-2 text-xs text-slate-500">{{ 'common.noData' | translate }}</div>
+        </div>
+      </div>
+      <div *ngIf="newLines().length" class="mt-2 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+        <table class="w-full border-collapse text-xs">
+          <thead class="bg-slate-50 dark:bg-slate-700">
+            <tr>
+              <th class="px-3 py-2 text-left font-semibold text-slate-600 dark:text-slate-300">{{ 'common.product' | translate }}</th>
+              <th class="px-3 py-2 text-right font-semibold text-slate-600 dark:text-slate-300">{{ 'common.quantity' | translate }}</th>
+              <th class="px-3 py-2 text-right font-semibold text-slate-600 dark:text-slate-300">{{ 'common.price' | translate }}</th>
+              <th class="px-3 py-2 text-right font-semibold text-slate-600 dark:text-slate-300">{{ 'common.total' | translate }}</th>
+              <th class="w-8"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let l of newLines(); let i = index" class="border-t border-slate-100 dark:border-slate-700">
+              <td class="px-3 py-2"><div class="font-semibold text-slate-900 dark:text-slate-100">{{ l.name }}</div><div class="text-[11px] text-slate-500">{{ l.sku }}</div></td>
+              <td class="px-3 py-2 text-right"><input type="number" min="1" class="w-16 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-right text-slate-900 dark:text-slate-100" [ngModel]="l.quantity" (ngModelChange)="setNewQty(i, $event)" /></td>
+              <td class="px-3 py-2 text-right"><input type="number" min="0" class="w-24 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-right text-slate-900 dark:text-slate-100" [ngModel]="l.unitPrice" (ngModelChange)="setNewPrice(i, $event)" /></td>
+              <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ l.quantity * l.unitPrice | money }}</td>
+              <td class="px-3 py-2 text-right"><button type="button" class="text-slate-400 hover:text-red-600" (click)="removeNewLine(i)" aria-label="Remove">×</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+
+    <!-- Summary -->
+    <div class="mt-4 grid gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm dark:border-slate-600 dark:bg-slate-700/50 sm:grid-cols-2">
+      <div class="grid gap-1">
+        <div class="flex justify-between"><span class="text-slate-600 dark:text-slate-400">{{ 'returns.returnValue' | translate }}</span><span class="font-semibold text-slate-900 dark:text-slate-100">{{ returnValue() | money }}</span></div>
+        <ng-container *ngIf="mode() === 'exchange'">
+          <div class="flex justify-between"><span class="text-slate-600 dark:text-slate-400">{{ 'returns.newTotal' | translate }}</span><span class="font-semibold text-slate-900 dark:text-slate-100">{{ newTotal() | money }}</span></div>
+          <div class="mt-1 flex justify-between rounded-lg px-2 py-1.5 font-bold"
+            [ngClass]="difference() > 0 ? 'bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-300' : difference() < 0 ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300' : 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200'">
+            <span>{{ (difference() > 0 ? 'returns.customerPays' : difference() < 0 ? 'returns.shopRefunds' : 'returns.evenExchange') | translate }}</span>
+            <span>{{ (difference() < 0 ? -difference() : difference()) | money }}</span>
+          </div>
+        </ng-container>
+      </div>
+      <div class="grid gap-2">
+        <!-- Exchange: customer pays extra -->
+        <ng-container *ngIf="mode() === 'exchange' && difference() > 0">
+          <label class="grid gap-1 text-xs text-slate-700 dark:text-slate-300">{{ 'customers.paymentMethod' | translate }}
+            <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" [ngModel]="paymentMethod()" (ngModelChange)="paymentMethod.set($event)">
+              <option value="CASH">Cash</option><option value="M-PESA">M-Pesa</option><option value="AIRTEL_MONEY">Airtel Money</option><option value="TIGO_PESA">Tigo-Pesa</option><option value="CARD">Card</option><option value="BANK">Bank</option><option value="OTHER">Other</option>
+            </select>
+          </label>
+          <label class="grid gap-1 text-xs text-slate-700 dark:text-slate-300">{{ 'customers.receivedAmount' | translate }}
+            <input type="number" min="0" class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" [ngModel]="amountReceived() ?? difference()" (ngModelChange)="amountReceived.set($event === '' ? null : +$event)" />
+          </label>
+          <div *ngIf="(amountReceived() ?? difference()) < difference()" class="text-xs font-semibold text-amber-600 dark:text-amber-400">{{ (difference() - (amountReceived() ?? difference())) | money }} {{ 'returns.debtNote' | translate }}</div>
+        </ng-container>
+
+        <!-- Refund (return, or exchange where shop owes customer) -->
+        <ng-container *ngIf="refundTotal() > 0">
+          <div *ngIf="hasDebt()" class="rounded-lg border border-amber-200 bg-amber-50 p-2 text-xs dark:border-amber-700 dark:bg-amber-900/20">
+            <div class="font-semibold text-amber-800 dark:text-amber-200">{{ 'returns.debtChoice' | translate }}</div>
+            <div class="mt-1 flex items-center gap-2">
+              <input type="number" min="0" class="w-32 rounded-lg border border-amber-300 bg-white px-2 py-1 text-slate-900 dark:border-amber-600 dark:bg-slate-800 dark:text-slate-100" [ngModel]="debtCredit()" (ngModelChange)="debtCredit.set($event === '' || $event === null ? null : +$event)" placeholder="0" />
+              <button type="button" class="text-xs font-semibold text-amber-800 underline dark:text-amber-200" (click)="useFullDebtCredit()">{{ 'returns.applyToDebt' | translate }}</button>
+            </div>
+          </div>
+          <label *ngIf="cashRefund() > 0" class="grid gap-1 text-xs text-slate-700 dark:text-slate-300">{{ 'returns.refundMethod' | translate }} — <strong>{{ cashRefund() | money }}</strong>
+            <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" [ngModel]="refundMethod()" (ngModelChange)="refundMethod.set($event)">
+              <option value="CASH">Cash</option><option value="M-PESA">M-Pesa</option><option value="AIRTEL_MONEY">Airtel Money</option><option value="TIGO_PESA">Tigo-Pesa</option><option value="BANK">Bank</option><option value="OTHER">Other</option>
+            </select>
+          </label>
+        </ng-container>
+
+        <label class="grid gap-1 text-xs text-slate-700 dark:text-slate-300">{{ 'returns.reason' | translate }}
+          <input type="text" maxlength="1000" class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" [ngModel]="reason()" (ngModelChange)="reason.set($event)" />
+        </label>
+      </div>
+    </div>
+  </ng-container>
+
+  <div *ngIf="error()" class="mt-3 text-sm text-[#B81104] dark:text-red-400">{{ error() }}</div>
+
+  <div class="mt-4 flex justify-end gap-2">
+    <button type="button" class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200" (click)="close.emit()" [disabled]="saving()">{{ 'common.cancel' | translate }}</button>
+    <button type="button" class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white hover:bg-pink-600 disabled:cursor-not-allowed disabled:opacity-60" (click)="submit()" [disabled]="!canSubmit()">
+      {{ saving() ? ('common.saving' | translate) : ((mode() === 'return' ? 'returns.submitReturn' : 'returns.submitExchange') | translate) }}
+    </button>
+  </div>
+</cis-modal>

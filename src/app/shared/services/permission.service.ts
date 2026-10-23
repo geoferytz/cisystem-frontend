@@ -1,5 +1,6 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { GraphqlService } from '../../core/graphql/graphql.service';
+import { BranchContext } from './branch-context.service';
 
 type UserPermission = {
   module: string;
@@ -24,6 +25,8 @@ export class PermissionService {
   private loaded = false;
 
   readonly isAdmin = computed(() => (this.me()?.roles ?? []).includes('ADMIN'));
+
+  private readonly branchCtx = inject(BranchContext);
 
   constructor(private readonly gql: GraphqlService) {}
 
@@ -59,16 +62,19 @@ export class PermissionService {
   }
 
   canCreate(module: string): boolean {
+    if (this.branchCtx.viewOnly()) return false;
     if (this.isAdmin()) return true;
     return Boolean(this.perm(module)?.canCreate);
   }
 
   canEdit(module: string): boolean {
+    if (this.branchCtx.viewOnly()) return false;
     if (this.isAdmin()) return true;
     return Boolean(this.perm(module)?.canEdit);
   }
 
   canDelete(module: string): boolean {
+    if (this.branchCtx.viewOnly()) return false;
     if (this.isAdmin()) return true;
     return Boolean(this.perm(module)?.canDelete);
   }

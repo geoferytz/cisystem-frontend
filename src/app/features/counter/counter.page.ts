@@ -15,6 +15,10 @@ import { ConfirmDialogComponent } from '../../shared/ui/confirm-dialog/confirm-d
 import { ModalComponent } from '../../shared/ui/modal/modal.component';
 import { RowActionsMenuComponent } from '../../shared/ui/row-actions-menu/row-actions-menu.component';
 import { PagerComponent } from '../../shared/ui/pager/pager.component';
+import { ReturnDialogComponent, SalesReturnResult } from '../../shared/ui/return-dialog/return-dialog.component';
+import { ToastService } from '../../shared/services/toast.service';
+import { ReceiptDialogComponent } from '../../shared/ui/receipt-dialog/receipt-dialog.component';
+import { TranslationService } from '../../core/i18n/translation.service';
 import { toIsoDate } from '../../shared/utils/date.utils';
 
 export type CounterProduct = {
@@ -30,7 +34,7 @@ const CART_FIELDS = 'id version customer referenceNumber createdAt updatedAt cre
 @Component({
   selector: 'cis-counter-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, MoneyPipe, ModalComponent, ConfirmDialogComponent, BarcodeScannerComponent, RowActionsMenuComponent, PagerComponent, TranslatePipe],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, MoneyPipe, ModalComponent, ConfirmDialogComponent, BarcodeScannerComponent, RowActionsMenuComponent, PagerComponent, TranslatePipe, ReturnDialogComponent, ReceiptDialogComponent],
   templateUrl: './counter.page.html',
   styleUrl: './counter.page.scss'
 })
@@ -58,7 +62,53 @@ export class CounterPage {
   readonly success = signal<string | null>(null);
   readonly expenseSuccess = signal<string | null>(null);
   readonly customerDebt = signal<number | null>(null);
+  readonly lastSale = signal<{ id: string; referenceNumber?: string | null; soldAt: string; soldBy?: string | null; customer?: string | null; paymentMethod?: string | null; amountReceived?: number | null; discount?: number | null; returnedValue?: number; lines: { productName: string; quantity: number; unitPrice: number; returnedQuantity?: number }[] } | null>(null);
+  readonly receiptOpen = signal(false);
+  readonly receiptOrder = signal<import('../../shared/services/receipt-print.service').ReceiptData | null>(null);
   private lastDebtCustomerId: number | null = null;
+
+  // ---- Returns / exchange from the counter
+  private readonly toast = inject(ToastService);
+  private readonly i18n = inject(TranslationService);
+  readonly findSaleOpen = signal(false);
+  readonly findSaleQuery = signal('');
+  readonly findSaleBusy = signal(false);
+  readonly findSaleError = signal<string | null>(null);
+  readonly returnOrderId = signal<string | null>(null);
+
+  canReturn(): boolean {
+    return this.perm.canCreate('RETURNS') || this.perm.canCreate('COUNTER') || this.perm.canCreate('SALES');
+  }
+
+  openFindSale(): void {
+    this.findSaleQuery.set('');
+    this.findSaleError.set(null);
+    this.findSaleOpen.set(true);
+  }
+
+  findSale(): void {
+    const q = this.findSaleQuery().trim();
+    if (!q || this.findSaleBusy()) return;
+    this.findSaleBusy.set(true);
+    this.findSaleError.set(null);
+    this.gql.request<{ salesOrders: Array<{ id: string; referenceNumber: string | null }> }>(
+      'query FindSaleForReturn { salesOrders { id referenceNumber } }'
+    ).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.findSaleBusy.set(false))).subscribe({
+      next: res => {
+        const needle = q.toLowerCase().replace(/^#/, '');
+        const match = res.salesOrders.find(o => (o.referenceNumber ?? '').toLowerCase() === needle) ?? res.salesOrders.find(o => String(o.id) === needle);
+        if (!match) { this.findSaleError.set(this.i18n.translate('returns.saleNotFound')); return; }
+        this.findSaleOpen.set(false);
+        this.returnOrderId.set(String(match.id));
+      },
+      error: error => this.findSaleError.set(this.message(error, 'Could not search sales.'))
+    });
+  }
+
+  onReturnCompleted(r: SalesReturnResult): void {
+    this.toast.success(`${this.i18n.translate(r.isExchange ? 'returns.exchangeDone' : 'returns.returnDone')} — ${r.reference}`);
+    this.loadProducts();
+  }
   readonly dirty = signal(false);
   readonly search = signal('');
   readonly category = signal('');
@@ -118,7 +168,8 @@ export class CounterPage {
   readonly productCategories = computed(() => [...new Set(this.products().map(p => p.category || 'Uncategorized'))].sort());
   readonly filteredProducts = computed(() => {
     const query = this.search().trim().toLowerCase();
-    return this.products().filter(p => (!this.category() || (p.category || 'Uncategorized') === this.category()) &&
+    return this.products().filter(p => (p.availableQuantity ?? 0) > 0 &&
+      (!this.category() || (p.category || 'Uncategorized') === this.category()) &&
       (!query || [p.name, p.sku, p.barcode, p.brand].some(value => value?.toLowerCase().includes(query))));
   });
   readonly visibleProducts = computed(() => this.filteredProducts().slice(0, this.visibleLimit()));
@@ -384,7 +435,7 @@ export class CounterPage {
     if (this.debtPreview() > 0 && !customerId) { this.actionError.set('Select a registered customer to sell on debt.'); return; }
     this.busy.set(true);
     this.actionError.set(null);
-    this.gql.request<{ checkoutCounterCart: { id: string } }>('mutation CheckoutCounterCart($input: CheckoutCounterCartInput!) { checkoutCounterCart(input: $input) { id } }', {
+    this.gql.request<{ checkoutCounterCart: { id: string; referenceNumber?: string | null; soldAt: string; soldBy?: string | null; customer?: string | null; paymentMethod?: string | null; amountReceived?: number | null; discount?: number | null; returnedValue?: number; lines: { productName: string; quantity: number; unitPrice: number; returnedQuantity?: number }[] } }>('mutation CheckoutCounterCart($input: CheckoutCounterCartInput!) { checkoutCounterCart(input: $input) { id referenceNumber soldAt soldBy customer paymentMethod amountReceived discount returnedValue lines { productName quantity unitPrice returnedQuantity } } }', {
       input: {
         id: this.cartId(),
         version: this.cartVersion(),
@@ -396,12 +447,15 @@ export class CounterPage {
       }
     }).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.busy.set(false))).subscribe({
       next: data => {
+        this.lastSale.set(data.checkoutCounterCart);
         this.success.set(`Sale #${data.checkoutCounterCart.id} completed. Stock has been updated.`);
         this.checkoutOpen.set(false);
         this.workspaceOpen.set(false);
         this.resetCart();
         this.loadPending();
         this.loadProducts();
+        this.receiptOrder.set(data.checkoutCounterCart);
+        this.receiptOpen.set(true);
       },
       error: error => this.actionError.set(this.message(error, 'Checkout failed. Your held cart is safe; retrying will not duplicate this sale.'))
     });
@@ -417,6 +471,14 @@ export class CounterPage {
         next: () => { this.loadPending(); this.success.set('Held sale cancelled. No stock was changed.'); },
         error: error => this.actionError.set(this.message(error, 'Could not cancel the held sale.'))
       });
+  }
+
+  printLastSale(): void {
+    const sale = this.lastSale();
+    if (sale) {
+      this.receiptOrder.set(sale);
+      this.receiptOpen.set(true);
+    }
   }
 
   openExpense(): void {

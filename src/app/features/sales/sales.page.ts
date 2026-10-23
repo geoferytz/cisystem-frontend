@@ -6,10 +6,14 @@ import { GraphqlService } from '../../core/graphql/graphql.service';
 import { BranchContext } from '../../shared/services/branch-context.service';
 import { ConfirmDialogComponent } from '../../shared/ui/confirm-dialog/confirm-dialog.component';
 import { ModalComponent } from '../../shared/ui/modal/modal.component';
+import { ReturnDialogComponent, SalesReturnResult } from '../../shared/ui/return-dialog/return-dialog.component';
+import { ToastService } from '../../shared/services/toast.service';
+import { TranslationService } from '../../core/i18n/translation.service';
 import { RowActionsMenuComponent } from '../../shared/ui/row-actions-menu/row-actions-menu.component';
 import { PagerComponent } from '../../shared/ui/pager/pager.component';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { PermissionService } from '../../shared/services/permission.service';
+import { ReceiptDialogComponent } from '../../shared/ui/receipt-dialog/receipt-dialog.component';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 
 type Product = {
@@ -37,6 +41,7 @@ type SalesOrderLine = {
   location: string;
   unitPrice: number;
   deductions: SalesDeduction[];
+  returnedQuantity: number;
 };
 
 type SalesOrder = {
@@ -50,6 +55,16 @@ type SalesOrder = {
   paymentMethod?: string | null;
   amountReceived?: number | null;
   lines: SalesOrderLine[];
+  returnedValue: number;
+  exchangeSale: boolean;
+  exchangeReference?: string | null;
+  exchangeLines?: SalesOrderLine[];
+  returnReference?: string | null;
+  exchangeReturnValue?: number | null;
+  exchangeSettlement?: number | null;
+  exchangeRefundAmount?: number | null;
+  exchangeDebtCredit?: number | null;
+  exchangeRefundMethod?: string | null;
 };
 
 type SalesOrdersQueryResult = { salesOrders: SalesOrder[] };
@@ -72,7 +87,7 @@ type PendingCartsQueryResult = { pendingCounterCarts: CounterCart[] };
 @Component({
   selector: 'cis-sales-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ConfirmDialogComponent, ModalComponent, MoneyPipe, TranslatePipe, RowActionsMenuComponent, PagerComponent],
+  imports: [CommonModule, ReactiveFormsModule, ConfirmDialogComponent, ModalComponent, MoneyPipe, TranslatePipe, RowActionsMenuComponent, PagerComponent, ReturnDialogComponent, ReceiptDialogComponent],
   templateUrl: './sales.page.html',
   styleUrl: './sales.page.scss'
 })
@@ -125,13 +140,13 @@ export class SalesPage {
   });
 
   totalSalesValue = computed(() =>
-    this.orders().reduce((sum, o) => sum + this.saleTotalValue(o), 0)
+    this.orders().reduce((sum, o) => sum + this.saleNetValue(o), 0)
   );
 
   todayCollectionValue = computed(() =>
     this.orders()
       .filter((o) => this.isToday(o.soldAt))
-      .reduce((sum, o) => sum + this.saleTotalValue(o), 0)
+      .reduce((sum, o) => sum + this.saleNetValue(o), 0)
   );
 
   outstandingValue = computed(() =>
@@ -300,6 +315,23 @@ export class SalesPage {
       return;
     }
     this.deleteSale(id, code);
+  }
+
+  returnOrderId = signal<string | null>(null);
+  private readonly toast = inject(ToastService);
+  private readonly i18n = inject(TranslationService);
+
+  openReturn(o: SalesOrder): void {
+    this.returnOrderId.set(String(o.id));
+  }
+
+  onReturnCompleted(r: SalesReturnResult): void {
+    this.toast.success(`${this.i18n.translate(r.isExchange ? 'returns.exchangeDone' : 'returns.returnDone')} — ${r.reference}`);
+    this.load();
+  }
+
+  canReturn(): boolean {
+    return this.perm.canCreate('RETURNS') || this.perm.canCreate('SALES');
   }
 
   detailsOrder = signal<SalesOrder | null>(null);
@@ -506,6 +538,27 @@ export class SalesPage {
     return Math.max(0, lines - Number(o.discount ?? 0));
   }
 
+  /** Net value that actually stays in the till: sale minus whatever came back via returns. */
+  saleNetValue(o: SalesOrder): number {
+    return Math.max(0, this.saleTotalValue(o) - Number(o.returnedValue ?? 0));
+  }
+
+  readonly receiptOpen = signal(false);
+  readonly receiptOrder = signal<SalesOrder | null>(null);
+
+  printReceipt(o: SalesOrder): void {
+    this.receiptOrder.set(o);
+    this.receiptOpen.set(true);
+  }
+
+  orderStatus(o: SalesOrder): 'EXCHANGE' | 'RETURNED' | 'PARTIAL' | 'COMPLETED' {
+    if (o.exchangeSale) return 'EXCHANGE';
+    const returned = (o.lines ?? []).reduce((s, l) => s + Number(l.returnedQuantity ?? 0), 0);
+    if (returned <= 0) return 'COMPLETED';
+    const sold = (o.lines ?? []).reduce((s, l) => s + Number(l.quantity ?? 0), 0);
+    return returned >= sold ? 'RETURNED' : 'PARTIAL';
+  }
+
   isToday(soldAt: string): boolean {
     const d = new Date(soldAt);
     if (isNaN(d.getTime())) return false;
@@ -594,7 +647,7 @@ export class SalesPage {
     this.loading.set(true);
     this.error.set(null);
 
-    const q = `query SalesOrders($branch: String) { salesOrders(branch: $branch) { id customer customerId referenceNumber soldAt soldBy discount paymentMethod amountReceived lines { id productId sku productName quantity location unitPrice deductions { id batchId batchNumber expiryDate quantity } } } }`;
+    const q = `query SalesOrders($branch: String) { salesOrders(branch: $branch) { id customer customerId referenceNumber soldAt soldBy discount paymentMethod amountReceived returnedValue exchangeSale exchangeReference returnReference exchangeReturnValue exchangeSettlement exchangeRefundAmount exchangeDebtCredit exchangeRefundMethod lines { id productId sku productName quantity location unitPrice returnedQuantity deductions { id batchId batchNumber expiryDate quantity } } exchangeLines { id productId sku productName quantity unitPrice } } }`;
 
     this.gql.request<SalesOrdersQueryResult>(q, { branch: this.branchCtx.effective() }).subscribe({
       next: (res) => {

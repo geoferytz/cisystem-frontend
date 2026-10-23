@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject, signal } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BarcodeScannerComponent } from '../../../shared/ui/barcode-scanner/barcode-scanner.component';
+import { BranchContext } from '../../../shared/services/branch-context.service';
 
 type Category = {
   id: string;
@@ -29,6 +30,7 @@ export type ProductFormValue = {
   batchNumber: string;
   expiryDate: string;
   location: string;
+  alsoRegisterMain: boolean;
   initialQuantity: number | null;
   units: ProductUnitValue[];
 };
@@ -51,6 +53,8 @@ export class ProductFormComponent implements OnChanges {
   @Input() loading = false;
   @Input() error: string | null = null;
   @Input() open = false;
+
+  readonly branchCtx = inject(BranchContext);
 
   @Output() submitted = new EventEmitter<ProductFormValue>();
   @Output() cancel = new EventEmitter<void>();
@@ -87,6 +91,7 @@ export class ProductFormComponent implements OnChanges {
     batchNumber: [''],
     expiryDate: [''],
     location: [''],
+    alsoRegisterMain: [false],
     initialQuantity: [null as number | null, [Validators.required, Validators.min(1)]],
 
     pieceBuyingPrice: [null as number | null],
@@ -119,7 +124,8 @@ export class ProductFormComponent implements OnChanges {
         variant: '',
         batchNumber: '',
         expiryDate: '',
-        location: '',
+        location: this.branchCtx.writeBranch(),
+        alsoRegisterMain: this.branchCtx.writeBranch() !== 'MAIN',
         initialQuantity: null,
         pieceBuyingPrice: null,
         pieceSellingPrice: null,
@@ -226,6 +232,7 @@ export class ProductFormComponent implements OnChanges {
       batchNumber: raw.batchNumber ?? '',
       expiryDate: raw.expiryDate ?? '',
       location: raw.location ?? '',
+      alsoRegisterMain: raw.alsoRegisterMain ?? false,
       initialQuantity: raw.initialQuantity ?? null,
       units: this.collectUnits()
     });
