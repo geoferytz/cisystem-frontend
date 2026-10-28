@@ -6,6 +6,7 @@ import { GraphqlService } from '../../core/graphql/graphql.service';
 import { BranchContext } from '../../shared/services/branch-context.service';
 import { PermissionService } from '../../shared/services/permission.service';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { CIS_FORM_IMPORTS, FormField } from '../../shared/ui/form/form-field.component';
 import { PagerComponent } from '../../shared/ui/pager/pager.component';
 
 type ExpiryAlert = {
@@ -33,7 +34,7 @@ type LowStockAlertsQueryResult = { lowStockAlerts: LowStockAlert[] };
 @Component({
   selector: 'cis-expiry-alerts-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, PagerComponent],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, PagerComponent, CIS_FORM_IMPORTS],
   templateUrl: './expiry-alerts.page.html',
   styleUrl: './expiry-alerts.page.scss'
 })
@@ -72,6 +73,11 @@ export class ExpiryAlertsPage {
     days: [30 as number, [Validators.required]],
     threshold: [10 as number, [Validators.required]]
   });
+
+  readonly alertFields: FormField[] = [
+    { key: 'days', label: 'common.expiryAlertDays', type: 'number', required: true },
+    { key: 'threshold', label: 'common.lowStockThreshold', type: 'number', required: true }
+  ];
 
   constructor(private readonly gql: GraphqlService) {
     this.perm.load();

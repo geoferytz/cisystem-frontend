@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GraphqlService } from '../../core/graphql/graphql.service';
@@ -6,7 +6,9 @@ import { BranchContext } from '../../shared/services/branch-context.service';
 import { PermissionService } from '../../shared/services/permission.service';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { RowActionsMenuComponent } from '../../shared/ui/row-actions-menu/row-actions-menu.component';
-import { PagerComponent } from '../../shared/ui/pager/pager.component';
+import { PermissionMatrixComponent } from '../../shared/ui/permission-matrix/permission-matrix.component';
+import { CIS_TABLE_IMPORTS, TableColumn } from '../../shared/ui/table/data-table.component';
+import { CIS_FORM_IMPORTS, FormField } from '../../shared/ui/form/form-field.component';
 
 type AdminUser = {
   id: string;
@@ -41,26 +43,20 @@ type DeleteUserResult = {
   deleteUser: boolean;
 };
 
-type UserPermission = {
-  module: string;
-  canView: boolean;
-  canCreate: boolean;
-  canEdit: boolean;
-  canDelete: boolean;
+type SetRolesResult = {
+  setUserRoles: AdminUser;
 };
 
-type UserPermissionsQueryResult = {
-  userPermissions: UserPermission[];
+type SetActiveResult = {
+  setUserActive: AdminUser;
 };
 
-type SetUserPermissionsMutationResult = {
-  setUserPermissions: UserPermission[];
-};
+type DetailsTab = 'profile' | 'roles' | 'permissions' | 'edit' | 'danger';
 
 @Component({
   selector: 'cis-users-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, RowActionsMenuComponent, PagerComponent],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, RowActionsMenuComponent, PermissionMatrixComponent, CIS_TABLE_IMPORTS, CIS_FORM_IMPORTS],
   templateUrl: './users.page.html',
   styleUrl: './users.page.scss'
 })
@@ -72,13 +68,14 @@ export class UsersPage {
   success = signal<string | null>(null);
 
   users = signal<AdminUser[]>([]);
-  pageSize = signal(10);
-  pageIndex = signal(0);
-  displayedUsers = computed(() => {
-    const size = this.pageSize();
-    const start = this.pageIndex() * size;
-    return this.users().slice(start, start + size);
-  });
+  readonly userCols: TableColumn<AdminUser>[] = [
+    { key: 'name', label: 'common.name' },
+    { key: 'email', label: 'common.email' },
+    { key: 'roles', label: 'common.roles', type: 'template' },
+    { key: 'branch', label: 'common.branch', value: u => u.branchName || u.branchCode || '—' },
+    { key: 'status', label: 'common.status', type: 'template' },
+    { key: 'actions', label: 'common.actions', align: 'right', type: 'template' }
+  ];
   roles = signal<string[]>([]);
 
   createOpen = signal(false);
@@ -86,32 +83,22 @@ export class UsersPage {
   editingUser = signal<AdminUser | null>(null);
   deleteOpen = signal(false);
   pendingDelete = signal<AdminUser | null>(null);
-  permissionsOpen = signal(false);
 
-  selectedUserId = signal<string>('');
-  permissionsLoading = signal(false);
-  permissions = signal<UserPermission[]>([]);
+  profileOpen = signal(false);
+  profileUser = signal<AdminUser | null>(null);
 
-  readonly modules: Array<{ key: string; label: string }> = [
-    { key: 'COUNTER', label: 'Counter' },
-    { key: 'PRODUCTS', label: 'Products' },
-    { key: 'CATEGORIES', label: 'Categories' },
-    { key: 'INVENTORY', label: 'Inventory' },
-    { key: 'STOCK_MOVEMENTS', label: 'Stock Movements' },
-    { key: 'EXPIRY_ALERTS', label: 'Expiry & Alerts' },
-    { key: 'SALES', label: 'Sales' },
-    { key: 'MY_SALES', label: 'My Sales' },
-    { key: 'CUSTOMERS', label: 'Customers' },
-    { key: 'RETURNS', label: 'Returns' },
-    { key: 'PURCHASING', label: 'Purchasing' },
-    { key: 'EXPENSES', label: 'Expenses' },
-    { key: 'EXPENSE_CATEGORIES', label: 'Expense Categories' },
-    { key: 'REPORTS', label: 'Reports' },
-    { key: 'PROFIT_MANAGEMENT', label: 'Profit Management' },
-    { key: 'USERS_ROLES', label: 'Users & Roles' },
-    { key: 'BRANCHES', label: 'Branches' },
-    { key: 'TRANSFERS', label: 'Transfers' }
+  detailsOpen = signal(false);
+  detailsUser = signal<AdminUser | null>(null);
+  detailsTab = signal<DetailsTab>('profile');
+  readonly detailsTabs: Array<{ key: DetailsTab; label: string }> = [
+    { key: 'profile', label: 'users.details.tabProfile' },
+    { key: 'roles', label: 'users.details.tabRoles' },
+    { key: 'permissions', label: 'users.details.tabPermissions' },
+    { key: 'edit', label: 'users.details.tabEdit' },
+    { key: 'danger', label: 'users.details.tabDanger' }
   ];
+  /** Selected roles inside the Assign Roles tab. */
+  roleSel = signal<Set<string>>(new Set());
 
   private readonly fb = inject(FormBuilder);
   readonly branchCtx = inject(BranchContext);
@@ -134,6 +121,30 @@ export class UsersPage {
 
   /** Extra branches the user may view read-only (excludes their home branch). */
   viewBranchesSel = signal<Set<string>>(new Set());
+
+  private readonly roleOptions = () => this.roles().map(r => ({ value: r, label: r }));
+  private readonly branchOptions = () => [
+    { value: null as string | null, label: 'common.allBranches' },
+    ...this.branchCtx.options().map(b => ({ value: b.id as string | null, label: `${b.name} (${b.code})` }))
+  ];
+
+  readonly createFields: FormField[] = [
+    { key: 'name', label: 'common.name', required: true },
+    { key: 'email', label: 'common.email', type: 'email', required: true },
+    { key: 'password', label: 'common.password', type: 'password', required: true },
+    { key: 'role', label: 'common.role', type: 'select', options: this.roleOptions },
+    { key: 'branchId', label: 'common.branch', type: 'select', options: this.branchOptions },
+    { key: 'viewBranches', label: 'users.viewBranches', type: 'template', hide: () => !this.form.value.branchId }
+  ];
+
+  readonly editFields: FormField[] = [
+    { key: 'name', label: 'common.name', required: true },
+    { key: 'email', label: 'common.email', type: 'email', required: true },
+    { key: 'password', label: 'common.newPassword', type: 'password', placeholder: '••••••' },
+    { key: 'role', label: 'common.role', type: 'select', options: this.roleOptions },
+    { key: 'branchId', label: 'common.branch', type: 'select', options: this.branchOptions },
+    { key: 'viewBranches', label: 'users.viewBranches', type: 'template', hide: () => !this.editForm.value.branchId }
+  ];
 
   toggleViewBranch(code: string): void {
     const next = new Set(this.viewBranchesSel());
@@ -164,117 +175,102 @@ export class UsersPage {
     this.form.reset({ name: '', email: '', password: '', role: 'STOREKEEPER' });
   }
 
-  openPermissions(userId: string): void {
-    this.permissionsOpen.set(true);
-    this.onSelectUserForPermissions(userId);
+  openProfile(user: AdminUser): void {
+    this.profileUser.set(user);
+    this.profileOpen.set(true);
   }
 
-  closePermissions(): void {
-    this.permissionsOpen.set(false);
-    this.selectedUserId.set('');
-    this.permissions.set([]);
+  closeProfile(): void {
+    this.profileOpen.set(false);
+    this.profileUser.set(null);
   }
 
-  private defaultPermissions(): UserPermission[] {
-    return this.modules.map((m) => ({
-      module: m.key,
-      canView: false,
-      canCreate: false,
-      canEdit: false,
-      canDelete: false
-    }));
+  openDetails(user: AdminUser): void {
+    this.detailsUser.set(user);
+    this.detailsTab.set('profile');
+    this.roleSel.set(new Set(user.roles ?? []));
+    this.error.set(null);
+    this.success.set(null);
+    // Prepare the shared edit form so the Edit tab is ready.
+    this.editForm.reset({
+      name: user.name,
+      email: user.email,
+      password: '',
+      role: user.roles[0] ?? 'STOREKEEPER',
+      branchId: user.branchId ?? null
+    });
+    this.editingUser.set(user);
+    this.viewBranchesSel.set(new Set(user.viewBranches ?? []));
+    this.detailsOpen.set(true);
   }
 
-  onSelectUserForPermissions(userId: string): void {
-    this.selectedUserId.set(String(userId || ''));
-    this.permissions.set(this.defaultPermissions());
-    if (!this.selectedUserId()) return;
-    this.loadUserPermissions();
+  closeDetails(): void {
+    this.detailsOpen.set(false);
+    this.detailsUser.set(null);
   }
 
-  loadUserPermissions(): void {
-    const userId = this.selectedUserId();
-    if (!userId) return;
+  toggleRole(name: string): void {
+    const next = new Set(this.roleSel());
+    if (next.has(name)) next.delete(name); else next.add(name);
+    this.roleSel.set(next);
+  }
 
-    this.permissionsLoading.set(true);
+  saveRoles(): void {
+    const user = this.detailsUser();
+    if (!user) return;
+    if (this.roleSel().size === 0) {
+      this.error.set('Select at least one role');
+      return;
+    }
+    this.loading.set(true);
     this.error.set(null);
     this.success.set(null);
 
-    const q = `query UserPermissions($userId: ID!) { userPermissions(userId: $userId) { module canView canCreate canEdit canDelete } }`;
-    this.gql.request<UserPermissionsQueryResult>(q, { userId }).subscribe({
-      next: (res) => {
-        const incoming = res.userPermissions ?? [];
-        const map = new Map(incoming.map((p) => [String(p.module).toUpperCase(), p] as const));
-        this.permissions.set(
-          this.modules.map((m) => {
-            const p = map.get(m.key);
-            return {
-              module: m.key,
-              canView: Boolean(p?.canView),
-              canCreate: Boolean(p?.canCreate),
-              canEdit: Boolean(p?.canEdit),
-              canDelete: Boolean(p?.canDelete)
-            };
-          })
-        );
-        this.permissionsLoading.set(false);
+    const mutation = `mutation SetUserRoles($input: SetUserRolesInput!) {
+      setUserRoles(input: $input) { id name email active roles branchId branchCode branchName viewBranches }
+    }`;
+    this.gql.request<SetRolesResult>(mutation, {
+      input: { userId: user.id, roles: [...this.roleSel()] }
+    }).subscribe({
+      next: res => {
+        const updated = res.setUserRoles;
+        this.detailsUser.set({ ...user, roles: updated.roles });
+        this.users.set(this.users().map(u => u.id === user.id ? { ...u, roles: updated.roles } : u));
+        this.success.set('Roles updated — the user gets them on next login/refresh');
+        this.loading.set(false);
       },
       error: (e: unknown) => {
-        this.permissions.set(this.defaultPermissions());
-        this.error.set(e instanceof Error ? e.message : 'Failed to load permissions');
-        this.permissionsLoading.set(false);
+        this.error.set(e instanceof Error ? e.message : 'Failed to update roles');
+        this.loading.set(false);
       }
     });
   }
 
-  togglePermission(module: string, key: 'canView' | 'canCreate' | 'canEdit' | 'canDelete'): void {
-    const mod = String(module).toUpperCase();
-    this.permissions.set(
-      this.permissions().map((p) => {
-        if (String(p.module).toUpperCase() !== mod) return p;
-        return {
-          ...p,
-          [key]: !p[key]
-        } as UserPermission;
-      })
-    );
-  }
-
-  savePermissions(): void {
-    const userId = this.selectedUserId();
-    if (!userId) return;
-
-    this.permissionsLoading.set(true);
+  toggleActive(): void {
+    const user = this.detailsUser();
+    if (!user) return;
+    this.loading.set(true);
     this.error.set(null);
     this.success.set(null);
 
-    const mutation = `mutation SetUserPermissions($input: SetUserPermissionsInput!) {
-      setUserPermissions(input: $input) { module canView canCreate canEdit canDelete }
+    const mutation = `mutation SetUserActive($input: SetUserActiveInput!) {
+      setUserActive(input: $input) { id name email active roles branchId branchCode branchName viewBranches }
     }`;
-
-    this.gql
-      .request<SetUserPermissionsMutationResult>(mutation, {
-        input: {
-          userId,
-          permissions: this.permissions().map((p) => ({
-            module: p.module,
-            canView: p.canView,
-            canCreate: p.canCreate,
-            canEdit: p.canEdit,
-            canDelete: p.canDelete
-          }))
-        }
-      })
-      .subscribe({
-        next: () => {
-          this.success.set('Permissions updated');
-          this.permissionsLoading.set(false);
-        },
-        error: (e: unknown) => {
-          this.error.set(e instanceof Error ? e.message : 'Failed to update permissions');
-          this.permissionsLoading.set(false);
-        }
-      });
+    this.gql.request<SetActiveResult>(mutation, {
+      input: { userId: user.id, active: !user.active }
+    }).subscribe({
+      next: res => {
+        const updated = res.setUserActive;
+        this.detailsUser.set({ ...user, active: updated.active });
+        this.users.set(this.users().map(u => u.id === user.id ? { ...u, active: updated.active } : u));
+        this.success.set(updated.active ? 'User enabled' : 'User disabled');
+        this.loading.set(false);
+      },
+      error: (e: unknown) => {
+        this.error.set(e instanceof Error ? e.message : 'Failed to update status');
+        this.loading.set(false);
+      }
+    });
   }
 
   load(): void {
@@ -297,7 +293,7 @@ export class UsersPage {
     });
 
     this.gql.request<RolesQueryResult>(qRoles).subscribe({
-      next: (res) => this.roles.set(res.roles.filter((r) => r === 'ADMIN' || r === 'STOREKEEPER')),
+      next: (res) => this.roles.set(res.roles),
       error: () => {}
     });
   }
@@ -385,9 +381,15 @@ export class UsersPage {
         }
       })
       .subscribe({
-        next: () => {
-          this.closeEdit();
-          this.success.set('User updated');
+        next: res => {
+          const updated = res.updateUser;
+          if (this.detailsOpen() && this.detailsUser()?.id === user.id) {
+            this.detailsUser.set({ ...user, ...updated });
+            this.success.set('User updated');
+          } else {
+            this.closeEdit();
+            this.success.set('User updated');
+          }
           this.load();
         },
         error: (e: unknown) => {
@@ -421,6 +423,7 @@ export class UsersPage {
       .subscribe({
         next: () => {
           this.closeDelete();
+          this.closeDetails();
           this.success.set('User deleted');
           this.load();
         },
@@ -431,4 +434,3 @@ export class UsersPage {
       });
   }
 }
-

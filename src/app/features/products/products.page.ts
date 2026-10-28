@@ -10,6 +10,7 @@ import { PermissionService } from '../../shared/services/permission.service';
 import { PendingReceivingService } from '../../shared/services/pending-receiving.service';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { TranslationService } from '../../core/i18n/translation.service';
+import { CIS_FORM_IMPORTS, FormField } from '../../shared/ui/form/form-field.component';
 
 type Product = {
   id: string;
@@ -71,7 +72,7 @@ type UpdateBatchNumberMutationResult = {
 @Component({
   selector: 'cis-products-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ProductFormComponent, MoneyPipe, TranslatePipe, RowActionsMenuComponent],
+  imports: [CommonModule, ReactiveFormsModule, ProductFormComponent, MoneyPipe, TranslatePipe, RowActionsMenuComponent, CIS_FORM_IMPORTS],
   templateUrl: './products.page.html',
   styleUrl: './products.page.scss'
 })
@@ -145,6 +146,26 @@ export class ProductsPage {
     buyingPrice: [null as number | null],
     sellingPrice: [null as number | null]
   });
+
+  /** Inline table-edit fields — bare+compact controls inside the editForm group. */
+  editField(key: keyof typeof this.editForm.controls, opts: Partial<FormField> = {}): FormField {
+    return { key, label: key, bare: true, compact: true, ...opts };
+  }
+  batchEditField(p: Product): FormField {
+    return this.editField('batchNumber', {
+      readonly: this.latestBatchNumber(p) === '-',
+      placeholder: this.latestBatchNumber(p) === '-' ? 'No batch' : ''
+    });
+  }
+  categoryEditField(): FormField {
+    return this.editField('category', {
+      type: 'select',
+      options: () => [
+        { value: '', label: 'common.selectCategory' },
+        ...this.categories().map(c => ({ value: c.name, label: c.name }))
+      ]
+    });
+  }
 
   constructor(private readonly gql: GraphqlService) {
     this.perm.load();

@@ -6,6 +6,7 @@ import { PermissionService } from '../../shared/services/permission.service';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { RowActionsMenuComponent } from '../../shared/ui/row-actions-menu/row-actions-menu.component';
 import { PagerComponent } from '../../shared/ui/pager/pager.component';
+import { CIS_FORM_IMPORTS, FormField } from '../../shared/ui/form/form-field.component';
 
 type Branch = {
   id: string;
@@ -30,7 +31,7 @@ type BranchMutationResult = {
 @Component({
   selector: 'cis-branches-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, RowActionsMenuComponent, PagerComponent],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, RowActionsMenuComponent, PagerComponent, CIS_FORM_IMPORTS],
   templateUrl: './branches.page.html',
   styleUrl: './branches.page.scss'
 })
@@ -60,6 +61,23 @@ export class BranchesPage {
     phone: [''],
     active: [true, [Validators.required]]
   });
+
+  readonly branchFields: FormField[] = [
+    { key: 'code', label: 'common.code', required: true, placeholder: 'e.g. BR2', inputClass: 'uppercase' },
+    { key: 'name', label: 'common.name', required: true },
+    { key: 'address', label: 'common.address' },
+    { key: 'phone', label: 'common.phone' },
+    {
+      key: 'active',
+      label: 'common.status',
+      type: 'select',
+      hide: () => !this.editingId(),
+      options: [
+        { value: true, label: 'common.active' },
+        { value: false, label: 'common.inactive' }
+      ]
+    }
+  ];
 
   constructor(private readonly gql: GraphqlService) {
     this.perm.load();

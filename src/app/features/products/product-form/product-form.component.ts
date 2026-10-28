@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject, signal } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BarcodeScannerComponent } from '../../../shared/ui/barcode-scanner/barcode-scanner.component';
 import { BranchContext } from '../../../shared/services/branch-context.service';
+import { CIS_FORM_IMPORTS, FormField } from '../../../shared/ui/form/form-field.component';
 
 type Category = {
   id: string;
@@ -44,7 +45,7 @@ type PricingTier = {
 @Component({
   selector: 'cis-product-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, BarcodeScannerComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, BarcodeScannerComponent, CIS_FORM_IMPORTS],
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.scss'
 })
@@ -109,6 +110,55 @@ export class ProductFormComponent implements OnChanges {
 
     unitOfMeasure: ['pcs']
   });
+
+  readonly basicRow1: FormField[] = [
+    { key: 'sku', label: 'SKU', labelHint: 'auto if empty', placeholder: 'PRD-00001' },
+    { key: 'name', label: 'Product Name', required: true }
+  ];
+
+  readonly basicRow2: FormField[] = [
+    {
+      key: 'category', label: 'Category', type: 'select',
+      options: () => [
+        { value: '', label: 'expenses.selectCategory' },
+        ...this.categories.map(c => ({ value: c.name, label: c.name }))
+      ]
+    },
+    { key: 'brand', label: 'Brand' }
+  ];
+
+  readonly basicRow3: FormField[] = [
+    { key: 'variant', label: 'Variant' },
+    { key: 'batchNumber', label: 'Batch Number', labelHint: 'auto if empty', placeholder: 'B1-0001' }
+  ];
+
+  readonly basicRow4: FormField[] = [
+    { key: 'expiryDate', label: 'Expiry Date', type: 'date' },
+    {
+      key: 'location', label: 'Location / Branch', type: 'select',
+      options: () => this.branchCtx.options().map(b => ({ value: b.code, label: `${b.name} (${b.code})` }))
+    },
+    { key: 'initialQuantity', label: 'Initial Quantity (pcs)', type: 'number', required: true, min: 1 }
+  ];
+
+  /** Pricing-tier field — control names are dynamic (pieceBuyingPrice, …). */
+  tierField(tier: PricingTier, kind: 'BuyingPrice' | 'SellingPrice' | 'Quantity'): FormField {
+    const labels = { BuyingPrice: 'Buying Price (TZS)', SellingPrice: 'Selling Price (TZS)', Quantity: 'Quantity (pcs)' };
+    const f: FormField = {
+      key: this.tierControlName(tier, kind),
+      label: labels[kind],
+      type: 'number',
+      min: kind === 'Quantity' ? 1 : 0
+    };
+    if (kind === 'Quantity') {
+      f.placeholder = tier.defaultQuantity != null ? `${tier.defaultQuantity}` : `pcs per ${tier.label.toLowerCase()}`;
+    }
+    return f;
+  }
+
+  tierControl(tier: PricingTier, kind: 'BuyingPrice' | 'SellingPrice' | 'Quantity'): FormControl {
+    return this.form.get(this.tierControlName(tier, kind)) as FormControl;
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['open']?.currentValue === true) {

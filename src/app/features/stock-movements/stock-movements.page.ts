@@ -4,8 +4,9 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { GraphqlService } from '../../core/graphql/graphql.service';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
-import { PagerComponent } from '../../shared/ui/pager/pager.component';
 import { BranchContext } from '../../shared/services/branch-context.service';
+import { CIS_TABLE_IMPORTS, TableColumn } from '../../shared/ui/table/data-table.component';
+import { CIS_FORM_IMPORTS, FormField } from '../../shared/ui/form/form-field.component';
 
 type StockMovement = {
   id: string;
@@ -49,7 +50,7 @@ type CategoriesQueryResult = {
 @Component({
   selector: 'cis-stock-movements-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, PagerComponent],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, CIS_TABLE_IMPORTS, CIS_FORM_IMPORTS],
   templateUrl: './stock-movements.page.html',
   styleUrl: './stock-movements.page.scss'
 })
@@ -58,18 +59,15 @@ export class StockMovementsPage {
   error = signal<string | null>(null);
   items = signal<StockMovement[]>([]);
 
-  pageSize = signal(10);
-  pageIndex = signal(0);
-
-  displayedItems = computed(() => {
-    const all = this.items();
-    const size = this.pageSize();
-    const idx = this.pageIndex();
-    const start = idx * size;
-    return all.slice(start, start + size);
-  });
-
-  totalPages = computed(() => Math.ceil(this.items().length / this.pageSize()));
+  readonly movementCols: TableColumn<StockMovement>[] = [
+    { key: 'createdAt', label: 'common.date' },
+    { key: 'type', label: 'common.type', class: 'font-semibold' },
+    { key: 'sku', label: 'common.sku' },
+    { key: 'productName', label: 'common.product' },
+    { key: 'batchNumber', label: 'common.batch' },
+    { key: 'quantity', label: 'common.qty', align: 'right', class: 'font-semibold' },
+    { key: 'createdBy', label: 'common.by', value: m => m.createdBy || '-' }
+  ];
 
   // --- Out of stock products ---
   oosItems = signal<OosProduct[]>([]);
@@ -77,8 +75,13 @@ export class StockMovementsPage {
   oosLoading = signal(false);
   oosError = signal<string | null>(null);
 
-  oosPageSize = signal(10);
-  oosPageIndex = signal(0);
+  readonly oosCols: TableColumn<OosProduct>[] = [
+    { key: 'sku', label: 'common.sku' },
+    { key: 'productName', label: 'common.product' },
+    { key: 'category', label: 'common.category' },
+    { key: 'qtyOnHand', label: 'common.qty', align: 'right', type: 'template' },
+    { key: 'status', label: 'common.status', type: 'template' }
+  ];
 
   private readonly oosCategory = signal('');
   private readonly oosQuery = signal('');
@@ -93,12 +96,6 @@ export class StockMovementsPage {
     );
   });
 
-  oosDisplayed = computed(() => {
-    const size = this.oosPageSize();
-    const start = this.oosPageIndex() * size;
-    return this.oosFiltered().slice(start, start + size);
-  });
-
   private readonly fb = inject(FormBuilder);
   private readonly branchCtx = inject(BranchContext);
 
@@ -106,16 +103,32 @@ export class StockMovementsPage {
     type: ['']
   });
 
+  readonly movementFilterFields: FormField[] = [
+    { key: 'type', label: 'common.type', hint: 'IN / OUT / LOSS / ADJUSTMENT / RETURN' }
+  ];
+
   oosFilterForm = this.fb.group({
     query: [''],
     category: ['']
   });
 
+  readonly oosFilterFields: FormField[] = [
+    {
+      key: 'category',
+      label: 'common.category',
+      type: 'select',
+      options: () => [
+        { value: '', label: 'common.all' },
+        ...this.oosCategories().map(c => ({ value: c, label: c }))
+      ]
+    },
+    { key: 'query', label: 'common.search', type: 'search', placeholder: 'common.searchProductSku' }
+  ];
+
   constructor(private readonly gql: GraphqlService) {
     this.oosFilterForm.valueChanges.subscribe((v) => {
       this.oosCategory.set(v.category ?? '');
       this.oosQuery.set(v.query ?? '');
-      this.oosPageIndex.set(0);
     });
     this.load();
     this.loadOutOfStock();
@@ -155,7 +168,6 @@ export class StockMovementsPage {
 
         this.oosItems.set(out);
         this.oosCategories.set([...names, ...(hasUncategorized ? ['Uncategorized'] : [])].sort());
-        this.oosPageIndex.set(0);
         this.oosLoading.set(false);
       },
       error: (e: unknown) => {
@@ -188,7 +200,6 @@ export class StockMovementsPage {
       .subscribe({
         next: (res) => {
           this.items.set(res.stockMovements);
-          this.pageIndex.set(0);
           this.loading.set(false);
         },
         error: (e: unknown) => {
@@ -197,19 +208,4 @@ export class StockMovementsPage {
         }
       });
   }
-
-  prevPage(): void {
-    this.pageIndex.update(v => Math.max(0, v - 1));
-  }
-
-  nextPage(): void {
-    this.pageIndex.update(v => Math.min(this.totalPages() - 1, v + 1));
-  }
-
-  setPageSize(size: number | string): void {
-    const next = typeof size === 'string' ? parseInt(size, 10) : size;
-    this.pageSize.set(next);
-    this.pageIndex.set(0);
-  }
 }
-

@@ -7,6 +7,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { GraphqlService } from '../../core/graphql/graphql.service';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { CIS_FORM_IMPORTS, FormField } from '../../shared/ui/form/form-field.component';
 import { PagerComponent } from '../../shared/ui/pager/pager.component';
 
 type MySaleLine = {
@@ -30,7 +31,7 @@ type MySalesQueryResult = { mySales: MySale[] };
 @Component({
   selector: 'cis-my-sales-report-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, MoneyPipe, TranslatePipe, PagerComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, MoneyPipe, TranslatePipe, PagerComponent, CIS_FORM_IMPORTS],
   templateUrl: './my-sales-report.page.html',
   styleUrl: './my-sales-report.page.scss'
 })
@@ -50,6 +51,9 @@ export class MySalesReportPage {
     date: [new Date().toISOString().slice(0, 10), [Validators.required]],
     month: [new Date().toISOString().slice(0, 7), [Validators.required]]
   });
+
+  readonly dateFields: FormField[] = [{ key: 'date', label: 'common.date', type: 'date', required: true }];
+  readonly monthFields: FormField[] = [{ key: 'month', label: 'common.month', type: 'month', required: true }];
 
   constructor() {
     this.form.controls.date.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((v) => {

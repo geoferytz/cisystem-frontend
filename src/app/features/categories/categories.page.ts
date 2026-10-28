@@ -6,6 +6,7 @@ import { PermissionService } from '../../shared/services/permission.service';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { RowActionsMenuComponent } from '../../shared/ui/row-actions-menu/row-actions-menu.component';
 import { PagerComponent } from '../../shared/ui/pager/pager.component';
+import { CIS_FORM_IMPORTS, FormField } from '../../shared/ui/form/form-field.component';
 
 type Category = {
   id: string;
@@ -33,7 +34,7 @@ type DeleteCategoryMutationResult = {
 @Component({
   selector: 'cis-categories-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, RowActionsMenuComponent, PagerComponent],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, RowActionsMenuComponent, PagerComponent, CIS_FORM_IMPORTS],
   templateUrl: './categories.page.html',
   styleUrl: './categories.page.scss'
 })
@@ -67,6 +68,25 @@ export class CategoriesPage {
     description: [''],
     active: [true, [Validators.required]]
   });
+
+  readonly categoryFields: FormField[] = [
+    { key: 'name', label: 'common.name', required: true },
+    { key: 'description', label: 'common.description', type: 'textarea' }
+  ];
+
+  readonly editNameField: FormField = { key: 'name', label: 'common.name', bare: true, compact: true };
+  readonly editDescField: FormField = { key: 'description', label: 'common.description', bare: true, compact: true };
+  readonly editActiveField: FormField = {
+    key: 'active',
+    label: 'common.status',
+    type: 'select',
+    bare: true,
+    compact: true,
+    options: [
+      { value: true, label: 'common.active' },
+      { value: false, label: 'common.inactive' }
+    ]
+  };
 
   constructor(private readonly gql: GraphqlService) {
     this.perm.load();

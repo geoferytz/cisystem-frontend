@@ -7,9 +7,11 @@ import { GraphqlService } from '../../core/graphql/graphql.service';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { PermissionService } from '../../shared/services/permission.service';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { TranslationService } from '../../core/i18n/translation.service';
 import { RowActionsMenuComponent } from '../../shared/ui/row-actions-menu/row-actions-menu.component';
 import { PagerComponent } from '../../shared/ui/pager/pager.component';
 import { ModalComponent } from '../../shared/ui/modal/modal.component';
+import { CIS_FORM_IMPORTS, FormField } from '../../shared/ui/form/form-field.component';
 
 type Customer = {
   id: string;
@@ -42,7 +44,7 @@ type Period = 'week' | 'month' | 'year' | 'all';
 @Component({
   selector: 'cis-customers-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MoneyPipe, TranslatePipe, RowActionsMenuComponent, PagerComponent, ModalComponent],
+  imports: [CommonModule, ReactiveFormsModule, MoneyPipe, TranslatePipe, RowActionsMenuComponent, PagerComponent, ModalComponent, CIS_FORM_IMPORTS],
   templateUrl: './customers.page.html',
   styleUrl: './customers.page.scss'
 })
@@ -72,6 +74,7 @@ export class CustomersPage {
 
   private readonly fb = inject(FormBuilder);
   private readonly gql = inject(GraphqlService);
+  private readonly t = inject(TranslationService);
 
   customerForm = this.fb.group({
     name: ['', [Validators.required, Validators.maxLength(200)]],
@@ -80,10 +83,41 @@ export class CustomersPage {
     address: ['', [Validators.maxLength(500)]]
   });
 
+  readonly customerTopFields: FormField[] = [
+    { key: 'name', label: 'customers.name', required: true, errorMessage: 'customers.nameRequired', maxlength: 200 }
+  ];
+  readonly customerMidFields: FormField[] = [
+    { key: 'phone', label: 'customers.phone', type: 'tel', maxlength: 40 },
+    { key: 'email', label: 'customers.email', type: 'email', maxlength: 320 }
+  ];
+  readonly customerBottomFields: FormField[] = [
+    { key: 'address', label: 'customers.address', maxlength: 500 }
+  ];
+
   paymentForm = this.fb.group({
     amount: [null as number | null, [Validators.required, Validators.min(0.01)]],
     paidAt: ['', [Validators.required]]
   });
+
+  readonly paymentFields: FormField[] = [
+    {
+      key: 'amount',
+      label: 'customers.paymentAmount',
+      type: 'number',
+      required: true,
+      min: 0.01,
+      step: 0.01,
+      hint: () => {
+        const c = this.detailsCustomer();
+        return c ? `${this.t.translate('customers.debt')}: ${this.fmtMoney(this.customerStats(c).debt)}` : '';
+      }
+    },
+    { key: 'paidAt', label: 'customers.paymentDate', type: 'date', required: true }
+  ];
+
+  private fmtMoney(v: number): string {
+    return `${new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v)} TSH`;
+  }
 
   private inPeriod(soldAt: string, period: Period): boolean {
     if (period === 'all') return true;

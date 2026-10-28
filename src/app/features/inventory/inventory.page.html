@@ -51,27 +51,7 @@
 
 <div class="mt-4 rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
   <form class="grid gap-3 sm:grid-cols-[1fr_auto_auto_auto_auto] sm:items-end" [formGroup]="filterForm" (ngSubmit)="load()">
-    <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-      {{ 'common.search' | translate }} ({{ 'common.sku' | translate }} / {{ 'common.name' | translate }} / {{ 'common.batch' | translate }})
-      <input
-        class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
-        formControlName="query"
-      />
-    </label>
-
-    <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-      Low stock threshold
-      <input
-        class="w-32 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
-        type="number"
-        formControlName="lowStockThreshold"
-      />
-    </label>
-
-    <label class="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
-      <input type="checkbox" formControlName="includeZero" />
-      Include zero qty
-    </label>
+    <cis-form-fields [form]="filterForm" [fields]="filterFields" />
 
     <button class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white" type="submit">
       {{ 'common.apply' | translate }}
@@ -205,24 +185,7 @@
 
       <div class="mt-4 grid gap-3" [formGroup]="adjustForm">
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-            Quantity change (+/-)
-            <input
-              class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
-              type="number"
-              step="1"
-              formControlName="delta"
-              placeholder="e.g. 10 or -3"
-            />
-          </label>
-          <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-            Location
-            <input
-              class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
-              formControlName="location"
-              maxlength="120"
-            />
-          </label>
+          <cis-form-fields [form]="adjustForm" [fields]="adjustTopFields" />
         </div>
 
         <p class="text-xs text-slate-500 dark:text-slate-400" *ngIf="pendingAdjust() as row">
@@ -235,13 +198,7 @@
           </span>
         </p>
 
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          Note (optional)
-          <input
-            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
-            formControlName="note"
-          />
-        </label>
+        <cis-form-fields [form]="adjustForm" [fields]="adjustBottomFields" />
 
         <p class="text-sm text-[#B81104] dark:text-red-400" role="alert" *ngIf="adjustError()">{{ adjustError() }}</p>
       </div>

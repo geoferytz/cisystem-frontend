@@ -123,23 +123,7 @@
       </div>
 
       <form class="mt-4 grid gap-3" [formGroup]="form" (ngSubmit)="save()">
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'common.name' | translate }}
-          <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="name" />
-        </label>
-
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'common.description' | translate }}
-          <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="description" />
-        </label>
-
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'common.status' | translate }}
-          <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="active">
-            <option [ngValue]="true">{{ 'common.active' | translate }}</option>
-            <option [ngValue]="false">{{ 'common.inactive' | translate }}</option>
-          </select>
-        </label>
+        <cis-form-fields [form]="form" [fields]="categoryFields" />
 
         <div class="text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">{{ error() }}</div>
 

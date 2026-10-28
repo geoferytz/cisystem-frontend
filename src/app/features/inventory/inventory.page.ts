@@ -8,6 +8,7 @@ import { inject } from '@angular/core';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { PendingRepurchasesComponent } from '../purchasing/pending-repurchases.component';
 import { RowActionsMenuComponent } from '../../shared/ui/row-actions-menu/row-actions-menu.component';
+import { CIS_FORM_IMPORTS, FormField } from '../../shared/ui/form/form-field.component';
 
 type InventoryItem = {
   id: string;
@@ -44,7 +45,7 @@ type LowStockBatchAlertsQueryResult = {
 @Component({
   selector: 'cis-inventory-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslatePipe, PendingRepurchasesComponent, RowActionsMenuComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslatePipe, PendingRepurchasesComponent, RowActionsMenuComponent, CIS_FORM_IMPORTS],
   templateUrl: './inventory.page.html',
   styleUrl: './inventory.page.scss'
 })
@@ -90,11 +91,25 @@ export class InventoryPage {
     lowStockThreshold: [10 as number]
   });
 
+  readonly filterFields: FormField[] = [
+    { key: 'query', label: 'common.search', type: 'search', placeholder: 'common.searchSkuNameBatch' },
+    { key: 'lowStockThreshold', label: 'common.lowStockThreshold', type: 'number', inputClass: 'w-32' },
+    { key: 'includeZero', label: 'inventory.includeZero', type: 'checkbox' }
+  ];
+
   adjustForm = this.fb.group({
     delta: [null as number | null, [Validators.required]],
     location: ['', [Validators.required]],
     note: ['']
   });
+
+  readonly adjustTopFields: FormField[] = [
+    { key: 'delta', label: 'inventory.qtyChange', type: 'number', required: true, step: 1, placeholder: 'e.g. 10 or -3' },
+    { key: 'location', label: 'common.location', required: true, maxlength: 120 }
+  ];
+  readonly adjustBottomFields: FormField[] = [
+    { key: 'note', label: 'inventory.noteOptional' }
+  ];
 
   adjustError = signal<string | null>(null);
 

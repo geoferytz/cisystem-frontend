@@ -7,6 +7,7 @@ import { BaseChartDirective } from 'ng2-charts';
 import type { ChartConfiguration, ChartData } from 'chart.js';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { CIS_FORM_IMPORTS, FormField } from '../../shared/ui/form/form-field.component';
 
 type DailySalesReportItem = {
   productId: string;
@@ -54,7 +55,7 @@ type ExpensesQueryResult = {
 @Component({
   selector: 'cis-profit-dashboard-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, BaseChartDirective, MoneyPipe, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, BaseChartDirective, MoneyPipe, TranslatePipe, CIS_FORM_IMPORTS],
   templateUrl: './profit-dashboard.page.html',
   styleUrl: './profit-dashboard.page.scss'
 })
@@ -68,6 +69,7 @@ export class ProfitDashboardPage {
   selectedDateForm = this.fb.group({
     date: [new Date().toISOString().slice(0, 10), [Validators.required]]
   });
+  readonly dateFields: FormField[] = [{ key: 'date', label: 'common.date', type: 'date', required: true }];
 
   todaySales = signal(0);
   grossProfit = signal(0);

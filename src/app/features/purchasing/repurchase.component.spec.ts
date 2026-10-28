@@ -7,7 +7,7 @@ import { PendingRepurchasesComponent } from './pending-repurchases.component';
 import { RepurchaseComponent, RepurchaseOrder, RepurchaseProduct } from './repurchase.component';
 
 const product: RepurchaseProduct = { id: '1', sku: 'SKU-1', name: 'Cream', barcode: '1234', brand: 'Naboo', category: 'Skincare', unitOfMeasure: 'pcs', active: true, buyingPrice: 5, sellingPrice: 10, availableQuantity: 2 };
-const order: RepurchaseOrder = { id: '33b44fba-9e7e-49c0-8df5-ded9a6d214e2', supplier: 'Supplier', invoiceNumber: 'INV-1', createdAt: '2026-01-01T00:00:00Z', createdBy: 'storekeeper', activation: false, receivedPurchaseId: null,
+const order: RepurchaseOrder = { id: '33b44fba-9e7e-49c0-8df5-ded9a6d214e2', supplier: 'Supplier', invoiceNumber: 'INV-1', createdAt: '2026-01-01T00:00:00Z', createdBy: 'storekeeper', activation: false, receivedPurchaseId: null, branch: null,
   lines: [{ productId: '1', sku: 'SKU-1', productName: 'Cream', buyingPrice: 5, sellingPrice: 10, quantity: 2 }] };
 
 describe('RepurchaseComponent', () => {

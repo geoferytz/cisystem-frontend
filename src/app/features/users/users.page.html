@@ -1,5 +1,5 @@
 <div class="flex items-center">
-  <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">Users & Roles</h2>
+  <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">Users</h2>
   <div class="ml-auto flex items-center gap-2">
     <button
       *ngIf="perm.canCreate('USERS_ROLES')"
@@ -12,75 +12,68 @@
   </div>
 </div>
 
-<div class="mt-2 text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">{{ error() }}</div>
-<div class="mt-2 text-sm text-pink-500 dark:text-pink-400" *ngIf="success()">{{ success() }}</div>
+<div class="mt-2 text-sm text-[#B81104] dark:text-red-400" *ngIf="error() && !detailsOpen() && !createOpen() && !editOpen()">{{ error() }}</div>
+<div class="mt-2 text-sm text-pink-500 dark:text-pink-400" *ngIf="success() && !detailsOpen()">{{ success() }}</div>
 
 <div class="mt-4">
   <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
     <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'common.list' | translate }}</h3>
 
-    <cis-pager class="mt-3 block" [total]="users().length" [(pageSize)]="pageSize" [(pageIndex)]="pageIndex" />
-
-    <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
-      <table class="w-full border-collapse text-sm">
-        <thead class="bg-slate-50 dark:bg-slate-700">
-          <tr>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.name' | translate }}</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.email' | translate }}</th>
-            <!-- <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600">Password</th> -->
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.roles' | translate }}</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.branch' | translate }}</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.status' | translate }}</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.actions' | translate }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let u of displayedUsers()" class="border-t border-slate-100 dark:border-slate-700">
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ u.name }}</td>
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ u.email }}</td>
-            <!-- <td class="px-3 py-2 text-xs text-slate-500">{{ u.plainPassword || '••••••' }}</td> -->
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ u.roles.join(', ') }}</td>
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ u.branchName || u.branchCode || '—' }}</td>
-            <td class="px-3 py-2">
-              <span class="text-slate-800 dark:text-slate-300" [class.text-[#B81104]]="!u.active" [class.dark\:text-red-400]="!u.active">{{ u.active ? ('common.active' | translate) : ('common.inactive' | translate) }}</span>
-            </td>
-            <td class="px-3 py-2 text-right">
-              <cis-row-actions>
-                <button
-                  type="button"
-                  class="cis-row-action"
-                  (click)="openPermissions(u.id)"
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
-                  {{ 'common.permissions' | translate }}
-                </button>
-                <button
-                  *ngIf="perm.canEdit('USERS_ROLES')"
-                  type="button"
-                  class="cis-row-action"
-                  (click)="openEdit(u)"
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                  {{ 'common.edit' | translate }}
-                </button>
-                <button
-                  *ngIf="perm.canDelete('USERS_ROLES')"
-                  type="button"
-                  class="cis-row-action cis-row-action-danger"
-                  (click)="openDelete(u)"
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                  {{ 'common.delete' | translate }}
-                </button>
-              </cis-row-actions>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="mt-3">
+      <cis-data-table [columns]="userCols" [rows]="users()">
+        <ng-template cisCell="roles" let-u>
+          <span
+            *ngFor="let r of u.roles"
+            class="mr-1 inline-block rounded-full bg-violet-50 px-2 py-0.5 text-[11px] font-bold text-violet-700 dark:bg-violet-900/30 dark:text-violet-300"
+          >{{ r }}</span>
+        </ng-template>
+        <ng-template cisCell="status" let-u>
+          <span class="text-slate-800 dark:text-slate-300" [class.text-[#B81104]]="!u.active" [class.dark\:text-red-400]="!u.active">{{ u.active ? ('common.active' | translate) : ('common.inactive' | translate) }}</span>
+        </ng-template>
+        <ng-template cisCell="actions" let-u>
+          <cis-row-actions>
+            <button
+              type="button"
+              class="cis-row-action"
+              (click)="openProfile(u)"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a7.5 7.5 0 0115 0" /></svg>
+              {{ 'users.viewProfile' | translate }}
+            </button>
+            <button
+              *ngIf="perm.canEdit('USERS_ROLES')"
+              type="button"
+              class="cis-row-action"
+              (click)="openEdit(u)"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+              {{ 'common.edit' | translate }}
+            </button>
+            <button
+              *ngIf="perm.canDelete('USERS_ROLES')"
+              type="button"
+              class="cis-row-action cis-row-action-danger"
+              (click)="openDelete(u)"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+              {{ 'common.delete' | translate }}
+            </button>
+            <button
+              type="button"
+              class="cis-row-action"
+              (click)="openDetails(u)"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
+              {{ 'users.moreDetails' | translate }}
+            </button>
+          </cis-row-actions>
+        </ng-template>
+      </cis-data-table>
     </div>
   </section>
 </div>
 
+<!-- Create user -->
 <div *ngIf="createOpen()" class="cis-modal-overlay fixed inset-0 z-50">
   <div class="absolute inset-0 bg-slate-900/40" (click)="closeCreate()"></div>
   <div class="absolute inset-0 flex items-center justify-center p-4">
@@ -94,46 +87,20 @@
       </div>
 
       <form class="mt-4 grid gap-3" [formGroup]="form" (ngSubmit)="create()">
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'common.name' | translate }}
-          <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="name" />
-        </label>
-
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'common.email' | translate }}
-          <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="email" />
-        </label>
-
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'common.password' | translate }}
-          <input type="password" class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="password" />
-        </label>
-
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'common.role' | translate }}
-          <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="role">
-            <option *ngFor="let r of roles()" [value]="r">{{ r }}</option>
-          </select>
-        </label>
-
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'common.branch' | translate }}
-          <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="branchId">
-            <option [ngValue]="null">{{ 'common.allBranches' | translate }}</option>
-            <option *ngFor="let b of branchCtx.options()" [ngValue]="b.id">{{ b.name }} ({{ b.code }})</option>
-          </select>
-        </label>
-
-        <div *ngIf="form.value.branchId" class="grid gap-1.5">
-          <div class="text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'users.viewBranches' | translate }}</div>
-          <div class="text-[11px] text-slate-500 dark:text-slate-400">{{ 'users.viewBranchesHelp' | translate }}</div>
-          <div class="flex flex-wrap gap-2">
-            <label *ngFor="let b of viewBranchOptions(form.value.branchId)" class="flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" [class.bg-pink-50]="viewBranchesSel().has(b.code)" [class.border-pink-300]="viewBranchesSel().has(b.code)">
-              <input type="checkbox" class="h-3.5 w-3.5 accent-pink-500" [checked]="viewBranchesSel().has(b.code)" (change)="toggleViewBranch(b.code)" />
-              {{ b.code }}
-            </label>
-          </div>
-        </div>
+        <cis-form-fields [form]="form" [fields]="createFields">
+          <ng-template cisField="viewBranches">
+            <div class="grid gap-1.5">
+              <div class="text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'users.viewBranches' | translate }}</div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400">{{ 'users.viewBranchesHelp' | translate }}</div>
+              <div class="flex flex-wrap gap-2">
+                <label *ngFor="let b of viewBranchOptions(form.value.branchId)" class="flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" [class.bg-pink-50]="viewBranchesSel().has(b.code)" [class.border-pink-300]="viewBranchesSel().has(b.code)">
+                  <input type="checkbox" class="h-3.5 w-3.5 accent-pink-500" [checked]="viewBranchesSel().has(b.code)" (change)="toggleViewBranch(b.code)" />
+                  {{ b.code }}
+                </label>
+              </div>
+            </div>
+          </ng-template>
+        </cis-form-fields>
 
         <div class="text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">{{ error() }}</div>
         <div class="text-sm text-pink-500 dark:text-pink-400" *ngIf="success()">{{ success() }}</div>
@@ -155,74 +122,208 @@
   </div>
 </div>
 
-<div *ngIf="permissionsOpen()" class="cis-modal-overlay fixed inset-0 z-50">
-  <div class="absolute inset-0 bg-slate-900/40" (click)="closePermissions()"></div>
+<!-- View profile -->
+<div *ngIf="profileOpen()" class="cis-modal-overlay fixed inset-0 z-50">
+  <div class="absolute inset-0 bg-slate-900/40" (click)="closeProfile()"></div>
   <div class="absolute inset-0 flex items-center justify-center p-4">
-    <div class="w-full max-w-3xl rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700" (click)="$event.stopPropagation()">
-      <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'common.permissions' | translate }}</div>
-          <div class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ 'common.assignPermissions' | translate }}</div>
+    <div class="w-full max-w-md rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700" (click)="$event.stopPropagation()" *ngIf="profileUser() as u">
+      <div class="flex items-start justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="grid h-12 w-12 place-items-center rounded-2xl bg-pink-500 text-lg font-bold text-white">{{ u.name?.charAt(0) | uppercase }}</div>
+          <div>
+            <div class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ u.name }}</div>
+            <div class="text-xs text-slate-500 dark:text-slate-400">{{ u.email }}</div>
+          </div>
         </div>
-        <div class="flex items-center gap-2">
-          <button
-            type="button"
-            class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-60"
-            (click)="loadUserPermissions()"
-            [disabled]="!selectedUserId() || permissionsLoading()"
-          >
-            {{ 'common.refresh' | translate }}
-          </button>
-          <button
-            type="button"
-            class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
-            (click)="savePermissions()"
-            [disabled]="!selectedUserId() || permissionsLoading()"
-          >
-            S
-          </button>
-          <button type="button" class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200" (click)="closePermissions()">✕</button>
+        <button type="button" class="rounded-xl bg-slate-100 dark:bg-slate-700 px-3 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200" (click)="closeProfile()">✕</button>
+      </div>
+
+      <div class="mt-4 grid gap-2 text-sm">
+        <div class="flex justify-between rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-700/40">
+          <span class="text-slate-500 dark:text-slate-400">{{ 'common.roles' | translate }}</span>
+          <span class="font-semibold text-slate-900 dark:text-slate-100">{{ u.roles.join(', ') }}</span>
+        </div>
+        <div class="flex justify-between rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-700/40">
+          <span class="text-slate-500 dark:text-slate-400">{{ 'common.branch' | translate }}</span>
+          <span class="font-semibold text-slate-900 dark:text-slate-100">{{ u.branchName || u.branchCode || ('common.allBranches' | translate) }}</span>
+        </div>
+        <div class="flex justify-between rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-700/40" *ngIf="u.viewBranches?.length">
+          <span class="text-slate-500 dark:text-slate-400">{{ 'users.viewBranches' | translate }}</span>
+          <span class="font-semibold text-slate-900 dark:text-slate-100">{{ u.viewBranches!.join(', ') }}</span>
+        </div>
+        <div class="flex justify-between rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-700/40">
+          <span class="text-slate-500 dark:text-slate-400">{{ 'common.status' | translate }}</span>
+          <span class="font-semibold" [ngClass]="u.active ? 'text-emerald-600 dark:text-emerald-400' : 'text-[#B81104] dark:text-red-400'">{{ u.active ? ('common.active' | translate) : ('common.inactive' | translate) }}</span>
         </div>
       </div>
 
-      <div class="mt-4 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
-        <table class="w-full border-collapse text-sm">
-          <thead class="bg-slate-50 dark:bg-slate-700">
-            <tr>
-              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.module' | translate }}</th>
-              <th class="px-3 py-2 text-center text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.view' | translate }}</th>
-              <th class="px-3 py-2 text-center text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.create' | translate }}</th>
-              <th class="px-3 py-2 text-center text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.edit' | translate }}</th>
-              <th class="px-3 py-2 text-center text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.delete' | translate }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let p of permissions()" class="border-t border-slate-100 dark:border-slate-700">
-              <td class="px-3 py-2 text-sm font-semibold text-slate-900 dark:text-slate-300">{{ p.module }}</td>
-              <td class="px-3 py-2 text-center">
-                <input type="checkbox" [checked]="p.canView" (change)="togglePermission(p.module, 'canView')" />
-              </td>
-              <td class="px-3 py-2 text-center">
-                <input type="checkbox" [checked]="p.canCreate" (change)="togglePermission(p.module, 'canCreate')" />
-              </td>
-              <td class="px-3 py-2 text-center">
-                <input type="checkbox" [checked]="p.canEdit" (change)="togglePermission(p.module, 'canEdit')" />
-              </td>
-              <td class="px-3 py-2 text-center">
-                <input type="checkbox" [checked]="p.canDelete" (change)="togglePermission(p.module, 'canDelete')" />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="mt-4 flex justify-end">
+        <button type="button" class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white" (click)="closeProfile(); openDetails(u)">
+          {{ 'users.moreDetails' | translate }}
+        </button>
       </div>
-
-      <div *ngIf="permissionsLoading()" class="mt-3 text-xs font-semibold text-slate-600 dark:text-slate-400">{{ 'common.loadingPermissions' | translate }}</div>
-      <div class="mt-2 text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">{{ error() }}</div>
-      <div class="mt-2 text-sm text-pink-500 dark:text-pink-400" *ngIf="success()">{{ success() }}</div>
     </div>
   </div>
 </div>
 
+<!-- More Details (tabs) -->
+<div *ngIf="detailsOpen()" class="cis-modal-overlay fixed inset-0 z-50">
+  <div class="absolute inset-0 bg-slate-900/40" (click)="closeDetails()"></div>
+  <div class="absolute inset-0 flex items-center justify-center p-4">
+    <div class="flex max-h-[92vh] w-full max-w-4xl flex-col rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700" (click)="$event.stopPropagation()" *ngIf="detailsUser() as u">
+
+      <!-- Header -->
+      <div class="flex items-center gap-3">
+        <div class="grid h-12 w-12 place-items-center rounded-2xl bg-pink-500 text-lg font-bold text-white">{{ u.name?.charAt(0) | uppercase }}</div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <div class="truncate text-base font-semibold text-slate-900 dark:text-slate-100">{{ u.name }}</div>
+            <span class="rounded-full px-2 py-0.5 text-[10px] font-bold" [ngClass]="u.active ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300' : 'bg-red-100 text-[#B81104] dark:bg-red-900/40 dark:text-red-300'">{{ u.active ? ('common.active' | translate) : ('common.inactive' | translate) }}</span>
+          </div>
+          <div class="truncate text-xs text-slate-500 dark:text-slate-400">{{ u.email }} · {{ u.roles.join(', ') }} · {{ u.branchName || u.branchCode || ('common.allBranches' | translate) }}</div>
+        </div>
+        <button type="button" class="ml-auto rounded-xl bg-slate-100 dark:bg-slate-700 px-3 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200" (click)="closeDetails()">✕</button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="mt-4 flex flex-wrap gap-2">
+        <button
+          *ngFor="let t of detailsTabs"
+          type="button"
+          class="rounded-xl px-3 py-2 text-xs font-semibold transition"
+          [ngClass]="detailsTab() === t.key
+            ? (t.key === 'danger' ? 'bg-red-500 text-white shadow-sm' : 'bg-pink-500 text-white shadow-sm')
+            : (t.key === 'danger' ? 'bg-red-50 text-[#B81104] hover:bg-red-100 dark:bg-red-900/20 dark:text-red-300' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600')"
+          (click)="detailsTab.set(t.key)"
+        >{{ t.label | translate }}</button>
+      </div>
+
+      <div class="mt-2 text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">{{ error() }}</div>
+      <div class="mt-2 text-sm text-pink-500 dark:text-pink-400" *ngIf="success()">{{ success() }}</div>
+
+      <!-- Tab content -->
+      <div class="mt-3 min-h-0 flex-1 overflow-y-auto">
+
+        <!-- Profile -->
+        <div *ngIf="detailsTab() === 'profile'" class="grid gap-2 text-sm sm:grid-cols-2">
+          <div class="rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-700/40">
+            <div class="text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'common.name' | translate }}</div>
+            <div class="mt-0.5 font-semibold text-slate-900 dark:text-slate-100">{{ u.name }}</div>
+          </div>
+          <div class="rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-700/40">
+            <div class="text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'common.email' | translate }}</div>
+            <div class="mt-0.5 font-semibold text-slate-900 dark:text-slate-100">{{ u.email }}</div>
+          </div>
+          <div class="rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-700/40">
+            <div class="text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'common.roles' | translate }}</div>
+            <div class="mt-0.5 font-semibold text-slate-900 dark:text-slate-100">{{ u.roles.join(', ') }}</div>
+          </div>
+          <div class="rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-700/40">
+            <div class="text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'common.branch' | translate }}</div>
+            <div class="mt-0.5 font-semibold text-slate-900 dark:text-slate-100">{{ u.branchName || u.branchCode || ('common.allBranches' | translate) }}</div>
+          </div>
+          <div class="rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-700/40" *ngIf="u.viewBranches?.length">
+            <div class="text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'users.viewBranches' | translate }}</div>
+            <div class="mt-0.5 font-semibold text-slate-900 dark:text-slate-100">{{ u.viewBranches!.join(', ') }}</div>
+          </div>
+          <div class="rounded-xl bg-slate-50 px-3 py-2 dark:bg-slate-700/40">
+            <div class="text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'common.status' | translate }}</div>
+            <div class="mt-0.5 font-semibold" [ngClass]="u.active ? 'text-emerald-600 dark:text-emerald-400' : 'text-[#B81104] dark:text-red-400'">{{ u.active ? ('common.active' | translate) : ('common.inactive' | translate) }}</div>
+          </div>
+        </div>
+
+        <!-- Assign roles -->
+        <div *ngIf="detailsTab() === 'roles'">
+          <div class="text-xs text-slate-500 dark:text-slate-400">{{ 'users.details.rolesHint' | translate }}</div>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <label
+              *ngFor="let r of roles()"
+              class="flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-sm font-semibold transition"
+              [ngClass]="roleSel().has(r)
+                ? 'border-violet-300 bg-violet-50 text-violet-700 dark:border-violet-700 dark:bg-violet-900/30 dark:text-violet-300'
+                : 'border-slate-200 text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700'"
+            >
+              <input type="checkbox" class="h-4 w-4 accent-violet-500" [checked]="roleSel().has(r)" (change)="toggleRole(r)" />
+              {{ r }}
+            </label>
+          </div>
+          <div class="mt-4 flex items-center gap-2">
+            <button
+              type="button"
+              class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+              [disabled]="loading() || roleSel().size === 0"
+              (click)="saveRoles()"
+            >{{ 'common.save' | translate }}</button>
+            <span class="text-[11px] text-slate-500 dark:text-slate-400">{{ 'users.details.rolesNote' | translate }}</span>
+          </div>
+        </div>
+
+        <!-- Permissions -->
+        <div *ngIf="detailsTab() === 'permissions'">
+          <cis-permission-matrix ownerKind="user" [ownerId]="u.id" />
+        </div>
+
+        <!-- Edit user -->
+        <form *ngIf="detailsTab() === 'edit'" class="grid max-w-lg gap-3" [formGroup]="editForm" (ngSubmit)="saveEdit()">
+          <cis-form-fields [form]="editForm" [fields]="editFields">
+            <ng-template cisField="viewBranches">
+              <div class="grid gap-1.5">
+                <div class="text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'users.viewBranches' | translate }}</div>
+                <div class="flex flex-wrap gap-2">
+                  <label *ngFor="let b of viewBranchOptions(editForm.value.branchId)" class="flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" [class.bg-pink-50]="viewBranchesSel().has(b.code)" [class.border-pink-300]="viewBranchesSel().has(b.code)">
+                    <input type="checkbox" class="h-3.5 w-3.5 accent-pink-500" [checked]="viewBranchesSel().has(b.code)" (change)="toggleViewBranch(b.code)" />
+                    {{ b.code }}
+                  </label>
+                </div>
+              </div>
+            </ng-template>
+          </cis-form-fields>
+          <div class="mt-1 flex items-center justify-end gap-2">
+            <button
+              class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+              type="submit"
+              [disabled]="editForm.invalid || loading()"
+            >
+              {{ 'common.save' | translate }}
+            </button>
+          </div>
+        </form>
+
+        <!-- Disable / danger -->
+        <div *ngIf="detailsTab() === 'danger'" class="max-w-lg">
+          <div class="rounded-2xl border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
+            <div class="text-sm font-bold text-[#B81104] dark:text-red-300">
+              {{ u.active ? ('users.details.disableTitle' | translate) : ('users.details.enableTitle' | translate) }}
+            </div>
+            <div class="mt-1 text-xs text-red-700 dark:text-red-300">
+              {{ u.active ? ('users.details.disableDesc' | translate) : ('users.details.enableDesc' | translate) }}
+            </div>
+            <div class="mt-3 flex flex-wrap gap-2">
+              <button
+                type="button"
+                class="rounded-xl px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                [ngClass]="u.active ? 'bg-red-500 hover:bg-red-600' : 'bg-emerald-500 hover:bg-emerald-600'"
+                [disabled]="loading()"
+                (click)="toggleActive()"
+              >
+                {{ u.active ? ('users.details.disableBtn' | translate) : ('users.details.enableBtn' | translate) }}
+              </button>
+              <button
+                *ngIf="perm.canDelete('USERS_ROLES')"
+                type="button"
+                class="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-[#B81104] ring-1 ring-red-200 hover:bg-red-50 dark:bg-slate-800 dark:text-red-300 dark:ring-red-800"
+                (click)="openDelete(u)"
+              >{{ 'common.delete' | translate }}</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit user (standalone) -->
 <div *ngIf="editOpen()" class="cis-modal-overlay fixed inset-0 z-50">
   <div class="absolute inset-0 bg-slate-900/40" (click)="closeEdit()"></div>
   <div class="absolute inset-0 flex items-center justify-center p-4">
@@ -236,48 +337,19 @@
       </div>
 
       <form class="mt-4 grid gap-3" [formGroup]="editForm" (ngSubmit)="saveEdit()">
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'common.name' | translate }}
-          <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="name" />
-        </label>
-
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'common.email' | translate }}
-          <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="email" />
-        </label>
-
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'common.password' | translate }}
-          <input type="text" class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="password" placeholder="{{ 'common.leaveBlankPassword' | translate }}" />
-        </label>
-
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'common.role' | translate }}
-          <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="role">
-            <option *ngFor="let r of roles()" [value]="r">{{ r }}</option>
-          </select>
-        </label>
-
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'common.branch' | translate }}
-          <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="branchId">
-            <option [ngValue]="null">{{ 'common.allBranches' | translate }}</option>
-            <option *ngFor="let b of branchCtx.options()" [ngValue]="b.id">{{ b.name }} ({{ b.code }})</option>
-          </select>
-        </label>
-
-        <div *ngIf="editForm.value.branchId" class="grid gap-1.5">
-          <div class="text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'users.viewBranches' | translate }}</div>
-          <div class="text-[11px] text-slate-500 dark:text-slate-400">{{ 'users.viewBranchesHelp' | translate }}</div>
-          <div class="flex flex-wrap gap-2">
-            <label *ngFor="let b of viewBranchOptions(editForm.value.branchId)" class="flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" [class.bg-pink-50]="viewBranchesSel().has(b.code)" [class.border-pink-300]="viewBranchesSel().has(b.code)">
-              <input type="checkbox" class="h-3.5 w-3.5 accent-pink-500" [checked]="viewBranchesSel().has(b.code)" (change)="toggleViewBranch(b.code)" />
-              {{ b.code }}
-            </label>
-          </div>
-        </div>
-
-        <div class="text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">{{ error() }}</div>
+        <cis-form-fields [form]="editForm" [fields]="editFields">
+          <ng-template cisField="viewBranches">
+            <div class="grid gap-1.5">
+              <div class="text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'users.viewBranches' | translate }}</div>
+              <div class="flex flex-wrap gap-2">
+                <label *ngFor="let b of viewBranchOptions(editForm.value.branchId)" class="flex cursor-pointer items-center gap-1.5 rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" [class.bg-pink-50]="viewBranchesSel().has(b.code)" [class.border-pink-300]="viewBranchesSel().has(b.code)">
+                  <input type="checkbox" class="h-3.5 w-3.5 accent-pink-500" [checked]="viewBranchesSel().has(b.code)" (change)="toggleViewBranch(b.code)" />
+                  {{ b.code }}
+                </label>
+              </div>
+            </div>
+          </ng-template>
+        </cis-form-fields>
 
         <div class="mt-1 flex items-center justify-end gap-2">
           <button type="button" class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600" (click)="closeEdit()">
@@ -288,7 +360,7 @@
             type="submit"
             [disabled]="editForm.invalid || loading()"
           >
-            S
+            {{ 'common.save' | translate }}
           </button>
         </div>
       </form>
@@ -296,32 +368,20 @@
   </div>
 </div>
 
+<!-- Delete user -->
 <div *ngIf="deleteOpen()" class="cis-modal-overlay fixed inset-0 z-50">
   <div class="absolute inset-0 bg-slate-900/40" (click)="closeDelete()"></div>
   <div class="absolute inset-0 flex items-center justify-center p-4">
-    <div class="w-full max-w-md rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700" (click)="$event.stopPropagation()">
-      <div class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'common.delete' | translate }}</div>
-      <div class="mt-2 text-sm text-slate-600 dark:text-slate-400">
-        Are you sure you want to permanently delete
-        <span class="font-semibold text-slate-900 dark:text-slate-300">{{ pendingDelete()?.name }}</span>
-        ({{ pendingDelete()?.email }})?
+    <div class="w-full max-w-sm rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700" (click)="$event.stopPropagation()">
+      <div class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'common.deleteUser' | translate }}</div>
+      <div class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+        {{ 'common.deleteUserConfirm' | translate }} <b>{{ pendingDelete()?.name }}</b>?
       </div>
-
-      <div class="mt-5 flex justify-end gap-2">
-        <button
-          class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-70"
-          type="button"
-          (click)="closeDelete()"
-          [disabled]="loading()"
-        >
-          {{ 'common.close' | translate }}
+      <div class="mt-4 flex items-center justify-end gap-2">
+        <button type="button" class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600" (click)="closeDelete()">
+          {{ 'common.cancel' | translate }}
         </button>
-        <button
-          class="rounded-xl bg-[#B81104] px-4 py-2 text-sm font-semibold text-white hover:bg-[#7f0c03] disabled:cursor-not-allowed disabled:opacity-70"
-          type="button"
-          (click)="confirmDelete()"
-          [disabled]="loading()"
-        >
+        <button type="button" class="rounded-xl bg-[#B81104] px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70" [disabled]="loading()" (click)="confirmDelete()">
           {{ 'common.delete' | translate }}
         </button>
       </div>

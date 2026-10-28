@@ -415,23 +415,72 @@
         </a>
 
 
-        <a
-          *ngIf="canView('USERS_ROLES')"
-          routerLink="/users"
-          routerLinkActive="cis-nav-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
-          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 20H2v-2a4 4 0 014-4h1" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M16 3.13a4 4 0 010 7.75" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M8 3.13a4 4 0 000 7.75" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 12a4 4 0 100-8 4 4 0 000 8z" />
+        <div class="relative" *ngIf="canView('USERS_ROLES')">
+          <button
+            type="button"
+            (click)="toggleUsersRoles(); $event.stopPropagation()"
+            class="grid w-full grid-cols-[44px_1fr_auto] items-center rounded-xl px-3 py-2 text-left text-sm text-white/90 hover:bg-white/15"
+            [ngClass]="{ 'cis-nav-active': isUsersRolesSection() || usersRolesExpanded() }">
+            <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 20H2v-2a4 4 0 014-4h1" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16 3.13a4 4 0 010 7.75" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 3.13a4 4 0 000 7.75" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 12a4 4 0 100-8 4 4 0 000 8z" />
+              </svg>
+            </span>
+            <span>{{ 'nav.usersRoles' | translate }}</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 transition-transform duration-200"
+              [ngClass]="{ 'rotate-90': usersRolesExpanded() }">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
             </svg>
-          </span>
-          <span>{{ 'nav.usersRoles' | translate }}</span>
-        </a>
+          </button>
+
+          <!-- Flyout backdrop (click to close) -->
+          <div
+            *ngIf="usersRolesExpanded()"
+            class="fixed inset-0 z-[60] hidden md:block"
+            (click)="toggleUsersRoles()">
+          </div>
+
+          <!-- Flyout popup -->
+          <div
+            *ngIf="usersRolesExpanded()"
+            class="cis-sidebar-flyout absolute left-full top-0 z-[61] ml-2 w-56 rounded-xl bg-white dark:bg-slate-800 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700 overflow-hidden"
+            (click)="$event.stopPropagation()">
+
+            <div class="border-b border-slate-100 dark:border-slate-700 px-4 py-3">
+              <div class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{{ 'nav.usersRoles' | translate }}</div>
+            </div>
+
+            <div class="grid gap-0.5 p-2">
+              <a
+                routerLink="/users"
+                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="toggleUsersRoles()"
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-pink-600 dark:text-pink-400">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a7.5 7.5 0 0115 0" />
+                </svg>
+                <span>{{ 'nav.users' | translate }}</span>
+              </a>
+
+              <a
+                routerLink="/roles"
+                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="toggleUsersRoles()"
+                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-violet-600 dark:text-violet-400">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                </svg>
+                <span>{{ 'nav.roles' | translate }}</span>
+              </a>
+            </div>
+          </div>
+        </div>
 
         <a
           *ngIf="canView('BRANCHES')"

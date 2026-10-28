@@ -8,6 +8,7 @@ type UserPermission = {
   canCreate: boolean;
   canEdit: boolean;
   canDelete: boolean;
+  extras?: string[];
 };
 
 type MeResult = {
@@ -40,7 +41,7 @@ export class PermissionService {
       error: () => this.me.set(null)
     });
 
-    const permQ = `query MyPermissions { myPermissions { module canView canCreate canEdit canDelete } }`;
+    const permQ = `query MyPermissions { myPermissions { module canView canCreate canEdit canDelete extras } }`;
     this.gql.request<MyPermissionsResult>(permQ).subscribe({
       next: (res) => this.myPermissions.set(res.myPermissions ?? []),
       error: () => this.myPermissions.set([])
@@ -54,6 +55,12 @@ export class PermissionService {
 
   private perm(module: string): UserPermission | undefined {
     return this.myPermissions().find((x) => x.module === module.toUpperCase());
+  }
+
+  /** Fine-grained action check, e.g. can('REPORTS', 'PRINT'). Admins always pass. */
+  can(module: string, action: string): boolean {
+    if (this.isAdmin()) return true;
+    return Boolean(this.perm(module)?.extras?.includes(action.toUpperCase()));
   }
 
   canView(module: string): boolean {

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/shared/ui/barcode-scanner/barcode-scanner.component.scss"],
+  "sourcesContent": [".scanner-body { position: relative; overflow: hidden; border-radius: 14px; background: #0f172a; }\n.scanner-video { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }\n.scanner-overlay { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }\n.scanner-frame { width: 72%; height: 55%; border: 3px solid rgba(167, 139, 250, 0.95); border-radius: 14px; box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.4); }\n.scanner-status { margin-top: 10px; font-size: 13px; color: #64748b; text-align: center; }\n.scanner-error { margin-top: 10px; font-size: 13px; color: #b81104; text-align: center; }\n.scanner-actions { margin-top: 14px; display: flex; justify-content: flex-end; }\n"],
+  "mappings": ";AAAA,CAAA;AAAgB,YAAA;AAAoB,YAAA;AAAkB,iBAAA;AAAqB,cAAA;;AAC3E,CAAA;AAAiB,WAAA;AAAgB,SAAA;AAAa,gBAAA,CAAA,CAAA;AAAqB,cAAA;;AACnE,CAAA;AAAmB,YAAA;AAAoB,SAAA;AAAU,WAAA;AAAe,eAAA;AAAqB,kBAAA;;AACrF,CAAA;AAAiB,SAAA;AAAY,UAAA;AAAa,UAAA,IAAA,MAAA,KAAA,GAAA,EAAA,GAAA,EAAA,GAAA,EAAA;AAA6C,iBAAA;AAAqB,cAAA,EAAA,EAAA,EAAA,OAAA,KAAA,EAAA,EAAA,EAAA,EAAA,EAAA,EAAA;;AAC5G,CAAA;AAAkB,cAAA;AAAkB,aAAA;AAAiB,SAAA;AAAgB,cAAA;;AACrE,CAAA;AAAiB,cAAA;AAAkB,aAAA;AAAiB,SAAA;AAAgB,cAAA;;AACpE,CAAA;AAAmB,cAAA;AAAkB,WAAA;AAAe,mBAAA;;",
+  "names": []
+}

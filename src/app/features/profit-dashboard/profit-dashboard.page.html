@@ -4,8 +4,8 @@
     <div class="mt-1 text-xs text-slate-500">Is my shop making money today or not?</div>
   </div>
 
-  <form class="flex items-center gap-2" [formGroup]="selectedDateForm" (ngSubmit)="load()">
-    <input class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm" type="date" formControlName="date" />
+  <form class="flex items-end gap-2" [formGroup]="selectedDateForm" (ngSubmit)="load()">
+    <cis-form-fields [form]="selectedDateForm" [fields]="dateFields" />
     <button
       type="button"
       class="rounded-xl bg-pink-500 px-3 py-2 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"

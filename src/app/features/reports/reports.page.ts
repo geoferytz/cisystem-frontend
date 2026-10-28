@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal, untracked } from '@angular/core';
+import { PermissionService } from '../../shared/services/permission.service';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 
 import { GraphqlService } from '../../core/graphql/graphql.service';
@@ -8,6 +9,7 @@ import { ReportPrintService } from '../../shared/services/report-print.service';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { PagerComponent } from '../../shared/ui/pager/pager.component';
+import { CIS_FORM_IMPORTS, FormField } from '../../shared/ui/form/form-field.component';
 
 type InventoryValuation = {
   totalStockValue: number;
@@ -93,7 +95,7 @@ type CustomersQueryResult = { customers: ReportCustomer[] };
 @Component({
   selector: 'cis-reports-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MoneyPipe, TranslatePipe, PagerComponent],
+  imports: [CommonModule, ReactiveFormsModule, MoneyPipe, TranslatePipe, PagerComponent, CIS_FORM_IMPORTS],
   templateUrl: './reports.page.html',
   styleUrl: './reports.page.scss'
 })
@@ -106,6 +108,19 @@ export class ReportsPage {
     { key: 'audit', label: 'reports.tabAudit', activeClass: 'bg-amber-500 text-white shadow-sm', inactiveClass: 'bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-300' }
   ] as const;
   activeTab = signal<'sales' | 'breakdown' | 'debtors' | 'stock' | 'audit'>('sales');
+  readonly perm = inject(PermissionService);
+  /** Tabs the user may open (REPORTS → SALES/BREAKDOWN/DEBTORS/STOCK/AUDIT). */
+  visibleTabs = computed(() => this.tabs.filter(t => this.perm.can('REPORTS', t.key.toUpperCase())));
+  canPrint = computed(() => this.perm.can('REPORTS', 'PRINT'));
+  showTab(key: string): boolean {
+    return this.activeTab() === key && this.visibleTabs().some(t => t.key === key);
+  }
+  private readonly syncTab = effect(() => {
+    const visible = this.visibleTabs();
+    if (visible.length && !visible.some(t => t.key === this.activeTab())) {
+      untracked(() => this.activeTab.set(visible[0].key));
+    }
+  });
   loading = signal(false);
   error = signal<string | null>(null);
 
@@ -288,16 +303,32 @@ export class ReportsPage {
     to: ['']
   });
 
+  readonly auditFields: FormField[] = [
+    { key: 'type', label: 'common.type', placeholder: 'IN/OUT/LOSS' },
+    { key: 'from', label: 'common.from', placeholder: '2026-01-01T00:00:00Z' },
+    { key: 'to', label: 'common.to', placeholder: '2026-12-31T23:59:59Z' }
+  ];
+
   dailySalesForm = this.fb.group({
     date: [new Date().toISOString().slice(0, 10)]
   });
+
+  readonly dailySalesFields: FormField[] = [
+    { key: 'date', label: 'common.date', type: 'date' }
+  ];
 
   periodForm = this.fb.group({
     from: [''],
     to: ['']
   });
 
+  readonly periodFields: FormField[] = [
+    { key: 'from', label: 'common.from', type: 'date' },
+    { key: 'to', label: 'common.to', type: 'date' }
+  ];
+
   constructor(private readonly gql: GraphqlService) {
+    this.perm.load();
     this.load();
   }
 

@@ -224,10 +224,7 @@
 
       <div class="mt-4 grid gap-3" [formGroup]="headerForm">
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-            {{ 'common.date' | translate }}
-            <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="date" formControlName="date" />
-          </label>
+          <cis-form-fields [form]="headerForm" [fields]="headerFields" />
         </div>
       </div>
 
@@ -235,30 +232,7 @@
         <div class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ 'common.addLine' | translate }}</div>
         <form class="mt-3 grid gap-3" [formGroup]="lineForm" (ngSubmit)="addLine()">
           <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-              Category
-              <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="categoryId">
-                <option value="">Select category</option>
-                <option *ngFor="let c of categories()" [value]="c.id">{{ c.name }}</option>
-              </select>
-            </label>
-
-            <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-              {{ 'common.amount' | translate }}
-              <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="number" formControlName="amount" />
-            </label>
-
-            <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300 sm:col-span-2">
-              Description (optional)
-              <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="description" />
-            </label>
-
-            <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-              {{ 'common.paymentMethod' | translate }}
-              <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="paymentMethod">
-                <option *ngFor="let p of paymentMethods" [value]="p.key">{{ p.label }}</option>
-              </select>
-            </label>
+            <cis-form-fields [form]="lineForm" [fields]="lineFields" />
           </div>
 
           <button class="w-28 rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white" type="submit">
@@ -271,30 +245,7 @@
         <div class="text-sm font-semibold text-slate-900 dark:text-slate-100">Expense</div>
         <form class="mt-3 grid gap-3" [formGroup]="lineForm" (ngSubmit)="save()">
           <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-              Category
-              <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="categoryId">
-                <option value="">Select category</option>
-                <option *ngFor="let c of categories()" [value]="c.id">{{ c.name }}</option>
-              </select>
-            </label>
-
-            <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-              {{ 'common.amount' | translate }}
-              <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="number" formControlName="amount" />
-            </label>
-
-            <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300 sm:col-span-2">
-              Description (optional)
-              <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="description" />
-            </label>
-
-            <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-              {{ 'common.paymentMethod' | translate }}
-              <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="paymentMethod">
-                <option *ngFor="let p of paymentMethods" [value]="p.key">{{ p.label }}</option>
-              </select>
-            </label>
+            <cis-form-fields [form]="lineForm" [fields]="lineFields" />
           </div>
         </form>
       </div>

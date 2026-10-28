@@ -5,9 +5,11 @@ import { GraphqlService } from '../../core/graphql/graphql.service';
 import { PermissionService } from '../../shared/services/permission.service';
 import { BranchContext } from '../../shared/services/branch-context.service';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { TranslationService } from '../../core/i18n/translation.service';
 import { RowActionsMenuComponent } from '../../shared/ui/row-actions-menu/row-actions-menu.component';
 import { PagerComponent } from '../../shared/ui/pager/pager.component';
 import { ConfirmDialogComponent } from '../../shared/ui/confirm-dialog/confirm-dialog.component';
+import { CIS_FORM_IMPORTS, FormField } from '../../shared/ui/form/form-field.component';
 
 type TransferLine = {
   productId: string;
@@ -48,13 +50,14 @@ const TRANSFER_FIELDS = 'id reference fromBranch toBranch status note createdAt 
 @Component({
   selector: 'cis-transfers-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, RowActionsMenuComponent, PagerComponent, ConfirmDialogComponent],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, RowActionsMenuComponent, PagerComponent, ConfirmDialogComponent, CIS_FORM_IMPORTS],
   templateUrl: './transfers.page.html',
   styleUrl: './transfers.page.scss'
 })
 export class TransfersPage {
   readonly perm = inject(PermissionService);
   readonly branchCtx = inject(BranchContext);
+  private readonly t = inject(TranslationService);
 
   loading = signal(false);
   error = signal<string | null>(null);
@@ -97,10 +100,63 @@ export class TransfersPage {
     quantity: [1 as number, [Validators.required, Validators.min(1)]]
   });
 
+  readonly fromField: FormField = {
+    key: 'fromBranch',
+    label: 'transfers.from',
+    type: 'select',
+    options: () => this.branchCtx.options().map(b => ({ value: b.code, label: `${b.name} (${b.code})` }))
+  };
+  readonly toField: FormField = {
+    key: 'toBranch',
+    label: 'transfers.to',
+    type: 'select',
+    options: () => [
+      { value: '', label: 'transfers.chooseDestination', disabled: true },
+      ...this.branchCtx.options().map(b => ({
+        value: b.code,
+        label: `${b.name} (${b.code})`,
+        disabled: () => b.code === this.form.getRawValue().fromBranch
+      }))
+    ]
+  };
+  readonly batchField: FormField = {
+    key: 'batchId',
+    label: 'common.batch',
+    type: 'select',
+    bare: true,
+    inputClass: 'w-full',
+    options: () => [
+      { value: null, label: this.sourceLoading() ? 'common.loading' : 'transfers.chooseBatch', disabled: true },
+      ...this.sourceStock().map(i => ({
+        value: +i.batchId,
+        label: `${i.productName} (${i.sku}) · ${i.batchNumber} · ${i.expiryDate} · ${i.qtyOnHand} ${this.t.translate('common.pcs')}`
+      }))
+    ]
+  };
+  readonly qtyField: FormField = {
+    key: 'quantity',
+    label: 'common.qty',
+    type: 'number',
+    bare: true,
+    inputClass: 'w-full',
+    placeholder: 'common.qty',
+    min: 1,
+    max: () => this.selectedBatchMax()
+  };
+  readonly noteField: FormField = { key: 'note', label: 'transfers.note', placeholder: 'transfers.notePlaceholder' };
+
+  get fromControl() { return this.form.controls.fromBranch; }
+  get toControl() { return this.form.controls.toBranch; }
+  get batchControl() { return this.form.controls.batchId; }
+  get qtyControl() { return this.form.controls.quantity; }
+  get noteControl() { return this.form.controls.note; }
+
   constructor(private readonly gql: GraphqlService) {
     this.perm.load();
     this.branchCtx.load();
     this.load();
+    this.form.controls.fromBranch.valueChanges.subscribe(() => this.onFromChange());
+    this.form.controls.batchId.valueChanges.subscribe(() => this.onBatchSelect());
   }
 
   totalQty(t: StockTransfer): number {
@@ -170,9 +226,10 @@ export class TransfersPage {
     this.lines.set([]);
     this.selectedBatchMax.set(null);
     const from = this.branchCtx.writeBranch();
+    if (this.branchCtx.locked()) this.form.controls.fromBranch.disable();
+    else this.form.controls.fromBranch.enable();
     this.form.reset({ fromBranch: from, toBranch: '', note: '', batchId: null, quantity: 1 });
     this.createOpen.set(true);
-    this.loadSourceStock(from);
   }
 
   closeCreate(): void {

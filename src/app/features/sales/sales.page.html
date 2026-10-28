@@ -9,7 +9,7 @@
   </button>
 </div>
 
-<div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+<div *ngIf="perm.can('SALES', 'VIEW_CARDS')" class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
   <button type="button" (click)="setTab('all')" class="rounded-2xl bg-white dark:bg-slate-800 p-4 text-left shadow-sm ring-1 ring-slate-100 dark:ring-slate-700 transition hover:ring-teal-300 dark:hover:ring-teal-600">
     <div class="flex items-center justify-between">
       <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ 'sales.totalSales' | translate }}</div>
@@ -65,58 +65,33 @@
 
   <form class="mt-4 grid gap-3" [formGroup]="headerForm" (ngSubmit)="createSale()">
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-      <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-        {{ 'common.customer' | translate }} <small class="text-slate-400">({{ 'customers.walkIn' | translate }} if empty)</small>
-        <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="customerId" (change)="loadCustomerDebt()">
-          <option [ngValue]="null">{{ 'customers.walkIn' | translate }}</option>
-          <option *ngFor="let c of customers()" [ngValue]="c.id">{{ c.name }}<span *ngIf="c.phone"> · {{ c.phone }}</span></option>
-        </select>
-        <div class="text-xs font-semibold text-amber-600 dark:text-amber-400" *ngIf="customerDebt() != null">
-          {{ 'customers.debt' | translate }}: {{ customerDebt() | money }}
-        </div>
-        <button type="button" class="text-left text-xs font-semibold text-pink-600 dark:text-pink-400 hover:underline" (click)="newCustomerOpen.set(!newCustomerOpen())">
-          {{ 'customers.newInline' | translate }}
-        </button>
-      </label>
-      <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-        {{ 'common.reference' | translate }} <small class="text-slate-400">(auto)</small>
-        <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="referenceNumber" placeholder="Auto (e.g. 201026-0001)" />
-      </label>
-      <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-        {{ 'common.discount' | translate }} (TSH)
-        <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="number" min="0" step="0.01" formControlName="discount" />
-      </label>
+      <cis-form-fields [form]="headerForm" [fields]="headerRow1Fields">
+        <ng-template cisField="customerId" let-control>
+          <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+            {{ 'common.customer' | translate }} <small class="text-slate-400">({{ 'customers.walkIn' | translate }} if empty)</small>
+            <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" [formControl]="control">
+              <option [ngValue]="null">{{ 'customers.walkIn' | translate }}</option>
+              <option *ngFor="let c of customers()" [ngValue]="c.id">{{ c.name }}<span *ngIf="c.phone"> · {{ c.phone }}</span></option>
+            </select>
+            <div class="text-xs font-semibold text-amber-600 dark:text-amber-400" *ngIf="customerDebt() != null">
+              {{ 'customers.debt' | translate }}: {{ customerDebt() | money }}
+            </div>
+            <button type="button" class="text-left text-xs font-semibold text-pink-600 dark:text-pink-400 hover:underline" (click)="newCustomerOpen.set(!newCustomerOpen())">
+              {{ 'customers.newInline' | translate }}
+            </button>
+          </label>
+        </ng-template>
+      </cis-form-fields>
     </div>
     <div class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-      <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-        {{ 'customers.paymentMethod' | translate }}
-        <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="paymentMethod">
-          <option value="CASH">Cash</option>
-          <option value="M-PESA">M-Pesa</option>
-          <option value="AIRTEL_MONEY">Airtel Money</option>
-          <option value="TIGO_PESA">Tigo-Pesa</option>
-          <option value="CARD">Card</option>
-          <option value="BANK">Bank</option>
-          <option value="OTHER">Other</option>
-        </select>
-      </label>
-      <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-        {{ 'customers.receivedAmount' | translate }} (TSH)
-        <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="number" min="0" step="0.01" formControlName="amountReceived" />
-      </label>
+      <cis-form-fields [form]="headerForm" [fields]="headerRow2Fields" />
     </div>
   </form>
 
   <div class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2" *ngIf="newCustomerOpen()" [formGroup]="newCustomerForm">
-    <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-      {{ 'customers.name' | translate }} *
-      <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="name" />
-    </label>
+    <cis-form-fields [form]="newCustomerForm" [fields]="newCustomerFields.slice(0, 1)" />
     <div class="grid grid-cols-[1fr_auto] items-end gap-2">
-      <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-        {{ 'customers.phone' | translate }}
-        <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="phone" />
-      </label>
+      <cis-form-fields [form]="newCustomerForm" [fields]="newCustomerFields.slice(1)" />
       <button type="button" class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white hover:bg-pink-600" (click)="createCustomerInline()" [disabled]="newCustomerBusy() || newCustomerForm.invalid">
         {{ 'customers.createInline' | translate }}
       </button>
@@ -139,34 +114,7 @@
       </div>
 
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'common.productName' | translate }}
-          <select
-            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
-            formControlName="productId"
-            (change)="onProductChanged()"
-          >
-            <option [ngValue]="null">{{ 'common.selectProduct' | translate }}</option>
-            <option *ngFor="let p of filteredProducts()" [ngValue]="+p.id">
-              {{ p.name }}
-               <!-- ({{ p.sku }}) -->
-            </option>
-          </select>
-        </label>
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'common.qty' | translate }}
-          <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="number" formControlName="quantity" />
-        </label>
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'common.unitPrice' | translate }}
-          <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="number" step="0.01" formControlName="unitPrice" />
-        </label>
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'common.branch' | translate }}
-          <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="location" [disabled]="branchCtx.locked()">
-            <option *ngFor="let b of branchCtx.options()" [value]="b.code">{{ b.name }} ({{ b.code }})</option>
-          </select>
-        </label>
+        <cis-form-fields [form]="lineForm" [fields]="lineFields" />
       </div>
 
       <div class="text-right text-xs font-semibold text-slate-600 dark:text-slate-400">
@@ -609,14 +557,7 @@
 
     <form *ngIf="payOpen()" class="mt-3 grid gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-600 dark:bg-slate-700/50" [formGroup]="paymentForm" (ngSubmit)="savePayment()">
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'customers.paymentAmount' | translate }} * ({{ 'customers.debt' | translate }}: {{ orderDebt(o) | money }})
-          <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="number" min="0.01" step="0.01" formControlName="amount" />
-        </label>
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'customers.paymentDate' | translate }} *
-          <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="date" formControlName="paidAt" />
-        </label>
+        <cis-form-fields [form]="paymentForm" [fields]="paymentFields(o)" />
       </div>
       <div class="flex items-center justify-end gap-2">
         <button type="button" class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200" (click)="payOpen.set(false)" [disabled]="paying()">{{ 'common.cancel' | translate }}</button>

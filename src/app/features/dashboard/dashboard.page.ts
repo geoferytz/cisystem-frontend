@@ -8,6 +8,7 @@ import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { forkJoin } from 'rxjs';
 import type { ChartConfiguration, ChartData } from 'chart.js';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { CIS_FORM_IMPORTS, FormField } from '../../shared/ui/form/form-field.component';
 
 type InventoryValuationQueryResult = {
   inventoryValuation: {
@@ -103,7 +104,7 @@ type ExpensesQueryResult = {
 @Component({
   selector: 'cis-dashboard-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, BaseChartDirective, MoneyPipe, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, BaseChartDirective, MoneyPipe, TranslatePipe, CIS_FORM_IMPORTS],
   templateUrl: './dashboard.page.html',
   styleUrl: './dashboard.page.scss'
 })
@@ -140,6 +141,7 @@ export class DashboardPage {
   selectedDateForm = this.fb.group({
     date: [new Date().toISOString().slice(0, 10), [Validators.required]]
   });
+  readonly dateFields: FormField[] = [{ key: 'date', label: 'common.date', type: 'date', required: true }];
 
   todaySales = signal(0);
   grossProfit = signal(0);

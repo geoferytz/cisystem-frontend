@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { GraphqlService } from '../../core/graphql/graphql.service';
@@ -15,6 +15,7 @@ import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { PermissionService } from '../../shared/services/permission.service';
 import { ReceiptDialogComponent } from '../../shared/ui/receipt-dialog/receipt-dialog.component';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { CIS_FORM_IMPORTS, FormField } from '../../shared/ui/form/form-field.component';
 
 type Product = {
   id: string;
@@ -87,7 +88,7 @@ type PendingCartsQueryResult = { pendingCounterCarts: CounterCart[] };
 @Component({
   selector: 'cis-sales-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ConfirmDialogComponent, ModalComponent, MoneyPipe, TranslatePipe, RowActionsMenuComponent, PagerComponent, ReturnDialogComponent, ReceiptDialogComponent],
+  imports: [CommonModule, ReactiveFormsModule, ConfirmDialogComponent, ModalComponent, MoneyPipe, TranslatePipe, RowActionsMenuComponent, PagerComponent, ReturnDialogComponent, ReceiptDialogComponent, CIS_FORM_IMPORTS],
   templateUrl: './sales.page.html',
   styleUrl: './sales.page.scss'
 })
@@ -205,6 +206,33 @@ export class SalesPage {
   newCustomerBusy = signal(false);
   newCustomerForm = this.fb.nonNullable.group({ name: ['', [Validators.required, Validators.maxLength(200)]], phone: ['', [Validators.maxLength(40)]] });
 
+  readonly headerRow1Fields: FormField[] = [
+    { key: 'customerId', label: 'common.customer', type: 'template' },
+    { key: 'referenceNumber', label: 'common.reference', hint: '(auto)', placeholder: 'Auto (e.g. 201026-0001)' },
+    { key: 'discount', label: 'common.discount', type: 'number', min: 0, step: 0.01 }
+  ];
+
+  readonly headerRow2Fields: FormField[] = [
+    {
+      key: 'paymentMethod', label: 'customers.paymentMethod', type: 'select',
+      options: [
+        { value: 'CASH', label: 'Cash' },
+        { value: 'M-PESA', label: 'M-Pesa' },
+        { value: 'AIRTEL_MONEY', label: 'Airtel Money' },
+        { value: 'TIGO_PESA', label: 'Tigo-Pesa' },
+        { value: 'CARD', label: 'Card' },
+        { value: 'BANK', label: 'Bank' },
+        { value: 'OTHER', label: 'Other' }
+      ]
+    },
+    { key: 'amountReceived', label: 'customers.receivedAmount', type: 'number', min: 0, step: 0.01 }
+  ];
+
+  readonly newCustomerFields: FormField[] = [
+    { key: 'name', label: 'customers.name', required: true, maxlength: 200 },
+    { key: 'phone', label: 'customers.phone', maxlength: 40 }
+  ];
+
   lineForm = this.fb.group({
     productId: [null as number | null, [Validators.required, Validators.min(1)]],
     quantity: [1 as number, [Validators.required, Validators.min(1)]],
@@ -212,9 +240,41 @@ export class SalesPage {
     location: ['MAIN']
   });
 
+  readonly lineFields: FormField[] = [
+    {
+      key: 'productId', label: 'common.productName', type: 'select', required: true,
+      options: () => [
+        { value: null, label: 'common.selectProduct' },
+        ...this.filteredProducts().map(p => ({ value: +p.id, label: p.name }))
+      ]
+    },
+    { key: 'quantity', label: 'common.qty', type: 'number', required: true, min: 1 },
+    { key: 'unitPrice', label: 'common.unitPrice', type: 'number', required: true, min: 0, step: 0.01 },
+    {
+      key: 'location', label: 'common.branch', type: 'select',
+      options: () => this.branchCtx.options().map(b => ({ value: b.code, label: `${b.name} (${b.code})` }))
+    }
+  ];
+
+  paymentFields(o: SalesOrder): FormField[] {
+    return [
+      {
+        key: 'amount', label: 'customers.paymentAmount', type: 'number', required: true, min: 0.01, step: 0.01,
+        hint: () => `${this.i18n.translate('customers.debt')}: ${this.orderDebt(o).toLocaleString()}`
+      },
+      { key: 'paidAt', label: 'customers.paymentDate', type: 'date', required: true }
+    ];
+  }
+
   readonly branchCtx = inject(BranchContext);
 
   constructor(private readonly gql: GraphqlService) {
+    effect(() => {
+      if (this.branchCtx.locked()) this.lineForm.controls.location.disable();
+      else this.lineForm.controls.location.enable();
+    });
+    this.headerForm.controls.customerId.valueChanges.subscribe(() => this.loadCustomerDebt());
+    this.lineForm.controls.productId.valueChanges.subscribe(() => this.onProductChanged());
     this.perm.load();
     this.loadProducts();
     this.loadCustomers();

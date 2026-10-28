@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/shared/ui/row-actions-menu/row-actions-menu.component.ts"],
+  "sourcesContent": ["\n      :host {\n        display: inline-block;\n      }\n    "],
+  "mappings": ";AACM;AACE,WAAA;;",
+  "names": []
+}

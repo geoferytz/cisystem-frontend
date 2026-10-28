@@ -142,25 +142,11 @@
   (close)="closeCreate()"
 >
   <form class="grid gap-3" [formGroup]="customerForm" (ngSubmit)="saveCustomer()">
-    <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-      {{ 'customers.name' | translate }} *
-      <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="name" />
-      <span class="text-[#B81104] dark:text-red-400" *ngIf="customerForm.controls.name.touched && customerForm.controls.name.invalid">{{ 'customers.nameRequired' | translate }}</span>
-    </label>
+    <cis-form-fields [form]="customerForm" [fields]="customerTopFields" />
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-      <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-        {{ 'customers.phone' | translate }}
-        <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="phone" />
-      </label>
-      <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-        {{ 'customers.email' | translate }}
-        <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="email" formControlName="email" />
-      </label>
+      <cis-form-fields [form]="customerForm" [fields]="customerMidFields" />
     </div>
-    <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-      {{ 'customers.address' | translate }}
-      <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="address" />
-    </label>
+    <cis-form-fields [form]="customerForm" [fields]="customerBottomFields" />
 
     <div class="mt-2 flex items-center justify-end gap-2">
       <button type="button" class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200" (click)="closeCreate()">{{ 'common.cancel' | translate }}</button>
@@ -205,14 +191,7 @@
 
     <form *ngIf="payOpen()" class="mt-3 grid gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-600 dark:bg-slate-700/50" [formGroup]="paymentForm" (ngSubmit)="savePayment()">
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'customers.paymentAmount' | translate }} * ({{ 'customers.debt' | translate }}: {{ customerStats(c).debt | money }})
-          <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="number" min="0.01" step="0.01" formControlName="amount" />
-        </label>
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'customers.paymentDate' | translate }} *
-          <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="date" formControlName="paidAt" />
-        </label>
+        <cis-form-fields [form]="paymentForm" [fields]="paymentFields" />
       </div>
       <div class="flex items-center justify-end gap-2">
         <button type="button" class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200" (click)="payOpen.set(false)" [disabled]="paying()">{{ 'common.cancel' | translate }}</button>

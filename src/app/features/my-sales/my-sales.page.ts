@@ -9,6 +9,7 @@ import { PermissionService } from '../../shared/services/permission.service';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { RowActionsMenuComponent } from '../../shared/ui/row-actions-menu/row-actions-menu.component';
 import { PagerComponent } from '../../shared/ui/pager/pager.component';
+import { CIS_FORM_IMPORTS, FormField } from '../../shared/ui/form/form-field.component';
 
 type MySaleLine = {
   id: string;
@@ -34,7 +35,7 @@ type DeleteMySaleMutationResult = { deleteMySale: boolean };
 @Component({
   selector: 'cis-my-sales-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, MoneyPipe, TranslatePipe, RowActionsMenuComponent, PagerComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, MoneyPipe, TranslatePipe, RowActionsMenuComponent, PagerComponent, CIS_FORM_IMPORTS],
   templateUrl: './my-sales.page.html',
   styleUrl: './my-sales.page.scss'
 })
@@ -69,11 +70,22 @@ export class MySalesPage {
     referenceNumber: ['']
   });
 
+  readonly headerFields: FormField[] = [
+    { key: 'customer', label: 'common.seller' },
+    { key: 'referenceNumber', label: 'common.reference' }
+  ];
+
   lineForm = this.fb.group({
     productName: ['', [Validators.required]],
     quantity: [1 as number, [Validators.required, Validators.min(1)]],
     unitPrice: [0 as number, [Validators.required, Validators.min(0)]]
   });
+
+  readonly lineFields: FormField[] = [
+    { key: 'productName', label: 'common.productName', required: true },
+    { key: 'quantity', label: 'common.qty', type: 'number', required: true, min: 1 },
+    { key: 'unitPrice', label: 'common.unitPrice', type: 'number', required: true, step: 0.01, min: 0 }
+  ];
 
   lines = signal<Array<{ productName: string; quantity: number; unitPrice: number }>>([]);
 

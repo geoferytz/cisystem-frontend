@@ -30,7 +30,7 @@ describe('CounterPage', () => {
       imports: [CounterPage],
       providers: [provideRouter([]), { provide: GraphqlService, useValue: { request } },
         { provide: PwaService, useValue: { online } },
-        { provide: PermissionService, useValue: { load() {}, canCreate: () => true, canView: () => true, canDelete: () => true } }]
+        { provide: PermissionService, useValue: { load() {}, isAdmin: () => true, canCreate: () => true, canView: () => true, canDelete: () => true } }]
     }).compileComponents();
   });
 
@@ -130,7 +130,7 @@ describe('CounterPage', () => {
     page.completeSale();
     page.completeSale();
     expect(request).toHaveBeenCalledTimes(1);
-    expect(request.calls.mostRecent().args[1].input).toEqual({ id: held.id, version: held.version, expectedTotal: held.total });
+    expect(request.calls.mostRecent().args[1].input).toEqual({ id: held.id, version: held.version, expectedTotal: held.total, discount: null, customerId: null, paymentMethod: 'CASH', amountReceived: null });
     pending.next({ checkoutCounterCart: { id: '99' } });
     pending.complete();
     expect(page.lines()).toEqual([]);

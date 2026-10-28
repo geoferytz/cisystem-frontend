@@ -4,6 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GraphqlService } from '../../core/graphql/graphql.service';
 import { PermissionService } from '../../shared/services/permission.service';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
+import { CIS_FORM_IMPORTS, FormField } from '../../shared/ui/form/form-field.component';
 import { RowActionsMenuComponent } from '../../shared/ui/row-actions-menu/row-actions-menu.component';
 import { PagerComponent } from '../../shared/ui/pager/pager.component';
 
@@ -33,7 +34,7 @@ type DeleteExpenseCategoryMutationResult = {
 @Component({
   selector: 'cis-expense-categories-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, RowActionsMenuComponent, PagerComponent],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, RowActionsMenuComponent, PagerComponent, CIS_FORM_IMPORTS],
   templateUrl: './expense-categories.page.html',
   styleUrl: './expense-categories.page.scss'
 })
@@ -65,6 +66,20 @@ export class ExpenseCategoriesPage {
     description: [''],
     active: [true as boolean, [Validators.required]]
   });
+
+  readonly categoryFields: FormField[] = [
+    { key: 'name', label: 'common.name', required: true },
+    { key: 'description', label: 'common.description' },
+    {
+      key: 'active',
+      label: 'common.status',
+      type: 'select',
+      options: [
+        { value: true, label: 'common.active' },
+        { value: false, label: 'common.inactive' }
+      ]
+    }
+  ];
 
   constructor(private readonly gql: GraphqlService) {
     this.perm.load();

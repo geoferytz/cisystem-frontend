@@ -89,6 +89,12 @@ export class ShellLayout {
     return url.startsWith('/expenses') || url.startsWith('/expense-categories') || url.startsWith('/profit-management');
   });
 
+  usersRolesExpanded = signal(false);
+  isUsersRolesSection = computed(() => {
+    const url = this.currentUrl();
+    return url.startsWith('/users') || url.startsWith('/roles');
+  });
+
   user = signal<MeQueryResult['me']>(null);
   userMenuOpen = signal(false);
   notificationsOpen = signal(false);
@@ -331,6 +337,10 @@ export class ShellLayout {
     this.financeExpanded.set(!this.financeExpanded());
   }
 
+  toggleUsersRoles(): void {
+    this.usersRolesExpanded.set(!this.usersRolesExpanded());
+  }
+
   toggleSidebar(): void {
     this.closeMenus();
     this.sidebarOpen.set(!this.sidebarOpen());
@@ -346,6 +356,7 @@ export class ShellLayout {
     this.productsExpanded.set(false);
     this.salesExpanded.set(false);
     this.financeExpanded.set(false);
+    this.usersRolesExpanded.set(false);
   }
 
   @HostListener('document:keydown.escape')

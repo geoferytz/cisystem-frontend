@@ -4,16 +4,7 @@
 
 <div class="mt-4 rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
   <form class="grid gap-3 sm:grid-cols-[200px_200px_auto] sm:items-end" [formGroup]="form" (ngSubmit)="load()">
-    <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-      {{ 'common.expiryAlertDays' | translate }}
-      <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="number" formControlName="days" />
-    </label>
-
-    <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-      {{ 'common.lowStockThreshold' | translate }}
-      <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="number" formControlName="threshold" />
-    </label>
-
+    <cis-form-fields [form]="form" [fields]="alertFields" />
     <button class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white" type="submit">{{ 'common.apply' | translate }}</button>
   </form>
 

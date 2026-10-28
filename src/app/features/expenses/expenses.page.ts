@@ -9,6 +9,7 @@ import { forkJoin } from 'rxjs';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { RowActionsMenuComponent } from '../../shared/ui/row-actions-menu/row-actions-menu.component';
 import { PagerComponent } from '../../shared/ui/pager/pager.component';
+import { CIS_FORM_IMPORTS, FormField } from '../../shared/ui/form/form-field.component';
 
 type ExpenseCategory = {
   id: string;
@@ -50,7 +51,7 @@ type DeleteExpenseMutationResult = {
 @Component({
   selector: 'cis-expenses-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MoneyPipe, TranslatePipe, RowActionsMenuComponent, PagerComponent],
+  imports: [CommonModule, ReactiveFormsModule, MoneyPipe, TranslatePipe, RowActionsMenuComponent, PagerComponent, CIS_FORM_IMPORTS],
   templateUrl: './expenses.page.html',
   styleUrl: './expenses.page.scss'
 })
@@ -89,12 +90,32 @@ export class ExpensesPage {
     date: ['', [Validators.required]]
   });
 
+  readonly headerFields: FormField[] = [
+    { key: 'date', label: 'common.date', type: 'date', required: true }
+  ];
+
   lineForm = this.fb.group({
     categoryId: ['', [Validators.required]],
     description: [''],
     amount: [null as number | null, [Validators.required, Validators.min(0)]],
     paymentMethod: ['CASH', [Validators.required]]
   });
+
+  readonly lineFields: FormField[] = [
+    {
+      key: 'categoryId', label: 'common.category', type: 'select', required: true,
+      options: () => [
+        { value: '', label: 'expenses.selectCategory' },
+        ...this.categories().map(c => ({ value: c.id, label: c.name }))
+      ]
+    },
+    { key: 'amount', label: 'common.amount', type: 'number', required: true, min: 0 },
+    { key: 'description', label: 'expenses.descriptionOptional', wrapClass: 'sm:col-span-2' },
+    {
+      key: 'paymentMethod', label: 'common.paymentMethod', type: 'select', required: true,
+      options: () => this.paymentMethods.map(p => ({ value: p.key, label: p.label }))
+    }
+  ];
 
   lines = signal<
     Array<{ categoryId: string; description: string; amount: number; paymentMethod: string }>

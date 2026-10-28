@@ -14,79 +14,49 @@
 >
   <form class="mt-4 grid gap-3" [formGroup]="headerForm" (ngSubmit)="receive()">
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-      <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-        {{ 'common.supplier' | translate }}
-        <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="supplier" />
-      </label>
-      <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-        {{ 'common.invoiceNumber' | translate }}
-        <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" formControlName="invoiceNumber" />
-      </label>
+      <cis-form-fields [form]="headerForm" [fields]="headerFields" />
     </div>
   </form>
 
   <div class="mt-4 rounded-xl bg-slate-50 dark:bg-slate-700/50 p-3 ring-1 ring-slate-100 dark:ring-slate-600">
-    <h4 class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ 'common.addLine' | translate }}</h4>
+    <h4 class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ 'common.addLine' | translate }} — New product</h4>
+    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+      Enter details of a product that is not yet in the system. It will be saved to the product table and its stock added to inventory when this purchase is received.
+    </p>
 
     <form class="mt-3 grid gap-3" [formGroup]="lineForm" (ngSubmit)="addLine()">
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'common.product' | translate }}
-          <select
-            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100"
-            formControlName="productId"
-            (change)="onProductChange()"
-          >
-            <option [ngValue]="null">Select product</option>
-            <option *ngFor="let p of productOptions()" [ngValue]="p.id">
-              {{ p.name }} — {{ p.sku }}{{ p.active ? '' : ' (inactive)' }}
-            </option>
-          </select>
-        </label>
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          Purchase type
-          <select
-            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100"
-            formControlName="measure"
-            (change)="onMeasureChange()"
-          >
-            <option value="">Select measure</option>
-            <option *ngFor="let u of measureOptions()" [value]="u.name">{{ u.name }}</option>
-          </select>
-        </label>
-      </div>
-
-      <p class="text-xs text-slate-500 dark:text-slate-400" *ngIf="selectedProduct() as p">
-        {{ p.sku }}<span *ngIf="p.brand"> · {{ p.brand }}</span><span *ngIf="p.category"> · {{ p.category }}</span>
-        <span *ngIf="!p.active"> · <strong class="text-amber-700 dark:text-amber-400">Inactive — receiving will not activate it</strong></span>
-      </p>
-
-      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'common.expiryDate' | translate }}
-          <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="date" formControlName="expiryDate" />
-        </label>
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          pcs per {{ selectedUnit()?.name || 'measure' }}
-          <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="number" min="1" step="1" formControlName="unitSize" />
-        </label>
+        <cis-form-fields [form]="lineForm" [fields]="lineFieldsA" />
       </div>
 
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          Quantity ({{ selectedUnit()?.name || 'measure' }})
-          <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="number" min="1" step="1" formControlName="measureQuantity" />
-        </label>
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          Buying price per {{ selectedUnit()?.name || 'measure' }} (TZS)
-          <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="number" min="0" step="0.01" formControlName="measurePrice" />
-        </label>
+        <cis-form-fields [form]="lineForm" [fields]="lineFieldsB" />
       </div>
 
-      <p class="text-xs text-slate-600 dark:text-slate-400" *ngIf="selectedUnit() as u">
-        {{ lineForm.controls.unitSize.value || 0 }} pcs per {{ u.name }} → <strong>{{ linePcs() }} pcs</strong> ·
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <cis-form-fields [form]="lineForm" [fields]="lineFieldsC" />
+      </div>
+
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <cis-form-fields [form]="lineForm" [fields]="lineFieldsD" />
+      </div>
+
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <cis-form-fields [form]="lineForm" [fields]="lineFieldsE" />
+      </div>
+
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <cis-form-fields [form]="lineForm" [fields]="lineFieldsF" />
+      </div>
+
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <cis-form-fields [form]="lineForm" [fields]="lineFieldsG" />
+      </div>
+
+      <p class="text-xs text-slate-600 dark:text-slate-400">
+        {{ lineForm.controls.unitSize.value || 0 }} pcs per {{ lineForm.controls.measure.value || 'measure' }} →
+        <strong>{{ linePcs() }} pcs</strong> ·
         cost/pc <strong>{{ costPerPiece() | money }}</strong> ·
-        selling/{{ u.name }} <strong>{{ (u.price ?? 0) | money }}</strong> ·
         line total <strong>{{ lineTotal() | money }}</strong>
       </p>
 
@@ -112,7 +82,10 @@
         </thead>
         <tbody>
           <tr *ngFor="let l of lines(); let idx = index" class="border-t border-slate-100 dark:border-slate-700">
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ productLabel(l.productId) }}</td>
+            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
+              {{ l.displayName }}
+              <span *ngIf="l.newProduct" class="ml-1 inline-flex items-center rounded-full bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:ring-emerald-700">NEW</span>
+            </td>
             <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ l.batchNumber }}</td>
             <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ l.expiryDate }}</td>
             <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ l.costPrice | money}}</td>

@@ -13,6 +13,7 @@ import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { PermissionService } from '../../shared/services/permission.service';
 import { TranslatePipe } from '../../core/i18n/translate.pipe';
 import { RepurchaseComponent } from './repurchase.component';
+import { CIS_FORM_IMPORTS, FormField } from '../../shared/ui/form/form-field.component';
 
 type PurchaseOrderLine = {
   id: string;
@@ -40,38 +41,38 @@ type ReceivePurchaseMutationResult = { receivePurchase: PurchaseOrder };
 type UpdatePurchaseMutationResult = { updatePurchase: PurchaseOrder };
 type DeletePurchaseMutationResult = { deletePurchase: boolean };
 
-type ProductUnit = {
+type ExistingProductRef = {
+  id: string;
+  sku: string;
+  name: string;
+};
+
+type ProductsQueryResult = { products: ExistingProductRef[] };
+
+type NewProductUnitInput = {
   name: string;
   price: number | null;
   buyingPrice: number | null;
   quantity: number;
 };
 
-type ProductOption = {
-  id: string;
-  sku: string;
+type NewProductInput = {
+  sku: string | null;
+  barcode: string | null;
   name: string;
-  active: boolean;
-  brand?: string | null;
-  category?: string | null;
-  unitOfMeasure?: string | null;
-  buyingPrice?: number | null;
-  sellingPrice?: number | null;
-  units: ProductUnit[];
-  batches: Array<{ batchNumber: string }>;
-};
-
-type MeasureOption = {
-  name: string;
-  price: number | null;
+  brand: string | null;
+  category: string | null;
+  variant: string | null;
+  unitOfMeasure: string | null;
   buyingPrice: number | null;
-  quantity: number | null;
+  sellingPrice: number | null;
+  units: NewProductUnitInput[] | null;
 };
-
-type ProductsQueryResult = { products: ProductOption[] };
 
 type PurchaseLineInput = {
-  productId: number;
+  productId: number | null;
+  newProduct: NewProductInput | null;
+  displayName: string;
   batchNumber: string | null;
   expiryDate: string;
   costPrice: number;
@@ -83,7 +84,7 @@ type PurchaseLineInput = {
 @Component({
   selector: 'cis-purchasing-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, ConfirmDialogComponent, ModalComponent, MoneyPipe, TranslatePipe, RepurchaseComponent, RowActionsMenuComponent, PagerComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, ConfirmDialogComponent, ModalComponent, MoneyPipe, TranslatePipe, RepurchaseComponent, RowActionsMenuComponent, PagerComponent, CIS_FORM_IMPORTS],
   templateUrl: './purchasing.page.html',
   styleUrl: './purchasing.page.scss'
 })
@@ -110,39 +111,8 @@ export class PurchasingPage {
     return this.orders().slice(start, start + size);
   });
   lines = signal<PurchaseLineInput[]>([]);
-  productOptions = signal<ProductOption[]>([]);
-  selectedProduct = signal<ProductOption | null>(null);
-  selectedUnit = signal<MeasureOption | null>(null);
-
-  measureOptions = computed<MeasureOption[]>(() => {
-    const p = this.selectedProduct();
-    if (!p) return [];
-    const units = p.units ?? [];
-    const byName = new Map(units.map((u) => [u.name.toLowerCase(), u]));
-    const standard: Array<{ name: string; qty: number | null }> = [
-      { name: 'Piece', qty: 1 },
-      { name: 'Half Dozen', qty: 6 },
-      { name: 'Dozen', qty: 12 },
-      { name: 'Carton', qty: null }
-    ];
-    const options: MeasureOption[] = standard.map((s) => {
-      const u = byName.get(s.name.toLowerCase());
-      if (u) return { name: u.name, price: u.price, buyingPrice: u.buyingPrice, quantity: u.quantity };
-      const qty = s.qty;
-      return {
-        name: s.name,
-        quantity: qty,
-        price: p.sellingPrice != null && qty != null ? p.sellingPrice * qty : null,
-        buyingPrice: p.buyingPrice != null && qty != null ? p.buyingPrice * qty : null
-      };
-    });
-    for (const u of units) {
-      if (!standard.some((s) => s.name.toLowerCase() === u.name.toLowerCase())) {
-        options.push({ name: u.name, price: u.price, buyingPrice: u.buyingPrice, quantity: u.quantity });
-      }
-    }
-    return options;
-  });
+  productOptions = signal<ExistingProductRef[]>([]);
+  categories = signal<Array<{ id: string; name: string }>>([]);
 
   private readonly fb = inject(FormBuilder);
   private readonly branchCtx = inject(BranchContext);
@@ -152,9 +122,20 @@ export class PurchasingPage {
     invoiceNumber: ['']
   });
 
+  readonly headerFields: FormField[] = [
+    { key: 'supplier', label: 'common.supplier' },
+    { key: 'invoiceNumber', label: 'common.invoiceNumber' }
+  ];
+
   lineForm = this.fb.group({
-    productId: [null as number | null, [Validators.required]],
-    measure: ['', [Validators.required]],
+    sku: [''],
+    name: ['', [Validators.required]],
+    barcode: [''],
+    brand: [''],
+    category: [''],
+    variant: [''],
+    sellingPrice: [null as number | null, [Validators.min(0)]],
+    measure: ['Piece', [Validators.required]],
     unitSize: [1 as number | null, [Validators.required, Validators.min(1)]],
     batchNumber: [''],
     expiryDate: ['', [Validators.required]],
@@ -162,54 +143,79 @@ export class PurchasingPage {
     measureQuantity: [1 as number, [Validators.required, Validators.min(1)]]
   });
 
+  private measureName(): string {
+    return (this.lineForm.controls.measure.value ?? '').trim() || 'measure';
+  }
+
+  readonly lineFieldsA: FormField[] = [
+    { key: 'sku', label: 'SKU', labelHint: 'auto if empty', placeholder: 'PRD-00001' },
+    { key: 'name', label: 'Product Name', required: true }
+  ];
+
+  readonly lineFieldsB: FormField[] = [
+    { key: 'barcode', label: 'Barcode' },
+    { key: 'brand', label: 'Brand' }
+  ];
+
+  readonly lineFieldsC: FormField[] = [
+    {
+      key: 'category', label: 'Category', type: 'select',
+      options: () => [
+        { value: '', label: 'expenses.selectCategory' },
+        ...this.categories().map(c => ({ value: c.name, label: c.name }))
+      ]
+    },
+    { key: 'variant', label: 'Variant' }
+  ];
+
+  readonly lineFieldsD: FormField[] = [
+    { key: 'measure', label: 'Purchase type / measure', required: true, placeholder: 'e.g. Piece, Dozen, Carton' },
+    {
+      key: 'unitSize', type: 'number', required: true, min: 1, step: 1,
+      label: () => `pcs per ${this.measureName()}`
+    }
+  ];
+
+  readonly lineFieldsE: FormField[] = [
+    { key: 'expiryDate', label: 'common.expiryDate', type: 'date', required: true },
+    { key: 'batchNumber', label: 'common.batchNumber', labelHint: 'auto if empty', placeholder: 'B1-0001' }
+  ];
+
+  readonly lineFieldsF: FormField[] = [
+    {
+      key: 'measureQuantity', type: 'number', required: true, min: 1, step: 1,
+      label: () => `Quantity (${this.measureName()})`
+    },
+    {
+      key: 'measurePrice', type: 'number', required: true, min: 0, step: 0.01,
+      label: () => `Buying price per ${this.measureName()} (TZS)`
+    }
+  ];
+
+  readonly lineFieldsG: FormField[] = [
+    { key: 'sellingPrice', label: 'Selling price per piece (TZS)', type: 'number', min: 0, step: 0.01 }
+  ];
+
   constructor(private readonly gql: GraphqlService) {
-    this.lineForm.controls.measure.disable();
     this.perm.load();
     this.load();
     this.loadProductOptions();
+    this.loadCategories();
   }
 
   loadProductOptions(): void {
-    const q = `query Products { products { id sku name active brand category unitOfMeasure buyingPrice sellingPrice units { name price buyingPrice quantity } batches { batchNumber } } }`;
+    const q = `query Products { products { id sku name } }`;
     this.gql.request<ProductsQueryResult>(q).subscribe({
       next: (res) => this.productOptions.set(res.products ?? []),
       error: () => this.productOptions.set([])
     });
   }
 
-  onProductChange(): void {
-    const id = Number(this.lineForm.getRawValue().productId);
-    const product = this.productOptions().find((p) => Number(p.id) === id) ?? null;
-    this.selectedProduct.set(product);
-    this.selectedUnit.set(null);
-    if (!product) {
-      this.lineForm.patchValue({ measure: '', unitSize: null, measurePrice: 0, batchNumber: '' });
-      this.lineForm.controls.measure.disable();
-      return;
-    }
-    this.lineForm.controls.measure.enable();
-    this.lineForm.patchValue({ batchNumber: '' });
-    const first = this.measureOptions()[0];
-    if (first) this.applyMeasure(first);
-  }
-
-  onMeasureChange(): void {
-    const name = String(this.lineForm.getRawValue().measure ?? '');
-    const unit = this.measureOptions().find((u) => u.name === name) ?? null;
-    this.applyMeasure(unit);
-  }
-
-  private applyMeasure(unit: MeasureOption | null): void {
-    this.selectedUnit.set(unit);
-    if (!unit) {
-      this.lineForm.patchValue({ measure: '', unitSize: null });
-      return;
-    }
-    const p = this.selectedProduct();
-    this.lineForm.patchValue({
-      measure: unit.name,
-      unitSize: unit.quantity ?? null,
-      measurePrice: unit.buyingPrice ?? (unit.quantity != null && p?.buyingPrice != null ? p.buyingPrice * unit.quantity : 0)
+  loadCategories(): void {
+    const q = `query Categories { categories { id name } }`;
+    this.gql.request<{ categories: Array<{ id: string; name: string }> }>(q).subscribe({
+      next: (res) => this.categories.set(res.categories ?? []),
+      error: () => this.categories.set([])
     });
   }
 
@@ -230,11 +236,6 @@ export class PurchasingPage {
   lineTotal(): number {
     const raw = this.lineForm.getRawValue();
     return Number(raw.measurePrice ?? 0) * Number(raw.measureQuantity ?? 0);
-  }
-
-  productLabel(id: number): string {
-    const p = this.productOptions().find((x) => Number(x.id) === Number(id));
-    return p ? `${p.name} — ${p.sku}` : `#${id}`;
   }
 
   lineQtyLabel(l: PurchaseLineInput): string {
@@ -282,6 +283,8 @@ export class PurchasingPage {
     this.lines.set(
       (o.lines ?? []).map((l) => ({
         productId: Number(l.productId),
+        newProduct: null,
+        displayName: `${l.productName ?? ''}${l.sku ? ` — ${l.sku}` : ''}`,
         batchNumber: String(l.batchNumber ?? ''),
         expiryDate: String(l.expiryDate ?? ''),
         costPrice: Number(l.costPrice ?? 0),
@@ -323,26 +326,68 @@ export class PurchasingPage {
   addLine(): void {
     if (this.lineForm.invalid) return;
     const raw = this.lineForm.getRawValue();
-    const unit = this.selectedUnit();
     const unitSize = Number(raw.unitSize ?? 0);
-    if (!raw.productId || !unit || unitSize <= 0) return;
+    if (unitSize <= 0) return;
 
-    const batchNumber = raw.batchNumber?.trim() || null;
+    const name = (raw.name ?? '').trim();
+    if (!name) return;
 
+    const sku = raw.sku?.trim() || null;
+    const existing = this.productOptions().find((p) =>
+      p.name.trim().toLowerCase() === name.toLowerCase() ||
+      (sku != null && p.sku.trim().toLowerCase() === sku.toLowerCase()));
+    if (existing) {
+      this.error.set(`"${existing.name}" already exists in the system (SKU ${existing.sku}). Add Purchase is for new products only.`);
+      return;
+    }
+    const dup = this.lines().find((l) =>
+      l.newProduct != null &&
+      (l.newProduct.name.toLowerCase() === name.toLowerCase() ||
+        (sku != null && l.newProduct.sku?.toLowerCase() === sku.toLowerCase())));
+    if (dup) {
+      this.error.set(`"${name}" is already added as a line below.`);
+      return;
+    }
+    this.error.set(null);
+
+    const measure = (raw.measure ?? '').trim() || 'Piece';
     const measureQty = Number(raw.measureQuantity ?? 0);
     const measurePrice = Number(raw.measurePrice ?? 0);
     const pcs = Math.round(measureQty * unitSize);
     if (pcs <= 0) return;
 
+    const costPrice = Math.round((measurePrice / unitSize) * 10000) / 10000;
+    const sellingPrice = raw.sellingPrice != null ? Number(raw.sellingPrice) : null;
+
+    const newProduct: NewProductInput = {
+      sku,
+      barcode: raw.barcode?.trim() || null,
+      name,
+      brand: raw.brand?.trim() || null,
+      category: raw.category?.trim() || null,
+      variant: raw.variant?.trim() || null,
+      unitOfMeasure: 'pcs',
+      buyingPrice: costPrice,
+      sellingPrice,
+      units: [{
+        name: measure,
+        price: sellingPrice != null ? Math.round(sellingPrice * unitSize * 100) / 100 : null,
+        buyingPrice: measurePrice,
+        quantity: unitSize
+      }]
+    };
+
     this.lines.set([
       ...this.lines(),
       {
-        productId: Number(raw.productId),
-        batchNumber,
+        productId: null,
+        newProduct,
+        displayName: name,
+        batchNumber: raw.batchNumber?.trim() || null,
         expiryDate: raw.expiryDate ?? '',
-        costPrice: Math.round((measurePrice / unitSize) * 10000) / 10000,
+        costPrice,
         quantityReceived: pcs,
-        measureName: unit.name,
+        measureName: measure,
         measureQuantity: measureQty
       }
     ]);
@@ -351,13 +396,16 @@ export class PurchasingPage {
   }
 
   private resetLineForm(): void {
-    this.selectedProduct.set(null);
-    this.selectedUnit.set(null);
-    this.lineForm.controls.measure.disable();
     this.lineForm.reset({
-      productId: null,
-      measure: '',
-      unitSize: null,
+      sku: '',
+      name: '',
+      barcode: '',
+      brand: '',
+      category: '',
+      variant: '',
+      sellingPrice: null,
+      measure: 'Piece',
+      unitSize: 1,
       batchNumber: '',
       expiryDate: '',
       measurePrice: 0,
@@ -383,8 +431,8 @@ export class PurchasingPage {
     this.error.set(null);
 
     const header = this.headerForm.getRawValue();
-    const lineInputs = this.lines().map(({ productId, batchNumber, expiryDate, costPrice, quantityReceived }) =>
-      ({ productId, batchNumber, expiryDate, costPrice, quantityReceived }));
+    const lineInputs = this.lines().map(({ productId, newProduct, batchNumber, expiryDate, costPrice, quantityReceived }) =>
+      ({ productId, newProduct, batchNumber, expiryDate, costPrice, quantityReceived }));
 
     const editingId = this.editingOrderId();
     if (editingId) {
