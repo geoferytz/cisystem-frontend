@@ -44,8 +44,8 @@
         <div class="rp-heading"><strong>{{ line.productName }}</strong><button type="button" [disabled]="busy() || locked()" (click)="removeProduct(line.productId)" [attr.aria-label]="'Remove ' + line.productName">Remove</button></div>
         <small>{{ line.sku }}</small>
         <div class="rp-prices">
-          <label>Buying price<input type="number" min="0" max="1000000000" step="0.0001" [value]="line.buyingPrice" (change)="changeLine(line.productId, 'buyingPrice', $event)" [disabled]="busy() || locked() || !perm.canEdit('PRODUCTS')" /></label>
-          <label>Selling price<input type="number" min="0" max="1000000000" step="0.0001" [value]="line.sellingPrice" (change)="changeLine(line.productId, 'sellingPrice', $event)" [disabled]="busy() || locked() || !perm.canEdit('PRODUCTS')" /></label>
+          <label>Buying price<input cisCurrencyInput type="text" inputmode="decimal" [ngModel]="line.buyingPrice" (ngModelChange)="setLine(line.productId, 'buyingPrice', $event)" [disabled]="busy() || locked() || !perm.canEdit('PRODUCTS')" /></label>
+          <label>Selling price<input cisCurrencyInput type="text" inputmode="decimal" [ngModel]="line.sellingPrice" (ngModelChange)="setLine(line.productId, 'sellingPrice', $event)" [disabled]="busy() || locked() || !perm.canEdit('PRODUCTS')" /></label>
         </div>
         <div class="rp-prices">
           <label>Batch number<input type="text" maxlength="80" [value]="line.batchNumber || ''" (input)="setText(line.productId, 'batchNumber', $any($event.target).value)" [disabled]="busy() || locked()" placeholder="e.g. BN-2025-01" /></label>

@@ -1,4 +1,7 @@
 import {
+  CurrencyInputDirective
+} from "./chunk-O3WQKP2X.js";
+import {
   CheckboxControlValueAccessor,
   DefaultValueAccessor,
   FormControlDirective,
@@ -7,7 +10,7 @@ import {
   ReactiveFormsModule,
   SelectControlValueAccessor,
   ɵNgSelectMultipleOption
-} from "./chunk-TD7F3R7N.js";
+} from "./chunk-CXEU7F5R.js";
 import {
   TranslatePipe
 } from "./chunk-DPFPPFWE.js";
@@ -154,7 +157,7 @@ function CisFormFieldComponent_ng_template_1_Template(rf, ctx) {
 }
 function CisFormFieldComponent_ng_template_3_select_1_option_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "option", 19);
+    \u0275\u0275elementStart(0, "option", 20);
     \u0275\u0275text(1);
     \u0275\u0275pipe(2, "translate");
     \u0275\u0275elementEnd();
@@ -169,8 +172,8 @@ function CisFormFieldComponent_ng_template_3_select_1_option_1_Template(rf, ctx)
 }
 function CisFormFieldComponent_ng_template_3_select_1_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275elementStart(0, "select", 17);
-    \u0275\u0275template(1, CisFormFieldComponent_ng_template_3_select_1_option_1_Template, 3, 5, "option", 18);
+    \u0275\u0275elementStart(0, "select", 18);
+    \u0275\u0275template(1, CisFormFieldComponent_ng_template_3_select_1_option_1_Template, 3, 5, "option", 19);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
@@ -183,7 +186,7 @@ function CisFormFieldComponent_ng_template_3_select_1_Template(rf, ctx) {
 }
 function CisFormFieldComponent_ng_template_3_textarea_2_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275element(0, "textarea", 20);
+    \u0275\u0275element(0, "textarea", 21);
     \u0275\u0275pipe(1, "translate");
   }
   if (rf & 2) {
@@ -194,7 +197,7 @@ function CisFormFieldComponent_ng_template_3_textarea_2_Template(rf, ctx) {
 }
 function CisFormFieldComponent_ng_template_3_input_3_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275element(0, "input", 21);
+    \u0275\u0275element(0, "input", 22);
   }
   if (rf & 2) {
     const ctx_r0 = \u0275\u0275nextContext(2);
@@ -203,7 +206,19 @@ function CisFormFieldComponent_ng_template_3_input_3_Template(rf, ctx) {
 }
 function CisFormFieldComponent_ng_template_3_input_4_Template(rf, ctx) {
   if (rf & 1) {
-    \u0275\u0275element(0, "input", 22);
+    \u0275\u0275element(0, "input", 23);
+    \u0275\u0275pipe(1, "translate");
+  }
+  if (rf & 2) {
+    const ctx_r0 = \u0275\u0275nextContext(2);
+    \u0275\u0275classMap(ctx_r0.controlClass());
+    \u0275\u0275property("placeholder", \u0275\u0275pipeBind1(1, 8, ctx_r0.placeholder()))("readonly", ctx_r0.field().readonly ?? false)("formControl", ctx_r0.control());
+    \u0275\u0275attribute("maxlength", ctx_r0.field().maxlength ?? null)("autocomplete", ctx_r0.field().autocomplete ?? "off")("autofocus", ctx_r0.field().autofocus ? "" : null);
+  }
+}
+function CisFormFieldComponent_ng_template_3_input_5_Template(rf, ctx) {
+  if (rf & 1) {
+    \u0275\u0275element(0, "input", 24);
     \u0275\u0275pipe(1, "translate");
   }
   if (rf & 2) {
@@ -216,7 +231,7 @@ function CisFormFieldComponent_ng_template_3_input_4_Template(rf, ctx) {
 function CisFormFieldComponent_ng_template_3_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementContainerStart(0, 12);
-    \u0275\u0275template(1, CisFormFieldComponent_ng_template_3_select_1_Template, 2, 4, "select", 13)(2, CisFormFieldComponent_ng_template_3_textarea_2_Template, 2, 7, "textarea", 14)(3, CisFormFieldComponent_ng_template_3_input_3_Template, 1, 1, "input", 15)(4, CisFormFieldComponent_ng_template_3_input_4_Template, 2, 15, "input", 16);
+    \u0275\u0275template(1, CisFormFieldComponent_ng_template_3_select_1_Template, 2, 4, "select", 13)(2, CisFormFieldComponent_ng_template_3_textarea_2_Template, 2, 7, "textarea", 14)(3, CisFormFieldComponent_ng_template_3_input_3_Template, 1, 1, "input", 15)(4, CisFormFieldComponent_ng_template_3_input_4_Template, 2, 10, "input", 16)(5, CisFormFieldComponent_ng_template_3_input_5_Template, 2, 15, "input", 17);
     \u0275\u0275elementContainerEnd();
   }
   if (rf & 2) {
@@ -228,6 +243,8 @@ function CisFormFieldComponent_ng_template_3_Template(rf, ctx) {
     \u0275\u0275property("ngSwitchCase", "textarea");
     \u0275\u0275advance();
     \u0275\u0275property("ngSwitchCase", "checkbox");
+    \u0275\u0275advance();
+    \u0275\u0275property("ngSwitchCase", "currency");
   }
 }
 var _c0 = (a0) => ({ $implicit: a0 });
@@ -379,15 +396,15 @@ var CisFormFieldComponent = class _CisFormFieldComponent {
   static \u0275fac = function CisFormFieldComponent_Factory(__ngFactoryType__) {
     return new (__ngFactoryType__ || _CisFormFieldComponent)();
   };
-  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _CisFormFieldComponent, selectors: [["cis-form-field"]], hostAttrs: [2, "display", "contents"], inputs: { field: [1, "field"], control: [1, "control"] }, decls: 5, vars: 2, consts: [["bareControl", ""], ["controlTpl", ""], [3, "class", 4, "ngIf", "ngIfElse"], ["class", "text-[#B81104]", 4, "ngIf"], ["class", "font-normal text-slate-400 dark:text-slate-500", 4, "ngIf"], [4, "ngTemplateOutlet"], ["class", "text-[11px] font-normal text-slate-500 dark:text-slate-400", 4, "ngIf"], ["class", "text-[11px] font-semibold text-[#B81104] dark:text-red-400", 4, "ngIf"], [1, "text-[#B81104]"], [1, "font-normal", "text-slate-400", "dark:text-slate-500"], [1, "text-[11px]", "font-normal", "text-slate-500", "dark:text-slate-400"], [1, "text-[11px]", "font-semibold", "text-[#B81104]", "dark:text-red-400"], [3, "ngSwitch"], [3, "class", "formControl", 4, "ngSwitchCase"], [3, "class", "rows", "placeholder", "formControl", 4, "ngSwitchCase"], ["type", "checkbox", "class", "h-4 w-4 accent-pink-500", 3, "formControl", 4, "ngSwitchCase"], [3, "type", "class", "placeholder", "readonly", "formControl", 4, "ngSwitchDefault"], [3, "formControl"], [3, "ngValue", "disabled", 4, "ngFor", "ngForOf"], [3, "ngValue", "disabled"], [3, "rows", "placeholder", "formControl"], ["type", "checkbox", 1, "h-4", "w-4", "accent-pink-500", 3, "formControl"], [3, "type", "placeholder", "readonly", "formControl"]], template: function CisFormFieldComponent_Template(rf, ctx) {
+  static \u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _CisFormFieldComponent, selectors: [["cis-form-field"]], hostAttrs: [2, "display", "contents"], inputs: { field: [1, "field"], control: [1, "control"] }, decls: 5, vars: 2, consts: [["bareControl", ""], ["controlTpl", ""], [3, "class", 4, "ngIf", "ngIfElse"], ["class", "text-[#B81104]", 4, "ngIf"], ["class", "font-normal text-slate-400 dark:text-slate-500", 4, "ngIf"], [4, "ngTemplateOutlet"], ["class", "text-[11px] font-normal text-slate-500 dark:text-slate-400", 4, "ngIf"], ["class", "text-[11px] font-semibold text-[#B81104] dark:text-red-400", 4, "ngIf"], [1, "text-[#B81104]"], [1, "font-normal", "text-slate-400", "dark:text-slate-500"], [1, "text-[11px]", "font-normal", "text-slate-500", "dark:text-slate-400"], [1, "text-[11px]", "font-semibold", "text-[#B81104]", "dark:text-red-400"], [3, "ngSwitch"], [3, "class", "formControl", 4, "ngSwitchCase"], [3, "class", "rows", "placeholder", "formControl", 4, "ngSwitchCase"], ["type", "checkbox", "class", "h-4 w-4 accent-pink-500", 3, "formControl", 4, "ngSwitchCase"], ["cisCurrencyInput", "", "type", "text", "inputmode", "decimal", 3, "class", "placeholder", "readonly", "formControl", 4, "ngSwitchCase"], [3, "type", "class", "placeholder", "readonly", "formControl", 4, "ngSwitchDefault"], [3, "formControl"], [3, "ngValue", "disabled", 4, "ngFor", "ngForOf"], [3, "ngValue", "disabled"], [3, "rows", "placeholder", "formControl"], ["type", "checkbox", 1, "h-4", "w-4", "accent-pink-500", 3, "formControl"], ["cisCurrencyInput", "", "type", "text", "inputmode", "decimal", 3, "placeholder", "readonly", "formControl"], [3, "type", "placeholder", "readonly", "formControl"]], template: function CisFormFieldComponent_Template(rf, ctx) {
     if (rf & 1) {
-      \u0275\u0275template(0, CisFormFieldComponent_label_0_Template, 9, 10, "label", 2)(1, CisFormFieldComponent_ng_template_1_Template, 1, 1, "ng-template", null, 0, \u0275\u0275templateRefExtractor)(3, CisFormFieldComponent_ng_template_3_Template, 5, 4, "ng-template", null, 1, \u0275\u0275templateRefExtractor);
+      \u0275\u0275template(0, CisFormFieldComponent_label_0_Template, 9, 10, "label", 2)(1, CisFormFieldComponent_ng_template_1_Template, 1, 1, "ng-template", null, 0, \u0275\u0275templateRefExtractor)(3, CisFormFieldComponent_ng_template_3_Template, 6, 5, "ng-template", null, 1, \u0275\u0275templateRefExtractor);
     }
     if (rf & 2) {
       const bareControl_r4 = \u0275\u0275reference(2);
       \u0275\u0275property("ngIf", !ctx.field().bare)("ngIfElse", bareControl_r4);
     }
-  }, dependencies: [CommonModule, NgForOf, NgIf, NgTemplateOutlet, NgSwitch, NgSwitchCase, NgSwitchDefault, ReactiveFormsModule, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, CheckboxControlValueAccessor, SelectControlValueAccessor, NgControlStatus, FormControlDirective, TranslatePipe], encapsulation: 2 });
+  }, dependencies: [CommonModule, NgForOf, NgIf, NgTemplateOutlet, NgSwitch, NgSwitchCase, NgSwitchDefault, ReactiveFormsModule, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, CheckboxControlValueAccessor, SelectControlValueAccessor, NgControlStatus, FormControlDirective, CurrencyInputDirective, TranslatePipe], encapsulation: 2 });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(CisFormFieldComponent, [{
@@ -395,7 +412,7 @@ var CisFormFieldComponent = class _CisFormFieldComponent {
     args: [{
       selector: "cis-form-field",
       standalone: true,
-      imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
+      imports: [CommonModule, ReactiveFormsModule, TranslatePipe, CurrencyInputDirective],
       // Transparent wrapper — the label/control itself becomes the grid item.
       host: { "style": "display: contents" },
       template: `
@@ -440,6 +457,20 @@ var CisFormFieldComponent = class _CisFormFieldComponent {
         />
 
         <input
+          *ngSwitchCase="'currency'"
+          cisCurrencyInput
+          type="text"
+          inputmode="decimal"
+          [class]="controlClass()"
+          [placeholder]="placeholder() | translate"
+          [attr.maxlength]="field().maxlength ?? null"
+          [attr.autocomplete]="field().autocomplete ?? 'off'"
+          [attr.autofocus]="field().autofocus ? '' : null"
+          [readonly]="field().readonly ?? false"
+          [formControl]="control()"
+        />
+
+        <input
           *ngSwitchDefault
           [type]="field().type ?? 'text'"
           [class]="controlClass()"
@@ -461,7 +492,7 @@ var CisFormFieldComponent = class _CisFormFieldComponent {
   }], null, { field: [{ type: Input, args: [{ isSignal: true, alias: "field", required: true }] }], control: [{ type: Input, args: [{ isSignal: true, alias: "control", required: true }] }] });
 })();
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(CisFormFieldComponent, { className: "CisFormFieldComponent", filePath: "app/shared/ui/form/form-field.component.ts", lineNumber: 155 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(CisFormFieldComponent, { className: "CisFormFieldComponent", filePath: "app/shared/ui/form/form-field.component.ts", lineNumber: 170 });
 })();
 var CisFormFieldsComponent = class _CisFormFieldsComponent {
   fields = input.required(...ngDevMode ? [{ debugName: "fields" }] : []);
@@ -527,9 +558,9 @@ var CisFormFieldsComponent = class _CisFormFieldsComponent {
   }], null, { fields: [{ type: Input, args: [{ isSignal: true, alias: "fields", required: true }] }], form: [{ type: Input, args: [{ isSignal: true, alias: "form", required: true }] }], fieldTemplates: [{ type: ContentChildren, args: [forwardRef(() => CisFieldTplDirective), { isSignal: true }] }] });
 })();
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(CisFormFieldsComponent, { className: "CisFormFieldsComponent", filePath: "app/shared/ui/form/form-field.component.ts", lineNumber: 257 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(CisFormFieldsComponent, { className: "CisFormFieldsComponent", filePath: "app/shared/ui/form/form-field.component.ts", lineNumber: 272 });
 })();
-var CIS_FORM_IMPORTS = [CisFormFieldsComponent, CisFormFieldComponent, CisFieldTplDirective];
+var CIS_FORM_IMPORTS = [CisFormFieldsComponent, CisFormFieldComponent, CisFieldTplDirective, CurrencyInputDirective];
 
 export {
   CisFieldTplDirective,
@@ -537,4 +568,4 @@ export {
   CisFormFieldsComponent,
   CIS_FORM_IMPORTS
 };
-//# sourceMappingURL=chunk-XGYQYOHY.js.map
+//# sourceMappingURL=chunk-ELX72Y6T.js.map

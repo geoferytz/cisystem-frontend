@@ -225,7 +225,7 @@ export class SalesPage {
         { value: 'OTHER', label: 'Other' }
       ]
     },
-    { key: 'amountReceived', label: 'customers.receivedAmount', type: 'number', min: 0, step: 0.01 }
+    { key: 'amountReceived', label: 'customers.receivedAmount', type: 'currency', min: 0 }
   ];
 
   readonly newCustomerFields: FormField[] = [
@@ -249,7 +249,7 @@ export class SalesPage {
       ]
     },
     { key: 'quantity', label: 'common.qty', type: 'number', required: true, min: 1 },
-    { key: 'unitPrice', label: 'common.unitPrice', type: 'number', required: true, min: 0, step: 0.01 },
+    { key: 'unitPrice', label: 'common.unitPrice', type: 'currency', required: true, min: 0 },
     {
       key: 'location', label: 'common.branch', type: 'select',
       options: () => this.branchCtx.options().map(b => ({ value: b.code, label: `${b.name} (${b.code})` }))
@@ -259,7 +259,7 @@ export class SalesPage {
   paymentFields(o: SalesOrder): FormField[] {
     return [
       {
-        key: 'amount', label: 'customers.paymentAmount', type: 'number', required: true, min: 0.01, step: 0.01,
+        key: 'amount', label: 'customers.paymentAmount', type: 'currency', required: true, min: 0.01,
         hint: () => `${this.i18n.translate('customers.debt')}: ${this.orderDebt(o).toLocaleString()}`
       },
       { key: 'paidAt', label: 'customers.paymentDate', type: 'date', required: true }

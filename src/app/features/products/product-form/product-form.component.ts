@@ -147,7 +147,7 @@ export class ProductFormComponent implements OnChanges {
     const f: FormField = {
       key: this.tierControlName(tier, kind),
       label: labels[kind],
-      type: 'number',
+      type: kind === 'Quantity' ? 'number' : 'currency',
       min: kind === 'Quantity' ? 1 : 0
     };
     if (kind === 'Quantity') {

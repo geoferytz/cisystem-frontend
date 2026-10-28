@@ -11,6 +11,7 @@ import { PwaService } from '../../core/pwa.service';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { PermissionService } from '../../shared/services/permission.service';
 import { BarcodeScannerComponent } from '../../shared/ui/barcode-scanner/barcode-scanner.component';
+import { CurrencyInputDirective } from '../../shared/ui/form/currency-input.directive';
 import { ConfirmDialogComponent } from '../../shared/ui/confirm-dialog/confirm-dialog.component';
 import { ModalComponent } from '../../shared/ui/modal/modal.component';
 import { RowActionsMenuComponent } from '../../shared/ui/row-actions-menu/row-actions-menu.component';
@@ -34,7 +35,7 @@ const CART_FIELDS = 'id version customer referenceNumber createdAt updatedAt cre
 @Component({
   selector: 'cis-counter-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, MoneyPipe, ModalComponent, ConfirmDialogComponent, BarcodeScannerComponent, RowActionsMenuComponent, PagerComponent, TranslatePipe, ReturnDialogComponent, ReceiptDialogComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, MoneyPipe, ModalComponent, ConfirmDialogComponent, BarcodeScannerComponent, RowActionsMenuComponent, PagerComponent, TranslatePipe, ReturnDialogComponent, ReceiptDialogComponent, CurrencyInputDirective],
   templateUrl: './counter.page.html',
   styleUrl: './counter.page.scss'
 })

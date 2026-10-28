@@ -11,7 +11,7 @@ import {
   ReturnDialogComponent,
   provideServiceWorker,
   takeUntilDestroyed
-} from "./chunk-NLVFH436.js";
+} from "./chunk-767WNY32.js";
 import {
   ConfirmDialogComponent
 } from "./chunk-N7IOF3IM.js";
@@ -36,7 +36,8 @@ import {
   CisFieldTplDirective,
   CisFormFieldComponent,
   CisFormFieldsComponent
-} from "./chunk-XGYQYOHY.js";
+} from "./chunk-ELX72Y6T.js";
+import "./chunk-O3WQKP2X.js";
 import {
   RowActionsMenuComponent
 } from "./chunk-NDY7KUDP.js";
@@ -60,7 +61,7 @@ import {
   Validators,
   ɵNgNoValidate,
   ɵNgSelectMultipleOption
-} from "./chunk-TD7F3R7N.js";
+} from "./chunk-CXEU7F5R.js";
 import {
   PagerComponent
 } from "./chunk-LNJXT4KE.js";
@@ -5468,7 +5469,7 @@ var ProductFormComponent = class _ProductFormComponent {
     const f = {
       key: this.tierControlName(tier, kind),
       label: labels[kind],
-      type: "number",
+      type: kind === "Quantity" ? "number" : "currency",
       min: kind === "Quantity" ? 1 : 0
     };
     if (kind === "Quantity") {
@@ -5859,7 +5860,7 @@ var ProductFormComponent = class _ProductFormComponent {
 })();
 
 // src/app/features/products/products.page.ts
-var _c05 = () => ({ type: "number" });
+var _c05 = () => ({ type: "currency" });
 function ProductsPage_button_10_Template(rf, ctx) {
   if (rf & 1) {
     const _r1 = \u0275\u0275getCurrentView();
@@ -7467,7 +7468,7 @@ var ProductsPage = class _ProductsPage {
                 {{ p.buyingPrice | money }}
               </ng-container>
               <ng-template #editBuying>
-                <cis-form-field [field]="editField('buyingPrice', { type: 'number' })" [control]="editForm.controls.buyingPrice" />
+                <cis-form-field [field]="editField('buyingPrice', { type: 'currency' })" [control]="editForm.controls.buyingPrice" />
               </ng-template>
             </td>
 
@@ -7476,7 +7477,7 @@ var ProductsPage = class _ProductsPage {
                 {{ p.sellingPrice | money }}
               </ng-container>
               <ng-template #editSelling>
-                <cis-form-field [field]="editField('sellingPrice', { type: 'number' })" [control]="editForm.controls.sellingPrice" />
+                <cis-form-field [field]="editField('sellingPrice', { type: 'currency' })" [control]="editForm.controls.sellingPrice" />
               </ng-template>
             </td>
             <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
@@ -10244,7 +10245,7 @@ var SalesPage = class _SalesPage {
         { value: "OTHER", label: "Other" }
       ]
     },
-    { key: "amountReceived", label: "customers.receivedAmount", type: "number", min: 0, step: 0.01 }
+    { key: "amountReceived", label: "customers.receivedAmount", type: "currency", min: 0 }
   ];
   newCustomerFields = [
     { key: "name", label: "customers.name", required: true, maxlength: 200 },
@@ -10268,7 +10269,7 @@ var SalesPage = class _SalesPage {
       ]
     },
     { key: "quantity", label: "common.qty", type: "number", required: true, min: 1 },
-    { key: "unitPrice", label: "common.unitPrice", type: "number", required: true, min: 0, step: 0.01 },
+    { key: "unitPrice", label: "common.unitPrice", type: "currency", required: true, min: 0 },
     {
       key: "location",
       label: "common.branch",
@@ -10281,10 +10282,9 @@ var SalesPage = class _SalesPage {
       {
         key: "amount",
         label: "customers.paymentAmount",
-        type: "number",
+        type: "currency",
         required: true,
         min: 0.01,
-        step: 0.01,
         hint: () => `${this.i18n.translate("customers.debt")}: ${this.orderDebt(o).toLocaleString()}`
       },
       { key: "paidAt", label: "customers.paymentDate", type: "date", required: true }
@@ -12432,7 +12432,7 @@ var MySalesPage = class _MySalesPage {
   lineFields = [
     { key: "productName", label: "common.productName", required: true },
     { key: "quantity", label: "common.qty", type: "number", required: true, min: 1 },
-    { key: "unitPrice", label: "common.unitPrice", type: "number", required: true, step: 0.01, min: 0 }
+    { key: "unitPrice", label: "common.unitPrice", type: "currency", required: true, min: 0 }
   ];
   lines = signal([], ...ngDevMode ? [{ debugName: "lines" }] : []);
   constructor() {
@@ -18209,7 +18209,7 @@ var ExpensesPage = class _ExpensesPage {
         ...this.categories().map((c) => ({ value: c.id, label: c.name }))
       ]
     },
-    { key: "amount", label: "common.amount", type: "number", required: true, min: 0 },
+    { key: "amount", label: "common.amount", type: "currency", required: true, min: 0 },
     { key: "description", label: "expenses.descriptionOptional", wrapClass: "sm:col-span-2" },
     {
       key: "paymentMethod",
@@ -19684,7 +19684,7 @@ var routes = [
       { path: "home", component: HomePage },
       {
         path: "counter",
-        loadComponent: () => import("./chunk-LTOODRPI.js").then((m) => m.CounterPage),
+        loadComponent: () => import("./chunk-3KIZFVBI.js").then((m) => m.CounterPage),
         canDeactivate: [(component) => component.canDeactivate()]
       },
       { path: "dashboard", component: DashboardPage },
@@ -19696,7 +19696,7 @@ var routes = [
       { path: "categories", component: CategoriesPage },
       {
         path: "inventory",
-        loadComponent: () => import("./chunk-KMHOEUVD.js").then((m) => m.InventoryPage)
+        loadComponent: () => import("./chunk-NW5LSQWO.js").then((m) => m.InventoryPage)
       },
       {
         path: "inventory/analytics",
@@ -19705,16 +19705,16 @@ var routes = [
       { path: "stock-movements", component: StockMovementsPage },
       {
         path: "purchasing",
-        loadComponent: () => import("./chunk-7JOZF5VI.js").then((m) => m.PurchasingPage)
+        loadComponent: () => import("./chunk-T7K37K32.js").then((m) => m.PurchasingPage)
       },
       { path: "sales", component: SalesPage },
       {
         path: "customers",
-        loadComponent: () => import("./chunk-DK2HBEEU.js").then((m) => m.CustomersPage)
+        loadComponent: () => import("./chunk-MBSOH2WB.js").then((m) => m.CustomersPage)
       },
       {
         path: "returns",
-        loadComponent: () => import("./chunk-X4WMSQDM.js").then((m) => m.ReturnsPage)
+        loadComponent: () => import("./chunk-OFLFEKQN.js").then((m) => m.ReturnsPage)
       },
       { path: "my-sales", component: MySalesPage },
       { path: "my-sales-report", component: MySalesReportPage },
@@ -19725,19 +19725,19 @@ var routes = [
       { path: "profit-management", component: ProfitManagementPage },
       {
         path: "users",
-        loadComponent: () => import("./chunk-2RAXPJ53.js").then((m) => m.UsersPage)
+        loadComponent: () => import("./chunk-RA5POLZL.js").then((m) => m.UsersPage)
       },
       {
         path: "roles",
-        loadComponent: () => import("./chunk-C4XGEM6U.js").then((m) => m.RolesPage)
+        loadComponent: () => import("./chunk-KLRBUXBM.js").then((m) => m.RolesPage)
       },
       {
         path: "branches",
-        loadComponent: () => import("./chunk-3WFLFY2D.js").then((m) => m.BranchesPage)
+        loadComponent: () => import("./chunk-O7YUTHOY.js").then((m) => m.BranchesPage)
       },
       {
         path: "transfers",
-        loadComponent: () => import("./chunk-J4FIE5AB.js").then((m) => m.TransfersPage)
+        loadComponent: () => import("./chunk-3VGWUUZX.js").then((m) => m.TransfersPage)
       }
     ]
   },

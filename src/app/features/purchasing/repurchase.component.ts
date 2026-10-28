@@ -7,6 +7,7 @@ import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { PermissionService } from '../../shared/services/permission.service';
 import { ModalComponent } from '../../shared/ui/modal/modal.component';
 import { PendingRepurchasesComponent } from './pending-repurchases.component';
+import { CurrencyInputDirective } from '../../shared/ui/form/currency-input.directive';
 import { RepurchaseLine, RepurchaseOrder, RepurchaseProduct, orderFields } from './repurchase.types';
 
 export type { RepurchaseLine, RepurchaseOrder, RepurchaseProduct } from './repurchase.types';
@@ -14,7 +15,7 @@ export type { RepurchaseLine, RepurchaseOrder, RepurchaseProduct } from './repur
 @Component({
   selector: 'cis-repurchase',
   standalone: true,
-  imports: [CommonModule, FormsModule, MoneyPipe, ModalComponent, PendingRepurchasesComponent],
+  imports: [CommonModule, FormsModule, MoneyPipe, ModalComponent, PendingRepurchasesComponent, CurrencyInputDirective],
   templateUrl: './repurchase.component.html',
   styleUrl: './repurchase.component.scss'
 })
@@ -81,8 +82,8 @@ export class RepurchaseComponent {
 
   setLine(id: string, field: 'quantity' | 'buyingPrice' | 'sellingPrice', value: unknown): void {
     if (this.locked() || this.busy()) return;
-    const number = Number(value);
-    if (value === null || value === '' || !Number.isFinite(number) || number < (field === 'quantity' ? 1 : 0)
+    const number = (value === null || value === '') ? (field === 'quantity' ? NaN : 0) : Number(value);
+    if (!Number.isFinite(number) || number < (field === 'quantity' ? 1 : 0)
       || (field === 'quantity' && (!Number.isInteger(number) || number > 1000000))
       || (field !== 'quantity' && (number > 1000000000 || Math.abs(number * 10000 - Math.round(number * 10000)) > 0.001))) {
       this.error.set('Enter a whole quantity (1–1000000) and non-negative prices with up to four decimal places.');

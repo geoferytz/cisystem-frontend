@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
+import { CurrencyInputDirective } from './currency-input.directive';
 
 export type FormOption = {
   /** Option value (use ngValue semantics — booleans/numbers allowed). */
@@ -25,7 +26,7 @@ export type FormField = {
   key: string;
   /** Label text, translation key, or callback for dynamic labels (evaluated every CD). */
   label: string | (() => string);
-  type?: 'text' | 'email' | 'password' | 'number' | 'date' | 'datetime-local' | 'time' | 'month' | 'search' | 'tel' | 'url' | 'select' | 'textarea' | 'checkbox' | 'template';
+  type?: 'text' | 'email' | 'password' | 'number' | 'currency' | 'date' | 'datetime-local' | 'time' | 'month' | 'search' | 'tel' | 'url' | 'select' | 'textarea' | 'checkbox' | 'template';
   /** Placeholder text or translation key. */
   placeholder?: string;
   /** Small helper text (or translation key) shown under the control — callback for dynamic hints. */
@@ -89,7 +90,7 @@ const INVALID = 'border-[#B81104] dark:border-red-500';
 @Component({
   selector: 'cis-form-field',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, CurrencyInputDirective],
   // Transparent wrapper — the label/control itself becomes the grid item.
   host: { 'style': 'display: contents' },
   template: `
@@ -130,6 +131,20 @@ const INVALID = 'border-[#B81104] dark:border-red-500';
           *ngSwitchCase="'checkbox'"
           type="checkbox"
           class="h-4 w-4 accent-pink-500"
+          [formControl]="control()"
+        />
+
+        <input
+          *ngSwitchCase="'currency'"
+          cisCurrencyInput
+          type="text"
+          inputmode="decimal"
+          [class]="controlClass()"
+          [placeholder]="placeholder() | translate"
+          [attr.maxlength]="field().maxlength ?? null"
+          [attr.autocomplete]="field().autocomplete ?? 'off'"
+          [attr.autofocus]="field().autofocus ? '' : null"
+          [readonly]="field().readonly ?? false"
           [formControl]="control()"
         />
 
@@ -279,4 +294,4 @@ export class CisFormFieldsComponent {
 }
 
 /** Convenience import bundle for standalone pages using cisField templates. */
-export const CIS_FORM_IMPORTS = [CisFormFieldsComponent, CisFormFieldComponent, CisFieldTplDirective] as const;
+export const CIS_FORM_IMPORTS = [CisFormFieldsComponent, CisFormFieldComponent, CisFieldTplDirective, CurrencyInputDirective] as const;

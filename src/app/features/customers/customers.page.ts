@@ -103,10 +103,9 @@ export class CustomersPage {
     {
       key: 'amount',
       label: 'customers.paymentAmount',
-      type: 'number',
+      type: 'currency',
       required: true,
       min: 0.01,
-      step: 0.01,
       hint: () => {
         const c = this.detailsCustomer();
         return c ? `${this.t.translate('customers.debt')}: ${this.fmtMoney(this.customerStats(c).debt)}` : '';

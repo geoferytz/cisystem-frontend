@@ -10,7 +10,8 @@ import {
 import {
   CIS_FORM_IMPORTS,
   CisFormFieldsComponent
-} from "./chunk-XGYQYOHY.js";
+} from "./chunk-ELX72Y6T.js";
+import "./chunk-O3WQKP2X.js";
 import {
   RowActionsMenuComponent
 } from "./chunk-NDY7KUDP.js";
@@ -21,7 +22,7 @@ import {
   ReactiveFormsModule,
   Validators,
   ɵNgNoValidate
-} from "./chunk-TD7F3R7N.js";
+} from "./chunk-CXEU7F5R.js";
 import {
   PagerComponent
 } from "./chunk-LNJXT4KE.js";
@@ -81,7 +82,7 @@ import {
 import "./chunk-Y5RQAIA6.js";
 
 // src/app/features/purchasing/purchasing.page.ts
-var PurchasingPage_Defer_4_DepsFn = () => [import("./chunk-SGFJ6FQD.js").then((m) => m.RepurchaseComponent)];
+var PurchasingPage_Defer_4_DepsFn = () => [import("./chunk-3BCHMJDH.js").then((m) => m.RepurchaseComponent)];
 function PurchasingPage_Defer_3_Template(rf, ctx) {
   if (rf & 1) {
     const _r1 = \u0275\u0275getCurrentView();
@@ -502,15 +503,14 @@ var PurchasingPage = class _PurchasingPage {
     },
     {
       key: "measurePrice",
-      type: "number",
+      type: "currency",
       required: true,
       min: 0,
-      step: 0.01,
       label: () => `Buying price per ${this.measureName()} (TZS)`
     }
   ];
   lineFieldsG = [
-    { key: "sellingPrice", label: "Selling price per piece (TZS)", type: "number", min: 0, step: 0.01 }
+    { key: "sellingPrice", label: "Selling price per piece (TZS)", type: "currency", min: 0 }
   ];
   constructor(gql) {
     this.gql = gql;
@@ -994,7 +994,7 @@ var PurchasingPage = class _PurchasingPage {
   }, dependencies: [CommonModule, NgForOf, NgIf, ReactiveFormsModule, \u0275NgNoValidate, NgControlStatusGroup, FormGroupDirective, ConfirmDialogComponent, ModalComponent, RowActionsMenuComponent, PagerComponent, CisFormFieldsComponent, MoneyPipe, TranslatePipe], encapsulation: 2 });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadataAsync(PurchasingPage, () => [import("./chunk-SGFJ6FQD.js").then((m) => m.RepurchaseComponent)], (RepurchaseComponent) => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadataAsync(PurchasingPage, () => [import("./chunk-3BCHMJDH.js").then((m) => m.RepurchaseComponent)], (RepurchaseComponent) => {
     setClassMetadata(PurchasingPage, [{
       type: Component,
       args: [{ selector: "cis-purchasing-page", standalone: true, imports: [CommonModule, ReactiveFormsModule, RouterLink, ConfirmDialogComponent, ModalComponent, MoneyPipe, TranslatePipe, RepurchaseComponent, RowActionsMenuComponent, PagerComponent, CIS_FORM_IMPORTS], template: `<div class="flex items-center justify-between">\r
@@ -1242,4 +1242,4 @@ var PurchasingPage = class _PurchasingPage {
 export {
   PurchasingPage
 };
-//# sourceMappingURL=chunk-7JOZF5VI.js.map
+//# sourceMappingURL=chunk-T7K37K32.js.map

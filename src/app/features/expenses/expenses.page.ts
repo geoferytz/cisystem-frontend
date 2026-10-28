@@ -109,7 +109,7 @@ export class ExpensesPage {
         ...this.categories().map(c => ({ value: c.id, label: c.name }))
       ]
     },
-    { key: 'amount', label: 'common.amount', type: 'number', required: true, min: 0 },
+    { key: 'amount', label: 'common.amount', type: 'currency', required: true, min: 0 },
     { key: 'description', label: 'expenses.descriptionOptional', wrapClass: 'sm:col-span-2' },
     {
       key: 'paymentMethod', label: 'common.paymentMethod', type: 'select', required: true,

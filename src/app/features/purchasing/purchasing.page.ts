@@ -187,13 +187,13 @@ export class PurchasingPage {
       label: () => `Quantity (${this.measureName()})`
     },
     {
-      key: 'measurePrice', type: 'number', required: true, min: 0, step: 0.01,
+      key: 'measurePrice', type: 'currency', required: true, min: 0,
       label: () => `Buying price per ${this.measureName()} (TZS)`
     }
   ];
 
   readonly lineFieldsG: FormField[] = [
-    { key: 'sellingPrice', label: 'Selling price per piece (TZS)', type: 'number', min: 0, step: 0.01 }
+    { key: 'sellingPrice', label: 'Selling price per piece (TZS)', type: 'currency', min: 0 }
   ];
 
   constructor(private readonly gql: GraphqlService) {

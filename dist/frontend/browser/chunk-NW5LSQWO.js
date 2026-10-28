@@ -1,7 +1,8 @@
 import {
   CIS_FORM_IMPORTS,
   CisFormFieldsComponent
-} from "./chunk-XGYQYOHY.js";
+} from "./chunk-ELX72Y6T.js";
+import "./chunk-O3WQKP2X.js";
 import {
   RowActionsMenuComponent
 } from "./chunk-NDY7KUDP.js";
@@ -14,7 +15,7 @@ import {
   Validators,
   ɵNgNoValidate,
   ɵNgSelectMultipleOption
-} from "./chunk-TD7F3R7N.js";
+} from "./chunk-CXEU7F5R.js";
 import {
   RouterLink
 } from "./chunk-ICDIWG7Q.js";
@@ -66,7 +67,7 @@ import {
 import "./chunk-Y5RQAIA6.js";
 
 // src/app/features/inventory/inventory.page.ts
-var InventoryPage_Defer_4_DepsFn = () => [import("./chunk-AVA2UQJF.js").then((m) => m.PendingRepurchasesComponent)];
+var InventoryPage_Defer_4_DepsFn = () => [import("./chunk-3PTO3KCJ.js").then((m) => m.PendingRepurchasesComponent)];
 function InventoryPage_Defer_3_Template(rf, ctx) {
   if (rf & 1) {
     const _r1 = \u0275\u0275getCurrentView();
@@ -763,7 +764,7 @@ var InventoryPage = class _InventoryPage {
   }, dependencies: [CommonModule, NgForOf, NgIf, ReactiveFormsModule, \u0275NgNoValidate, NgSelectOption, \u0275NgSelectMultipleOption, NgControlStatusGroup, FormGroupDirective, RouterLink, RowActionsMenuComponent, CisFormFieldsComponent, TranslatePipe], encapsulation: 2 });
 };
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadataAsync(InventoryPage, () => [import("./chunk-AVA2UQJF.js").then((m) => m.PendingRepurchasesComponent)], (PendingRepurchasesComponent) => {
+  (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadataAsync(InventoryPage, () => [import("./chunk-3PTO3KCJ.js").then((m) => m.PendingRepurchasesComponent)], (PendingRepurchasesComponent) => {
     setClassMetadata(InventoryPage, [{
       type: Component,
       args: [{ selector: "cis-inventory-page", standalone: true, imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslatePipe, PendingRepurchasesComponent, RowActionsMenuComponent, CIS_FORM_IMPORTS], template: `<div class="flex items-center">
@@ -1000,4 +1001,4 @@ var InventoryPage = class _InventoryPage {
 export {
   InventoryPage
 };
-//# sourceMappingURL=chunk-KMHOEUVD.js.map
+//# sourceMappingURL=chunk-NW5LSQWO.js.map

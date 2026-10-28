@@ -84,7 +84,7 @@ export class MySalesPage {
   readonly lineFields: FormField[] = [
     { key: 'productName', label: 'common.productName', required: true },
     { key: 'quantity', label: 'common.qty', type: 'number', required: true, min: 1 },
-    { key: 'unitPrice', label: 'common.unitPrice', type: 'number', required: true, step: 0.01, min: 0 }
+    { key: 'unitPrice', label: 'common.unitPrice', type: 'currency', required: true, min: 0 }
   ];
 
   lines = signal<Array<{ productName: string; quantity: number; unitPrice: number }>>([]);

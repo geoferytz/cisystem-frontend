@@ -1,7 +1,7 @@
 import {
   PendingRepurchasesComponent,
   orderFields
-} from "./chunk-PYP3OYM6.js";
+} from "./chunk-FTOUYJZM.js";
 import "./chunk-3CNNOXWB.js";
 import {
   ModalComponent
@@ -10,12 +10,15 @@ import {
   PermissionService
 } from "./chunk-MUULZ2RC.js";
 import {
+  CurrencyInputDirective
+} from "./chunk-O3WQKP2X.js";
+import {
   DefaultValueAccessor,
   FormsModule,
   MaxLengthValidator,
   NgControlStatus,
   NgModel
-} from "./chunk-TD7F3R7N.js";
+} from "./chunk-CXEU7F5R.js";
 import {
   MoneyPipe
 } from "./chunk-WX6AFSP5.js";
@@ -257,19 +260,19 @@ function RepurchaseComponent_article_41_Template(rf, ctx) {
     \u0275\u0275elementStart(8, "div", 37)(9, "label");
     \u0275\u0275text(10, "Buying price");
     \u0275\u0275elementStart(11, "input", 38);
-    \u0275\u0275listener("change", function RepurchaseComponent_article_41_Template_input_change_11_listener($event) {
+    \u0275\u0275listener("ngModelChange", function RepurchaseComponent_article_41_Template_input_ngModelChange_11_listener($event) {
       const line_r10 = \u0275\u0275restoreView(_r9).$implicit;
       const ctx_r1 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r1.changeLine(line_r10.productId, "buyingPrice", $event));
+      return \u0275\u0275resetView(ctx_r1.setLine(line_r10.productId, "buyingPrice", $event));
     });
     \u0275\u0275elementEnd()();
     \u0275\u0275elementStart(12, "label");
     \u0275\u0275text(13, "Selling price");
     \u0275\u0275elementStart(14, "input", 38);
-    \u0275\u0275listener("change", function RepurchaseComponent_article_41_Template_input_change_14_listener($event) {
+    \u0275\u0275listener("ngModelChange", function RepurchaseComponent_article_41_Template_input_ngModelChange_14_listener($event) {
       const line_r10 = \u0275\u0275restoreView(_r9).$implicit;
       const ctx_r1 = \u0275\u0275nextContext();
-      return \u0275\u0275resetView(ctx_r1.changeLine(line_r10.productId, "sellingPrice", $event));
+      return \u0275\u0275resetView(ctx_r1.setLine(line_r10.productId, "sellingPrice", $event));
     });
     \u0275\u0275elementEnd()()();
     \u0275\u0275elementStart(15, "div", 37)(16, "label");
@@ -329,9 +332,9 @@ function RepurchaseComponent_article_41_Template(rf, ctx) {
     \u0275\u0275advance(3);
     \u0275\u0275textInterpolate(line_r10.sku);
     \u0275\u0275advance(4);
-    \u0275\u0275property("value", line_r10.buyingPrice)("disabled", ctx_r1.busy() || ctx_r1.locked() || !ctx_r1.perm.canEdit("PRODUCTS"));
+    \u0275\u0275property("ngModel", line_r10.buyingPrice)("disabled", ctx_r1.busy() || ctx_r1.locked() || !ctx_r1.perm.canEdit("PRODUCTS"));
     \u0275\u0275advance(3);
-    \u0275\u0275property("value", line_r10.sellingPrice)("disabled", ctx_r1.busy() || ctx_r1.locked() || !ctx_r1.perm.canEdit("PRODUCTS"));
+    \u0275\u0275property("ngModel", line_r10.sellingPrice)("disabled", ctx_r1.busy() || ctx_r1.locked() || !ctx_r1.perm.canEdit("PRODUCTS"));
     \u0275\u0275advance(4);
     \u0275\u0275property("value", line_r10.batchNumber || "")("disabled", ctx_r1.busy() || ctx_r1.locked());
     \u0275\u0275advance(3);
@@ -453,8 +456,8 @@ var RepurchaseComponent = class _RepurchaseComponent {
   setLine(id, field, value) {
     if (this.locked() || this.busy())
       return;
-    const number = Number(value);
-    if (value === null || value === "" || !Number.isFinite(number) || number < (field === "quantity" ? 1 : 0) || field === "quantity" && (!Number.isInteger(number) || number > 1e6) || field !== "quantity" && (number > 1e9 || Math.abs(number * 1e4 - Math.round(number * 1e4)) > 1e-3)) {
+    const number = value === null || value === "" ? field === "quantity" ? NaN : 0 : Number(value);
+    if (!Number.isFinite(number) || number < (field === "quantity" ? 1 : 0) || field === "quantity" && (!Number.isInteger(number) || number > 1e6) || field !== "quantity" && (number > 1e9 || Math.abs(number * 1e4 - Math.round(number * 1e4)) > 1e-3)) {
       this.error.set("Enter a whole quantity (1\u20131000000) and non-negative prices with up to four decimal places.");
       return;
     }
@@ -526,7 +529,7 @@ var RepurchaseComponent = class _RepurchaseComponent {
       let _t;
       \u0275\u0275queryRefresh(_t = \u0275\u0275loadQuery()) && (ctx.pendingComponent = _t.first);
     }
-  }, outputs: { received: "received", addPurchase: "addPurchase" }, decls: 53, vars: 25, consts: [[1, "repurchase-summary"], [1, "rp-heading"], [1, "rp-actions"], ["type", "button", "class", "accent", 3, "click", 4, "ngIf"], ["type", "button", "class", "primary", 3, "click", 4, "ngIf"], ["kind", "repurchase", 3, "ordersLoaded", "received", "flat"], ["title", "Repurchase Product", "maxWidthClass", "max-w-7xl", 3, "close", "open"], [1, "rp-workspace"], [1, "rp-catalog"], [1, "rp-search"], ["type", "search", "placeholder", "Product name, SKU, barcode or brand", 3, "ngModelChange", "ngModel"], ["role", "group", "aria-label", "Product stock filter", 1, "rp-filters"], ["type", "button", 3, "selected", "click", 4, "ngFor", "ngForOf"], ["role", "status", 4, "ngIf"], ["type", "button", 3, "click", 4, "ngIf"], ["class", "rp-empty", 4, "ngIf"], [1, "rp-products"], ["class", "rp-product", 4, "ngFor", "ngForOf"], [1, "rp-cart"], [1, "rp-badge"], ["maxlength", "200", 3, "ngModelChange", "ngModel", "disabled"], ["maxlength", "120", 3, "ngModelChange", "ngModel", "disabled"], ["class", "rp-cart-line", 4, "ngFor", "ngForOf"], [4, "ngIf"], ["class", "rp-error", "role", "alert", 4, "ngIf"], [1, "rp-heading", "rp-total"], ["type", "button", 1, "primary", "rp-submit", 3, "click", "disabled"], ["type", "button", 1, "accent", 3, "click"], ["type", "button", 1, "primary", 3, "click"], ["type", "button", 3, "click"], ["role", "status"], [1, "rp-empty"], [1, "rp-product"], [1, "rp-monogram"], ["type", "button", 1, "primary", 3, "click", "disabled"], [1, "rp-cart-line"], ["type", "button", 3, "click", "disabled"], [1, "rp-prices"], ["type", "number", "min", "0", "max", "1000000000", "step", "0.0001", 3, "change", "value", "disabled"], ["type", "text", "maxlength", "80", "placeholder", "e.g. BN-2025-01", 3, "input", "value", "disabled"], ["type", "date", 3, "input", "value", "disabled"], [1, "rp-stepper"], ["type", "number", "min", "1", "max", "1000000", "step", "1", 3, "change", "value", "disabled"], ["role", "alert", 1, "rp-error"]], template: function RepurchaseComponent_Template(rf, ctx) {
+  }, outputs: { received: "received", addPurchase: "addPurchase" }, decls: 53, vars: 25, consts: [[1, "repurchase-summary"], [1, "rp-heading"], [1, "rp-actions"], ["type", "button", "class", "accent", 3, "click", 4, "ngIf"], ["type", "button", "class", "primary", 3, "click", 4, "ngIf"], ["kind", "repurchase", 3, "ordersLoaded", "received", "flat"], ["title", "Repurchase Product", "maxWidthClass", "max-w-7xl", 3, "close", "open"], [1, "rp-workspace"], [1, "rp-catalog"], [1, "rp-search"], ["type", "search", "placeholder", "Product name, SKU, barcode or brand", 3, "ngModelChange", "ngModel"], ["role", "group", "aria-label", "Product stock filter", 1, "rp-filters"], ["type", "button", 3, "selected", "click", 4, "ngFor", "ngForOf"], ["role", "status", 4, "ngIf"], ["type", "button", 3, "click", 4, "ngIf"], ["class", "rp-empty", 4, "ngIf"], [1, "rp-products"], ["class", "rp-product", 4, "ngFor", "ngForOf"], [1, "rp-cart"], [1, "rp-badge"], ["maxlength", "200", 3, "ngModelChange", "ngModel", "disabled"], ["maxlength", "120", 3, "ngModelChange", "ngModel", "disabled"], ["class", "rp-cart-line", 4, "ngFor", "ngForOf"], [4, "ngIf"], ["class", "rp-error", "role", "alert", 4, "ngIf"], [1, "rp-heading", "rp-total"], ["type", "button", 1, "primary", "rp-submit", 3, "click", "disabled"], ["type", "button", 1, "accent", 3, "click"], ["type", "button", 1, "primary", 3, "click"], ["type", "button", 3, "click"], ["role", "status"], [1, "rp-empty"], [1, "rp-product"], [1, "rp-monogram"], ["type", "button", 1, "primary", 3, "click", "disabled"], [1, "rp-cart-line"], ["type", "button", 3, "click", "disabled"], [1, "rp-prices"], ["cisCurrencyInput", "", "type", "text", "inputmode", "decimal", 3, "ngModelChange", "ngModel", "disabled"], ["type", "text", "maxlength", "80", "placeholder", "e.g. BN-2025-01", 3, "input", "value", "disabled"], ["type", "date", 3, "input", "value", "disabled"], [1, "rp-stepper"], ["type", "number", "min", "1", "max", "1000000", "step", "1", 3, "change", "value", "disabled"], ["role", "alert", 1, "rp-error"]], template: function RepurchaseComponent_Template(rf, ctx) {
     if (rf & 1) {
       \u0275\u0275elementStart(0, "section", 0)(1, "div", 1)(2, "div")(3, "h3");
       \u0275\u0275text(4, "Repurchase orders");
@@ -653,12 +656,12 @@ var RepurchaseComponent = class _RepurchaseComponent {
       \u0275\u0275advance();
       \u0275\u0275property("ngIf", ctx.locked() && !ctx.busy());
     }
-  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, DefaultValueAccessor, NgControlStatus, MaxLengthValidator, NgModel, ModalComponent, PendingRepurchasesComponent, MoneyPipe], styles: ["\n\n[_nghost-%COMP%] {\n  display: block;\n  color: var(--cis-text);\n}\n.repurchase-summary[_ngcontent-%COMP%] {\n  margin-top: 20px;\n  padding: 22px;\n  border: 1px solid var(--cis-border);\n  border-radius: 20px;\n  background: var(--cis-surface);\n}\nh3[_ngcontent-%COMP%] {\n  font-size: 18px;\n  font-weight: 750;\n}\nh4[_ngcontent-%COMP%] {\n  font-size: 14px;\n  font-weight: 700;\n  overflow-wrap: anywhere;\n}\np[_ngcontent-%COMP%], \nsmall[_ngcontent-%COMP%], \nlabel[_ngcontent-%COMP%] {\n  font-size: 12px;\n  color: var(--cis-muted);\n  line-height: 1.6;\n}\np[_ngcontent-%COMP%] {\n  margin: 8px 0;\n}\nbutton[_ngcontent-%COMP%] {\n  min-height: 44px;\n  border-radius: 10px;\n  padding: 8px 14px;\n  font-size: 12px;\n  font-weight: 650;\n  background: var(--cis-page);\n  color: var(--cis-primary-strong);\n}\nbutton.primary[_ngcontent-%COMP%] {\n  background: var(--cis-primary);\n  color: white;\n}\nbutton.primary[_ngcontent-%COMP%]:hover:not(:disabled) {\n  background: var(--cis-primary-hover);\n}\nbutton.accent[_ngcontent-%COMP%] {\n  background: #03cdd4;\n  color: white;\n}\nbutton.accent[_ngcontent-%COMP%]:hover:not(:disabled) {\n  background: #02686b;\n}\nbutton[_ngcontent-%COMP%]:disabled {\n  cursor: not-allowed;\n  opacity: 0.55;\n}\n.rp-heading[_ngcontent-%COMP%], \n.rp-actions[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  flex-wrap: wrap;\n  gap: 12px;\n}\n.rp-actions[_ngcontent-%COMP%] {\n  justify-content: flex-end;\n}\n.rp-badge[_ngcontent-%COMP%] {\n  display: inline-block;\n  font-size: 11px;\n  padding: 5px 10px;\n  border-radius: 20px;\n  background: var(--cis-primary-soft);\n  color: var(--cis-primary-strong);\n}\n.rp-error[_ngcontent-%COMP%] {\n  color: #b91c1c;\n  padding: 10px;\n  border: 1px solid currentColor;\n  border-radius: 10px;\n}\n.dark[_nghost-%COMP%]   .rp-error[_ngcontent-%COMP%], .dark   [_nghost-%COMP%]   .rp-error[_ngcontent-%COMP%] {\n  color: #fca5a5;\n}\n.rp-empty[_ngcontent-%COMP%] {\n  padding: 20px 0;\n  text-align: center;\n}\n.rp-workspace[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: minmax(0, 1fr) 350px;\n  gap: 24px;\n  margin-top: 16px;\n}\n.rp-catalog[_ngcontent-%COMP%], \n.rp-cart[_ngcontent-%COMP%] {\n  min-width: 0;\n}\nlabel[_ngcontent-%COMP%] {\n  display: grid;\n  gap: 5px;\n  margin-bottom: 12px;\n}\ninput[_ngcontent-%COMP%] {\n  width: 100%;\n  min-width: 0;\n  min-height: 44px;\n  border: 1px solid var(--cis-border);\n  border-radius: 10px;\n  padding: 8px 10px;\n  background: var(--cis-surface);\n  color: var(--cis-text);\n}\n.rp-filters[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 6px;\n  overflow-x: auto;\n  padding-bottom: 5px;\n}\n.rp-filters[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  flex-shrink: 0;\n}\n.rp-filters[_ngcontent-%COMP%]   .selected[_ngcontent-%COMP%] {\n  background: var(--cis-primary);\n  color: white;\n}\n.rp-products[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));\n  gap: 12px;\n}\n.rp-product[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  border: 1px solid var(--cis-border);\n  border-radius: 16px;\n  padding: 14px;\n}\n.rp-product[_ngcontent-%COMP%]    > button[_ngcontent-%COMP%] {\n  margin-top: auto;\n}\n.rp-monogram[_ngcontent-%COMP%] {\n  display: grid;\n  place-items: center;\n  width: 36px;\n  height: 36px;\n  border-radius: 10px;\n  font-weight: 750;\n  background: var(--cis-primary-soft);\n  color: var(--cis-primary-strong);\n}\ndl[_ngcontent-%COMP%] {\n  font-size: 12px;\n}\ndt[_ngcontent-%COMP%] {\n  color: var(--cis-muted);\n}\ndd[_ngcontent-%COMP%] {\n  margin-bottom: 6px;\n  overflow-wrap: anywhere;\n}\n.rp-cart[_ngcontent-%COMP%] {\n  padding: 18px;\n  border-radius: 16px;\n  background: var(--cis-page);\n  align-self: start;\n}\n.rp-cart-line[_ngcontent-%COMP%] {\n  border-top: 1px solid var(--cis-border);\n  padding: 16px 0;\n}\n.rp-cart-line[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%] {\n  font-size: 13px;\n  overflow-wrap: anywhere;\n}\n.rp-prices[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 10px;\n  margin-top: 10px;\n}\n.rp-stepper[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 3px;\n}\n.rp-stepper[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 65px;\n  text-align: center;\n}\n.rp-stepper[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  padding: 8px 12px;\n}\n.rp-total[_ngcontent-%COMP%] {\n  border-top: 1px dashed var(--cis-border);\n  padding: 16px 0;\n}\n.rp-submit[_ngcontent-%COMP%] {\n  width: 100%;\n}\n@media (max-width: 1000px) {\n  .rp-workspace[_ngcontent-%COMP%] {\n    grid-template-columns: minmax(0, 1fr);\n  }\n}\n@media (max-width: 767px) {\n  .repurchase-summary[_ngcontent-%COMP%] {\n    padding: 16px;\n  }\n  .rp-products[_ngcontent-%COMP%] {\n    grid-template-columns: repeat(2, minmax(0, 1fr));\n    gap: 8px;\n  }\n  .rp-product[_ngcontent-%COMP%] {\n    padding: 10px;\n  }\n  .rp-prices[_ngcontent-%COMP%] {\n    grid-template-columns: minmax(0, 1fr);\n  }\n  input[_ngcontent-%COMP%] {\n    font-size: 16px;\n  }\n  .rp-cart[_ngcontent-%COMP%] {\n    padding: 12px;\n  }\n}\n/*# sourceMappingURL=repurchase.component.css.map */"] });
+  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, DefaultValueAccessor, NgControlStatus, MaxLengthValidator, NgModel, ModalComponent, PendingRepurchasesComponent, CurrencyInputDirective, MoneyPipe], styles: ["\n\n[_nghost-%COMP%] {\n  display: block;\n  color: var(--cis-text);\n}\n.repurchase-summary[_ngcontent-%COMP%] {\n  margin-top: 20px;\n  padding: 22px;\n  border: 1px solid var(--cis-border);\n  border-radius: 20px;\n  background: var(--cis-surface);\n}\nh3[_ngcontent-%COMP%] {\n  font-size: 18px;\n  font-weight: 750;\n}\nh4[_ngcontent-%COMP%] {\n  font-size: 14px;\n  font-weight: 700;\n  overflow-wrap: anywhere;\n}\np[_ngcontent-%COMP%], \nsmall[_ngcontent-%COMP%], \nlabel[_ngcontent-%COMP%] {\n  font-size: 12px;\n  color: var(--cis-muted);\n  line-height: 1.6;\n}\np[_ngcontent-%COMP%] {\n  margin: 8px 0;\n}\nbutton[_ngcontent-%COMP%] {\n  min-height: 44px;\n  border-radius: 10px;\n  padding: 8px 14px;\n  font-size: 12px;\n  font-weight: 650;\n  background: var(--cis-page);\n  color: var(--cis-primary-strong);\n}\nbutton.primary[_ngcontent-%COMP%] {\n  background: var(--cis-primary);\n  color: white;\n}\nbutton.primary[_ngcontent-%COMP%]:hover:not(:disabled) {\n  background: var(--cis-primary-hover);\n}\nbutton.accent[_ngcontent-%COMP%] {\n  background: #03cdd4;\n  color: white;\n}\nbutton.accent[_ngcontent-%COMP%]:hover:not(:disabled) {\n  background: #02686b;\n}\nbutton[_ngcontent-%COMP%]:disabled {\n  cursor: not-allowed;\n  opacity: 0.55;\n}\n.rp-heading[_ngcontent-%COMP%], \n.rp-actions[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  flex-wrap: wrap;\n  gap: 12px;\n}\n.rp-actions[_ngcontent-%COMP%] {\n  justify-content: flex-end;\n}\n.rp-badge[_ngcontent-%COMP%] {\n  display: inline-block;\n  font-size: 11px;\n  padding: 5px 10px;\n  border-radius: 20px;\n  background: var(--cis-primary-soft);\n  color: var(--cis-primary-strong);\n}\n.rp-error[_ngcontent-%COMP%] {\n  color: #b91c1c;\n  padding: 10px;\n  border: 1px solid currentColor;\n  border-radius: 10px;\n}\n.dark[_nghost-%COMP%]   .rp-error[_ngcontent-%COMP%], .dark   [_nghost-%COMP%]   .rp-error[_ngcontent-%COMP%] {\n  color: #fca5a5;\n}\n.rp-empty[_ngcontent-%COMP%] {\n  padding: 20px 0;\n  text-align: center;\n}\n.rp-workspace[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: minmax(0, 1fr) 350px;\n  gap: 24px;\n  margin-top: 16px;\n}\n.rp-catalog[_ngcontent-%COMP%], \n.rp-cart[_ngcontent-%COMP%] {\n  min-width: 0;\n}\nlabel[_ngcontent-%COMP%] {\n  display: grid;\n  gap: 5px;\n  margin-bottom: 12px;\n}\ninput[_ngcontent-%COMP%] {\n  width: 100%;\n  min-width: 0;\n  min-height: 44px;\n  border: 1px solid var(--cis-border);\n  border-radius: 10px;\n  padding: 8px 10px;\n  background: var(--cis-surface);\n  color: var(--cis-text);\n}\n.rp-filters[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 6px;\n  overflow-x: auto;\n  padding-bottom: 5px;\n}\n.rp-filters[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  flex-shrink: 0;\n}\n.rp-filters[_ngcontent-%COMP%]   .selected[_ngcontent-%COMP%] {\n  background: var(--cis-primary);\n  color: white;\n}\n.rp-products[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));\n  gap: 12px;\n}\n.rp-product[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  gap: 6px;\n  border: 1px solid var(--cis-border);\n  border-radius: 16px;\n  padding: 14px;\n}\n.rp-product[_ngcontent-%COMP%]    > button[_ngcontent-%COMP%] {\n  margin-top: auto;\n}\n.rp-monogram[_ngcontent-%COMP%] {\n  display: grid;\n  place-items: center;\n  width: 36px;\n  height: 36px;\n  border-radius: 10px;\n  font-weight: 750;\n  background: var(--cis-primary-soft);\n  color: var(--cis-primary-strong);\n}\ndl[_ngcontent-%COMP%] {\n  font-size: 12px;\n}\ndt[_ngcontent-%COMP%] {\n  color: var(--cis-muted);\n}\ndd[_ngcontent-%COMP%] {\n  margin-bottom: 6px;\n  overflow-wrap: anywhere;\n}\n.rp-cart[_ngcontent-%COMP%] {\n  padding: 18px;\n  border-radius: 16px;\n  background: var(--cis-page);\n  align-self: start;\n}\n.rp-cart-line[_ngcontent-%COMP%] {\n  border-top: 1px solid var(--cis-border);\n  padding: 16px 0;\n}\n.rp-cart-line[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%] {\n  font-size: 13px;\n  overflow-wrap: anywhere;\n}\n.rp-prices[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 10px;\n  margin-top: 10px;\n}\n.rp-stepper[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 3px;\n}\n.rp-stepper[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 65px;\n  text-align: center;\n}\n.rp-stepper[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  padding: 8px 12px;\n}\n.rp-total[_ngcontent-%COMP%] {\n  border-top: 1px dashed var(--cis-border);\n  padding: 16px 0;\n}\n.rp-submit[_ngcontent-%COMP%] {\n  width: 100%;\n}\n@media (max-width: 1000px) {\n  .rp-workspace[_ngcontent-%COMP%] {\n    grid-template-columns: minmax(0, 1fr);\n  }\n}\n@media (max-width: 767px) {\n  .repurchase-summary[_ngcontent-%COMP%] {\n    padding: 16px;\n  }\n  .rp-products[_ngcontent-%COMP%] {\n    grid-template-columns: repeat(2, minmax(0, 1fr));\n    gap: 8px;\n  }\n  .rp-product[_ngcontent-%COMP%] {\n    padding: 10px;\n  }\n  .rp-prices[_ngcontent-%COMP%] {\n    grid-template-columns: minmax(0, 1fr);\n  }\n  input[_ngcontent-%COMP%] {\n    font-size: 16px;\n  }\n  .rp-cart[_ngcontent-%COMP%] {\n    padding: 12px;\n  }\n}\n/*# sourceMappingURL=repurchase.component.css.map */"] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(RepurchaseComponent, [{
     type: Component,
-    args: [{ selector: "cis-repurchase", standalone: true, imports: [CommonModule, FormsModule, MoneyPipe, ModalComponent, PendingRepurchasesComponent], template: `<section class="repurchase-summary">
+    args: [{ selector: "cis-repurchase", standalone: true, imports: [CommonModule, FormsModule, MoneyPipe, ModalComponent, PendingRepurchasesComponent, CurrencyInputDirective], template: `<section class="repurchase-summary">
   <div class="rp-heading">
     <div><h3>Repurchase orders</h3><p>Replenish products, then receive deliveries into MAIN.</p></div>
     <div class="rp-actions">
@@ -704,8 +707,8 @@ var RepurchaseComponent = class _RepurchaseComponent {
         <div class="rp-heading"><strong>{{ line.productName }}</strong><button type="button" [disabled]="busy() || locked()" (click)="removeProduct(line.productId)" [attr.aria-label]="'Remove ' + line.productName">Remove</button></div>
         <small>{{ line.sku }}</small>
         <div class="rp-prices">
-          <label>Buying price<input type="number" min="0" max="1000000000" step="0.0001" [value]="line.buyingPrice" (change)="changeLine(line.productId, 'buyingPrice', $event)" [disabled]="busy() || locked() || !perm.canEdit('PRODUCTS')" /></label>
-          <label>Selling price<input type="number" min="0" max="1000000000" step="0.0001" [value]="line.sellingPrice" (change)="changeLine(line.productId, 'sellingPrice', $event)" [disabled]="busy() || locked() || !perm.canEdit('PRODUCTS')" /></label>
+          <label>Buying price<input cisCurrencyInput type="text" inputmode="decimal" [ngModel]="line.buyingPrice" (ngModelChange)="setLine(line.productId, 'buyingPrice', $event)" [disabled]="busy() || locked() || !perm.canEdit('PRODUCTS')" /></label>
+          <label>Selling price<input cisCurrencyInput type="text" inputmode="decimal" [ngModel]="line.sellingPrice" (ngModelChange)="setLine(line.productId, 'sellingPrice', $event)" [disabled]="busy() || locked() || !perm.canEdit('PRODUCTS')" /></label>
         </div>
         <div class="rp-prices">
           <label>Batch number<input type="text" maxlength="80" [value]="line.batchNumber || ''" (input)="setText(line.productId, 'batchNumber', $any($event.target).value)" [disabled]="busy() || locked()" placeholder="e.g. BN-2025-01" /></label>
@@ -739,9 +742,9 @@ var RepurchaseComponent = class _RepurchaseComponent {
   }] });
 })();
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(RepurchaseComponent, { className: "RepurchaseComponent", filePath: "app/features/purchasing/repurchase.component.ts", lineNumber: 21 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(RepurchaseComponent, { className: "RepurchaseComponent", filePath: "app/features/purchasing/repurchase.component.ts", lineNumber: 22 });
 })();
 export {
   RepurchaseComponent
 };
-//# sourceMappingURL=chunk-SGFJ6FQD.js.map
+//# sourceMappingURL=chunk-3BCHMJDH.js.map

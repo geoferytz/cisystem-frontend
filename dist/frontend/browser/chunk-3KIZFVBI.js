@@ -4,7 +4,7 @@ import {
   ReceiptDialogComponent,
   ReturnDialogComponent,
   takeUntilDestroyed
-} from "./chunk-NLVFH436.js";
+} from "./chunk-767WNY32.js";
 import {
   ConfirmDialogComponent
 } from "./chunk-N7IOF3IM.js";
@@ -14,6 +14,9 @@ import {
 import {
   PermissionService
 } from "./chunk-MUULZ2RC.js";
+import {
+  CurrencyInputDirective
+} from "./chunk-O3WQKP2X.js";
 import {
   RowActionsMenuComponent
 } from "./chunk-NDY7KUDP.js";
@@ -26,19 +29,17 @@ import {
   FormGroupDirective,
   FormsModule,
   MaxLengthValidator,
-  MinValidator,
   NgControlStatus,
   NgControlStatusGroup,
   NgForm,
   NgModel,
   NgSelectOption,
-  NumberValueAccessor,
   ReactiveFormsModule,
   SelectControlValueAccessor,
   Validators,
   ɵNgNoValidate,
   ɵNgSelectMultipleOption
-} from "./chunk-TD7F3R7N.js";
+} from "./chunk-CXEU7F5R.js";
 import {
   PagerComponent
 } from "./chunk-LNJXT4KE.js";
@@ -57,6 +58,7 @@ import {
   CommonModule,
   Component,
   DatePipe,
+  DecimalPipe,
   DestroyRef,
   GraphqlService,
   HostListener,
@@ -1243,7 +1245,7 @@ function CounterPage_section_57_Template(rf, ctx) {
     \u0275\u0275property("ngIf", !ctx_r0.pendingLoading() && !ctx_r0.pendingError() && !ctx_r0.filteredPending().length);
   }
 }
-function CounterPage_div_104_Template(rf, ctx) {
+function CounterPage_div_105_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 141);
     \u0275\u0275text(1);
@@ -1257,7 +1259,7 @@ function CounterPage_div_104_Template(rf, ctx) {
     \u0275\u0275textInterpolate2(" ", \u0275\u0275pipeBind1(2, 2, ctx_r0.debtPreview()), " ", \u0275\u0275pipeBind1(3, 4, "customers.debtNote"), " ");
   }
 }
-function CounterPage_div_105_Template(rf, ctx) {
+function CounterPage_div_106_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 64);
     \u0275\u0275text(1);
@@ -1269,14 +1271,14 @@ function CounterPage_div_105_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r0.discountError());
   }
 }
-function CounterPage_div_106_Template(rf, ctx) {
+function CounterPage_div_107_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 176);
     \u0275\u0275text(1, "Select a registered customer to sell on debt.");
     \u0275\u0275elementEnd();
   }
 }
-function CounterPage_div_109_Template(rf, ctx) {
+function CounterPage_div_110_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 64);
     \u0275\u0275text(1);
@@ -1288,7 +1290,7 @@ function CounterPage_div_109_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r0.actionError());
   }
 }
-function CounterPage_option_127_Template(rf, ctx) {
+function CounterPage_option_128_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "option", 117);
     \u0275\u0275text(1);
@@ -1301,13 +1303,13 @@ function CounterPage_option_127_Template(rf, ctx) {
     \u0275\u0275textInterpolate(item_r27.name);
   }
 }
-function CounterPage_p_145_Template(rf, ctx) {
+function CounterPage_p_146_Template(rf, ctx) {
   if (rf & 1) {
     const _r28 = \u0275\u0275getCurrentView();
     \u0275\u0275elementStart(0, "p", 159);
     \u0275\u0275text(1, "No expense categories are available. Ask an administrator to create a category, then ");
     \u0275\u0275elementStart(2, "button", 92);
-    \u0275\u0275listener("click", function CounterPage_p_145_Template_button_click_2_listener() {
+    \u0275\u0275listener("click", function CounterPage_p_146_Template_button_click_2_listener() {
       \u0275\u0275restoreView(_r28);
       const ctx_r0 = \u0275\u0275nextContext();
       return \u0275\u0275resetView(ctx_r0.loadExpenseCategories());
@@ -1318,14 +1320,14 @@ function CounterPage_p_145_Template(rf, ctx) {
     \u0275\u0275elementEnd();
   }
 }
-function CounterPage_p_146_Template(rf, ctx) {
+function CounterPage_p_147_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "p", 64);
     \u0275\u0275text(1, "Choose a date and category, and enter an amount greater than zero.");
     \u0275\u0275elementEnd();
   }
 }
-function CounterPage_p_147_Template(rf, ctx) {
+function CounterPage_p_148_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "p", 64);
     \u0275\u0275text(1);
@@ -1337,7 +1339,7 @@ function CounterPage_p_147_Template(rf, ctx) {
     \u0275\u0275textInterpolate(ctx_r0.expenseError());
   }
 }
-function CounterPage_p_163_Template(rf, ctx) {
+function CounterPage_p_164_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "p", 64);
     \u0275\u0275text(1);
@@ -1957,7 +1959,7 @@ var CounterPage = class _CounterPage {
         return ctx.beforeUnload($event);
       }, \u0275\u0275resolveWindow);
     }
-  }, decls: 173, vars: 95, consts: [["saleWorkspace", ""], ["cartPanel", ""], [1, "counter-page"], [1, "counter-heading"], [1, "counter-eyebrow"], [1, "counter-connection"], ["class", "counter-notice error", "role", "alert", 4, "ngIf"], ["aria-label", "Counter actions", 1, "counter-actions"], ["type", "button", "data-counter-action", "sale", 1, "counter-action", "sale-action", 3, "click", "disabled"], [1, "counter-action-icon"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "1.7", "aria-hidden", "true"], ["d", "M3 3h2l3 12h10l3-9H6M9 20h.01M18 20h.01M12 8h5m-2.5-2.5v5"], ["aria-hidden", "true", 1, "counter-arrow"], [1, "counter-action-pair"], ["class", "counter-action expense-action", "type", "button", "data-counter-action", "expense", 3, "disabled", "click", 4, "ngIf"], ["class", "counter-action expense-action success-state", "routerLink", "/expenses", "role", "status", 4, "ngIf"], ["class", "counter-action viewsales-action", "routerLink", "/sales", "role", "status", 3, "success-state", 4, "ngIf"], ["class", "counter-action", "type", "button", 3, "click", 4, "ngIf"], ["aria-label", "Counter overview", 1, "counter-overview"], ["class", "counter-workspace scroll-mt-28", "aria-label", "New sale workspace", 4, "ngIf"], ["class", "counter-panel counter-pending", "aria-label", "Pending sales", 4, "ngIf"], ["title", "Complete this sale", "maxWidthClass", "max-w-md", 3, "close", "open"], [1, "counter-checkout-summary"], [1, "counter-discount"], ["type", "number", "min", "0", "step", "0.01", "placeholder", "0.00", 3, "formControl", "readonly"], [1, "counter-checkout-summary", "payable"], ["aria-live", "polite"], [1, "counter-payment-row"], [3, "ngModelChange", "ngModel", "disabled"], ["value", "CASH"], ["value", "M-PESA"], ["value", "AIRTEL_MONEY"], ["value", "TIGO_PESA"], ["value", "CARD"], ["value", "BANK"], ["value", "OTHER"], ["type", "number", "min", "0", "step", "0.01", 3, "ngModelChange", "ngModel", "readonly", "placeholder"], ["class", "counter-notice warning", "role", "status", 4, "ngIf"], ["class", "counter-notice warning", "role", "alert", 4, "ngIf"], [1, "counter-hint"], [1, "counter-modal-actions"], ["type", "button", 1, "counter-button", "secondary", 3, "click", "disabled"], ["type", "button", 1, "counter-button", "primary", 3, "click", "disabled"], ["title", "New Expenses", "maxWidthClass", "max-w-lg", 3, "close", "open"], [1, "counter-expense-form", 3, "ngSubmit", "formGroup"], ["type", "date", "formControlName", "date", 3, "readonly"], ["formControlName", "categoryId"], ["value", ""], [3, "value", 4, "ngFor", "ngForOf"], ["type", "number", "min", "0.01", "step", "0.01", "formControlName", "amount", 3, "readonly"], ["formControlName", "paymentMethod"], ["value", "MPESA"], ["formControlName", "description", "rows", "3", "maxlength", "1000", "placeholder", "What was this expense for?", 3, "readonly"], ["class", "counter-notice warning", 4, "ngIf"], ["type", "submit", 1, "counter-button", "primary", 3, "disabled"], ["title", "Discard unsaved cart changes?", "message", "Your unsaved changes will be lost. To keep this cart, go back and choose Hold sale for later.", "confirmText", "Discard changes", "cancelText", "Keep editing", 3, "confirm", "cancel", "open"], ["title", "Scan product barcode", 3, "scanned", "close", "open"], ["title", "Cancel this held sale?", "message", "The cart will be removed from pending sales. No inventory or completed sales will be changed.", "confirmText", "Cancel held sale", "cancelText", "Keep sale", 3, "confirm", "cancel", "open"], ["maxWidthClass", "max-w-md", 3, "close", "open", "title"], [1, "mt-3", "grid", "gap-3", 3, "ngSubmit"], ["type", "text", "name", "ref", "placeholder", "211026-0002", "autofocus", "", 1, "rounded-xl", "border", "border-slate-200", "dark:border-slate-600", "bg-white", "dark:bg-slate-700", "px-3", "py-2", "text-sm", "text-slate-900", "dark:text-slate-100", 3, "ngModelChange", "ngModel"], ["type", "button", 1, "counter-button", "secondary", 3, "click"], [3, "close", "completed", "open", "salesOrderId", "isAdmin", "location"], [3, "close", "open", "order"], ["role", "alert", 1, "counter-notice", "error"], ["type", "button", "data-counter-action", "expense", 1, "counter-action", "expense-action", 3, "click", "disabled"], ["d", "M6 3h12v18l-3-2-3 2-3-2-3 2V3ZM9 7h6M9 11h6M9 15h3"], ["routerLink", "/expenses", "role", "status", 1, "counter-action", "expense-action", "success-state"], ["d", "m5 13 4 4L19 7"], ["routerLink", "/sales", "role", "status", 1, "counter-action", "viewsales-action"], ["d", "m5 13 4 4L19 7", 4, "ngIf"], [4, "ngIf"], ["d", "M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2"], ["d", "M12 6v2m0 10v2"], ["d", "M20 12a8 8 0 11-16 0 8 8 0 0116 0z"], ["type", "button", 1, "counter-action", 3, "click"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"], ["x", "6", "y", "14", "width", "12", "height", "7", "rx", "1"], ["aria-label", "New sale workspace", 1, "counter-workspace", "scroll-mt-28"], [1, "counter-catalog", "counter-panel"], [1, "counter-section-heading"], [1, "counter-catalog-tools"], [1, "counter-search"], [1, "sr-only"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2", "aria-hidden", "true"], ["cx", "10.5", "cy", "10.5", "r", "6.5"], ["d", "m16 16 5 5"], ["type", "search", "placeholder", "Search name, SKU, barcode, or brand", 3, "input", "keydown.enter", "value"], [1, "counter-location"], ["aria-label", "Branch", 3, "change", "formControl", "disabled"], ["aria-label", "Product category", 1, "counter-category-tabs"], ["type", "button", 3, "click"], ["type", "button", 3, "selected", "click", 4, "ngFor", "ngForOf"], ["class", "counter-empty", "role", "status", 4, "ngIf"], ["type", "button", "class", "sticky top-24 z-10 mb-3 w-full rounded-xl bg-primary-500 px-4 py-3 text-sm font-semibold text-white shadow-lg min-[1101px]:hidden", 3, "click", 4, "ngIf"], ["class", "counter-product-grid", 4, "ngIf"], ["class", "counter-empty", 4, "ngIf"], ["type", "button", "class", "counter-button secondary counter-load-more", 3, "click", 4, "ngIf"], ["aria-label", "Sales cart", 1, "counter-cart", "counter-panel", "scroll-mt-28"], [1, "flex", "items-center", "gap-2"], ["type", "button", "class", "counter-button secondary", 3, "disabled", "title", "click", 4, "ngIf"], [1, "counter-count"], [1, "counter-customer-form", 3, "formGroup"], ["formControlName", "customerId", 3, "disabled"], [3, "ngValue"], [3, "ngValue", 4, "ngFor", "ngForOf"], ["class", "counter-new-customer", 4, "ngIf"], ["formControlName", "referenceNumber", "maxlength", "120", "placeholder", "Auto (e.g. 201026-0001)", 3, "readonly"], ["class", "counter-new-customer-form", 3, "formGroup", 4, "ngIf"], [1, "counter-cart-lines"], ["class", "counter-cart-line", 4, "ngFor", "ngForOf"], [1, "counter-cart-footer"], [1, "counter-total"], ["type", "button", 1, "counter-button", "primary", "counter-charge", 3, "click", "disabled"], ["type", "button", 1, "counter-button", "secondary", "counter-charge", 3, "click", "disabled"], ["type", "button", 1, "counter-button", "secondary", "counter-charge", "min-[1101px]:hidden", 3, "click"], [3, "value"], ["role", "status", 1, "counter-empty"], ["type", "button", 1, "sticky", "top-24", "z-10", "mb-3", "w-full", "rounded-xl", "bg-primary-500", "px-4", "py-3", "text-sm", "font-semibold", "text-white", "shadow-lg", "min-[1101px]:hidden", 3, "click"], [1, "counter-product-grid"], ["type", "button", "class", "counter-product", 3, "in-cart", "disabled", "click", 4, "ngFor", "ngForOf"], ["type", "button", 1, "counter-product", 3, "click", "disabled"], [1, "counter-product-top"], ["aria-hidden", "true", 1, "counter-product-monogram"], ["class", "counter-product-count", 4, "ngIf"], [1, "counter-product-category"], ["class", "inline-flex w-fit items-center gap-1 rounded-lg bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700 dark:bg-amber-900/50 dark:text-amber-300", 4, "ngIf"], [1, "counter-product-price"], [3, "text-[#B81104]", "dark:text-red-400", 4, "ngIf"], ["class", "counter-product-price", "style", "font-size: 0.8rem; color: #7367d8;", 4, "ngIf"], [1, "counter-product-bottom"], ["type", "button", "class", "counter-button secondary", "style", "padding: 0.25rem 0.5rem; font-size: 0.7rem;", 3, "disabled", "click", 4, "ngIf"], ["aria-hidden", "true", 1, "counter-add"], [1, "counter-product-count"], [1, "inline-flex", "w-fit", "items-center", "gap-1", "rounded-lg", "bg-amber-100", "px-2", "py-1", "text-xs", "font-semibold", "text-amber-700", "dark:bg-amber-900/50", "dark:text-amber-300"], [1, "counter-product-price", 2, "font-size", "0.8rem", "color", "#7367d8"], ["type", "button", 1, "counter-button", "secondary", 2, "padding", "0.25rem 0.5rem", "font-size", "0.7rem", 3, "click", "disabled"], [1, "counter-empty"], ["type", "button", 1, "counter-button", "secondary", "counter-load-more", 3, "click"], ["type", "button", 1, "counter-button", "secondary", 3, "click", "disabled", "title"], ["role", "status", 1, "counter-notice", "warning"], [1, "counter-new-customer"], ["type", "button", 1, "counter-link", 3, "click", "disabled"], [1, "counter-new-customer-form", 3, "formGroup"], ["formControlName", "name", "maxlength", "200", 3, "placeholder"], ["formControlName", "phone", "maxlength", "40", 3, "placeholder"], [1, "counter-new-customer-actions"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "1.5", "aria-hidden", "true"], ["d", "M3 3h2l3 12h10l3-9H6M9 20h.01M18 20h.01"], [1, "counter-cart-line"], [1, "counter-line-title"], ["class", "ml-1 inline-flex items-center rounded-md bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 dark:bg-amber-900/40 dark:text-amber-300", 4, "ngIf"], ["type", "button", 1, "counter-remove", 3, "click", "disabled"], [1, "counter-line-bottom"], [1, "counter-stepper"], ["type", "button", 3, "click", "disabled"], ["type", "number", "min", "1", "step", "1", 3, "change", "value", "readonly"], [1, "ml-1", "inline-flex", "items-center", "rounded-md", "bg-amber-100", "px-1.5", "py-0.5", "text-[10px]", "font-semibold", "text-amber-700", "dark:bg-amber-900/40", "dark:text-amber-300"], [1, "counter-notice", "warning"], ["aria-label", "Pending sales", 1, "counter-panel", "counter-pending"], [1, "counter-search", "counter-pending-search"], ["type", "search", "placeholder", "Search customer, reference, or product", 3, "input", "value"], ["class", "mt-2 block", 3, "total", "pageSize", "pageIndex", "pageSizeChange", "pageIndexChange", 4, "ngIf"], ["class", "counter-pending-table", 4, "ngIf"], [1, "mt-2", "block", 3, "pageSizeChange", "pageIndexChange", "total", "pageSize", "pageIndex"], [1, "counter-pending-table"], [1, "w-full", "border-collapse", "text-sm"], [4, "ngFor", "ngForOf"], [1, "counter-status"], ["type", "button", 1, "cis-row-action", 3, "click", "disabled"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2", "aria-hidden", "true", 1, "h-3.5", "w-3.5", "shrink-0"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M6 4l14 8-14 8V4z"], ["type", "button", "class", "cis-row-action cis-row-action-danger", 3, "disabled", "click", 4, "ngIf"], ["type", "button", 1, "cis-row-action", "cis-row-action-danger", 3, "click", "disabled"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"], ["role", "alert", 1, "counter-notice", "warning"]], template: function CounterPage_Template(rf, ctx) {
+  }, decls: 174, vars: 98, consts: [["saleWorkspace", ""], ["cartPanel", ""], [1, "counter-page"], [1, "counter-heading"], [1, "counter-eyebrow"], [1, "counter-connection"], ["class", "counter-notice error", "role", "alert", 4, "ngIf"], ["aria-label", "Counter actions", 1, "counter-actions"], ["type", "button", "data-counter-action", "sale", 1, "counter-action", "sale-action", 3, "click", "disabled"], [1, "counter-action-icon"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "1.7", "aria-hidden", "true"], ["d", "M3 3h2l3 12h10l3-9H6M9 20h.01M18 20h.01M12 8h5m-2.5-2.5v5"], ["aria-hidden", "true", 1, "counter-arrow"], [1, "counter-action-pair"], ["class", "counter-action expense-action", "type", "button", "data-counter-action", "expense", 3, "disabled", "click", 4, "ngIf"], ["class", "counter-action expense-action success-state", "routerLink", "/expenses", "role", "status", 4, "ngIf"], ["class", "counter-action viewsales-action", "routerLink", "/sales", "role", "status", 3, "success-state", 4, "ngIf"], ["class", "counter-action", "type", "button", 3, "click", 4, "ngIf"], ["aria-label", "Counter overview", 1, "counter-overview"], ["class", "counter-workspace scroll-mt-28", "aria-label", "New sale workspace", 4, "ngIf"], ["class", "counter-panel counter-pending", "aria-label", "Pending sales", 4, "ngIf"], ["title", "Complete this sale", "maxWidthClass", "max-w-md", 3, "close", "open"], [1, "counter-checkout-summary"], [1, "counter-discount"], ["cisCurrencyInput", "", "type", "text", "inputmode", "decimal", "placeholder", "0", 3, "formControl", "readonly"], [1, "counter-checkout-summary", "payable"], ["aria-live", "polite"], [1, "counter-payment-row"], [3, "ngModelChange", "ngModel", "disabled"], ["value", "CASH"], ["value", "M-PESA"], ["value", "AIRTEL_MONEY"], ["value", "TIGO_PESA"], ["value", "CARD"], ["value", "BANK"], ["value", "OTHER"], ["cisCurrencyInput", "", "type", "text", "inputmode", "decimal", 3, "ngModelChange", "ngModel", "readonly", "placeholder"], ["class", "counter-notice warning", "role", "status", 4, "ngIf"], ["class", "counter-notice warning", "role", "alert", 4, "ngIf"], [1, "counter-hint"], [1, "counter-modal-actions"], ["type", "button", 1, "counter-button", "secondary", 3, "click", "disabled"], ["type", "button", 1, "counter-button", "primary", 3, "click", "disabled"], ["title", "New Expenses", "maxWidthClass", "max-w-lg", 3, "close", "open"], [1, "counter-expense-form", 3, "ngSubmit", "formGroup"], ["type", "date", "formControlName", "date", 3, "readonly"], ["formControlName", "categoryId"], ["value", ""], [3, "value", 4, "ngFor", "ngForOf"], ["cisCurrencyInput", "", "type", "text", "inputmode", "decimal", "formControlName", "amount", 3, "readonly"], ["formControlName", "paymentMethod"], ["value", "MPESA"], ["formControlName", "description", "rows", "3", "maxlength", "1000", "placeholder", "What was this expense for?", 3, "readonly"], ["class", "counter-notice warning", 4, "ngIf"], ["type", "submit", 1, "counter-button", "primary", 3, "disabled"], ["title", "Discard unsaved cart changes?", "message", "Your unsaved changes will be lost. To keep this cart, go back and choose Hold sale for later.", "confirmText", "Discard changes", "cancelText", "Keep editing", 3, "confirm", "cancel", "open"], ["title", "Scan product barcode", 3, "scanned", "close", "open"], ["title", "Cancel this held sale?", "message", "The cart will be removed from pending sales. No inventory or completed sales will be changed.", "confirmText", "Cancel held sale", "cancelText", "Keep sale", 3, "confirm", "cancel", "open"], ["maxWidthClass", "max-w-md", 3, "close", "open", "title"], [1, "mt-3", "grid", "gap-3", 3, "ngSubmit"], ["type", "text", "name", "ref", "placeholder", "211026-0002", "autofocus", "", 1, "rounded-xl", "border", "border-slate-200", "dark:border-slate-600", "bg-white", "dark:bg-slate-700", "px-3", "py-2", "text-sm", "text-slate-900", "dark:text-slate-100", 3, "ngModelChange", "ngModel"], ["type", "button", 1, "counter-button", "secondary", 3, "click"], [3, "close", "completed", "open", "salesOrderId", "isAdmin", "location"], [3, "close", "open", "order"], ["role", "alert", 1, "counter-notice", "error"], ["type", "button", "data-counter-action", "expense", 1, "counter-action", "expense-action", 3, "click", "disabled"], ["d", "M6 3h12v18l-3-2-3 2-3-2-3 2V3ZM9 7h6M9 11h6M9 15h3"], ["routerLink", "/expenses", "role", "status", 1, "counter-action", "expense-action", "success-state"], ["d", "m5 13 4 4L19 7"], ["routerLink", "/sales", "role", "status", 1, "counter-action", "viewsales-action"], ["d", "m5 13 4 4L19 7", 4, "ngIf"], [4, "ngIf"], ["d", "M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2"], ["d", "M12 6v2m0 10v2"], ["d", "M20 12a8 8 0 11-16 0 8 8 0 0116 0z"], ["type", "button", 1, "counter-action", 3, "click"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"], ["x", "6", "y", "14", "width", "12", "height", "7", "rx", "1"], ["aria-label", "New sale workspace", 1, "counter-workspace", "scroll-mt-28"], [1, "counter-catalog", "counter-panel"], [1, "counter-section-heading"], [1, "counter-catalog-tools"], [1, "counter-search"], [1, "sr-only"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2", "aria-hidden", "true"], ["cx", "10.5", "cy", "10.5", "r", "6.5"], ["d", "m16 16 5 5"], ["type", "search", "placeholder", "Search name, SKU, barcode, or brand", 3, "input", "keydown.enter", "value"], [1, "counter-location"], ["aria-label", "Branch", 3, "change", "formControl", "disabled"], ["aria-label", "Product category", 1, "counter-category-tabs"], ["type", "button", 3, "click"], ["type", "button", 3, "selected", "click", 4, "ngFor", "ngForOf"], ["class", "counter-empty", "role", "status", 4, "ngIf"], ["type", "button", "class", "sticky top-24 z-10 mb-3 w-full rounded-xl bg-primary-500 px-4 py-3 text-sm font-semibold text-white shadow-lg min-[1101px]:hidden", 3, "click", 4, "ngIf"], ["class", "counter-product-grid", 4, "ngIf"], ["class", "counter-empty", 4, "ngIf"], ["type", "button", "class", "counter-button secondary counter-load-more", 3, "click", 4, "ngIf"], ["aria-label", "Sales cart", 1, "counter-cart", "counter-panel", "scroll-mt-28"], [1, "flex", "items-center", "gap-2"], ["type", "button", "class", "counter-button secondary", 3, "disabled", "title", "click", 4, "ngIf"], [1, "counter-count"], [1, "counter-customer-form", 3, "formGroup"], ["formControlName", "customerId", 3, "disabled"], [3, "ngValue"], [3, "ngValue", 4, "ngFor", "ngForOf"], ["class", "counter-new-customer", 4, "ngIf"], ["formControlName", "referenceNumber", "maxlength", "120", "placeholder", "Auto (e.g. 201026-0001)", 3, "readonly"], ["class", "counter-new-customer-form", 3, "formGroup", 4, "ngIf"], [1, "counter-cart-lines"], ["class", "counter-cart-line", 4, "ngFor", "ngForOf"], [1, "counter-cart-footer"], [1, "counter-total"], ["type", "button", 1, "counter-button", "primary", "counter-charge", 3, "click", "disabled"], ["type", "button", 1, "counter-button", "secondary", "counter-charge", 3, "click", "disabled"], ["type", "button", 1, "counter-button", "secondary", "counter-charge", "min-[1101px]:hidden", 3, "click"], [3, "value"], ["role", "status", 1, "counter-empty"], ["type", "button", 1, "sticky", "top-24", "z-10", "mb-3", "w-full", "rounded-xl", "bg-primary-500", "px-4", "py-3", "text-sm", "font-semibold", "text-white", "shadow-lg", "min-[1101px]:hidden", 3, "click"], [1, "counter-product-grid"], ["type", "button", "class", "counter-product", 3, "in-cart", "disabled", "click", 4, "ngFor", "ngForOf"], ["type", "button", 1, "counter-product", 3, "click", "disabled"], [1, "counter-product-top"], ["aria-hidden", "true", 1, "counter-product-monogram"], ["class", "counter-product-count", 4, "ngIf"], [1, "counter-product-category"], ["class", "inline-flex w-fit items-center gap-1 rounded-lg bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700 dark:bg-amber-900/50 dark:text-amber-300", 4, "ngIf"], [1, "counter-product-price"], [3, "text-[#B81104]", "dark:text-red-400", 4, "ngIf"], ["class", "counter-product-price", "style", "font-size: 0.8rem; color: #7367d8;", 4, "ngIf"], [1, "counter-product-bottom"], ["type", "button", "class", "counter-button secondary", "style", "padding: 0.25rem 0.5rem; font-size: 0.7rem;", 3, "disabled", "click", 4, "ngIf"], ["aria-hidden", "true", 1, "counter-add"], [1, "counter-product-count"], [1, "inline-flex", "w-fit", "items-center", "gap-1", "rounded-lg", "bg-amber-100", "px-2", "py-1", "text-xs", "font-semibold", "text-amber-700", "dark:bg-amber-900/50", "dark:text-amber-300"], [1, "counter-product-price", 2, "font-size", "0.8rem", "color", "#7367d8"], ["type", "button", 1, "counter-button", "secondary", 2, "padding", "0.25rem 0.5rem", "font-size", "0.7rem", 3, "click", "disabled"], [1, "counter-empty"], ["type", "button", 1, "counter-button", "secondary", "counter-load-more", 3, "click"], ["type", "button", 1, "counter-button", "secondary", 3, "click", "disabled", "title"], ["role", "status", 1, "counter-notice", "warning"], [1, "counter-new-customer"], ["type", "button", 1, "counter-link", 3, "click", "disabled"], [1, "counter-new-customer-form", 3, "formGroup"], ["formControlName", "name", "maxlength", "200", 3, "placeholder"], ["formControlName", "phone", "maxlength", "40", 3, "placeholder"], [1, "counter-new-customer-actions"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "1.5", "aria-hidden", "true"], ["d", "M3 3h2l3 12h10l3-9H6M9 20h.01M18 20h.01"], [1, "counter-cart-line"], [1, "counter-line-title"], ["class", "ml-1 inline-flex items-center rounded-md bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 dark:bg-amber-900/40 dark:text-amber-300", 4, "ngIf"], ["type", "button", 1, "counter-remove", 3, "click", "disabled"], [1, "counter-line-bottom"], [1, "counter-stepper"], ["type", "button", 3, "click", "disabled"], ["type", "number", "min", "1", "step", "1", 3, "change", "value", "readonly"], [1, "ml-1", "inline-flex", "items-center", "rounded-md", "bg-amber-100", "px-1.5", "py-0.5", "text-[10px]", "font-semibold", "text-amber-700", "dark:bg-amber-900/40", "dark:text-amber-300"], [1, "counter-notice", "warning"], ["aria-label", "Pending sales", 1, "counter-panel", "counter-pending"], [1, "counter-search", "counter-pending-search"], ["type", "search", "placeholder", "Search customer, reference, or product", 3, "input", "value"], ["class", "mt-2 block", 3, "total", "pageSize", "pageIndex", "pageSizeChange", "pageIndexChange", 4, "ngIf"], ["class", "counter-pending-table", 4, "ngIf"], [1, "mt-2", "block", 3, "pageSizeChange", "pageIndexChange", "total", "pageSize", "pageIndex"], [1, "counter-pending-table"], [1, "w-full", "border-collapse", "text-sm"], [4, "ngFor", "ngForOf"], [1, "counter-status"], ["type", "button", 1, "cis-row-action", 3, "click", "disabled"], ["viewBox", "0 0 24 24", "fill", "none", "stroke", "currentColor", "stroke-width", "2", "aria-hidden", "true", 1, "h-3.5", "w-3.5", "shrink-0"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M6 4l14 8-14 8V4z"], ["type", "button", "class", "cis-row-action cis-row-action-danger", 3, "disabled", "click", 4, "ngIf"], ["type", "button", 1, "cis-row-action", "cis-row-action-danger", 3, "click", "disabled"], ["stroke-linecap", "round", "stroke-linejoin", "round", "d", "M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"], ["role", "alert", 1, "counter-notice", "warning"]], template: function CounterPage_Template(rf, ctx) {
     if (rf & 1) {
       \u0275\u0275elementStart(0, "div", 2)(1, "header", 3)(2, "div")(3, "div", 4);
       \u0275\u0275text(4, "POINT OF SALE");
@@ -2090,141 +2092,142 @@ var CounterPage = class _CounterPage {
       \u0275\u0275pipe(102, "translate");
       \u0275\u0275elementEnd();
       \u0275\u0275elementStart(103, "input", 36);
+      \u0275\u0275pipe(104, "number");
       \u0275\u0275listener("ngModelChange", function CounterPage_Template_input_ngModelChange_103_listener($event) {
-        return ctx.amountReceived.set($event == null || $event === "" ? null : +$event);
+        return ctx.amountReceived.set($event);
       });
       \u0275\u0275elementEnd()()();
-      \u0275\u0275template(104, CounterPage_div_104_Template, 4, 6, "div", 37)(105, CounterPage_div_105_Template, 2, 1, "div", 6)(106, CounterPage_div_106_Template, 2, 0, "div", 38);
-      \u0275\u0275elementStart(107, "p", 39);
-      \u0275\u0275text(108, "Confirm that payment has been collected before completing this sale. This records the sale and deducts stock; it does not process an online payment.");
+      \u0275\u0275template(105, CounterPage_div_105_Template, 4, 6, "div", 37)(106, CounterPage_div_106_Template, 2, 1, "div", 6)(107, CounterPage_div_107_Template, 2, 0, "div", 38);
+      \u0275\u0275elementStart(108, "p", 39);
+      \u0275\u0275text(109, "Confirm that payment has been collected before completing this sale. This records the sale and deducts stock; it does not process an online payment.");
       \u0275\u0275elementEnd();
-      \u0275\u0275template(109, CounterPage_div_109_Template, 2, 1, "div", 6);
-      \u0275\u0275elementStart(110, "div", 40)(111, "button", 41);
-      \u0275\u0275listener("click", function CounterPage_Template_button_click_111_listener() {
+      \u0275\u0275template(110, CounterPage_div_110_Template, 2, 1, "div", 6);
+      \u0275\u0275elementStart(111, "div", 40)(112, "button", 41);
+      \u0275\u0275listener("click", function CounterPage_Template_button_click_112_listener() {
         return ctx.checkoutOpen.set(false);
       });
-      \u0275\u0275text(112, "Back to cart");
+      \u0275\u0275text(113, "Back to cart");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(113, "button", 42);
-      \u0275\u0275listener("click", function CounterPage_Template_button_click_113_listener() {
+      \u0275\u0275elementStart(114, "button", 42);
+      \u0275\u0275listener("click", function CounterPage_Template_button_click_114_listener() {
         return ctx.completeSale();
       });
-      \u0275\u0275text(114);
+      \u0275\u0275text(115);
       \u0275\u0275elementEnd()()();
-      \u0275\u0275elementStart(115, "cis-modal", 43);
-      \u0275\u0275listener("close", function CounterPage_Template_cis_modal_close_115_listener() {
+      \u0275\u0275elementStart(116, "cis-modal", 43);
+      \u0275\u0275listener("close", function CounterPage_Template_cis_modal_close_116_listener() {
         return !ctx.busy() && ctx.expenseOpen.set(false);
       });
-      \u0275\u0275elementStart(116, "p", 39);
-      \u0275\u0275text(117, "Record an expense against the correct category and payment method.");
+      \u0275\u0275elementStart(117, "p", 39);
+      \u0275\u0275text(118, "Record an expense against the correct category and payment method.");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(118, "form", 44);
-      \u0275\u0275listener("ngSubmit", function CounterPage_Template_form_ngSubmit_118_listener() {
+      \u0275\u0275elementStart(119, "form", 44);
+      \u0275\u0275listener("ngSubmit", function CounterPage_Template_form_ngSubmit_119_listener() {
         return ctx.saveExpense();
       });
-      \u0275\u0275elementStart(119, "label");
-      \u0275\u0275text(120, "Date");
-      \u0275\u0275element(121, "input", 45);
+      \u0275\u0275elementStart(120, "label");
+      \u0275\u0275text(121, "Date");
+      \u0275\u0275element(122, "input", 45);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(122, "label");
-      \u0275\u0275text(123, "Category");
-      \u0275\u0275elementStart(124, "select", 46)(125, "option", 47);
-      \u0275\u0275text(126);
+      \u0275\u0275elementStart(123, "label");
+      \u0275\u0275text(124, "Category");
+      \u0275\u0275elementStart(125, "select", 46)(126, "option", 47);
+      \u0275\u0275text(127);
       \u0275\u0275elementEnd();
-      \u0275\u0275template(127, CounterPage_option_127_Template, 2, 2, "option", 48);
+      \u0275\u0275template(128, CounterPage_option_128_Template, 2, 2, "option", 48);
       \u0275\u0275elementEnd()();
-      \u0275\u0275elementStart(128, "label");
-      \u0275\u0275text(129, "Amount (TSH)");
-      \u0275\u0275element(130, "input", 49);
+      \u0275\u0275elementStart(129, "label");
+      \u0275\u0275text(130, "Amount (TSH)");
+      \u0275\u0275element(131, "input", 49);
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(131, "label");
-      \u0275\u0275text(132, "Payment method");
-      \u0275\u0275elementStart(133, "select", 50)(134, "option", 29);
-      \u0275\u0275text(135, "Cash");
+      \u0275\u0275elementStart(132, "label");
+      \u0275\u0275text(133, "Payment method");
+      \u0275\u0275elementStart(134, "select", 50)(135, "option", 29);
+      \u0275\u0275text(136, "Cash");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(136, "option", 51);
-      \u0275\u0275text(137, "M-Pesa");
+      \u0275\u0275elementStart(137, "option", 51);
+      \u0275\u0275text(138, "M-Pesa");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(138, "option", 34);
-      \u0275\u0275text(139, "Bank");
+      \u0275\u0275elementStart(139, "option", 34);
+      \u0275\u0275text(140, "Bank");
       \u0275\u0275elementEnd()()();
-      \u0275\u0275elementStart(140, "label");
-      \u0275\u0275text(141, "Description ");
-      \u0275\u0275elementStart(142, "small");
-      \u0275\u0275text(143, "(optional)");
+      \u0275\u0275elementStart(141, "label");
+      \u0275\u0275text(142, "Description ");
+      \u0275\u0275elementStart(143, "small");
+      \u0275\u0275text(144, "(optional)");
       \u0275\u0275elementEnd();
-      \u0275\u0275element(144, "textarea", 52);
+      \u0275\u0275element(145, "textarea", 52);
       \u0275\u0275elementEnd();
-      \u0275\u0275template(145, CounterPage_p_145_Template, 5, 0, "p", 53)(146, CounterPage_p_146_Template, 2, 0, "p", 6)(147, CounterPage_p_147_Template, 2, 1, "p", 6);
-      \u0275\u0275elementStart(148, "div", 40)(149, "button", 41);
-      \u0275\u0275listener("click", function CounterPage_Template_button_click_149_listener() {
+      \u0275\u0275template(146, CounterPage_p_146_Template, 5, 0, "p", 53)(147, CounterPage_p_147_Template, 2, 0, "p", 6)(148, CounterPage_p_148_Template, 2, 1, "p", 6);
+      \u0275\u0275elementStart(149, "div", 40)(150, "button", 41);
+      \u0275\u0275listener("click", function CounterPage_Template_button_click_150_listener() {
         return ctx.expenseOpen.set(false);
       });
-      \u0275\u0275text(150, "Cancel");
+      \u0275\u0275text(151, "Cancel");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(151, "button", 54);
-      \u0275\u0275text(152);
+      \u0275\u0275elementStart(152, "button", 54);
+      \u0275\u0275text(153);
       \u0275\u0275elementEnd()()()();
-      \u0275\u0275elementStart(153, "cis-confirm-dialog", 55);
-      \u0275\u0275listener("confirm", function CounterPage_Template_cis_confirm_dialog_confirm_153_listener() {
+      \u0275\u0275elementStart(154, "cis-confirm-dialog", 55);
+      \u0275\u0275listener("confirm", function CounterPage_Template_cis_confirm_dialog_confirm_154_listener() {
         return ctx.confirmDiscard();
-      })("cancel", function CounterPage_Template_cis_confirm_dialog_cancel_153_listener() {
+      })("cancel", function CounterPage_Template_cis_confirm_dialog_cancel_154_listener() {
         return ctx.cancelDiscard();
       });
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(154, "cis-barcode-scanner", 56);
-      \u0275\u0275listener("scanned", function CounterPage_Template_cis_barcode_scanner_scanned_154_listener($event) {
+      \u0275\u0275elementStart(155, "cis-barcode-scanner", 56);
+      \u0275\u0275listener("scanned", function CounterPage_Template_cis_barcode_scanner_scanned_155_listener($event) {
         return ctx.onScanned($event);
-      })("close", function CounterPage_Template_cis_barcode_scanner_close_154_listener() {
+      })("close", function CounterPage_Template_cis_barcode_scanner_close_155_listener() {
         return ctx.scannerOpen.set(false);
       });
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(155, "cis-confirm-dialog", 57);
-      \u0275\u0275listener("confirm", function CounterPage_Template_cis_confirm_dialog_confirm_155_listener() {
+      \u0275\u0275elementStart(156, "cis-confirm-dialog", 57);
+      \u0275\u0275listener("confirm", function CounterPage_Template_cis_confirm_dialog_confirm_156_listener() {
         return ctx.cancelHeldCart();
-      })("cancel", function CounterPage_Template_cis_confirm_dialog_cancel_155_listener() {
+      })("cancel", function CounterPage_Template_cis_confirm_dialog_cancel_156_listener() {
         return ctx.cancelTarget.set(null);
       });
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(156, "cis-modal", 58);
-      \u0275\u0275pipe(157, "translate");
-      \u0275\u0275listener("close", function CounterPage_Template_cis_modal_close_156_listener() {
+      \u0275\u0275elementStart(157, "cis-modal", 58);
+      \u0275\u0275pipe(158, "translate");
+      \u0275\u0275listener("close", function CounterPage_Template_cis_modal_close_157_listener() {
         return ctx.findSaleOpen.set(false);
       });
-      \u0275\u0275elementStart(158, "p", 39);
-      \u0275\u0275text(159);
-      \u0275\u0275pipe(160, "translate");
+      \u0275\u0275elementStart(159, "p", 39);
+      \u0275\u0275text(160);
+      \u0275\u0275pipe(161, "translate");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(161, "form", 59);
-      \u0275\u0275listener("ngSubmit", function CounterPage_Template_form_ngSubmit_161_listener() {
+      \u0275\u0275elementStart(162, "form", 59);
+      \u0275\u0275listener("ngSubmit", function CounterPage_Template_form_ngSubmit_162_listener() {
         return ctx.findSale();
       });
-      \u0275\u0275elementStart(162, "input", 60);
-      \u0275\u0275listener("ngModelChange", function CounterPage_Template_input_ngModelChange_162_listener($event) {
+      \u0275\u0275elementStart(163, "input", 60);
+      \u0275\u0275listener("ngModelChange", function CounterPage_Template_input_ngModelChange_163_listener($event) {
         return ctx.findSaleQuery.set($event);
       });
       \u0275\u0275elementEnd();
-      \u0275\u0275template(163, CounterPage_p_163_Template, 2, 1, "p", 6);
-      \u0275\u0275elementStart(164, "div", 40)(165, "button", 61);
-      \u0275\u0275listener("click", function CounterPage_Template_button_click_165_listener() {
+      \u0275\u0275template(164, CounterPage_p_164_Template, 2, 1, "p", 6);
+      \u0275\u0275elementStart(165, "div", 40)(166, "button", 61);
+      \u0275\u0275listener("click", function CounterPage_Template_button_click_166_listener() {
         return ctx.findSaleOpen.set(false);
       });
-      \u0275\u0275text(166);
-      \u0275\u0275pipe(167, "translate");
+      \u0275\u0275text(167);
+      \u0275\u0275pipe(168, "translate");
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(168, "button", 54);
-      \u0275\u0275text(169);
-      \u0275\u0275pipe(170, "translate");
+      \u0275\u0275elementStart(169, "button", 54);
+      \u0275\u0275text(170);
+      \u0275\u0275pipe(171, "translate");
       \u0275\u0275elementEnd()()()();
-      \u0275\u0275elementStart(171, "cis-return-dialog", 62);
-      \u0275\u0275listener("close", function CounterPage_Template_cis_return_dialog_close_171_listener() {
+      \u0275\u0275elementStart(172, "cis-return-dialog", 62);
+      \u0275\u0275listener("close", function CounterPage_Template_cis_return_dialog_close_172_listener() {
         return ctx.returnOrderId.set(null);
-      })("completed", function CounterPage_Template_cis_return_dialog_completed_171_listener($event) {
+      })("completed", function CounterPage_Template_cis_return_dialog_completed_172_listener($event) {
         return ctx.onReturnCompleted($event);
       });
       \u0275\u0275elementEnd();
-      \u0275\u0275elementStart(172, "cis-receipt-dialog", 63);
-      \u0275\u0275listener("close", function CounterPage_Template_cis_receipt_dialog_close_172_listener() {
+      \u0275\u0275elementStart(173, "cis-receipt-dialog", 63);
+      \u0275\u0275listener("close", function CounterPage_Template_cis_receipt_dialog_close_173_listener() {
         return ctx.receiptOpen.set(false);
       });
       \u0275\u0275elementEnd();
@@ -2281,8 +2284,8 @@ var CounterPage = class _CounterPage {
       \u0275\u0275advance(17);
       \u0275\u0275textInterpolate1("", \u0275\u0275pipeBind1(102, 85, "customers.receivedAmount"), " (TSH)");
       \u0275\u0275advance(2);
-      \u0275\u0275property("placeholder", \u0275\u0275interpolate(ctx.payable()))("ngModel", ctx.amountReceived())("readonly", ctx.busy());
-      \u0275\u0275advance();
+      \u0275\u0275property("placeholder", \u0275\u0275interpolate(\u0275\u0275pipeBind2(104, 87, ctx.payable(), "1.0-0")))("ngModel", ctx.amountReceived())("readonly", ctx.busy());
+      \u0275\u0275advance(2);
       \u0275\u0275property("ngIf", ctx.debtPreview() > 0);
       \u0275\u0275advance();
       \u0275\u0275property("ngIf", ctx.discountError());
@@ -2329,30 +2332,30 @@ var CounterPage = class _CounterPage {
       \u0275\u0275advance();
       \u0275\u0275property("open", !!ctx.cancelTarget());
       \u0275\u0275advance();
-      \u0275\u0275property("open", ctx.findSaleOpen())("title", \u0275\u0275pipeBind1(157, 87, "returns.findSale"));
+      \u0275\u0275property("open", ctx.findSaleOpen())("title", \u0275\u0275pipeBind1(158, 90, "returns.findSale"));
       \u0275\u0275advance(3);
-      \u0275\u0275textInterpolate(\u0275\u0275pipeBind1(160, 89, "returns.findSaleHint"));
+      \u0275\u0275textInterpolate(\u0275\u0275pipeBind1(161, 92, "returns.findSaleHint"));
       \u0275\u0275advance(3);
       \u0275\u0275property("ngModel", ctx.findSaleQuery());
       \u0275\u0275advance();
       \u0275\u0275property("ngIf", ctx.findSaleError());
       \u0275\u0275advance(3);
-      \u0275\u0275textInterpolate(\u0275\u0275pipeBind1(167, 91, "common.cancel"));
+      \u0275\u0275textInterpolate(\u0275\u0275pipeBind1(168, 94, "common.cancel"));
       \u0275\u0275advance(2);
       \u0275\u0275property("disabled", ctx.findSaleBusy() || !ctx.findSaleQuery().trim());
       \u0275\u0275advance();
-      \u0275\u0275textInterpolate(ctx.findSaleBusy() ? "\u2026" : \u0275\u0275pipeBind1(170, 93, "returns.findSale"));
+      \u0275\u0275textInterpolate(ctx.findSaleBusy() ? "\u2026" : \u0275\u0275pipeBind1(171, 96, "returns.findSale"));
       \u0275\u0275advance(2);
       \u0275\u0275property("open", ctx.returnOrderId() !== null)("salesOrderId", ctx.returnOrderId())("isAdmin", ctx.perm.isAdmin())("location", ctx.location.value.trim() || ctx.branchCtx.writeBranch());
       \u0275\u0275advance();
       \u0275\u0275property("open", ctx.receiptOpen())("order", ctx.receiptOrder());
     }
-  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, \u0275NgNoValidate, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, NumberValueAccessor, SelectControlValueAccessor, NgControlStatus, NgControlStatusGroup, MaxLengthValidator, MinValidator, NgModel, NgForm, ReactiveFormsModule, FormControlDirective, FormGroupDirective, FormControlName, RouterLink, ModalComponent, ConfirmDialogComponent, BarcodeScannerComponent, RowActionsMenuComponent, PagerComponent, ReturnDialogComponent, ReceiptDialogComponent, UpperCasePipe, DatePipe, MoneyPipe, TranslatePipe], styles: ["\n\n[_nghost-%COMP%] {\n  display: block;\n  min-width: 0;\n  color: var(--cis-text);\n}\n.counter-page[_ngcontent-%COMP%] {\n  display: grid;\n  gap: 24px;\n}\nh1[_ngcontent-%COMP%] {\n  font-size: 30px;\n  font-weight: 800;\n  letter-spacing: -0.04em;\n  color: var(--cis-text);\n}\nh2[_ngcontent-%COMP%] {\n  font-size: 18px;\n  font-weight: 700;\n}\nh3[_ngcontent-%COMP%] {\n  font-weight: 600;\n}\nsmall[_ngcontent-%COMP%], \n.counter-hint[_ngcontent-%COMP%], \n.counter-heading[_ngcontent-%COMP%]   p[_ngcontent-%COMP%], \n.counter-section-heading[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  font-size: 12px;\n  color: var(--cis-muted);\n  line-height: 1.6;\n}\n.counter-heading[_ngcontent-%COMP%], \n.counter-section-heading[_ngcontent-%COMP%], \n.counter-action[_ngcontent-%COMP%], \n.counter-product-top[_ngcontent-%COMP%], \n.counter-product-bottom[_ngcontent-%COMP%], \n.counter-line-title[_ngcontent-%COMP%], \n.counter-line-bottom[_ngcontent-%COMP%], \n.counter-total[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 12px;\n}\n.counter-heading[_ngcontent-%COMP%], \n.counter-section-heading[_ngcontent-%COMP%] {\n  flex-wrap: wrap;\n}\n.counter-eyebrow[_ngcontent-%COMP%] {\n  color: var(--cis-primary);\n  font-size: 10px;\n  font-weight: 800;\n  letter-spacing: 0.18em;\n}\n.counter-connection[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 7px;\n  padding: 8px 12px;\n  border-radius: 30px;\n  background: var(--cis-surface);\n  font-size: 12px;\n}\n.counter-connection[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n  width: 7px;\n  height: 7px;\n  border-radius: 50%;\n  background: #16a085;\n}\n.counter-connection.is-offline[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n  background: #d97706;\n}\n.counter-actions[_ngcontent-%COMP%], \n.counter-overview[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 16px;\n}\n.counter-action-pair[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 16px;\n}\n.counter-action-pair.single[_ngcontent-%COMP%] {\n  grid-template-columns: 1fr;\n}\n.counter-action-pair[_ngcontent-%COMP%]   .counter-action[_ngcontent-%COMP%] {\n  padding: 16px;\n  border-radius: 18px;\n  text-decoration: none;\n  color: inherit;\n}\n.counter-action-pair[_ngcontent-%COMP%]   .counter-action-icon[_ngcontent-%COMP%] {\n  flex: 0 0 42px;\n  height: 42px;\n  border-radius: 12px;\n}\n.counter-action-pair[_ngcontent-%COMP%]   .counter-action-icon[_ngcontent-%COMP%]   svg[_ngcontent-%COMP%] {\n  width: 22px;\n  height: 22px;\n}\n.counter-action-pair[_ngcontent-%COMP%]   .counter-action[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%] {\n  font-size: 15px;\n}\n.counter-action-pair[_ngcontent-%COMP%]   .counter-action[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n  font-size: 11px;\n  margin-top: 4px;\n}\n.counter-overview[_ngcontent-%COMP%] {\n  grid-template-columns: repeat(3, minmax(0, 1fr));\n}\n.counter-action[_ngcontent-%COMP%] {\n  justify-content: start;\n  padding: 24px;\n  border-radius: 22px;\n  text-align: left;\n}\n.sale-action[_ngcontent-%COMP%] {\n  background:\n    linear-gradient(\n      120deg,\n      #7367d8,\n      #4e43a8);\n  color: white;\n}\n.sale-action[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n  color: inherit;\n}\n.counter-panel[_ngcontent-%COMP%], \n.expense-action[_ngcontent-%COMP%], \n.viewsales-action[_ngcontent-%COMP%], \n.counter-overview[_ngcontent-%COMP%]    > div[_ngcontent-%COMP%], \n.counter-product[_ngcontent-%COMP%] {\n  border: 1px solid var(--cis-border);\n  background: var(--cis-surface);\n}\n.counter-action-icon[_ngcontent-%COMP%] {\n  display: grid;\n  place-items: center;\n  flex: 0 0 54px;\n  height: 54px;\n  border-radius: 16px;\n  background: rgba(255, 255, 255, 0.1411764706);\n}\n.expense-action[_ngcontent-%COMP%]   .counter-action-icon[_ngcontent-%COMP%], \n.viewsales-action[_ngcontent-%COMP%]   .counter-action-icon[_ngcontent-%COMP%], \n.counter-product-monogram[_ngcontent-%COMP%], \n.counter-count[_ngcontent-%COMP%], \n.counter-add[_ngcontent-%COMP%] {\n  background: var(--cis-primary-soft);\n  color: var(--cis-primary-strong);\n}\n.viewsales-action.success-state[_ngcontent-%COMP%], \n.expense-action.success-state[_ngcontent-%COMP%] {\n  background:\n    linear-gradient(\n      120deg,\n      #ffc145,\n      #f0a21b);\n  border-color: transparent;\n  color: #1e293b;\n}\n.success-state[_ngcontent-%COMP%]   .counter-action-icon[_ngcontent-%COMP%] {\n  background: rgba(30, 41, 59, 0.0784313725);\n  color: #1e293b;\n}\n.counter-action-icon[_ngcontent-%COMP%]   svg[_ngcontent-%COMP%] {\n  width: 30px;\n  height: 30px;\n}\n.counter-action[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%] {\n  display: block;\n  font-size: 21px;\n}\n.counter-action[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n  display: block;\n  margin-top: 6px;\n}\n.counter-arrow[_ngcontent-%COMP%] {\n  margin-left: auto;\n  font-size: 24px;\n}\n.counter-overview[_ngcontent-%COMP%]    > div[_ngcontent-%COMP%] {\n  padding: 18px 22px;\n  border-radius: 18px;\n}\n.counter-overview[_ngcontent-%COMP%]   span[_ngcontent-%COMP%], \n.counter-overview[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n  display: block;\n  font-size: 11px;\n  color: var(--cis-muted);\n}\n.counter-overview[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%] {\n  display: block;\n  margin: 7px 0;\n  font-size: 23px;\n  font-weight: 800;\n}\n.counter-overview[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n  display: inline;\n}\n.counter-panel[_ngcontent-%COMP%] {\n  min-width: 0;\n  padding: 22px;\n  border-radius: 20px;\n}\n.counter-workspace[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: minmax(0, 1fr) 350px;\n  gap: 20px;\n  align-items: start;\n}\n.counter-button[_ngcontent-%COMP%] {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  min-height: 44px;\n  padding: 10px 15px;\n  border-radius: 12px;\n  font-size: 12px;\n  font-weight: 700;\n}\n.counter-button.primary[_ngcontent-%COMP%] {\n  color: white;\n  background: var(--cis-primary);\n}\n.counter-button.primary[_ngcontent-%COMP%]:not(:disabled):hover {\n  background: #5f52c7;\n}\n.counter-button.secondary[_ngcontent-%COMP%] {\n  background: var(--cis-page);\n  color: var(--cis-primary-strong);\n  border: 1px solid var(--cis-border);\n}\nbutton[_ngcontent-%COMP%]:disabled {\n  cursor: not-allowed;\n  opacity: 0.5;\n}\n.counter-catalog-tools[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: end;\n  flex-wrap: wrap;\n  gap: 10px;\n  margin: 20px 0 14px;\n}\n.counter-search[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  flex: 1;\n  min-width: 160px;\n  padding: 0 12px;\n  border: 1px solid var(--cis-border);\n  border-radius: 12px;\n  background: var(--cis-page);\n}\n.counter-search[_ngcontent-%COMP%]   svg[_ngcontent-%COMP%] {\n  width: 18px;\n  height: 18px;\n  flex-shrink: 0;\n}\n.counter-search[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 100%;\n  min-width: 0;\n  min-height: 44px;\n  border: 0;\n  background: transparent;\n  font-size: 13px;\n}\n.counter-location[_ngcontent-%COMP%] {\n  width: 105px;\n  font-size: 10px;\n}\n.counter-category-tabs[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 7px;\n  overflow-x: auto;\n  padding-bottom: 16px;\n}\n.counter-category-tabs[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  flex-shrink: 0;\n  padding: 8px 12px;\n  border-radius: 9px;\n  font-size: 11px;\n  background: var(--cis-page);\n}\n.counter-category-tabs[_ngcontent-%COMP%]   .selected[_ngcontent-%COMP%] {\n  background: var(--cis-primary-soft);\n  color: var(--cis-primary-strong);\n}\n.counter-product-grid[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));\n  gap: 12px;\n}\n.counter-product[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  gap: 7px;\n  padding: 14px;\n  border-radius: 16px;\n  text-align: left;\n}\n.counter-product.in-cart[_ngcontent-%COMP%], \n.counter-product[_ngcontent-%COMP%]:not(:disabled):hover {\n  border-color: var(--cis-primary);\n  background: var(--cis-page);\n}\n.counter-product[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%] {\n  font-size: 13px;\n  overflow-wrap: anywhere;\n}\n.counter-product[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n  font-size: 10px;\n}\n.counter-product-top[_ngcontent-%COMP%] {\n  width: 100%;\n}\n.counter-product-monogram[_ngcontent-%COMP%] {\n  display: grid;\n  width: 42px;\n  height: 42px;\n  place-items: center;\n  border-radius: 12px;\n  font-weight: 800;\n}\n.counter-product-count[_ngcontent-%COMP%] {\n  font-size: 9px;\n}\n.counter-product-price[_ngcontent-%COMP%] {\n  margin-top: auto;\n  padding-top: 6px;\n  font-weight: 800;\n  font-size: 13px;\n}\n.counter-product-bottom[_ngcontent-%COMP%] {\n  width: 100%;\n}\n.counter-product[_ngcontent-%COMP%]   .out-of-stock[_ngcontent-%COMP%] {\n  color: #b45309;\n}\n.counter-add[_ngcontent-%COMP%], \n.counter-count[_ngcontent-%COMP%] {\n  display: inline-grid;\n  place-items: center;\n  min-width: 28px;\n  min-height: 28px;\n  border-radius: 8px;\n  padding: 3px;\n}\n.counter-load-more[_ngcontent-%COMP%], \n.counter-charge[_ngcontent-%COMP%] {\n  width: 100%;\n  margin-top: 12px;\n}\n.counter-cart[_ngcontent-%COMP%] {\n  position: sticky;\n  top: 20px;\n}\n.counter-customer-form[_ngcontent-%COMP%], \n.counter-expense-form[_ngcontent-%COMP%] {\n  display: grid;\n  gap: 13px;\n  margin-top: 18px;\n}\n.counter-customer-form[_ngcontent-%COMP%]   label[_ngcontent-%COMP%], \n.counter-expense-form[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  display: grid;\n  gap: 6px;\n  font-size: 12px;\n  color: var(--cis-muted);\n}\ninput[_ngcontent-%COMP%]:not([type=search]), \nselect[_ngcontent-%COMP%], \ntextarea[_ngcontent-%COMP%] {\n  width: 100%;\n  min-height: 44px;\n  border: 1px solid var(--cis-border);\n  border-radius: 10px;\n  padding: 9px 11px;\n  background: var(--cis-page);\n  color: var(--cis-text);\n  font-size: 13px;\n}\n.counter-cart-lines[_ngcontent-%COMP%] {\n  max-height: 420px;\n  overflow-y: auto;\n  margin-top: 16px;\n}\n.counter-cart-line[_ngcontent-%COMP%] {\n  padding: 15px 0;\n  border-top: 1px solid var(--cis-border);\n}\n.counter-cart-line[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%] {\n  font-size: 12px;\n}\n.counter-line-title[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n  display: block;\n}\n.counter-remove[_ngcontent-%COMP%] {\n  flex-shrink: 0;\n  width: 36px;\n  height: 36px;\n  font-size: 21px;\n}\n.counter-line-bottom[_ngcontent-%COMP%] {\n  margin-top: 10px;\n}\n.counter-stepper[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  flex-shrink: 0;\n  border: 1px solid var(--cis-border);\n  border-radius: 10px;\n  overflow: hidden;\n}\n.counter-stepper[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  width: 34px;\n  min-height: 40px;\n  background: var(--cis-page);\n}\n.counter-stepper[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 48px;\n  border: 0;\n  border-radius: 0;\n  padding: 4px;\n  text-align: center;\n  appearance: textfield;\n}\n.counter-stepper[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]::-webkit-inner-spin-button {\n  appearance: none;\n}\n.counter-cart-footer[_ngcontent-%COMP%] {\n  margin-top: 16px;\n  border-top: 1px dashed var(--cis-border);\n  padding-top: 18px;\n}\n.counter-total[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%] {\n  font-size: 20px;\n  color: var(--cis-primary-strong);\n}\n.counter-hint[_ngcontent-%COMP%] {\n  margin: 10px 0;\n}\n.counter-notice[_ngcontent-%COMP%] {\n  padding: 12px 15px;\n  border-radius: 12px;\n  font-size: 12px;\n  line-height: 1.6;\n  margin: 10px 0;\n}\n.counter-notice[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n  margin-left: 8px;\n  text-decoration: underline;\n}\n.counter-notice.success[_ngcontent-%COMP%] {\n  background: #e7f7ef;\n  color: #166747;\n}\n.counter-notice.error[_ngcontent-%COMP%] {\n  background: #fff0f0;\n  color: #a12b35;\n}\n.counter-notice.warning[_ngcontent-%COMP%], \n.counter-status[_ngcontent-%COMP%] {\n  background: #fff6e5;\n  color: #875508;\n}\n.counter-empty[_ngcontent-%COMP%] {\n  padding: 36px 18px;\n  text-align: center;\n  color: var(--cis-muted);\n  font-size: 13px;\n}\n.counter-empty[_ngcontent-%COMP%]   svg[_ngcontent-%COMP%] {\n  width: 42px;\n  height: 42px;\n  margin: 0 auto 15px;\n}\n.counter-pending-search[_ngcontent-%COMP%] {\n  max-width: 440px;\n  margin: 20px 0;\n}\n.counter-pending-table[_ngcontent-%COMP%] {\n  overflow-x: auto;\n  border-radius: 12px;\n}\n.counter-pending-table[_ngcontent-%COMP%]   :is(th[_ngcontent-%COMP%], td[_ngcontent-%COMP%]) {\n  padding: 13px 14px;\n  text-align: left;\n  font-size: 12px;\n}\n.counter-pending-table[_ngcontent-%COMP%]   td[_ngcontent-%COMP%] {\n  border-bottom: 1px solid var(--cis-border);\n}\n.counter-pending-table[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n  display: block;\n}\n.counter-status[_ngcontent-%COMP%] {\n  display: inline-block;\n  border-radius: 20px;\n  padding: 4px 10px;\n  font-size: 10px;\n  white-space: nowrap;\n}\n.counter-row-actions[_ngcontent-%COMP%], \n.counter-modal-actions[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: flex-end;\n  gap: 8px;\n}\n.counter-modal-actions[_ngcontent-%COMP%] {\n  margin-top: 22px;\n  flex-wrap: wrap;\n}\n.counter-checkout-summary[_ngcontent-%COMP%] {\n  padding: 22px;\n  border-radius: 16px;\n  background: var(--cis-primary-soft);\n  text-align: center;\n  color: var(--cis-primary-strong);\n}\n.counter-checkout-summary[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%] {\n  display: block;\n  font-size: 30px;\n  font-weight: 800;\n  margin: 8px 0;\n}\n.counter-checkout-summary.payable[_ngcontent-%COMP%] {\n  margin-top: 14px;\n}\n.counter-discount[_ngcontent-%COMP%] {\n  display: grid;\n  gap: 6px;\n  margin-top: 14px;\n  font-size: 12px;\n  font-weight: 600;\n  color: var(--cis-muted);\n}\n.counter-discount[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.counter-discount[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  border: 1px solid var(--cis-border);\n  border-radius: 12px;\n  padding: 10px 14px;\n  font-size: 14px;\n  font-weight: 600;\n  color: var(--cis-ink);\n  background: var(--cis-card, #fff);\n  outline: none;\n}\n.counter-discount[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, \n.counter-discount[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus {\n  border-color: var(--cis-primary);\n}\n.counter-payment-row[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  gap: 12px;\n}\n.counter-link[_ngcontent-%COMP%] {\n  color: var(--cis-primary);\n  font-size: 12px;\n  font-weight: 700;\n  text-decoration: underline;\n  background: none;\n  border: 0;\n  padding: 0;\n  cursor: pointer;\n}\n.counter-new-customer[_ngcontent-%COMP%] {\n  margin: 4px 0 8px;\n  text-align: right;\n}\n.counter-new-customer-form[_ngcontent-%COMP%] {\n  display: grid;\n  gap: 8px;\n  margin: 8px 0;\n  padding: 12px;\n  border: 1px dashed var(--cis-border);\n  border-radius: 12px;\n}\n.counter-new-customer-form[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  border: 1px solid var(--cis-border);\n  border-radius: 10px;\n  padding: 9px 12px;\n  font-size: 13px;\n  color: var(--cis-ink);\n  background: var(--cis-card, #fff);\n  outline: none;\n}\n.counter-new-customer-form[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus {\n  border-color: var(--cis-primary);\n}\n.counter-new-customer-actions[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: flex-end;\n  gap: 8px;\n}\n@media (max-width: 767px) {\n  .counter-payment-row[_ngcontent-%COMP%] {\n    grid-template-columns: 1fr;\n  }\n}\n@media (max-width: 1100px) {\n  .counter-workspace[_ngcontent-%COMP%] {\n    grid-template-columns: minmax(0, 1fr);\n  }\n  .counter-cart[_ngcontent-%COMP%] {\n    position: static;\n  }\n}\n@media (max-width: 767px) {\n  .counter-actions[_ngcontent-%COMP%], \n   .counter-overview[_ngcontent-%COMP%] {\n    grid-template-columns: minmax(0, 1fr);\n    gap: 10px;\n  }\n  .counter-action[_ngcontent-%COMP%], \n   .counter-panel[_ngcontent-%COMP%] {\n    padding: 16px;\n  }\n  .counter-product-grid[_ngcontent-%COMP%] {\n    grid-template-columns: repeat(2, minmax(0, 1fr));\n    gap: 8px;\n  }\n  .counter-product[_ngcontent-%COMP%] {\n    padding: 11px;\n  }\n  .counter-catalog-tools[_ngcontent-%COMP%]   .counter-search[_ngcontent-%COMP%] {\n    flex-basis: 100%;\n  }\n  .counter-location[_ngcontent-%COMP%] {\n    flex: 1;\n  }\n  .counter-cart-lines[_ngcontent-%COMP%] {\n    max-height: none;\n  }\n  .counter-modal-actions[_ngcontent-%COMP%] {\n    flex-direction: column;\n  }\n  .counter-modal-actions[_ngcontent-%COMP%]   .counter-button[_ngcontent-%COMP%] {\n    width: 100%;\n  }\n  .counter-pending-search[_ngcontent-%COMP%] {\n    min-width: 0;\n  }\n  input[_ngcontent-%COMP%], \n   select[_ngcontent-%COMP%], \n   textarea[_ngcontent-%COMP%] {\n    font-size: 16px;\n  }\n}\n/*# sourceMappingURL=counter.page.css.map */"] });
+  }, dependencies: [CommonModule, NgForOf, NgIf, FormsModule, \u0275NgNoValidate, NgSelectOption, \u0275NgSelectMultipleOption, DefaultValueAccessor, SelectControlValueAccessor, NgControlStatus, NgControlStatusGroup, MaxLengthValidator, NgModel, NgForm, ReactiveFormsModule, FormControlDirective, FormGroupDirective, FormControlName, RouterLink, ModalComponent, ConfirmDialogComponent, BarcodeScannerComponent, RowActionsMenuComponent, PagerComponent, ReturnDialogComponent, ReceiptDialogComponent, CurrencyInputDirective, UpperCasePipe, DecimalPipe, DatePipe, MoneyPipe, TranslatePipe], styles: ["\n\n[_nghost-%COMP%] {\n  display: block;\n  min-width: 0;\n  color: var(--cis-text);\n}\n.counter-page[_ngcontent-%COMP%] {\n  display: grid;\n  gap: 24px;\n}\nh1[_ngcontent-%COMP%] {\n  font-size: 30px;\n  font-weight: 800;\n  letter-spacing: -0.04em;\n  color: var(--cis-text);\n}\nh2[_ngcontent-%COMP%] {\n  font-size: 18px;\n  font-weight: 700;\n}\nh3[_ngcontent-%COMP%] {\n  font-weight: 600;\n}\nsmall[_ngcontent-%COMP%], \n.counter-hint[_ngcontent-%COMP%], \n.counter-heading[_ngcontent-%COMP%]   p[_ngcontent-%COMP%], \n.counter-section-heading[_ngcontent-%COMP%]   p[_ngcontent-%COMP%] {\n  font-size: 12px;\n  color: var(--cis-muted);\n  line-height: 1.6;\n}\n.counter-heading[_ngcontent-%COMP%], \n.counter-section-heading[_ngcontent-%COMP%], \n.counter-action[_ngcontent-%COMP%], \n.counter-product-top[_ngcontent-%COMP%], \n.counter-product-bottom[_ngcontent-%COMP%], \n.counter-line-title[_ngcontent-%COMP%], \n.counter-line-bottom[_ngcontent-%COMP%], \n.counter-total[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 12px;\n}\n.counter-heading[_ngcontent-%COMP%], \n.counter-section-heading[_ngcontent-%COMP%] {\n  flex-wrap: wrap;\n}\n.counter-eyebrow[_ngcontent-%COMP%] {\n  color: var(--cis-primary);\n  font-size: 10px;\n  font-weight: 800;\n  letter-spacing: 0.18em;\n}\n.counter-connection[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 7px;\n  padding: 8px 12px;\n  border-radius: 30px;\n  background: var(--cis-surface);\n  font-size: 12px;\n}\n.counter-connection[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n  width: 7px;\n  height: 7px;\n  border-radius: 50%;\n  background: #16a085;\n}\n.counter-connection.is-offline[_ngcontent-%COMP%]    > span[_ngcontent-%COMP%] {\n  background: #d97706;\n}\n.counter-actions[_ngcontent-%COMP%], \n.counter-overview[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 16px;\n}\n.counter-action-pair[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(2, minmax(0, 1fr));\n  gap: 16px;\n}\n.counter-action-pair.single[_ngcontent-%COMP%] {\n  grid-template-columns: 1fr;\n}\n.counter-action-pair[_ngcontent-%COMP%]   .counter-action[_ngcontent-%COMP%] {\n  padding: 16px;\n  border-radius: 18px;\n  text-decoration: none;\n  color: inherit;\n}\n.counter-action-pair[_ngcontent-%COMP%]   .counter-action-icon[_ngcontent-%COMP%] {\n  flex: 0 0 42px;\n  height: 42px;\n  border-radius: 12px;\n}\n.counter-action-pair[_ngcontent-%COMP%]   .counter-action-icon[_ngcontent-%COMP%]   svg[_ngcontent-%COMP%] {\n  width: 22px;\n  height: 22px;\n}\n.counter-action-pair[_ngcontent-%COMP%]   .counter-action[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%] {\n  font-size: 15px;\n}\n.counter-action-pair[_ngcontent-%COMP%]   .counter-action[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n  font-size: 11px;\n  margin-top: 4px;\n}\n.counter-overview[_ngcontent-%COMP%] {\n  grid-template-columns: repeat(3, minmax(0, 1fr));\n}\n.counter-action[_ngcontent-%COMP%] {\n  justify-content: start;\n  padding: 24px;\n  border-radius: 22px;\n  text-align: left;\n}\n.sale-action[_ngcontent-%COMP%] {\n  background:\n    linear-gradient(\n      120deg,\n      #7367d8,\n      #4e43a8);\n  color: white;\n}\n.sale-action[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n  color: inherit;\n}\n.counter-panel[_ngcontent-%COMP%], \n.expense-action[_ngcontent-%COMP%], \n.viewsales-action[_ngcontent-%COMP%], \n.counter-overview[_ngcontent-%COMP%]    > div[_ngcontent-%COMP%], \n.counter-product[_ngcontent-%COMP%] {\n  border: 1px solid var(--cis-border);\n  background: var(--cis-surface);\n}\n.counter-action-icon[_ngcontent-%COMP%] {\n  display: grid;\n  place-items: center;\n  flex: 0 0 54px;\n  height: 54px;\n  border-radius: 16px;\n  background: rgba(255, 255, 255, 0.1411764706);\n}\n.expense-action[_ngcontent-%COMP%]   .counter-action-icon[_ngcontent-%COMP%], \n.viewsales-action[_ngcontent-%COMP%]   .counter-action-icon[_ngcontent-%COMP%], \n.counter-product-monogram[_ngcontent-%COMP%], \n.counter-count[_ngcontent-%COMP%], \n.counter-add[_ngcontent-%COMP%] {\n  background: var(--cis-primary-soft);\n  color: var(--cis-primary-strong);\n}\n.viewsales-action.success-state[_ngcontent-%COMP%], \n.expense-action.success-state[_ngcontent-%COMP%] {\n  background:\n    linear-gradient(\n      120deg,\n      #ffc145,\n      #f0a21b);\n  border-color: transparent;\n  color: #1e293b;\n}\n.success-state[_ngcontent-%COMP%]   .counter-action-icon[_ngcontent-%COMP%] {\n  background: rgba(30, 41, 59, 0.0784313725);\n  color: #1e293b;\n}\n.counter-action-icon[_ngcontent-%COMP%]   svg[_ngcontent-%COMP%] {\n  width: 30px;\n  height: 30px;\n}\n.counter-action[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%] {\n  display: block;\n  font-size: 21px;\n}\n.counter-action[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n  display: block;\n  margin-top: 6px;\n}\n.counter-arrow[_ngcontent-%COMP%] {\n  margin-left: auto;\n  font-size: 24px;\n}\n.counter-overview[_ngcontent-%COMP%]    > div[_ngcontent-%COMP%] {\n  padding: 18px 22px;\n  border-radius: 18px;\n}\n.counter-overview[_ngcontent-%COMP%]   span[_ngcontent-%COMP%], \n.counter-overview[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n  display: block;\n  font-size: 11px;\n  color: var(--cis-muted);\n}\n.counter-overview[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%] {\n  display: block;\n  margin: 7px 0;\n  font-size: 23px;\n  font-weight: 800;\n}\n.counter-overview[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n  display: inline;\n}\n.counter-panel[_ngcontent-%COMP%] {\n  min-width: 0;\n  padding: 22px;\n  border-radius: 20px;\n}\n.counter-workspace[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: minmax(0, 1fr) 350px;\n  gap: 20px;\n  align-items: start;\n}\n.counter-button[_ngcontent-%COMP%] {\n  display: inline-flex;\n  align-items: center;\n  justify-content: center;\n  min-height: 44px;\n  padding: 10px 15px;\n  border-radius: 12px;\n  font-size: 12px;\n  font-weight: 700;\n}\n.counter-button.primary[_ngcontent-%COMP%] {\n  color: white;\n  background: var(--cis-primary);\n}\n.counter-button.primary[_ngcontent-%COMP%]:not(:disabled):hover {\n  background: #5f52c7;\n}\n.counter-button.secondary[_ngcontent-%COMP%] {\n  background: var(--cis-page);\n  color: var(--cis-primary-strong);\n  border: 1px solid var(--cis-border);\n}\nbutton[_ngcontent-%COMP%]:disabled {\n  cursor: not-allowed;\n  opacity: 0.5;\n}\n.counter-catalog-tools[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: end;\n  flex-wrap: wrap;\n  gap: 10px;\n  margin: 20px 0 14px;\n}\n.counter-search[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  gap: 10px;\n  flex: 1;\n  min-width: 160px;\n  padding: 0 12px;\n  border: 1px solid var(--cis-border);\n  border-radius: 12px;\n  background: var(--cis-page);\n}\n.counter-search[_ngcontent-%COMP%]   svg[_ngcontent-%COMP%] {\n  width: 18px;\n  height: 18px;\n  flex-shrink: 0;\n}\n.counter-search[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 100%;\n  min-width: 0;\n  min-height: 44px;\n  border: 0;\n  background: transparent;\n  font-size: 13px;\n}\n.counter-location[_ngcontent-%COMP%] {\n  width: 105px;\n  font-size: 10px;\n}\n.counter-category-tabs[_ngcontent-%COMP%] {\n  display: flex;\n  gap: 7px;\n  overflow-x: auto;\n  padding-bottom: 16px;\n}\n.counter-category-tabs[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  flex-shrink: 0;\n  padding: 8px 12px;\n  border-radius: 9px;\n  font-size: 11px;\n  background: var(--cis-page);\n}\n.counter-category-tabs[_ngcontent-%COMP%]   .selected[_ngcontent-%COMP%] {\n  background: var(--cis-primary-soft);\n  color: var(--cis-primary-strong);\n}\n.counter-product-grid[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));\n  gap: 12px;\n}\n.counter-product[_ngcontent-%COMP%] {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  gap: 7px;\n  padding: 14px;\n  border-radius: 16px;\n  text-align: left;\n}\n.counter-product.in-cart[_ngcontent-%COMP%], \n.counter-product[_ngcontent-%COMP%]:not(:disabled):hover {\n  border-color: var(--cis-primary);\n  background: var(--cis-page);\n}\n.counter-product[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%] {\n  font-size: 13px;\n  overflow-wrap: anywhere;\n}\n.counter-product[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n  font-size: 10px;\n}\n.counter-product-top[_ngcontent-%COMP%] {\n  width: 100%;\n}\n.counter-product-monogram[_ngcontent-%COMP%] {\n  display: grid;\n  width: 42px;\n  height: 42px;\n  place-items: center;\n  border-radius: 12px;\n  font-weight: 800;\n}\n.counter-product-count[_ngcontent-%COMP%] {\n  font-size: 9px;\n}\n.counter-product-price[_ngcontent-%COMP%] {\n  margin-top: auto;\n  padding-top: 6px;\n  font-weight: 800;\n  font-size: 13px;\n}\n.counter-product-bottom[_ngcontent-%COMP%] {\n  width: 100%;\n}\n.counter-product[_ngcontent-%COMP%]   .out-of-stock[_ngcontent-%COMP%] {\n  color: #b45309;\n}\n.counter-add[_ngcontent-%COMP%], \n.counter-count[_ngcontent-%COMP%] {\n  display: inline-grid;\n  place-items: center;\n  min-width: 28px;\n  min-height: 28px;\n  border-radius: 8px;\n  padding: 3px;\n}\n.counter-load-more[_ngcontent-%COMP%], \n.counter-charge[_ngcontent-%COMP%] {\n  width: 100%;\n  margin-top: 12px;\n}\n.counter-cart[_ngcontent-%COMP%] {\n  position: sticky;\n  top: 20px;\n}\n.counter-customer-form[_ngcontent-%COMP%], \n.counter-expense-form[_ngcontent-%COMP%] {\n  display: grid;\n  gap: 13px;\n  margin-top: 18px;\n}\n.counter-customer-form[_ngcontent-%COMP%]   label[_ngcontent-%COMP%], \n.counter-expense-form[_ngcontent-%COMP%]   label[_ngcontent-%COMP%] {\n  display: grid;\n  gap: 6px;\n  font-size: 12px;\n  color: var(--cis-muted);\n}\ninput[_ngcontent-%COMP%]:not([type=search]), \nselect[_ngcontent-%COMP%], \ntextarea[_ngcontent-%COMP%] {\n  width: 100%;\n  min-height: 44px;\n  border: 1px solid var(--cis-border);\n  border-radius: 10px;\n  padding: 9px 11px;\n  background: var(--cis-page);\n  color: var(--cis-text);\n  font-size: 13px;\n}\n.counter-cart-lines[_ngcontent-%COMP%] {\n  max-height: 420px;\n  overflow-y: auto;\n  margin-top: 16px;\n}\n.counter-cart-line[_ngcontent-%COMP%] {\n  padding: 15px 0;\n  border-top: 1px solid var(--cis-border);\n}\n.counter-cart-line[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%] {\n  font-size: 12px;\n}\n.counter-line-title[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n  display: block;\n}\n.counter-remove[_ngcontent-%COMP%] {\n  flex-shrink: 0;\n  width: 36px;\n  height: 36px;\n  font-size: 21px;\n}\n.counter-line-bottom[_ngcontent-%COMP%] {\n  margin-top: 10px;\n}\n.counter-stepper[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n  flex-shrink: 0;\n  border: 1px solid var(--cis-border);\n  border-radius: 10px;\n  overflow: hidden;\n}\n.counter-stepper[_ngcontent-%COMP%]   button[_ngcontent-%COMP%] {\n  width: 34px;\n  min-height: 40px;\n  background: var(--cis-page);\n}\n.counter-stepper[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  width: 48px;\n  border: 0;\n  border-radius: 0;\n  padding: 4px;\n  text-align: center;\n  appearance: textfield;\n}\n.counter-stepper[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]::-webkit-inner-spin-button {\n  appearance: none;\n}\n.counter-cart-footer[_ngcontent-%COMP%] {\n  margin-top: 16px;\n  border-top: 1px dashed var(--cis-border);\n  padding-top: 18px;\n}\n.counter-total[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%] {\n  font-size: 20px;\n  color: var(--cis-primary-strong);\n}\n.counter-hint[_ngcontent-%COMP%] {\n  margin: 10px 0;\n}\n.counter-notice[_ngcontent-%COMP%] {\n  padding: 12px 15px;\n  border-radius: 12px;\n  font-size: 12px;\n  line-height: 1.6;\n  margin: 10px 0;\n}\n.counter-notice[_ngcontent-%COMP%]   a[_ngcontent-%COMP%] {\n  margin-left: 8px;\n  text-decoration: underline;\n}\n.counter-notice.success[_ngcontent-%COMP%] {\n  background: #e7f7ef;\n  color: #166747;\n}\n.counter-notice.error[_ngcontent-%COMP%] {\n  background: #fff0f0;\n  color: #a12b35;\n}\n.counter-notice.warning[_ngcontent-%COMP%], \n.counter-status[_ngcontent-%COMP%] {\n  background: #fff6e5;\n  color: #875508;\n}\n.counter-empty[_ngcontent-%COMP%] {\n  padding: 36px 18px;\n  text-align: center;\n  color: var(--cis-muted);\n  font-size: 13px;\n}\n.counter-empty[_ngcontent-%COMP%]   svg[_ngcontent-%COMP%] {\n  width: 42px;\n  height: 42px;\n  margin: 0 auto 15px;\n}\n.counter-pending-search[_ngcontent-%COMP%] {\n  max-width: 440px;\n  margin: 20px 0;\n}\n.counter-pending-table[_ngcontent-%COMP%] {\n  overflow-x: auto;\n  border-radius: 12px;\n}\n.counter-pending-table[_ngcontent-%COMP%]   :is(th[_ngcontent-%COMP%], td[_ngcontent-%COMP%]) {\n  padding: 13px 14px;\n  text-align: left;\n  font-size: 12px;\n}\n.counter-pending-table[_ngcontent-%COMP%]   td[_ngcontent-%COMP%] {\n  border-bottom: 1px solid var(--cis-border);\n}\n.counter-pending-table[_ngcontent-%COMP%]   small[_ngcontent-%COMP%] {\n  display: block;\n}\n.counter-status[_ngcontent-%COMP%] {\n  display: inline-block;\n  border-radius: 20px;\n  padding: 4px 10px;\n  font-size: 10px;\n  white-space: nowrap;\n}\n.counter-row-actions[_ngcontent-%COMP%], \n.counter-modal-actions[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: flex-end;\n  gap: 8px;\n}\n.counter-modal-actions[_ngcontent-%COMP%] {\n  margin-top: 22px;\n  flex-wrap: wrap;\n}\n.counter-checkout-summary[_ngcontent-%COMP%] {\n  padding: 22px;\n  border-radius: 16px;\n  background: var(--cis-primary-soft);\n  text-align: center;\n  color: var(--cis-primary-strong);\n}\n.counter-checkout-summary[_ngcontent-%COMP%]   strong[_ngcontent-%COMP%] {\n  display: block;\n  font-size: 30px;\n  font-weight: 800;\n  margin: 8px 0;\n}\n.counter-checkout-summary.payable[_ngcontent-%COMP%] {\n  margin-top: 14px;\n}\n.counter-discount[_ngcontent-%COMP%] {\n  display: grid;\n  gap: 6px;\n  margin-top: 14px;\n  font-size: 12px;\n  font-weight: 600;\n  color: var(--cis-muted);\n}\n.counter-discount[_ngcontent-%COMP%]   input[_ngcontent-%COMP%], \n.counter-discount[_ngcontent-%COMP%]   select[_ngcontent-%COMP%] {\n  border: 1px solid var(--cis-border);\n  border-radius: 12px;\n  padding: 10px 14px;\n  font-size: 14px;\n  font-weight: 600;\n  color: var(--cis-ink);\n  background: var(--cis-card, #fff);\n  outline: none;\n}\n.counter-discount[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus, \n.counter-discount[_ngcontent-%COMP%]   select[_ngcontent-%COMP%]:focus {\n  border-color: var(--cis-primary);\n}\n.counter-payment-row[_ngcontent-%COMP%] {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  gap: 12px;\n}\n.counter-link[_ngcontent-%COMP%] {\n  color: var(--cis-primary);\n  font-size: 12px;\n  font-weight: 700;\n  text-decoration: underline;\n  background: none;\n  border: 0;\n  padding: 0;\n  cursor: pointer;\n}\n.counter-new-customer[_ngcontent-%COMP%] {\n  margin: 4px 0 8px;\n  text-align: right;\n}\n.counter-new-customer-form[_ngcontent-%COMP%] {\n  display: grid;\n  gap: 8px;\n  margin: 8px 0;\n  padding: 12px;\n  border: 1px dashed var(--cis-border);\n  border-radius: 12px;\n}\n.counter-new-customer-form[_ngcontent-%COMP%]   input[_ngcontent-%COMP%] {\n  border: 1px solid var(--cis-border);\n  border-radius: 10px;\n  padding: 9px 12px;\n  font-size: 13px;\n  color: var(--cis-ink);\n  background: var(--cis-card, #fff);\n  outline: none;\n}\n.counter-new-customer-form[_ngcontent-%COMP%]   input[_ngcontent-%COMP%]:focus {\n  border-color: var(--cis-primary);\n}\n.counter-new-customer-actions[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: flex-end;\n  gap: 8px;\n}\n@media (max-width: 767px) {\n  .counter-payment-row[_ngcontent-%COMP%] {\n    grid-template-columns: 1fr;\n  }\n}\n@media (max-width: 1100px) {\n  .counter-workspace[_ngcontent-%COMP%] {\n    grid-template-columns: minmax(0, 1fr);\n  }\n  .counter-cart[_ngcontent-%COMP%] {\n    position: static;\n  }\n}\n@media (max-width: 767px) {\n  .counter-actions[_ngcontent-%COMP%], \n   .counter-overview[_ngcontent-%COMP%] {\n    grid-template-columns: minmax(0, 1fr);\n    gap: 10px;\n  }\n  .counter-action[_ngcontent-%COMP%], \n   .counter-panel[_ngcontent-%COMP%] {\n    padding: 16px;\n  }\n  .counter-product-grid[_ngcontent-%COMP%] {\n    grid-template-columns: repeat(2, minmax(0, 1fr));\n    gap: 8px;\n  }\n  .counter-product[_ngcontent-%COMP%] {\n    padding: 11px;\n  }\n  .counter-catalog-tools[_ngcontent-%COMP%]   .counter-search[_ngcontent-%COMP%] {\n    flex-basis: 100%;\n  }\n  .counter-location[_ngcontent-%COMP%] {\n    flex: 1;\n  }\n  .counter-cart-lines[_ngcontent-%COMP%] {\n    max-height: none;\n  }\n  .counter-modal-actions[_ngcontent-%COMP%] {\n    flex-direction: column;\n  }\n  .counter-modal-actions[_ngcontent-%COMP%]   .counter-button[_ngcontent-%COMP%] {\n    width: 100%;\n  }\n  .counter-pending-search[_ngcontent-%COMP%] {\n    min-width: 0;\n  }\n  input[_ngcontent-%COMP%], \n   select[_ngcontent-%COMP%], \n   textarea[_ngcontent-%COMP%] {\n    font-size: 16px;\n  }\n}\n/*# sourceMappingURL=counter.page.css.map */"] });
 };
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(CounterPage, [{
     type: Component,
-    args: [{ selector: "cis-counter-page", standalone: true, imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, MoneyPipe, ModalComponent, ConfirmDialogComponent, BarcodeScannerComponent, RowActionsMenuComponent, PagerComponent, TranslatePipe, ReturnDialogComponent, ReceiptDialogComponent], template: `<div class="counter-page">\r
+    args: [{ selector: "cis-counter-page", standalone: true, imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterLink, MoneyPipe, ModalComponent, ConfirmDialogComponent, BarcodeScannerComponent, RowActionsMenuComponent, PagerComponent, TranslatePipe, ReturnDialogComponent, ReceiptDialogComponent, CurrencyInputDirective], template: `<div class="counter-page">\r
   <header class="counter-heading">\r
     <div>\r
       <div class="counter-eyebrow">POINT OF SALE</div>\r
@@ -2526,7 +2529,7 @@ var CounterPage = class _CounterPage {
   </div>\r
   <label class="counter-discount">\r
     <span>{{ 'common.discount' | translate }} (TSH)</span>\r
-    <input type="number" min="0" step="0.01" [formControl]="discountControl" [readonly]="busy()" placeholder="0.00" />\r
+    <input cisCurrencyInput type="text" inputmode="decimal" [formControl]="discountControl" [readonly]="busy()" placeholder="0" />\r
   </label>\r
   <div class="counter-checkout-summary payable"><span>{{ 'common.totalToCollect' | translate }}</span><strong aria-live="polite">{{ payable() | money }}</strong></div>\r
   <div class="counter-payment-row">\r
@@ -2544,7 +2547,7 @@ var CounterPage = class _CounterPage {
     </label>\r
     <label class="counter-discount">\r
       <span>{{ 'customers.receivedAmount' | translate }} (TSH)</span>\r
-      <input type="number" min="0" step="0.01" [ngModel]="amountReceived()" (ngModelChange)="amountReceived.set($event == null || $event === '' ? null : +$event)" [readonly]="busy()" placeholder="{{ payable() }}" />\r
+      <input cisCurrencyInput type="text" inputmode="decimal" [ngModel]="amountReceived()" (ngModelChange)="amountReceived.set($event)" [readonly]="busy()" placeholder="{{ payable() | number:'1.0-0' }}" />\r
     </label>\r
   </div>\r
   <div class="counter-notice warning" role="status" *ngIf="debtPreview() > 0">\r
@@ -2562,7 +2565,7 @@ var CounterPage = class _CounterPage {
   <form class="counter-expense-form" [formGroup]="expenseForm" (ngSubmit)="saveExpense()">\r
     <label>Date<input type="date" formControlName="date" [readonly]="busy()" /></label>\r
     <label>Category<select formControlName="categoryId"><option value="">{{ categoriesLoading() ? 'Loading categories\u2026' : 'Select an expense category' }}</option><option *ngFor="let item of categories()" [value]="item.id">{{ item.name }}</option></select></label>\r
-    <label>Amount (TSH)<input type="number" min="0.01" step="0.01" formControlName="amount" [readonly]="busy()" /></label>\r
+    <label>Amount (TSH)<input cisCurrencyInput type="text" inputmode="decimal" formControlName="amount" [readonly]="busy()" /></label>\r
     <label>Payment method<select formControlName="paymentMethod"><option value="CASH">Cash</option><option value="MPESA">M-Pesa</option><option value="BANK">Bank</option></select></label>\r
     <label>Description <small>(optional)</small><textarea formControlName="description" rows="3" maxlength="1000" placeholder="What was this expense for?" [readonly]="busy()"></textarea></label>\r
     <p class="counter-notice warning" *ngIf="!categoriesLoading() && !categories().length">No expense categories are available. Ask an administrator to create a category, then <button type="button" (click)="loadExpenseCategories()">retry</button>.</p>\r
@@ -2613,9 +2616,9 @@ var CounterPage = class _CounterPage {
   }] });
 })();
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(CounterPage, { className: "CounterPage", filePath: "app/features/counter/counter.page.ts", lineNumber: 41 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(CounterPage, { className: "CounterPage", filePath: "app/features/counter/counter.page.ts", lineNumber: 42 });
 })();
 export {
   CounterPage
 };
-//# sourceMappingURL=chunk-LTOODRPI.js.map
+//# sourceMappingURL=chunk-3KIZFVBI.js.map

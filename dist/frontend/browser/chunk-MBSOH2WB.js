@@ -7,7 +7,8 @@ import {
 import {
   CIS_FORM_IMPORTS,
   CisFormFieldsComponent
-} from "./chunk-XGYQYOHY.js";
+} from "./chunk-ELX72Y6T.js";
+import "./chunk-O3WQKP2X.js";
 import {
   RowActionsMenuComponent
 } from "./chunk-NDY7KUDP.js";
@@ -18,7 +19,7 @@ import {
   ReactiveFormsModule,
   Validators,
   ɵNgNoValidate
-} from "./chunk-TD7F3R7N.js";
+} from "./chunk-CXEU7F5R.js";
 import {
   PagerComponent
 } from "./chunk-LNJXT4KE.js";
@@ -706,10 +707,9 @@ var CustomersPage = class _CustomersPage {
     {
       key: "amount",
       label: "customers.paymentAmount",
-      type: "number",
+      type: "currency",
       required: true,
       min: 0.01,
-      step: 0.01,
       hint: () => {
         const c = this.detailsCustomer();
         return c ? `${this.t.translate("customers.debt")}: ${this.fmtMoney(this.customerStats(c).debt)}` : "";
@@ -1457,4 +1457,4 @@ var CustomersPage = class _CustomersPage {
 export {
   CustomersPage
 };
-//# sourceMappingURL=chunk-DK2HBEEU.js.map
+//# sourceMappingURL=chunk-MBSOH2WB.js.map
