@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -35,7 +35,7 @@ type DeleteMySaleMutationResult = { deleteMySale: boolean };
 @Component({
   selector: 'cis-my-sales-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, MoneyPipe, TranslatePipe, RowActionsMenuComponent, PagerComponent, CIS_FORM_IMPORTS],
+  imports: [ReactiveFormsModule, RouterLink, MoneyPipe, TranslatePipe, RowActionsMenuComponent, PagerComponent, CIS_FORM_IMPORTS],
   templateUrl: './my-sales.page.html',
   styleUrl: './my-sales.page.scss'
 })

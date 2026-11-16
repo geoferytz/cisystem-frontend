@@ -13,7 +13,9 @@
     <cis-form-fields [form]="oosFilterForm" [fields]="oosFilterFields" />
   </form>
 
-  <div class="mt-3 text-sm text-[#B81104] dark:text-red-400" *ngIf="oosError()">{{ oosError() }}</div>
+  @if (oosError()) {
+    <div class="mt-3 text-sm text-[#B81104] dark:text-red-400">{{ oosError() }}</div>
+  }
 
   <div class="mt-3">
     <cis-data-table [columns]="oosCols" [rows]="oosFiltered()" [loading]="oosLoading()">
@@ -37,7 +39,9 @@
     </button>
   </form>
 
-  <div class="mt-3 text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">{{ error() }}</div>
+  @if (error()) {
+    <div class="mt-3 text-sm text-[#B81104] dark:text-red-400">{{ error() }}</div>
+  }
 
   <div class="mt-3">
     <cis-data-table [columns]="movementCols" [rows]="items()" [loading]="loading()" />

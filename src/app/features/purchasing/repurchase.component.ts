@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, EventEmitter, Output, ViewChild, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GraphqlService } from '../../core/graphql/graphql.service';
@@ -15,7 +15,7 @@ export type { RepurchaseLine, RepurchaseOrder, RepurchaseProduct } from './repur
 @Component({
   selector: 'cis-repurchase',
   standalone: true,
-  imports: [CommonModule, FormsModule, MoneyPipe, ModalComponent, PendingRepurchasesComponent, CurrencyInputDirective],
+  imports: [FormsModule, MoneyPipe, ModalComponent, PendingRepurchasesComponent, CurrencyInputDirective],
   templateUrl: './repurchase.component.html',
   styleUrl: './repurchase.component.scss'
 })

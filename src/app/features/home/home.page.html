@@ -1,376 +1,379 @@
 <!-- <div class="cis-home-shell"> -->
-  <div class="cis-home-header">
-    <div class="cis-home-brand">
-      <span class="cis-home-brand-name">Gyla Cosmetics</span>
-      <span class="cis-home-brand-divider" aria-hidden="true">|</span>
-      <span class="cis-home-brand-tagline">Your Beauty, Our Duty</span>
-    </div>
+<div class="cis-home-header">
+  <div class="cis-home-brand">
+    <span class="cis-home-brand-name">Gyla Cosmetics</span>
+    <span class="cis-home-brand-divider" aria-hidden="true">|</span>
+    <span class="cis-home-brand-tagline">Your Beauty, Our Duty</span>
   </div>
+</div>
 
-  <div class="cis-home-error dark:text-red-400" *ngIf="error()">{{ error() }}</div>
+@if (error()) {
+  <div class="cis-home-error dark:text-red-400">{{ error() }}</div>
+}
 
-  <div class="cis-home-grid">
-    <ng-container *ngFor="let c of cards()">
+<div class="cis-home-grid">
+  @for (c of cards(); track c) {
+    @if (!c.hidden) {
       <a
-        *ngIf="!c.hidden"
         class="cis-home-tile group"
         [routerLink]="c.route"
-      >
+        >
         <div class="cis-home-tile-watermark dark:text-pink-500/15">
-          <svg
-            *ngIf="c.icon === 'products'"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            class="h-40 w-40"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M20 13V7a2 2 0 00-2-2H6a2 2 0 00-2 2v6" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 13h16v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6z" />
-          </svg>
-
-          <svg
-            *ngIf="c.icon === 'inventory'"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            class="h-40 w-40 dark:text-pink-500/15"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4v10l8 4 8-4V7z" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7l8 4 8-4" />
-          </svg>
-
-          <svg
-            *ngIf="c.icon === 'stockMovements'"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            class="h-40 w-40 dark:text-pink-500/15"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13M8 12h13M8 17h13" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h.01M3 12h.01M3 17h.01" />
-          </svg>
-
-          <svg
-            *ngIf="c.icon === 'transfers'"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            class="h-40 w-40 dark:text-pink-500/15"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13m0 0l-3-3m3 3l-3 3M16 17H3m0 0l3 3m-3-3l3-3" />
-          </svg>
-
-          <svg
-            *ngIf="c.icon === 'customers'"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            class="h-40 w-40 dark:text-pink-500/15"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-3-3h-1m-4 5v-2a3 3 0 00-3-3H7a3 3 0 00-3 3v2h10zm-7-9a3.5 3.5 0 110-7 3.5 3.5 0 010 7z" />
-          </svg>
-
-          <svg
-            *ngIf="c.icon === 'returns'"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            class="h-40 w-40 dark:text-pink-500/15"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 14 4 9l5-5" /><path stroke-linecap="round" stroke-linejoin="round" d="M4 9h11a5 5 0 0 1 0 10h-3" />
-          </svg>
-
-          <svg
-            *ngIf="c.icon === 'purchasing'"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            class="h-40 w-40 dark:text-pink-500/15"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M7 13l-1.5 7h13L17 13" />
-          </svg>
-
-          <svg
-            *ngIf="c.icon === 'sales'"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            class="h-40 w-40 dark:text-pink-500/15"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" />
-          </svg>
-
-          <svg
-            *ngIf="c.icon === 'mySales'"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            class="h-40 w-40 dark:text-pink-500/15"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 14l2 2 4-4" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M7 3h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" />
-          </svg>
-
-          <svg
-            *ngIf="c.icon === 'expiryAlerts'"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            class="h-40 w-40 dark:text-pink-500/15"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-          </svg>
-
-          <svg
-            *ngIf="c.icon === 'expenses'"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            class="h-40 w-40 dark:text-pink-500/15"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
-          </svg>
-
-          <svg
-            *ngIf="c.icon === 'reports'"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            class="h-40 w-40 dark:text-pink-500/15"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M7 15l3-3 3 2 5-6" />
-          </svg>
-
-          <svg
-            *ngIf="c.icon === 'profitManagement'"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            class="h-40 w-40 dark:text-pink-500/15"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M7 15l3-3 3 2 5-6" />
-          </svg>
-
-          <svg
-            *ngIf="c.icon === 'users'"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            class="h-40 w-40 dark:text-pink-500/15"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 20H2v-2a4 4 0 014-4h1" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M16 3.13a4 4 0 010 7.75" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8 3.13a4 4 0 000 7.75" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 12a4 4 0 100-8 4 4 0 000 8z" />
-          </svg>
+          @if (c.icon === 'products') {
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="h-40 w-40"
+              >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20 13V7a2 2 0 00-2-2H6a2 2 0 00-2 2v6" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 13h16v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6z" />
+            </svg>
+          }
+          @if (c.icon === 'inventory') {
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="h-40 w-40 dark:text-pink-500/15"
+              >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4v10l8 4 8-4V7z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 7l8 4 8-4" />
+            </svg>
+          }
+          @if (c.icon === 'stockMovements') {
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="h-40 w-40 dark:text-pink-500/15"
+              >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13M8 12h13M8 17h13" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h.01M3 12h.01M3 17h.01" />
+            </svg>
+          }
+          @if (c.icon === 'transfers') {
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="h-40 w-40 dark:text-pink-500/15"
+              >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13m0 0l-3-3m3 3l-3 3M16 17H3m0 0l3 3m-3-3l3-3" />
+            </svg>
+          }
+          @if (c.icon === 'customers') {
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="h-40 w-40 dark:text-pink-500/15"
+              >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-3-3h-1m-4 5v-2a3 3 0 00-3-3H7a3 3 0 00-3 3v2h10zm-7-9a3.5 3.5 0 110-7 3.5 3.5 0 010 7z" />
+            </svg>
+          }
+          @if (c.icon === 'returns') {
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="h-40 w-40 dark:text-pink-500/15"
+              >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 14 4 9l5-5" /><path stroke-linecap="round" stroke-linejoin="round" d="M4 9h11a5 5 0 0 1 0 10h-3" />
+            </svg>
+          }
+          @if (c.icon === 'purchasing') {
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="h-40 w-40 dark:text-pink-500/15"
+              >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 13l-1.5 7h13L17 13" />
+            </svg>
+          }
+          @if (c.icon === 'sales') {
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="h-40 w-40 dark:text-pink-500/15"
+              >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" />
+            </svg>
+          }
+          @if (c.icon === 'mySales') {
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="h-40 w-40 dark:text-pink-500/15"
+              >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 14l2 2 4-4" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 3h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" />
+            </svg>
+          }
+          @if (c.icon === 'expiryAlerts') {
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="h-40 w-40 dark:text-pink-500/15"
+              >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+            </svg>
+          }
+          @if (c.icon === 'expenses') {
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="h-40 w-40 dark:text-pink-500/15"
+              >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
+            </svg>
+          }
+          @if (c.icon === 'reports') {
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="h-40 w-40 dark:text-pink-500/15"
+              >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 15l3-3 3 2 5-6" />
+            </svg>
+          }
+          @if (c.icon === 'profitManagement') {
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="h-40 w-40 dark:text-pink-500/15"
+              >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 15l3-3 3 2 5-6" />
+            </svg>
+          }
+          @if (c.icon === 'users') {
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              class="h-40 w-40 dark:text-pink-500/15"
+              >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 20H2v-2a4 4 0 014-4h1" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16 3.13a4 4 0 010 7.75" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 3.13a4 4 0 000 7.75" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 12a4 4 0 100-8 4 4 0 000 8z" />
+            </svg>
+          }
         </div>
-
         <div class="cis-home-tile-content">
           <span class="cis-home-tile-icon">
-                <svg
-                  *ngIf="c.icon === 'products'"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  class="h-7 w-7"
+            @if (c.icon === 'products') {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                class="h-7 w-7"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M20 13V7a2 2 0 00-2-2H6a2 2 0 00-2 2v6" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 13h16v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6z" />
-                </svg>
-
-                <svg
-                  *ngIf="c.icon === 'inventory'"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  class="h-6 w-6"
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20 13V7a2 2 0 00-2-2H6a2 2 0 00-2 2v6" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 13h16v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6z" />
+              </svg>
+            }
+            @if (c.icon === 'inventory') {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                class="h-6 w-6"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4v10l8 4 8-4V7z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 7l8 4 8-4" />
-                </svg>
-
-                <svg
-                  *ngIf="c.icon === 'stockMovements'"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  class="h-6 w-6"
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4v10l8 4 8-4V7z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 7l8 4 8-4" />
+              </svg>
+            }
+            @if (c.icon === 'stockMovements') {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                class="h-6 w-6"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13M8 12h13M8 17h13" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h.01M3 12h.01M3 17h.01" />
-                </svg>
-
-                <svg
-                  *ngIf="c.icon === 'transfers'"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  class="h-6 w-6"
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13M8 12h13M8 17h13" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h.01M3 12h.01M3 17h.01" />
+              </svg>
+            }
+            @if (c.icon === 'transfers') {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                class="h-6 w-6"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13m0 0l-3-3m3 3l-3 3M16 17H3m0 0l3 3m-3-3l3-3" />
-                </svg>
-
-                <svg
-                  *ngIf="c.icon === 'customers'"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  class="h-6 w-6"
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13m0 0l-3-3m3 3l-3 3M16 17H3m0 0l3 3m-3-3l3-3" />
+              </svg>
+            }
+            @if (c.icon === 'customers') {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                class="h-6 w-6"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-3-3h-1m-4 5v-2a3 3 0 00-3-3H7a3 3 0 00-3 3v2h10zm-7-9a3.5 3.5 0 110-7 3.5 3.5 0 010 7z" />
-                </svg>
-
-                <svg
-                  *ngIf="c.icon === 'returns'"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  class="h-6 w-6"
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-3-3h-1m-4 5v-2a3 3 0 00-3-3H7a3 3 0 00-3 3v2h10zm-7-9a3.5 3.5 0 110-7 3.5 3.5 0 010 7z" />
+              </svg>
+            }
+            @if (c.icon === 'returns') {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                class="h-6 w-6"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 14 4 9l5-5" /><path stroke-linecap="round" stroke-linejoin="round" d="M4 9h11a5 5 0 0 1 0 10h-3" />
-                </svg>
-
-                <svg
-                  *ngIf="c.icon === 'expenses'"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  class="h-6 w-6"
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 14 4 9l5-5" /><path stroke-linecap="round" stroke-linejoin="round" d="M4 9h11a5 5 0 0 1 0 10h-3" />
+              </svg>
+            }
+            @if (c.icon === 'expenses') {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                class="h-6 w-6"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
-                </svg>
-
-                <svg
-                  *ngIf="c.icon === 'purchasing'"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  class="h-6 w-6"
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
+              </svg>
+            }
+            @if (c.icon === 'purchasing') {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                class="h-6 w-6"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 13l-1.5 7h13L17 13" />
-                </svg>
-
-                <svg
-                  *ngIf="c.icon === 'sales'"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  class="h-6 w-6"
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 13l-1.5 7h13L17 13" />
+              </svg>
+            }
+            @if (c.icon === 'sales') {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                class="h-6 w-6"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" />
-                </svg>
-
-                <svg
-                  *ngIf="c.icon === 'mySales'"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  class="h-6 w-6"
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" />
+              </svg>
+            }
+            @if (c.icon === 'mySales') {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                class="h-6 w-6"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 14l2 2 4-4" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 3h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" />
-                </svg>
-
-                <svg
-                  *ngIf="c.icon === 'expiryAlerts'"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  class="h-6 w-6"
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 14l2 2 4-4" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 3h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" />
+              </svg>
+            }
+            @if (c.icon === 'expiryAlerts') {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                class="h-6 w-6"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-                </svg>
-
-                <svg
-                  *ngIf="c.icon === 'reports'"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  class="h-6 w-6"
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+              </svg>
+            }
+            @if (c.icon === 'reports') {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                class="h-6 w-6"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 15l3-3 3 2 5-6" />
-                </svg>
-
-                <svg
-                  *ngIf="c.icon === 'profitManagement'"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  class="h-6 w-6"
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 15l3-3 3 2 5-6" />
+              </svg>
+            }
+            @if (c.icon === 'profitManagement') {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                class="h-6 w-6"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 15l3-3 3 2 5-6" />
-                </svg>
-
-                <svg
-                  *ngIf="c.icon === 'users'"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  class="h-6 w-6"
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7 15l3-3 3 2 5-6" />
+              </svg>
+            }
+            @if (c.icon === 'users') {
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                class="h-6 w-6"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 20H2v-2a4 4 0 014-4h1" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M16 3.13a4 4 0 010 7.75" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 3.13a4 4 0 000 7.75" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 12a4 4 0 100-8 4 4 0 000 8z" />
-                </svg>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 20H2v-2a4 4 0 014-4h1" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16 3.13a4 4 0 010 7.75" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 3.13a4 4 0 000 7.75" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 12a4 4 0 100-8 4 4 0 000 8z" />
+              </svg>
+            }
           </span>
-
           <div class="cis-home-tile-copy">
             <div class="dark:text-white">{{ c.title }}</div>
             <p class="dark:text-slate-400">{{ c.description }}</p>
           </div>
         </div>
       </a>
-    </ng-container>
-  </div>
+    }
+  }
+</div>
 <!-- </div> -->

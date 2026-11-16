@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -31,7 +31,7 @@ type MySalesQueryResult = { mySales: MySale[] };
 @Component({
   selector: 'cis-my-sales-report-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, MoneyPipe, TranslatePipe, PagerComponent, CIS_FORM_IMPORTS],
+  imports: [ReactiveFormsModule, RouterLink, MoneyPipe, TranslatePipe, PagerComponent, CIS_FORM_IMPORTS],
   templateUrl: './my-sales-report.page.html',
   styleUrl: './my-sales-report.page.scss'
 })

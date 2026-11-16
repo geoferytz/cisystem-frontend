@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { GraphqlService } from '../../core/graphql/graphql.service';
@@ -50,7 +50,7 @@ type CategoriesQueryResult = {
 @Component({
   selector: 'cis-stock-movements-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, CIS_TABLE_IMPORTS, CIS_FORM_IMPORTS],
+  imports: [ReactiveFormsModule, TranslatePipe, CIS_TABLE_IMPORTS, CIS_FORM_IMPORTS],
   templateUrl: './stock-movements.page.html',
   styleUrl: './stock-movements.page.scss'
 })

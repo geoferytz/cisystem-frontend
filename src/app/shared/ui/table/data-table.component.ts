@@ -64,63 +64,75 @@ export class CisCellDirective {
   imports: [CommonModule, TranslatePipe, MoneyPipe, PagerComponent],
   hostDirectives: [ResponsiveTablesDirective],
   template: `
-    <cis-pager
-      *ngIf="paged() && rows().length > 0"
-      class="mb-3 block"
-      [total]="rows().length"
-      [(pageSize)]="pageSize"
-      [(pageIndex)]="pageIndex"
-    />
-
+    @if (paged() && rows().length > 0) {
+      <cis-pager
+        class="mb-3 block"
+        [total]="rows().length"
+        [(pageSize)]="pageSize"
+        [(pageIndex)]="pageIndex"
+        />
+    }
+    
     <div class="overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
       <table class="w-full border-collapse text-sm">
         <thead class="bg-slate-50 dark:bg-slate-700">
           <tr>
-            <th
-              *ngFor="let c of columns()"
-              class="px-3 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300"
-              [ngClass]="[alignClass(c.align), c.class ?? '']"
-            >{{ c.label | translate }}</th>
+            @for (c of columns(); track c) {
+              <th
+                class="px-3 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300"
+                [ngClass]="[alignClass(c.align), c.class ?? '']"
+              >{{ c.label | translate }}</th>
+            }
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="let row of displayed(); let i = index"
-            class="border-t border-slate-100 dark:border-slate-700"
-            [class.cursor-pointer]="clickable()"
-            (click)="rowClick.emit(row)"
-          >
-            <td
-              *ngFor="let c of columns()"
-              class="px-3 py-2 text-slate-900 dark:text-slate-300"
-              [ngClass]="[alignClass(c.align), c.class ?? '']"
-            >
-              <ng-container [ngSwitch]="c.type ?? 'text'">
-                <ng-container *ngSwitchCase="'template'">
-                  <ng-container *ngTemplateOutlet="templateFor(c.key); context: { $implicit: row, index: i }" />
-                </ng-container>
-                <ng-container *ngSwitchCase="'money'">{{ cellMoney(c, row) | money }}</ng-container>
-                <ng-container *ngSwitchCase="'badge'">
-                  <span class="inline-block rounded-full px-2 py-0.5 text-xs font-semibold" [ngClass]="badgeClass(c, row)">{{ cellValue(c, row) }}</span>
-                </ng-container>
-                <ng-container *ngSwitchDefault>{{ cellValue(c, row) ?? '—' }}</ng-container>
-              </ng-container>
-            </td>
-          </tr>
-          <tr *ngIf="!loading() && rows().length === 0" class="border-t border-slate-100 dark:border-slate-700">
-            <td [attr.colspan]="columns().length" class="px-3 py-6 text-center text-sm text-slate-500 dark:text-slate-400">
-              {{ emptyMessage() | translate }}
-            </td>
-          </tr>
-          <tr *ngIf="loading()" class="border-t border-slate-100 dark:border-slate-700">
-            <td [attr.colspan]="columns().length" class="px-3 py-6 text-center text-sm text-slate-500 dark:text-slate-400">
-              {{ 'common.loading' | translate }}
-            </td>
-          </tr>
+          @for (row of displayed(); track row; let i = $index) {
+            <tr
+              class="border-t border-slate-100 dark:border-slate-700"
+              [class.cursor-pointer]="clickable()"
+              (click)="rowClick.emit(row)"
+              >
+              @for (c of columns(); track c) {
+                <td
+                  class="px-3 py-2 text-slate-900 dark:text-slate-300"
+                  [ngClass]="[alignClass(c.align), c.class ?? '']"
+                  >
+                  @switch (c.type ?? 'text') {
+                    @case ('template') {
+                      <ng-container *ngTemplateOutlet="templateFor(c.key); context: { $implicit: row, index: i }" />
+                    }
+                    @case ('money') {
+                      {{ cellMoney(c, row) | money }}
+                    }
+                    @case ('badge') {
+                      <span class="inline-block rounded-full px-2 py-0.5 text-xs font-semibold" [ngClass]="badgeClass(c, row)">{{ cellValue(c, row) }}</span>
+                    }
+                    @default {
+                      {{ cellValue(c, row) ?? '—' }}
+                    }
+                  }
+                </td>
+              }
+            </tr>
+          }
+          @if (!loading() && rows().length === 0) {
+            <tr class="border-t border-slate-100 dark:border-slate-700">
+              <td [attr.colspan]="columns().length" class="px-3 py-6 text-center text-sm text-slate-500 dark:text-slate-400">
+                {{ emptyMessage() | translate }}
+              </td>
+            </tr>
+          }
+          @if (loading()) {
+            <tr class="border-t border-slate-100 dark:border-slate-700">
+              <td [attr.colspan]="columns().length" class="px-3 py-6 text-center text-sm text-slate-500 dark:text-slate-400">
+                {{ 'common.loading' | translate }}
+              </td>
+            </tr>
+          }
         </tbody>
       </table>
     </div>
-  `
+    `
 })
 export class CisDataTableComponent<T = unknown> {
   columns = input.required<TableColumn<T>[]>();

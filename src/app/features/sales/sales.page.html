@@ -3,64 +3,64 @@
 </div>
 
 <div class="mt-4 flex items-center justify-end">
-  <button *ngIf="perm.canCreate('SALES')" class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white" (click)="openCreate()">
-    {{ 'common.create' | translate }} Sale
-    
-  </button>
+  @if (perm.canCreate('SALES')) {
+    <button class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white" (click)="openCreate()">
+      {{ 'common.create' | translate }} Sale
+    </button>
+  }
 </div>
 
-<div *ngIf="perm.can('SALES', 'VIEW_CARDS')" class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-  <button type="button" (click)="setTab('all')" class="rounded-2xl bg-white dark:bg-slate-800 p-4 text-left shadow-sm ring-1 ring-slate-100 dark:ring-slate-700 transition hover:ring-teal-300 dark:hover:ring-teal-600">
-    <div class="flex items-center justify-between">
-      <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ 'sales.totalSales' | translate }}</div>
-      <span class="grid h-9 w-9 place-items-center rounded-xl bg-teal-50 dark:bg-teal-900/40 text-teal-600 dark:text-teal-300">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" /><path stroke-linecap="round" stroke-linejoin="round" d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" /></svg>
-      </span>
-    </div>
-    <div class="mt-1 text-xl font-bold text-slate-900 dark:text-slate-100">{{ totalSalesValue() | money }}</div>
-    <div class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ orders().length }} {{ 'sales.ordersCount' | translate }}</div>
-  </button>
-
-  <button type="button" (click)="setTab('today')" class="rounded-2xl bg-white dark:bg-slate-800 p-4 text-left shadow-sm ring-1 ring-slate-100 dark:ring-slate-700 transition hover:ring-emerald-300 dark:hover:ring-emerald-600">
-    <div class="flex items-center justify-between">
-      <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ 'sales.todayCollection' | translate }}</div>
-      <span class="grid h-9 w-9 place-items-center rounded-xl bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-300">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-      </span>
-    </div>
-    <div class="mt-1 text-xl font-bold text-slate-900 dark:text-slate-100">{{ todayCollectionValue() | money }}</div>
-    <div class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ filteredOrders().length }} {{ 'sales.ordersCount' | translate }}</div>
-  </button>
-
-  <button type="button" (click)="setTab('pending')" class="rounded-2xl bg-white dark:bg-slate-800 p-4 text-left shadow-sm ring-1 ring-slate-100 dark:ring-slate-700 transition hover:ring-amber-300 dark:hover:ring-amber-600">
-    <div class="flex items-center justify-between">
-      <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ 'sales.outstanding' | translate }}</div>
-      <span class="grid h-9 w-9 place-items-center rounded-xl bg-amber-50 dark:bg-amber-900/40 text-amber-600 dark:text-amber-300">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-      </span>
-    </div>
-    <div class="mt-1 text-xl font-bold text-slate-900 dark:text-slate-100">{{ outstandingValue() | money }}</div>
-    <div class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ 'sales.inPendingCarts' | translate }}</div>
-  </button>
-
-  <button type="button" (click)="setTab('pending')" class="rounded-2xl bg-white dark:bg-slate-800 p-4 text-left shadow-sm ring-1 ring-slate-100 dark:ring-slate-700 transition hover:ring-pink-300 dark:hover:ring-pink-600">
-    <div class="flex items-center justify-between">
-      <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ 'sales.pending' | translate }}</div>
-      <span class="grid h-9 w-9 place-items-center rounded-xl bg-pink-50 dark:bg-pink-900/40 text-pink-600 dark:text-pink-300">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4" /><path stroke-linecap="round" stroke-linejoin="round" d="M7 13l-1.5 7h13L17 13" /></svg>
-      </span>
-    </div>
-    <div class="mt-1 text-xl font-bold text-slate-900 dark:text-slate-100">{{ pendingCarts().length }}</div>
-    <div class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ 'sales.savedCarts' | translate }}</div>
-  </button>
-</div>
+@if (perm.can('SALES', 'VIEW_CARDS')) {
+  <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+    <button type="button" (click)="setTab('all')" class="rounded-2xl bg-white dark:bg-slate-800 p-4 text-left shadow-sm ring-1 ring-slate-100 dark:ring-slate-700 transition hover:ring-teal-300 dark:hover:ring-teal-600">
+      <div class="flex items-center justify-between">
+        <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ 'sales.totalSales' | translate }}</div>
+        <span class="grid h-9 w-9 place-items-center rounded-xl bg-teal-50 dark:bg-teal-900/40 text-teal-600 dark:text-teal-300">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" /><path stroke-linecap="round" stroke-linejoin="round" d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" /></svg>
+        </span>
+      </div>
+      <div class="mt-1 text-xl font-bold text-slate-900 dark:text-slate-100">{{ totalSalesValue() | money }}</div>
+      <div class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ orders().length }} {{ 'sales.ordersCount' | translate }}</div>
+    </button>
+    <button type="button" (click)="setTab('today')" class="rounded-2xl bg-white dark:bg-slate-800 p-4 text-left shadow-sm ring-1 ring-slate-100 dark:ring-slate-700 transition hover:ring-emerald-300 dark:hover:ring-emerald-600">
+      <div class="flex items-center justify-between">
+        <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ 'sales.todayCollection' | translate }}</div>
+        <span class="grid h-9 w-9 place-items-center rounded-xl bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-300">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+        </span>
+      </div>
+      <div class="mt-1 text-xl font-bold text-slate-900 dark:text-slate-100">{{ todayCollectionValue() | money }}</div>
+      <div class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ filteredOrders().length }} {{ 'sales.ordersCount' | translate }}</div>
+    </button>
+    <button type="button" (click)="setTab('pending')" class="rounded-2xl bg-white dark:bg-slate-800 p-4 text-left shadow-sm ring-1 ring-slate-100 dark:ring-slate-700 transition hover:ring-amber-300 dark:hover:ring-amber-600">
+      <div class="flex items-center justify-between">
+        <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ 'sales.outstanding' | translate }}</div>
+        <span class="grid h-9 w-9 place-items-center rounded-xl bg-amber-50 dark:bg-amber-900/40 text-amber-600 dark:text-amber-300">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        </span>
+      </div>
+      <div class="mt-1 text-xl font-bold text-slate-900 dark:text-slate-100">{{ outstandingValue() | money }}</div>
+      <div class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ 'sales.inPendingCarts' | translate }}</div>
+    </button>
+    <button type="button" (click)="setTab('pending')" class="rounded-2xl bg-white dark:bg-slate-800 p-4 text-left shadow-sm ring-1 ring-slate-100 dark:ring-slate-700 transition hover:ring-pink-300 dark:hover:ring-pink-600">
+      <div class="flex items-center justify-between">
+        <div class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">{{ 'sales.pending' | translate }}</div>
+        <span class="grid h-9 w-9 place-items-center rounded-xl bg-pink-50 dark:bg-pink-900/40 text-pink-600 dark:text-pink-300">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4" /><path stroke-linecap="round" stroke-linejoin="round" d="M7 13l-1.5 7h13L17 13" /></svg>
+        </span>
+      </div>
+      <div class="mt-1 text-xl font-bold text-slate-900 dark:text-slate-100">{{ pendingCarts().length }}</div>
+      <div class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ 'sales.savedCarts' | translate }}</div>
+    </button>
+  </div>
+}
 
 <cis-modal
   [open]="createOpen()"
   [title]="editingOrderId() ? ('Edit Sale (FIFO)') : ('Create Sale (FIFO)')"
   maxWidthClass="max-w-2xl"
   (close)="closeCreate()"
->
+  >
   <div class="text-xs text-slate-500 dark:text-slate-400">Expired batches are blocked automatically by backend.</div>
 
   <form class="mt-4 grid gap-3" [formGroup]="headerForm" (ngSubmit)="createSale()">
@@ -71,11 +71,17 @@
             {{ 'common.customer' | translate }} <small class="text-slate-400">({{ 'customers.walkIn' | translate }} if empty)</small>
             <select class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" [formControl]="control">
               <option [ngValue]="null">{{ 'customers.walkIn' | translate }}</option>
-              <option *ngFor="let c of customers()" [ngValue]="c.id">{{ c.name }}<span *ngIf="c.phone"> · {{ c.phone }}</span></option>
+              @for (c of customers(); track c) {
+                <option [ngValue]="c.id">{{ c.name }}@if (c.phone) {
+                  <span> · {{ c.phone }}</span>
+                }</option>
+              }
             </select>
-            <div class="text-xs font-semibold text-amber-600 dark:text-amber-400" *ngIf="customerDebt() != null">
-              {{ 'customers.debt' | translate }}: {{ customerDebt() | money }}
-            </div>
+            @if (customerDebt() != null) {
+              <div class="text-xs font-semibold text-amber-600 dark:text-amber-400">
+                {{ 'customers.debt' | translate }}: {{ customerDebt() | money }}
+              </div>
+            }
             <button type="button" class="text-left text-xs font-semibold text-pink-600 dark:text-pink-400 hover:underline" (click)="newCustomerOpen.set(!newCustomerOpen())">
               {{ 'customers.newInline' | translate }}
             </button>
@@ -88,15 +94,17 @@
     </div>
   </form>
 
-  <div class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2" *ngIf="newCustomerOpen()" [formGroup]="newCustomerForm">
-    <cis-form-fields [form]="newCustomerForm" [fields]="newCustomerFields.slice(0, 1)" />
-    <div class="grid grid-cols-[1fr_auto] items-end gap-2">
-      <cis-form-fields [form]="newCustomerForm" [fields]="newCustomerFields.slice(1)" />
-      <button type="button" class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white hover:bg-pink-600" (click)="createCustomerInline()" [disabled]="newCustomerBusy() || newCustomerForm.invalid">
-        {{ 'customers.createInline' | translate }}
-      </button>
+  @if (newCustomerOpen()) {
+    <div class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2" [formGroup]="newCustomerForm">
+      <cis-form-fields [form]="newCustomerForm" [fields]="newCustomerFields.slice(0, 1)" />
+      <div class="grid grid-cols-[1fr_auto] items-end gap-2">
+        <cis-form-fields [form]="newCustomerForm" [fields]="newCustomerFields.slice(1)" />
+        <button type="button" class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white hover:bg-pink-600" (click)="createCustomerInline()" [disabled]="newCustomerBusy() || newCustomerForm.invalid">
+          {{ 'customers.createInline' | translate }}
+        </button>
+      </div>
     </div>
-  </div>
+  }
 
   <div class="mt-4 rounded-xl bg-slate-50 dark:bg-slate-700 p-3 ring-1 ring-slate-100 dark:ring-slate-600">
     <h4 class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ 'common.addLine' | translate }}</h4>
@@ -109,7 +117,7 @@
             [value]="productQuery()"
             (input)="productQuery.set(($any($event.target)).value)"
             placeholder="{{ 'common.searchProductSku' | translate }}"
-          />
+            />
         </label>
       </div>
 
@@ -127,56 +135,65 @@
     </form>
   </div>
 
-  <div class="mt-4" *ngIf="lines().length">
-    <h4 class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ 'common.lines' | translate }}</h4>
-    <div class="mt-2 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
-      <table class="w-full border-collapse text-sm">
-        <thead class="bg-slate-50 dark:bg-slate-700">
-          <tr>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.product' | translate }}</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.location' | translate }}</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.qty' | translate }}</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.price' | translate }}</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.total' | translate }}</th>
-            <th class="px-3 py-2"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let l of displayLines(); let idx = index" class="border-t border-slate-100 dark:border-slate-700">
-            <td class="px-3 py-2">
-              <div class="font-semibold text-slate-900 dark:text-slate-100">{{ l.product?.name || ('#' + l.productId) }}</div>
-              <div class="text-xs text-slate-500 dark:text-slate-400" *ngIf="l.product?.sku">{{ l.product?.sku }}</div>
-            </td>
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ l.location || 'MAIN' }}</td>
-            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ l.quantity }}</td>
-            <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ l.unitPrice | money}}</td>
-            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ lineTotal(l.quantity, l.unitPrice) | money}}</td>
-            <td class="px-3 py-2 text-right">
-              <button class="text-xs font-semibold text-[#B81104] dark:text-red-400" type="button" (click)="removeLine(idx)">{{ 'common.remove' | translate }}</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  @if (lines().length) {
+    <div class="mt-4">
+      <h4 class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ 'common.lines' | translate }}</h4>
+      <div class="mt-2 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+        <table class="w-full border-collapse text-sm">
+          <thead class="bg-slate-50 dark:bg-slate-700">
+            <tr>
+              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.product' | translate }}</th>
+              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.location' | translate }}</th>
+              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.qty' | translate }}</th>
+              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.price' | translate }}</th>
+              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.total' | translate }}</th>
+              <th class="px-3 py-2"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (l of displayLines(); track l; let idx = $index) {
+              <tr class="border-t border-slate-100 dark:border-slate-700">
+                <td class="px-3 py-2">
+                  <div class="font-semibold text-slate-900 dark:text-slate-100">{{ l.product?.name || ('#' + l.productId) }}</div>
+                  @if (l.product?.sku) {
+                    <div class="text-xs text-slate-500 dark:text-slate-400">{{ l.product?.sku }}</div>
+                  }
+                </td>
+                <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ l.location || 'MAIN' }}</td>
+                <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ l.quantity }}</td>
+                <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ l.unitPrice | money}}</td>
+                <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ lineTotal(l.quantity, l.unitPrice) | money}}</td>
+                <td class="px-3 py-2 text-right">
+                  <button class="text-xs font-semibold text-[#B81104] dark:text-red-400" type="button" (click)="removeLine(idx)">{{ 'common.remove' | translate }}</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-2 text-right text-sm font-semibold text-slate-700 dark:text-slate-300">
+        {{ 'common.subtotal' | translate }}: <span class="text-slate-900 dark:text-slate-100">{{ grandTotal() | money}}</span>
+        <span class="mx-2 text-slate-400">·</span>
+        {{ 'common.discount' | translate }}: <span class="text-[#B81104] dark:text-red-400">-{{ discountValue() | money}}</span>
+        <span class="mx-2 text-slate-400">·</span>
+        {{ 'common.grandTotal' | translate }}: <span class="text-slate-900 dark:text-slate-100">{{ netTotal() | money}}</span>
+      </div>
+      @if (discountError()) {
+        <div class="mt-1 text-right text-xs text-[#B81104] dark:text-red-400">{{ discountError() }}</div>
+      }
     </div>
+  }
 
-    <div class="mt-2 text-right text-sm font-semibold text-slate-700 dark:text-slate-300">
-      {{ 'common.subtotal' | translate }}: <span class="text-slate-900 dark:text-slate-100">{{ grandTotal() | money}}</span>
-      <span class="mx-2 text-slate-400">·</span>
-      {{ 'common.discount' | translate }}: <span class="text-[#B81104] dark:text-red-400">-{{ discountValue() | money}}</span>
-      <span class="mx-2 text-slate-400">·</span>
-      {{ 'common.grandTotal' | translate }}: <span class="text-slate-900 dark:text-slate-100">{{ netTotal() | money}}</span>
-    </div>
-    <div class="mt-1 text-right text-xs text-[#B81104] dark:text-red-400" *ngIf="discountError()">{{ discountError() }}</div>
-  </div>
-
-  <div class="mt-3 text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">{{ error() }}</div>
+  @if (error()) {
+    <div class="mt-3 text-sm text-[#B81104] dark:text-red-400">{{ error() }}</div>
+  }
 
   <div class="mt-4 flex items-center justify-end gap-2">
     <button
       type="button"
       class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600"
       (click)="closeCreate()"
-    >
+      >
       {{ 'common.close' | translate }}
     </button>
     <button
@@ -184,7 +201,7 @@
       class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
       (click)="createSale()"
       [disabled]="loading()"
-    >
+      >
       {{ 'common.save' | translate }}
     </button>
   </div>
@@ -195,19 +212,22 @@
     <div class="flex flex-wrap items-center justify-between gap-2">
       <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">Sales Orders</h3>
       <div class="flex gap-1 rounded-xl bg-slate-100 dark:bg-slate-700 p-1">
-        <button
-          *ngFor="let t of ['all', 'today', 'week', 'month']"
-          type="button"
-          (click)="setTab($any(t))"
-          class="rounded-lg px-3 py-1.5 text-xs font-semibold transition"
-          [ngClass]="tabClass(t)"
-        >{{ ('common.' + (t === 'week' ? 'thisWeek' : t === 'month' ? 'thisMonth' : t)) | translate }}</button>
+        @for (t of ['all', 'today', 'week', 'month']; track t) {
+          <button
+            type="button"
+            (click)="setTab($any(t))"
+            class="rounded-lg px-3 py-1.5 text-xs font-semibold transition"
+            [ngClass]="tabClass(t)"
+          >{{ ('common.' + (t === 'week' ? 'thisWeek' : t === 'month' ? 'thisMonth' : t)) | translate }}</button>
+        }
         <button
           type="button"
           (click)="setTab('pending')"
           class="rounded-lg px-3 py-1.5 text-xs font-semibold transition"
           [ngClass]="tabClass('pending')"
-        >{{ 'sales.pending' | translate }}<span *ngIf="pendingCarts().length" class="ml-1 rounded-full bg-amber-500 px-1.5 py-0.5 text-[9px] font-bold text-white">{{ pendingCarts().length }}</span></button>
+          >{{ 'sales.pending' | translate }}@if (pendingCarts().length) {
+          <span class="ml-1 rounded-full bg-amber-500 px-1.5 py-0.5 text-[9px] font-bold text-white">{{ pendingCarts().length }}</span>
+        }</button>
       </div>
     </div>
 
@@ -222,7 +242,7 @@
           [value]="query()"
           (input)="onQueryChange($any($event.target).value)"
           placeholder="{{ 'sales.searchPlaceholder' | translate }}"
-        />
+          />
       </div>
       <input
         type="date"
@@ -230,152 +250,170 @@
         [value]="dateFilter()"
         (change)="onDateChange($any($event.target).value)"
         aria-label="{{ 'common.date' | translate }}"
-      />
-      <button
-        *ngIf="dateFilter() || query()"
-        type="button"
-        class="rounded-xl bg-slate-100 dark:bg-slate-700 px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600"
-        (click)="clearFilters()"
-      >{{ 'common.clear' | translate }}</button>
+        />
+      @if (dateFilter() || query()) {
+        <button
+          type="button"
+          class="rounded-xl bg-slate-100 dark:bg-slate-700 px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600"
+          (click)="clearFilters()"
+        >{{ 'common.clear' | translate }}</button>
+      }
     </div>
 
     <cis-pager class="mt-3 block" [total]="activeTab() === 'pending' ? filteredCarts().length : filteredOrders().length" [(pageSize)]="pageSize" [(pageIndex)]="pageIndex" />
 
-    <div *ngIf="activeTab() !== 'pending'" class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
-      <table class="w-full border-collapse text-sm">
-        <thead class="bg-slate-50 dark:bg-slate-700">
-          <tr>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">Sold At</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.customer' | translate }}</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.reference' | translate }}</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.lines' | translate }}</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.total' | translate }}</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'returns.status' | translate }}</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.actions' | translate }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <ng-container *ngFor="let o of displayedOrders()">
-            <tr class="border-t border-slate-100 dark:border-slate-700">
-              <td class="px-3 py-2 text-xs text-slate-600 dark:text-slate-400">{{ o.soldAt }}</td>
-              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ o.customer || '-' }}</td>
-              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ o.referenceNumber || '-' }}</td>
-              <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ o.lines.length }}</td>
-              <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ saleNetValue(o) | money}}<span *ngIf="(o.returnedValue ?? 0) > 0" class="block text-[11px] font-normal text-red-500 dark:text-red-400">−{{ o.returnedValue | money }}</span></td>
-              <td class="px-3 py-2">
-                <ng-container [ngSwitch]="orderStatus(o)">
-                  <span *ngSwitchCase="'EXCHANGE'" class="inline-flex rounded-full bg-purple-50 dark:bg-purple-900/30 px-2 py-0.5 text-[11px] font-semibold text-purple-700 dark:text-purple-300">{{ 'returns.status.exchange' | translate }}</span>
-                  <span *ngSwitchCase="'RETURNED'" class="inline-flex rounded-full bg-red-50 dark:bg-red-900/30 px-2 py-0.5 text-[11px] font-semibold text-red-700 dark:text-red-300">{{ 'returns.status.returned' | translate }}</span>
-                  <span *ngSwitchCase="'PARTIAL'" class="inline-flex rounded-full bg-amber-50 dark:bg-amber-900/30 px-2 py-0.5 text-[11px] font-semibold text-amber-700 dark:text-amber-300">{{ 'returns.status.partial' | translate }}</span>
-                  <span *ngSwitchDefault class="inline-flex rounded-full bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">{{ 'returns.status.completed' | translate }}</span>
-                </ng-container>
-              </td>
-              <td class="px-3 py-2 text-right">
-                <cis-row-actions>
-                  <button
-                    class="cis-row-action"
-                    type="button"
-                    (click)="toggleDetails(o)"
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
-                    {{ 'common.details' | translate }}
-                  </button>
-
-                  <button
-                    class="cis-row-action"
-                    type="button"
-                    (click)="printReceipt(o)"
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></svg>
-                    {{ 'sales.printReceipt' | translate }}
-                  </button>
-
-                  <button
-                    *ngIf="orderDebt(o) > 0 && o.customerId != null && perm.canEdit('CUSTOMERS')"
-                    class="cis-row-action"
-                    type="button"
-                    (click)="openPayFromRow(o)"
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2m0-8v2m0 10v2M20 12a8 8 0 11-16 0 8 8 0 0116 0z" /></svg>
-                    {{ 'customers.addPayment' | translate }}
-                  </button>
-
-                  <button
-                    *ngIf="canReturn() && o.lines.length"
-                    class="cis-row-action"
-                    type="button"
-                    (click)="openReturn(o)"
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 14 4 9l5-5" /><path stroke-linecap="round" stroke-linejoin="round" d="M4 9h11a5 5 0 0 1 0 10h-3" /></svg>
-                    {{ 'returns.action' | translate }}
-                  </button>
-
-                  <button
-                    *ngIf="perm.canEdit('SALES')"
-                    class="cis-row-action"
-                    type="button"
-                    (click)="openEdit(o)"
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                    {{ 'common.edit' | translate }}
-                  </button>
-
-                  <button
-                    *ngIf="perm.canDelete('SALES')"
-                    class="cis-row-action cis-row-action-danger"
-                    type="button"
-                    (click)="openDeleteConfirm(o.id)"
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                    {{ 'common.delete' | translate }}
-                  </button>
-                </cis-row-actions>
-              </td>
+    @if (activeTab() !== 'pending') {
+      <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+        <table class="w-full border-collapse text-sm">
+          <thead class="bg-slate-50 dark:bg-slate-700">
+            <tr>
+              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">Sold At</th>
+              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.customer' | translate }}</th>
+              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.reference' | translate }}</th>
+              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.lines' | translate }}</th>
+              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.total' | translate }}</th>
+              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'returns.status' | translate }}</th>
+              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.actions' | translate }}</th>
             </tr>
-
-          </ng-container>
-
-          <tr *ngIf="!filteredOrders().length" class="border-t border-slate-100 dark:border-slate-700">
-            <td class="px-3 py-6 text-center text-sm text-slate-600 dark:text-slate-400" colspan="6">No sales orders yet</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div *ngIf="activeTab() === 'pending'" class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
-      <table class="w-full border-collapse text-sm">
-        <thead class="bg-slate-50 dark:bg-slate-700">
-          <tr>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.created' | translate }}</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.customer' | translate }}</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.reference' | translate }}</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.seller' | translate }}</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.lines' | translate }}</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.total' | translate }}</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.status' | translate }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let c of displayedCarts()" class="border-t border-slate-100 dark:border-slate-700">
-            <td class="px-3 py-2 text-xs text-slate-600 dark:text-slate-400">{{ c.createdAt | date:'yyyy-MM-dd HH:mm' }}</td>
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ c.customer || '-' }}</td>
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ c.referenceNumber || '-' }}</td>
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ c.createdBy || '-' }}</td>
-            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ c.lines.length }}</td>
-            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ c.total | money }}</td>
-            <td class="px-3 py-2 text-right">
-              <span class="rounded-full bg-amber-100 dark:bg-amber-900/40 px-2 py-0.5 text-[10px] font-bold text-amber-800 dark:text-amber-300">PENDING</span>
-            </td>
-          </tr>
-          <tr *ngIf="!pendingCarts().length" class="border-t border-slate-100 dark:border-slate-700">
-            <td class="px-3 py-6 text-center text-sm text-slate-600 dark:text-slate-400" colspan="7">No pending sales</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="border-t border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-700/50 px-3 py-2 text-xs text-slate-500 dark:text-slate-400">
-        {{ 'sales.pendingHelp' | translate }}
+          </thead>
+          <tbody>
+            @for (o of displayedOrders(); track o) {
+              <tr class="border-t border-slate-100 dark:border-slate-700">
+                <td class="px-3 py-2 text-xs text-slate-600 dark:text-slate-400">{{ o.soldAt }}</td>
+                <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ o.customer || '-' }}</td>
+                <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ o.referenceNumber || '-' }}</td>
+                <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ o.lines.length }}</td>
+                <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ saleNetValue(o) | money}}@if ((o.returnedValue ?? 0) > 0) {
+                  <span class="block text-[11px] font-normal text-red-500 dark:text-red-400">−{{ o.returnedValue | money }}</span>
+                }</td>
+                <td class="px-3 py-2">
+                  @switch (orderStatus(o)) {
+                    @case ('EXCHANGE') {
+                      <span class="inline-flex rounded-full bg-purple-50 dark:bg-purple-900/30 px-2 py-0.5 text-[11px] font-semibold text-purple-700 dark:text-purple-300">{{ 'returns.status.exchange' | translate }}</span>
+                    }
+                    @case ('RETURNED') {
+                      <span class="inline-flex rounded-full bg-red-50 dark:bg-red-900/30 px-2 py-0.5 text-[11px] font-semibold text-red-700 dark:text-red-300">{{ 'returns.status.returned' | translate }}</span>
+                    }
+                    @case ('PARTIAL') {
+                      <span class="inline-flex rounded-full bg-amber-50 dark:bg-amber-900/30 px-2 py-0.5 text-[11px] font-semibold text-amber-700 dark:text-amber-300">{{ 'returns.status.partial' | translate }}</span>
+                    }
+                    @default {
+                      <span class="inline-flex rounded-full bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">{{ 'returns.status.completed' | translate }}</span>
+                    }
+                  }
+                </td>
+                <td class="px-3 py-2 text-right">
+                  <cis-row-actions>
+                    <button
+                      class="cis-row-action"
+                      type="button"
+                      (click)="toggleDetails(o)"
+                      >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                      {{ 'common.details' | translate }}
+                    </button>
+                    <button
+                      class="cis-row-action"
+                      type="button"
+                      (click)="printReceipt(o)"
+                      >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></svg>
+                      {{ 'sales.printReceipt' | translate }}
+                    </button>
+                    @if (orderDebt(o) > 0 && o.customerId != null && perm.canEdit('CUSTOMERS')) {
+                      <button
+                        class="cis-row-action"
+                        type="button"
+                        (click)="openPayFromRow(o)"
+                        >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2m0-8v2m0 10v2M20 12a8 8 0 11-16 0 8 8 0 0116 0z" /></svg>
+                        {{ 'customers.addPayment' | translate }}
+                      </button>
+                    }
+                    @if (canReturn() && o.lines.length) {
+                      <button
+                        class="cis-row-action"
+                        type="button"
+                        (click)="openReturn(o)"
+                        >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 14 4 9l5-5" /><path stroke-linecap="round" stroke-linejoin="round" d="M4 9h11a5 5 0 0 1 0 10h-3" /></svg>
+                        {{ 'returns.action' | translate }}
+                      </button>
+                    }
+                    @if (perm.canEdit('SALES')) {
+                      <button
+                        class="cis-row-action"
+                        type="button"
+                        (click)="openEdit(o)"
+                        >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                        {{ 'common.edit' | translate }}
+                      </button>
+                    }
+                    @if (perm.canDelete('SALES')) {
+                      <button
+                        class="cis-row-action cis-row-action-danger"
+                        type="button"
+                        (click)="openDeleteConfirm(o.id)"
+                        >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        {{ 'common.delete' | translate }}
+                      </button>
+                    }
+                  </cis-row-actions>
+                </td>
+              </tr>
+            }
+            @if (!filteredOrders().length) {
+              <tr class="border-t border-slate-100 dark:border-slate-700">
+                <td class="px-3 py-6 text-center text-sm text-slate-600 dark:text-slate-400" colspan="6">No sales orders yet</td>
+              </tr>
+            }
+          </tbody>
+        </table>
       </div>
-    </div>
+    }
+
+    @if (activeTab() === 'pending') {
+      <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+        <table class="w-full border-collapse text-sm">
+          <thead class="bg-slate-50 dark:bg-slate-700">
+            <tr>
+              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.created' | translate }}</th>
+              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.customer' | translate }}</th>
+              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.reference' | translate }}</th>
+              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.seller' | translate }}</th>
+              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.lines' | translate }}</th>
+              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.total' | translate }}</th>
+              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.status' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (c of displayedCarts(); track c) {
+              <tr class="border-t border-slate-100 dark:border-slate-700">
+                <td class="px-3 py-2 text-xs text-slate-600 dark:text-slate-400">{{ c.createdAt | date:'yyyy-MM-dd HH:mm' }}</td>
+                <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ c.customer || '-' }}</td>
+                <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ c.referenceNumber || '-' }}</td>
+                <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ c.createdBy || '-' }}</td>
+                <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ c.lines.length }}</td>
+                <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ c.total | money }}</td>
+                <td class="px-3 py-2 text-right">
+                  <span class="rounded-full bg-amber-100 dark:bg-amber-900/40 px-2 py-0.5 text-[10px] font-bold text-amber-800 dark:text-amber-300">PENDING</span>
+                </td>
+              </tr>
+            }
+            @if (!pendingCarts().length) {
+              <tr class="border-t border-slate-100 dark:border-slate-700">
+                <td class="px-3 py-6 text-center text-sm text-slate-600 dark:text-slate-400" colspan="7">No pending sales</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+        <div class="border-t border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-700/50 px-3 py-2 text-xs text-slate-500 dark:text-slate-400">
+          {{ 'sales.pendingHelp' | translate }}
+        </div>
+      </div>
+    }
   </section>
 </div>
 
@@ -395,7 +433,7 @@
   title="{{ 'sales.adminApprovalRequired' | translate }}"
   maxWidthClass="max-w-md"
   (close)="cancelAdminCode()"
->
+  >
   <div class="flex items-start gap-3">
     <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-amber-50 dark:bg-amber-900/40 text-amber-600 dark:text-amber-300">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
@@ -414,20 +452,22 @@
       (input)="adminCode.set($any($event.target).value)"
       (keydown.enter)="confirmAdminCodeDelete()"
       autocomplete="off"
-    />
+      />
   </label>
 
-  <div *ngIf="deleteError()" class="mt-3 flex items-center gap-2 rounded-xl bg-red-50 dark:bg-red-900/30 px-3 py-2 text-xs font-semibold text-red-700 dark:text-red-300">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /></svg>
-    {{ deleteError() }}
-  </div>
+  @if (deleteError()) {
+    <div class="mt-3 flex items-center gap-2 rounded-xl bg-red-50 dark:bg-red-900/30 px-3 py-2 text-xs font-semibold text-red-700 dark:text-red-300">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" /></svg>
+      {{ deleteError() }}
+    </div>
+  }
 
   <div class="mt-5 flex justify-end gap-2">
     <button
       type="button"
       class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600"
       (click)="cancelAdminCode()"
-    >
+      >
       {{ 'common.close' | translate }}
     </button>
     <button
@@ -435,7 +475,7 @@
       class="rounded-xl bg-[#B81104] px-4 py-2 text-sm font-semibold text-white hover:bg-[#7f0c03] disabled:cursor-not-allowed disabled:opacity-70"
       [disabled]="loading() || !adminCode().trim()"
       (click)="confirmAdminCodeDelete()"
-    >
+      >
       {{ 'common.delete' | translate }}
     </button>
   </div>
@@ -446,17 +486,20 @@
   [title]="payOpen() ? ('common.payDebt' | translate) : ('common.details' | translate)"
   maxWidthClass="max-w-2xl"
   (close)="closeDetails()"
->
-  <ng-container *ngIf="detailsOrder() as o">
+  >
+  @if (detailsOrder(); as o) {
     <div class="grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-slate-600 dark:text-slate-400">
       <div><span class="font-semibold">{{ 'common.customer' | translate }}:</span> {{ o.customer || '-' }}</div>
       <div><span class="font-semibold">{{ 'common.reference' | translate }}:</span> {{ o.referenceNumber || '-' }}</div>
       <div><span class="font-semibold">{{ 'customers.date' | translate }}:</span> {{ o.soldAt }}</div>
       <div><span class="font-semibold">{{ 'common.seller' | translate }}:</span> {{ o.soldBy || '-' }}</div>
-      <div *ngIf="o.paymentMethod"><span class="font-semibold">{{ 'customers.method' | translate }}:</span> {{ o.paymentMethod }}</div>
-      <div *ngIf="o.amountReceived != null"><span class="font-semibold">{{ 'customers.received' | translate }}:</span> {{ o.amountReceived | money }}</div>
+      @if (o.paymentMethod) {
+        <div><span class="font-semibold">{{ 'customers.method' | translate }}:</span> {{ o.paymentMethod }}</div>
+      }
+      @if (o.amountReceived != null) {
+        <div><span class="font-semibold">{{ 'customers.received' | translate }}:</span> {{ o.amountReceived | money }}</div>
+      }
     </div>
-
     <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
       <table class="w-full border-collapse text-xs">
         <thead class="bg-slate-50 dark:bg-slate-700">
@@ -469,70 +512,84 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let l of o.lines" class="border-t border-slate-100 dark:border-slate-700">
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ l.productName }}<span *ngIf="l.returnedQuantity > 0" class="ml-1.5 inline-flex rounded-full bg-red-50 dark:bg-red-900/30 px-2 py-0.5 text-[11px] font-semibold text-red-600 dark:text-red-300">{{ 'returns.status.returnedQty' | translate }} {{ l.returnedQuantity }}</span></td>
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ l.location || 'MAIN' }}</td>
-            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ l.quantity }}</td>
-            <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ l.unitPrice | money }}</td>
-            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ lineTotal(l.quantity, l.unitPrice) | money }}</td>
-          </tr>
+          @for (l of o.lines; track l) {
+            <tr class="border-t border-slate-100 dark:border-slate-700">
+              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ l.productName }}@if (l.returnedQuantity > 0) {
+                <span class="ml-1.5 inline-flex rounded-full bg-red-50 dark:bg-red-900/30 px-2 py-0.5 text-[11px] font-semibold text-red-600 dark:text-red-300">{{ 'returns.status.returnedQty' | translate }} {{ l.returnedQuantity }}</span>
+              }</td>
+              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ l.location || 'MAIN' }}</td>
+              <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ l.quantity }}</td>
+              <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ l.unitPrice | money }}</td>
+              <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ lineTotal(l.quantity, l.unitPrice) | money }}</td>
+            </tr>
+          }
         </tbody>
       </table>
     </div>
-
     <!-- Exchange details (shown on the exchange sale: what the customer gave back) -->
-    <div *ngIf="o.exchangeSale && (o.exchangeLines?.length ?? 0) > 0" class="mt-3 rounded-xl border border-purple-200 dark:border-purple-800 p-3">
-      <div class="flex items-center gap-2 text-xs font-semibold text-purple-700 dark:text-purple-300">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 14 4 9l5-5" /><path stroke-linecap="round" stroke-linejoin="round" d="M4 9h11a5 5 0 0 1 0 10h-3" /></svg>
-        {{ 'returns.exchangedFrom' | translate }} <span class="font-normal text-purple-500 dark:text-purple-400">({{ o.exchangeReference }})</span>
+    @if (o.exchangeSale && (o.exchangeLines?.length ?? 0) > 0) {
+      <div class="mt-3 rounded-xl border border-purple-200 dark:border-purple-800 p-3">
+        <div class="flex items-center gap-2 text-xs font-semibold text-purple-700 dark:text-purple-300">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 14 4 9l5-5" /><path stroke-linecap="round" stroke-linejoin="round" d="M4 9h11a5 5 0 0 1 0 10h-3" /></svg>
+          {{ 'returns.exchangedFrom' | translate }} <span class="font-normal text-purple-500 dark:text-purple-400">({{ o.exchangeReference }})</span>
+        </div>
+        <table class="mt-2 w-full border-collapse text-xs">
+          <tbody>
+            @for (l of o.exchangeLines; track l) {
+              <tr class="border-t border-purple-100 dark:border-purple-900/40">
+                <td class="py-1.5 text-slate-900 dark:text-slate-300">{{ l.productName }}</td>
+                <td class="py-1.5 text-right font-semibold text-slate-900 dark:text-slate-300">× {{ l.quantity }}</td>
+                <td class="py-1.5 text-right text-slate-900 dark:text-slate-300">{{ l.unitPrice | money }}</td>
+                <td class="py-1.5 text-right font-semibold text-slate-900 dark:text-slate-300">{{ lineTotal(l.quantity, l.unitPrice) | money }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+        <!-- Settlement: money the customer added or was refunded -->
+        <div class="mt-2 space-y-0.5 border-t border-purple-100 dark:border-purple-900/40 pt-2 text-right text-xs font-semibold">
+          <div class="flex justify-between">
+            <span class="text-purple-600/80 dark:text-purple-400">{{ 'returns.returnValue' | translate }} ({{ o.returnReference }})</span>
+            <span class="text-slate-900 dark:text-slate-100">{{ (o.exchangeReturnValue ?? 0) | money }}</span>
+          </div>
+          @if ((o.exchangeSettlement ?? 0) !== 0) {
+            <div class="flex justify-between">
+              <span class="text-purple-600/80 dark:text-purple-400">{{ ((o.exchangeSettlement ?? 0) > 0 ? 'returns.customerPays' : 'returns.shopRefunds') | translate }}</span>
+              <span [ngClass]="(o.exchangeSettlement ?? 0) > 0 ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400'">{{ ((o.exchangeSettlement ?? 0) < 0 ? -(o.exchangeSettlement ?? 0) : (o.exchangeSettlement ?? 0)) | money }}</span>
+            </div>
+          }
+          @if ((o.exchangeDebtCredit ?? 0) > 0) {
+            <div class="flex justify-between">
+              <span class="text-purple-600/80 dark:text-purple-400">{{ 'returns.debtCredit' | translate }}</span>
+              <span class="text-amber-600 dark:text-amber-400">{{ o.exchangeDebtCredit | money }}</span>
+            </div>
+          }
+          @if ((o.exchangeRefundAmount ?? 0) > 0) {
+            <div class="flex justify-between">
+              <span class="text-purple-600/80 dark:text-purple-400">{{ 'returns.refund' | translate }} ({{ o.exchangeRefundMethod }})</span>
+              <span class="text-slate-900 dark:text-slate-100">{{ o.exchangeRefundAmount | money }}</span>
+            </div>
+          }
+        </div>
       </div>
-      <table class="mt-2 w-full border-collapse text-xs">
-        <tbody>
-          <tr *ngFor="let l of o.exchangeLines" class="border-t border-purple-100 dark:border-purple-900/40">
-            <td class="py-1.5 text-slate-900 dark:text-slate-300">{{ l.productName }}</td>
-            <td class="py-1.5 text-right font-semibold text-slate-900 dark:text-slate-300">× {{ l.quantity }}</td>
-            <td class="py-1.5 text-right text-slate-900 dark:text-slate-300">{{ l.unitPrice | money }}</td>
-            <td class="py-1.5 text-right font-semibold text-slate-900 dark:text-slate-300">{{ lineTotal(l.quantity, l.unitPrice) | money }}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- Settlement: money the customer added or was refunded -->
-      <div class="mt-2 space-y-0.5 border-t border-purple-100 dark:border-purple-900/40 pt-2 text-right text-xs font-semibold">
-        <div class="flex justify-between">
-          <span class="text-purple-600/80 dark:text-purple-400">{{ 'returns.returnValue' | translate }} ({{ o.returnReference }})</span>
-          <span class="text-slate-900 dark:text-slate-100">{{ (o.exchangeReturnValue ?? 0) | money }}</span>
-        </div>
-        <div class="flex justify-between" *ngIf="(o.exchangeSettlement ?? 0) !== 0">
-          <span class="text-purple-600/80 dark:text-purple-400">{{ ((o.exchangeSettlement ?? 0) > 0 ? 'returns.customerPays' : 'returns.shopRefunds') | translate }}</span>
-          <span [ngClass]="(o.exchangeSettlement ?? 0) > 0 ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400'">{{ ((o.exchangeSettlement ?? 0) < 0 ? -(o.exchangeSettlement ?? 0) : (o.exchangeSettlement ?? 0)) | money }}</span>
-        </div>
-        <div class="flex justify-between" *ngIf="(o.exchangeDebtCredit ?? 0) > 0">
-          <span class="text-purple-600/80 dark:text-purple-400">{{ 'returns.debtCredit' | translate }}</span>
-          <span class="text-amber-600 dark:text-amber-400">{{ o.exchangeDebtCredit | money }}</span>
-        </div>
-        <div class="flex justify-between" *ngIf="(o.exchangeRefundAmount ?? 0) > 0">
-          <span class="text-purple-600/80 dark:text-purple-400">{{ 'returns.refund' | translate }} ({{ o.exchangeRefundMethod }})</span>
-          <span class="text-slate-900 dark:text-slate-100">{{ o.exchangeRefundAmount | money }}</span>
-        </div>
-      </div>
-    </div>
-
+    }
     <div class="mt-3 space-y-1 text-right text-xs font-semibold text-slate-700 dark:text-slate-300">
-      <div *ngIf="(o.discount ?? 0) > 0">
-        {{ 'common.discount' | translate }}: <span class="text-[#B81104] dark:text-red-400">-{{ (o.discount ?? 0) | money }}</span>
-      </div>
+      @if ((o.discount ?? 0) > 0) {
+        <div>
+          {{ 'common.discount' | translate }}: <span class="text-[#B81104] dark:text-red-400">-{{ (o.discount ?? 0) | money }}</span>
+        </div>
+      }
       <div>{{ 'common.netTotal' | translate }}: <span class="text-slate-900 dark:text-slate-100">{{ saleTotalValue(o) | money }}</span></div>
-      <div *ngIf="orderDebt(o) > 0">
-        {{ 'customers.debt' | translate }}: <span class="text-[#B81104] dark:text-red-400">{{ orderDebt(o) | money }}</span>
-      </div>
+      @if (orderDebt(o) > 0) {
+        <div>
+          {{ 'customers.debt' | translate }}: <span class="text-[#B81104] dark:text-red-400">{{ orderDebt(o) | money }}</span>
+        </div>
+      }
     </div>
-
     <div class="mt-3 flex items-center justify-between gap-2">
       <span
         class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
         [ngClass]="orderDebt(o) > 0 ? 'bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-300' : 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'"
-      >
+        >
         {{ orderDebt(o) > 0 ? ('customers.tabDebtors' | translate) : ('customers.paidBadge' | translate) }}
       </span>
       <div class="flex items-center gap-2">
@@ -540,53 +597,58 @@
           type="button"
           class="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
           (click)="printReceipt(o)"
-        >
+          >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></svg>
           {{ 'sales.printReceipt' | translate }}
         </button>
-        <button
-          *ngIf="orderDebt(o) > 0 && o.customerId != null && perm.canEdit('CUSTOMERS')"
-          type="button"
-        class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white hover:bg-pink-600"
-        (click)="openPay()"
-      >
-        {{ 'customers.addPayment' | translate }}
-        </button>
+        @if (orderDebt(o) > 0 && o.customerId != null && perm.canEdit('CUSTOMERS')) {
+          <button
+            type="button"
+            class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white hover:bg-pink-600"
+            (click)="openPay()"
+            >
+            {{ 'customers.addPayment' | translate }}
+          </button>
+        }
       </div>
     </div>
-
-    <form *ngIf="payOpen()" class="mt-3 grid gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-600 dark:bg-slate-700/50" [formGroup]="paymentForm" (ngSubmit)="savePayment()">
-      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <cis-form-fields [form]="paymentForm" [fields]="paymentFields(o)" />
+    @if (payOpen()) {
+      <form class="mt-3 grid gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-600 dark:bg-slate-700/50" [formGroup]="paymentForm" (ngSubmit)="savePayment()">
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <cis-form-fields [form]="paymentForm" [fields]="paymentFields(o)" />
+        </div>
+        <div class="flex items-center justify-end gap-2">
+          <button type="button" class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200" (click)="payOpen.set(false)" [disabled]="paying()">{{ 'common.cancel' | translate }}</button>
+          <button type="submit" class="rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600" [disabled]="paying()">
+            {{ paying() ? ('common.loading' | translate) : ('customers.savePayment' | translate) }}
+          </button>
+        </div>
+      </form>
+    }
+    @if (orderPayments(o).length) {
+      <div class="mt-3">
+        <div class="mb-1 text-xs font-semibold text-slate-600 dark:text-slate-400">{{ 'customers.paymentHistory' | translate }}</div>
+        <div class="overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+          <table class="w-full border-collapse text-xs">
+            <thead class="bg-slate-50 dark:bg-slate-700">
+              <tr>
+                <th class="px-3 py-2 text-left font-semibold text-slate-600 dark:text-slate-300">{{ 'customers.date' | translate }}</th>
+                <th class="px-3 py-2 text-right font-semibold text-slate-600 dark:text-slate-300">{{ 'customers.amount' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (p of orderPayments(o); track p) {
+                <tr class="border-t border-slate-100 dark:border-slate-700">
+                  <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ p.paidAt | date:'yyyy-MM-dd' }}</td>
+                  <td class="px-3 py-2 text-right font-semibold text-emerald-600 dark:text-emerald-400">{{ p.amount | money }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="flex items-center justify-end gap-2">
-        <button type="button" class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200" (click)="payOpen.set(false)" [disabled]="paying()">{{ 'common.cancel' | translate }}</button>
-        <button type="submit" class="rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600" [disabled]="paying()">
-          {{ paying() ? ('common.loading' | translate) : ('customers.savePayment' | translate) }}
-        </button>
-      </div>
-    </form>
-
-    <div *ngIf="orderPayments(o).length" class="mt-3">
-      <div class="mb-1 text-xs font-semibold text-slate-600 dark:text-slate-400">{{ 'customers.paymentHistory' | translate }}</div>
-      <div class="overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
-        <table class="w-full border-collapse text-xs">
-          <thead class="bg-slate-50 dark:bg-slate-700">
-            <tr>
-              <th class="px-3 py-2 text-left font-semibold text-slate-600 dark:text-slate-300">{{ 'customers.date' | translate }}</th>
-              <th class="px-3 py-2 text-right font-semibold text-slate-600 dark:text-slate-300">{{ 'customers.amount' | translate }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let p of orderPayments(o)" class="border-t border-slate-100 dark:border-slate-700">
-              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ p.paidAt | date:'yyyy-MM-dd' }}</td>
-              <td class="px-3 py-2 text-right font-semibold text-emerald-600 dark:text-emerald-400">{{ p.amount | money }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </ng-container>
+    }
+  }
 </cis-modal>
 
 <cis-return-dialog
@@ -596,10 +658,10 @@
   [location]="branchCtx.writeBranch()"
   (close)="returnOrderId.set(null)"
   (completed)="onReturnCompleted($event)"
-/>
+  />
 
 <cis-receipt-dialog
   [open]="receiptOpen()"
   [order]="receiptOrder()"
   (close)="receiptOpen.set(false)"
-/>
+  />

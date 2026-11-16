@@ -1,5 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GraphqlService } from '../../core/graphql/graphql.service';
 import { BranchContext } from '../../shared/services/branch-context.service';
@@ -72,7 +72,7 @@ type UpdateBatchNumberMutationResult = {
 @Component({
   selector: 'cis-products-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ProductFormComponent, MoneyPipe, TranslatePipe, RowActionsMenuComponent, CIS_FORM_IMPORTS],
+  imports: [ReactiveFormsModule, ProductFormComponent, MoneyPipe, TranslatePipe, RowActionsMenuComponent, CIS_FORM_IMPORTS],
   templateUrl: './products.page.html',
   styleUrl: './products.page.scss'
 })

@@ -4,423 +4,459 @@
 
 <!-- Report tabs -->
 <div class="mt-4 flex gap-2 overflow-x-auto">
-  <button
-    *ngFor="let t of visibleTabs()"
-    class="whitespace-nowrap rounded-xl px-4 py-2 text-sm font-semibold ring-1 transition"
-    [ngClass]="activeTab() === t.key ? t.activeClass + ' ring-transparent' : t.inactiveClass + ' ring-slate-200 dark:ring-slate-700'"
-    (click)="activeTab.set(t.key)"
-  >{{ t.label | translate }}</button>
+  @for (t of visibleTabs(); track t) {
+    <button
+      class="whitespace-nowrap rounded-xl px-4 py-2 text-sm font-semibold ring-1 transition"
+      [ngClass]="activeTab() === t.key ? t.activeClass + ' ring-transparent' : t.inactiveClass + ' ring-slate-200 dark:ring-slate-700'"
+      (click)="activeTab.set(t.key)"
+    >{{ t.label | translate }}</button>
+  }
 </div>
 
 <div class="mt-4 grid grid-cols-1 gap-4">
-  <ng-container *ngIf="showTab('stock')">
-  <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
-    <div class="flex items-center justify-between">
-      <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">Inventory Valuation</h3>
-      <button *ngIf="canPrint()" class="inline-flex items-center gap-1 rounded-xl border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" (click)="printValuation()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></svg>
-        {{ 'reports.print' | translate }}
-      </button>
-    </div>
-    <div class="mt-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 p-4 ring-1 ring-slate-100 dark:ring-slate-600">
-      <div class="text-xs text-slate-500 dark:text-slate-400">Total stock value (cost)</div>
-      <div class="mt-1 text-2xl font-extrabold text-slate-900 dark:text-slate-100">
-        {{ (valuation()?.totalStockValue ?? 0) | money }}
+  @if (showTab('stock')) {
+    <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">Inventory Valuation</h3>
+        @if (canPrint()) {
+          <button class="inline-flex items-center gap-1 rounded-xl border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" (click)="printValuation()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></svg>
+            {{ 'reports.print' | translate }}
+          </button>
+        }
       </div>
-    </div>
-  </section>
-  </ng-container>
-
-  <ng-container *ngIf="showTab('sales')">
-  <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
-    <div class="flex items-center justify-between">
-      <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">Daily Sales Report</h3>
-      <div class="flex items-center gap-2">
-        <button *ngIf="canPrint()" class="inline-flex items-center gap-1 rounded-xl border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" [disabled]="!dailySales()" (click)="printDailySales()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></svg>
-          {{ 'reports.print' | translate }}
-        </button>
-        <button class="rounded-xl bg-pink-500 px-3 py-2 text-xs font-semibold text-white" (click)="loadDailySales()">
-          {{ 'common.apply' | translate }}
-        </button>
+      <div class="mt-3 rounded-xl bg-slate-50 dark:bg-slate-700/50 p-4 ring-1 ring-slate-100 dark:ring-slate-600">
+        <div class="text-xs text-slate-500 dark:text-slate-400">Total stock value (cost)</div>
+        <div class="mt-1 text-2xl font-extrabold text-slate-900 dark:text-slate-100">
+          {{ (valuation()?.totalStockValue ?? 0) | money }}
+        </div>
       </div>
-    </div>
+    </section>
+  }
 
-    <form class="mt-3 grid gap-3 sm:grid-cols-[220px_auto]" [formGroup]="dailySalesForm" (ngSubmit)="loadDailySales()">
-      <cis-form-fields [form]="dailySalesForm" [fields]="dailySalesFields" />
-      <div class="grid grid-cols-3 gap-3">
+  @if (showTab('sales')) {
+    <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">Daily Sales Report</h3>
+        <div class="flex items-center gap-2">
+          @if (canPrint()) {
+            <button class="inline-flex items-center gap-1 rounded-xl border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" [disabled]="!dailySales()" (click)="printDailySales()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></svg>
+              {{ 'reports.print' | translate }}
+            </button>
+          }
+          <button class="rounded-xl bg-pink-500 px-3 py-2 text-xs font-semibold text-white" (click)="loadDailySales()">
+            {{ 'common.apply' | translate }}
+          </button>
+        </div>
+      </div>
+      <form class="mt-3 grid gap-3 sm:grid-cols-[220px_auto]" [formGroup]="dailySalesForm" (ngSubmit)="loadDailySales()">
+        <cis-form-fields [form]="dailySalesForm" [fields]="dailySalesFields" />
+        <div class="grid grid-cols-3 gap-3">
+          <div class="rounded-xl bg-slate-50 dark:bg-slate-700/50 p-3 ring-1 ring-slate-100 dark:ring-slate-600">
+            <div class="text-xs text-slate-500 dark:text-slate-400">Total sales</div>
+            <div class="mt-1 text-lg font-extrabold text-slate-900 dark:text-slate-100">{{ (dailySales()?.totalSalesAmount ?? 0) | money }}</div>
+          </div>
+          <div class="rounded-xl bg-slate-50 dark:bg-slate-700/50 p-3 ring-1 ring-slate-100 dark:ring-slate-600">
+            <div class="text-xs text-slate-500 dark:text-slate-400">Total profit</div>
+            <div class="mt-1 text-lg font-extrabold text-slate-900 dark:text-slate-100">{{ (dailySales()?.totalProfitAmount ?? 0) | money }}</div>
+          </div>
+          <div class="rounded-xl bg-slate-50 dark:bg-slate-700/50 p-3 ring-1 ring-slate-100 dark:ring-slate-600">
+            <div class="text-xs text-slate-500 dark:text-slate-400">Total cost</div>
+            <div class="mt-1 text-lg font-extrabold text-slate-900 dark:text-slate-100">{{ (dailySales()?.totalCostAmount ?? 0) | money }}</div>
+          </div>
+        </div>
+      </form>
+      @if (error()) {
+        <div class="mt-3 text-sm text-[#B81104] dark:text-red-400">{{ error() }}</div>
+      }
+      <cis-pager class="mt-3 block" [total]="dailySales()?.items?.length ?? 0" [(pageSize)]="dailyItemsPageSize" [(pageIndex)]="dailyItemsPageIndex" />
+      <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+        <table class="w-full border-collapse text-sm">
+          <thead class="bg-slate-50 dark:bg-slate-700">
+            <tr>
+              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.sku' | translate }}</th>
+              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.product' | translate }}</th>
+              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.qty' | translate }}</th>
+              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.sales' | translate }}</th>
+              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.cost' | translate }}</th>
+              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.profit' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of displayedDailyItems(); track r) {
+              <tr class="border-t border-slate-100 dark:border-slate-700">
+                <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ r.sku }}</td>
+                <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ r.productName }}</td>
+                <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ r.quantitySold }}</td>
+                <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ r.salesAmount | money }}</td>
+                <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ r.costAmount | money }}</td>
+                <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ r.profitAmount | money }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <!-- Sales Report — Period -->
+    <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700 xl:col-span-2">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">Sales Report — Kipindi</h3>
+        <div class="flex items-center gap-2">
+          @if (canPrint()) {
+            <button class="inline-flex items-center gap-1 rounded-xl border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" [disabled]="!periodDays().length" (click)="printPeriodSales()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></svg>
+              {{ 'reports.print' | translate }}
+            </button>
+          }
+          <button class="rounded-xl bg-pink-500 px-3 py-2 text-xs font-semibold text-white" (click)="loadPeriod()">
+            {{ 'common.apply' | translate }}
+          </button>
+        </div>
+      </div>
+      <div class="mt-3 flex flex-wrap items-end gap-2">
+        <div class="flex gap-1">
+          <button type="button" class="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200" (click)="presetPeriod('today')">{{ 'reports.today' | translate }}</button>
+          <button type="button" class="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200" (click)="presetPeriod('week')">{{ 'reports.thisWeek' | translate }}</button>
+          <button type="button" class="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200" (click)="presetPeriod('month')">{{ 'reports.thisMonth' | translate }}</button>
+          <button type="button" class="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200" (click)="presetPeriod('lastMonth')">{{ 'reports.lastMonth' | translate }}</button>
+        </div>
+        <form class="flex items-end gap-2" [formGroup]="periodForm" (ngSubmit)="loadPeriod()">
+          <cis-form-fields [form]="periodForm" [fields]="periodFields" />
+        </form>
+      </div>
+      <div class="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <div class="rounded-xl bg-slate-50 dark:bg-slate-700/50 p-3 ring-1 ring-slate-100 dark:ring-slate-600">
           <div class="text-xs text-slate-500 dark:text-slate-400">Total sales</div>
-          <div class="mt-1 text-lg font-extrabold text-slate-900 dark:text-slate-100">{{ (dailySales()?.totalSalesAmount ?? 0) | money }}</div>
+          <div class="mt-1 text-lg font-extrabold text-slate-900 dark:text-slate-100">{{ periodTotals().sales | money }}</div>
         </div>
         <div class="rounded-xl bg-slate-50 dark:bg-slate-700/50 p-3 ring-1 ring-slate-100 dark:ring-slate-600">
-          <div class="text-xs text-slate-500 dark:text-slate-400">Total profit</div>
-          <div class="mt-1 text-lg font-extrabold text-slate-900 dark:text-slate-100">{{ (dailySales()?.totalProfitAmount ?? 0) | money }}</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400">Cost</div>
+          <div class="mt-1 text-lg font-extrabold text-slate-900 dark:text-slate-100">{{ periodTotals().cost | money }}</div>
         </div>
         <div class="rounded-xl bg-slate-50 dark:bg-slate-700/50 p-3 ring-1 ring-slate-100 dark:ring-slate-600">
-          <div class="text-xs text-slate-500 dark:text-slate-400">Total cost</div>
-          <div class="mt-1 text-lg font-extrabold text-slate-900 dark:text-slate-100">{{ (dailySales()?.totalCostAmount ?? 0) | money }}</div>
+          <div class="text-xs text-slate-500 dark:text-slate-400">Profit</div>
+          <div class="mt-1 text-lg font-extrabold text-emerald-600 dark:text-emerald-400">{{ periodTotals().profit | money }}</div>
+        </div>
+        <div class="rounded-xl bg-slate-50 dark:bg-slate-700/50 p-3 ring-1 ring-slate-100 dark:ring-slate-600">
+          <div class="text-xs text-slate-500 dark:text-slate-400">Returns</div>
+          <div class="mt-1 text-lg font-extrabold text-red-500 dark:text-red-400">{{ periodTotals().returns | money }}</div>
         </div>
       </div>
-    </form>
-
-    <div class="mt-3 text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">{{ error() }}</div>
-
-    <cis-pager class="mt-3 block" [total]="dailySales()?.items?.length ?? 0" [(pageSize)]="dailyItemsPageSize" [(pageIndex)]="dailyItemsPageIndex" />
-
-    <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
-      <table class="w-full border-collapse text-sm">
-        <thead class="bg-slate-50 dark:bg-slate-700">
-          <tr>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.sku' | translate }}</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.product' | translate }}</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.qty' | translate }}</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.sales' | translate }}</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.cost' | translate }}</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.profit' | translate }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let r of displayedDailyItems()" class="border-t border-slate-100 dark:border-slate-700">
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ r.sku }}</td>
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ r.productName }}</td>
-            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ r.quantitySold }}</td>
-            <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ r.salesAmount | money }}</td>
-            <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ r.costAmount | money }}</td>
-            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ r.profitAmount | money }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- Sales Report — Period -->
-  <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700 xl:col-span-2">
-    <div class="flex items-center justify-between">
-      <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">Sales Report — Kipindi</h3>
-      <div class="flex items-center gap-2">
-        <button *ngIf="canPrint()" class="inline-flex items-center gap-1 rounded-xl border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" [disabled]="!periodDays().length" (click)="printPeriodSales()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></svg>
-          {{ 'reports.print' | translate }}
-        </button>
-        <button class="rounded-xl bg-pink-500 px-3 py-2 text-xs font-semibold text-white" (click)="loadPeriod()">
-          {{ 'common.apply' | translate }}
-        </button>
+      @if (periodLoading()) {
+        <div class="mt-3 text-xs text-slate-500 dark:text-slate-400">{{ 'common.loading' | translate }}</div>
+      }
+      <div class="mt-3 grid gap-4 lg:grid-cols-2">
+        <div class="overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+          <table class="w-full border-collapse text-sm">
+            <thead class="bg-slate-50 dark:bg-slate-700">
+              <tr>
+                <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.date' | translate }}</th>
+                <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.sales' | translate }}</th>
+                <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.cost' | translate }}</th>
+                <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.profit' | translate }}</th>
+                <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'nav.returns' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (d of periodDays(); track d) {
+                <tr class="border-t border-slate-100 dark:border-slate-700">
+                  <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ d.date }}</td>
+                  <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ d.totalSalesAmount | money }}</td>
+                  <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ d.totalCostAmount | money }}</td>
+                  <td class="px-3 py-2 text-right font-semibold text-emerald-600 dark:text-emerald-400">{{ d.totalProfitAmount | money }}</td>
+                  <td class="px-3 py-2 text-right font-semibold text-red-500 dark:text-red-400">{{ (d.totalReturnsAmount ?? 0) | money }}</td>
+                </tr>
+              }
+              @if (!periodDays().length && !periodLoading()) {
+                <tr><td colspan="5" class="px-3 py-6 text-center text-xs text-slate-400">{{ 'common.noData' | translate }}</td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <div class="overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+          <table class="w-full border-collapse text-sm">
+            <thead class="bg-slate-50 dark:bg-slate-700">
+              <tr>
+                <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.product' | translate }}</th>
+                <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.qty' | translate }}</th>
+                <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.sales' | translate }}</th>
+                <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.profit' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (p of periodProducts().slice(0, 15); track p) {
+                <tr class="border-t border-slate-100 dark:border-slate-700">
+                  <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ p.productName }} <span class="text-xs text-slate-400">{{ p.sku }}</span></td>
+                  <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ p.quantitySold }}</td>
+                  <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ p.salesAmount | money }}</td>
+                  <td class="px-3 py-2 text-right font-semibold text-emerald-600 dark:text-emerald-400">{{ p.profitAmount | money }}</td>
+                </tr>
+              }
+              @if (!periodProducts().length && !periodLoading()) {
+                <tr><td colspan="4" class="px-3 py-6 text-center text-xs text-slate-400">{{ 'common.noData' | translate }}</td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </section>
+  }
 
-    <div class="mt-3 flex flex-wrap items-end gap-2">
-      <div class="flex gap-1">
-        <button type="button" class="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200" (click)="presetPeriod('today')">{{ 'reports.today' | translate }}</button>
-        <button type="button" class="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200" (click)="presetPeriod('week')">{{ 'reports.thisWeek' | translate }}</button>
-        <button type="button" class="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200" (click)="presetPeriod('month')">{{ 'reports.thisMonth' | translate }}</button>
-        <button type="button" class="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200" (click)="presetPeriod('lastMonth')">{{ 'reports.lastMonth' | translate }}</button>
+  @if (showTab('breakdown')) {
+    <!-- Sales Breakdown: payment methods + sellers -->
+    <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">Sales Breakdown</h3>
+        @if (canPrint()) {
+          <button class="inline-flex items-center gap-1 rounded-xl border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" [disabled]="!periodOrders().length" (click)="printBreakdown()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></svg>
+            {{ 'reports.print' | translate }}
+          </button>
+        }
       </div>
-      <form class="flex items-end gap-2" [formGroup]="periodForm" (ngSubmit)="loadPeriod()">
-        <cis-form-fields [form]="periodForm" [fields]="periodFields" />
+      <div class="mt-1 text-xs text-slate-500 dark:text-slate-400">Kipindi: {{ periodForm.value.from }} → {{ periodForm.value.to }}</div>
+      <div class="mt-3 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'reports.byPayment' | translate }}</div>
+      <div class="mt-1 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+        <table class="w-full border-collapse text-sm">
+          <tbody>
+            @for (r of paymentBreakdown(); track r) {
+              <tr class="border-t border-slate-100 dark:border-slate-700">
+                <td class="px-3 py-2 font-semibold text-slate-900 dark:text-slate-100">{{ r.method }}</td>
+                <td class="px-3 py-2 text-right text-xs text-slate-500 dark:text-slate-400">{{ r.orders }} {{ 'reports.orders' | translate }}</td>
+                <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ r.sales | money }}</td>
+                <td class="px-3 py-2 text-right text-emerald-600 dark:text-emerald-400">{{ r.received | money }}</td>
+              </tr>
+            }
+            @if (!paymentBreakdown().length) {
+              <tr><td class="px-3 py-5 text-center text-xs text-slate-400">{{ 'common.noData' | translate }}</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'reports.bySeller' | translate }}</div>
+      <div class="mt-1 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+        <table class="w-full border-collapse text-sm">
+          <tbody>
+            @for (r of sellerBreakdown(); track r) {
+              <tr class="border-t border-slate-100 dark:border-slate-700">
+                <td class="px-3 py-2 font-semibold text-slate-900 dark:text-slate-100">{{ r.seller }}</td>
+                <td class="px-3 py-2 text-right text-xs text-slate-500 dark:text-slate-400">{{ r.orders }} {{ 'reports.orders' | translate }}</td>
+                <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ r.sales | money }}</td>
+                @if (r.returns > 0) {
+                  <td class="px-3 py-2 text-right text-red-500 dark:text-red-400">−{{ r.returns | money }}</td>
+                }
+                @if (r.returns <= 0) {
+                  <td class="px-3 py-2 text-right text-slate-300">—</td>
+                }
+              </tr>
+            }
+            @if (!sellerBreakdown().length) {
+              <tr><td class="px-3 py-5 text-center text-xs text-slate-400">{{ 'common.noData' | translate }}</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+
+  @if (showTab('debtors')) {
+    <!-- Debtors report -->
+    <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'reports.debtors' | translate }}</h3>
+        @if (canPrint()) {
+          <button class="inline-flex items-center gap-1 rounded-xl border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" [disabled]="!debtors().length" (click)="printDebtors()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></svg>
+            {{ 'reports.print' | translate }}
+          </button>
+        }
+      </div>
+      <div class="mt-3 grid grid-cols-2 gap-3">
+        <div class="rounded-xl bg-red-50 dark:bg-red-900/20 p-3 ring-1 ring-red-100 dark:ring-red-900/40">
+          <div class="text-xs text-red-500 dark:text-red-400">{{ 'reports.customersOwing' | translate }}</div>
+          <div class="mt-1 text-lg font-extrabold text-red-600 dark:text-red-400">{{ debtors().length }}</div>
+        </div>
+        <div class="rounded-xl bg-red-50 dark:bg-red-900/20 p-3 ring-1 ring-red-100 dark:ring-red-900/40">
+          <div class="text-xs text-red-500 dark:text-red-400">{{ 'customers.debt' | translate }}</div>
+          <div class="mt-1 text-lg font-extrabold text-red-600 dark:text-red-400">{{ totalDebt() | money }}</div>
+        </div>
+      </div>
+      <div class="mt-3 max-h-64 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+        <table class="w-full border-collapse text-sm">
+          <thead class="sticky top-0 bg-slate-50 dark:bg-slate-700">
+            <tr>
+              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.customer' | translate }}</th>
+              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.phone' | translate }}</th>
+              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'reports.orders' | translate }}</th>
+              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'customers.debt' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (d of debtors(); track d) {
+              <tr class="border-t border-slate-100 dark:border-slate-700">
+                <td class="px-3 py-2 font-semibold text-slate-900 dark:text-slate-100">{{ d.name }}</td>
+                <td class="px-3 py-2 text-slate-600 dark:text-slate-400">{{ d.phone || '—' }}</td>
+                <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ d.orders }}</td>
+                <td class="px-3 py-2 text-right font-semibold text-red-600 dark:text-red-400">{{ d.debt | money }}</td>
+              </tr>
+            }
+            @if (!debtors().length) {
+              <tr><td colspan="4" class="px-3 py-6 text-center text-xs text-slate-400">{{ 'common.noData' | translate }}</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  }
+
+  @if (showTab('stock')) {
+    <!-- Stock reports: balance, movers, expiry -->
+    <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700 xl:col-span-2">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'reports.stock' | translate }}</h3>
+        @if (canPrint()) {
+          <button class="inline-flex items-center gap-1 rounded-xl border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" (click)="printStock()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></svg>
+            {{ 'reports.print' | translate }}
+          </button>
+        }
+      </div>
+      <div class="mt-3 grid gap-4 lg:grid-cols-3">
+        <!-- Expiry buckets -->
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'reports.expiryBreakdown' | translate }}</div>
+          <div class="mt-1 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+            <table class="w-full border-collapse text-sm">
+              <tbody>
+                @for (b of expiryBuckets(); track b) {
+                  <tr class="border-t border-slate-100 dark:border-slate-700" [class.bg-red-50]="b.maxDays <= 7" [class.dark:bg-red-900/10]="b.maxDays <= 7">
+                    <td class="px-3 py-2 font-semibold text-slate-900 dark:text-slate-100">{{ b.label }}</td>
+                    <td class="px-3 py-2 text-right text-xs text-slate-500 dark:text-slate-400">{{ b.products.size }} {{ 'reports.items' | translate }}</td>
+                    <td class="px-3 py-2 text-right font-semibold" [class.text-red-600]="b.maxDays <= 7" [class.text-slate-900]="b.maxDays > 7">{{ b.qty }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Fast movers -->
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-400">{{ 'reports.fastMovers' | translate }}</div>
+          <div class="mt-1 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+            <table class="w-full border-collapse text-sm">
+              <tbody>
+                @for (m of fastMovers(); track m) {
+                  <tr class="border-t border-slate-100 dark:border-slate-700">
+                    <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ m.name }}</td>
+                    <td class="px-3 py-2 text-right font-semibold text-emerald-600 dark:text-emerald-400">{{ m.qty }}</td>
+                  </tr>
+                }
+                @if (!fastMovers().length) {
+                  <tr><td class="px-3 py-5 text-center text-xs text-slate-400">{{ 'common.noData' | translate }}</td></tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- Slow movers -->
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-400">{{ 'reports.slowMovers' | translate }}</div>
+          <div class="mt-1 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+            <table class="w-full border-collapse text-sm">
+              <tbody>
+                @for (p of slowMovers(); track p) {
+                  <tr class="border-t border-slate-100 dark:border-slate-700">
+                    <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ p.name }} <span class="text-xs text-slate-400">{{ p.sku }}</span></td>
+                    <td class="px-3 py-2 text-right font-semibold text-amber-600 dark:text-amber-400">{{ p.qty }}</td>
+                  </tr>
+                }
+                @if (!slowMovers().length) {
+                  <tr><td class="px-3 py-5 text-center text-xs text-slate-400">{{ 'common.noData' | translate }}</td></tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  }
+
+  @if (showTab('audit')) {
+    <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700 xl:col-span-2">
+      <div class="flex items-center justify-between">
+        <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">Movement Audit</h3>
+        <div class="flex items-center gap-2">
+          @if (canPrint()) {
+            <button class="inline-flex items-center gap-1 rounded-xl border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" [disabled]="!allMovements().length" (click)="printAudit()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></svg>
+              {{ 'reports.print' | translate }}
+            </button>
+          }
+          <button class="rounded-xl bg-pink-500 px-3 py-2 text-xs font-semibold text-white" (click)="loadAudit()">
+            {{ 'common.apply' | translate }}
+          </button>
+        </div>
+      </div>
+      <form class="mt-3 grid gap-3 sm:grid-cols-3" [formGroup]="auditForm" (ngSubmit)="loadAudit()">
+        <cis-form-fields [form]="auditForm" [fields]="auditFields" />
       </form>
-    </div>
-
-    <div class="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
-      <div class="rounded-xl bg-slate-50 dark:bg-slate-700/50 p-3 ring-1 ring-slate-100 dark:ring-slate-600">
-        <div class="text-xs text-slate-500 dark:text-slate-400">Total sales</div>
-        <div class="mt-1 text-lg font-extrabold text-slate-900 dark:text-slate-100">{{ periodTotals().sales | money }}</div>
-      </div>
-      <div class="rounded-xl bg-slate-50 dark:bg-slate-700/50 p-3 ring-1 ring-slate-100 dark:ring-slate-600">
-        <div class="text-xs text-slate-500 dark:text-slate-400">Cost</div>
-        <div class="mt-1 text-lg font-extrabold text-slate-900 dark:text-slate-100">{{ periodTotals().cost | money }}</div>
-      </div>
-      <div class="rounded-xl bg-slate-50 dark:bg-slate-700/50 p-3 ring-1 ring-slate-100 dark:ring-slate-600">
-        <div class="text-xs text-slate-500 dark:text-slate-400">Profit</div>
-        <div class="mt-1 text-lg font-extrabold text-emerald-600 dark:text-emerald-400">{{ periodTotals().profit | money }}</div>
-      </div>
-      <div class="rounded-xl bg-slate-50 dark:bg-slate-700/50 p-3 ring-1 ring-slate-100 dark:ring-slate-600">
-        <div class="text-xs text-slate-500 dark:text-slate-400">Returns</div>
-        <div class="mt-1 text-lg font-extrabold text-red-500 dark:text-red-400">{{ periodTotals().returns | money }}</div>
-      </div>
-    </div>
-
-    <div class="mt-3 text-xs text-slate-500 dark:text-slate-400" *ngIf="periodLoading()">{{ 'common.loading' | translate }}</div>
-
-    <div class="mt-3 grid gap-4 lg:grid-cols-2">
-      <div class="overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
+      @if (error()) {
+        <div class="mt-3 text-sm text-[#B81104] dark:text-red-400">{{ error() }}</div>
+      }
+      <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
         <table class="w-full border-collapse text-sm">
           <thead class="bg-slate-50 dark:bg-slate-700">
             <tr>
               <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.date' | translate }}</th>
-              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.sales' | translate }}</th>
-              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.cost' | translate }}</th>
-              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.profit' | translate }}</th>
-              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'nav.returns' | translate }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let d of periodDays()" class="border-t border-slate-100 dark:border-slate-700">
-              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ d.date }}</td>
-              <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ d.totalSalesAmount | money }}</td>
-              <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ d.totalCostAmount | money }}</td>
-              <td class="px-3 py-2 text-right font-semibold text-emerald-600 dark:text-emerald-400">{{ d.totalProfitAmount | money }}</td>
-              <td class="px-3 py-2 text-right font-semibold text-red-500 dark:text-red-400">{{ (d.totalReturnsAmount ?? 0) | money }}</td>
-            </tr>
-            <tr *ngIf="!periodDays().length && !periodLoading()"><td colspan="5" class="px-3 py-6 text-center text-xs text-slate-400">{{ 'common.noData' | translate }}</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
-        <table class="w-full border-collapse text-sm">
-          <thead class="bg-slate-50 dark:bg-slate-700">
-            <tr>
+              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.type' | translate }}</th>
+              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.sku' | translate }}</th>
               <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.product' | translate }}</th>
+              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.batch' | translate }}</th>
               <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.qty' | translate }}</th>
-              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.sales' | translate }}</th>
-              <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.profit' | translate }}</th>
+              <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.by' | translate }}</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let p of periodProducts().slice(0, 15)" class="border-t border-slate-100 dark:border-slate-700">
-              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ p.productName }} <span class="text-xs text-slate-400">{{ p.sku }}</span></td>
-              <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ p.quantitySold }}</td>
-              <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ p.salesAmount | money }}</td>
-              <td class="px-3 py-2 text-right font-semibold text-emerald-600 dark:text-emerald-400">{{ p.profitAmount | money }}</td>
-            </tr>
-            <tr *ngIf="!periodProducts().length && !periodLoading()"><td colspan="4" class="px-3 py-6 text-center text-xs text-slate-400">{{ 'common.noData' | translate }}</td></tr>
+            @for (m of movements; track m) {
+              <tr class="border-t border-slate-100 dark:border-slate-700">
+                <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ m.createdAt }}</td>
+                <td class="px-3 py-2 font-semibold text-slate-900 dark:text-slate-300">{{ m.type }}</td>
+                <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ m.sku }}</td>
+                <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ m.productName }}</td>
+                <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ m.batchNumber }}</td>
+                <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ m.quantity }}</td>
+                <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ m.createdBy || '-' }}</td>
+              </tr>
+            }
           </tbody>
         </table>
       </div>
-    </div>
-  </section>
-
-  </ng-container>
-
-  <ng-container *ngIf="showTab('breakdown')">
-  <!-- Sales Breakdown: payment methods + sellers -->
-  <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
-    <div class="flex items-center justify-between">
-      <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">Sales Breakdown</h3>
-      <button *ngIf="canPrint()" class="inline-flex items-center gap-1 rounded-xl border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" [disabled]="!periodOrders().length" (click)="printBreakdown()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></svg>
-        {{ 'reports.print' | translate }}
-      </button>
-    </div>
-    <div class="mt-1 text-xs text-slate-500 dark:text-slate-400">Kipindi: {{ periodForm.value.from }} → {{ periodForm.value.to }}</div>
-
-    <div class="mt-3 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'reports.byPayment' | translate }}</div>
-    <div class="mt-1 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
-      <table class="w-full border-collapse text-sm">
-        <tbody>
-          <tr *ngFor="let r of paymentBreakdown()" class="border-t border-slate-100 dark:border-slate-700">
-            <td class="px-3 py-2 font-semibold text-slate-900 dark:text-slate-100">{{ r.method }}</td>
-            <td class="px-3 py-2 text-right text-xs text-slate-500 dark:text-slate-400">{{ r.orders }} {{ 'reports.orders' | translate }}</td>
-            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ r.sales | money }}</td>
-            <td class="px-3 py-2 text-right text-emerald-600 dark:text-emerald-400">{{ r.received | money }}</td>
-          </tr>
-          <tr *ngIf="!paymentBreakdown().length"><td class="px-3 py-5 text-center text-xs text-slate-400">{{ 'common.noData' | translate }}</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'reports.bySeller' | translate }}</div>
-    <div class="mt-1 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
-      <table class="w-full border-collapse text-sm">
-        <tbody>
-          <tr *ngFor="let r of sellerBreakdown()" class="border-t border-slate-100 dark:border-slate-700">
-            <td class="px-3 py-2 font-semibold text-slate-900 dark:text-slate-100">{{ r.seller }}</td>
-            <td class="px-3 py-2 text-right text-xs text-slate-500 dark:text-slate-400">{{ r.orders }} {{ 'reports.orders' | translate }}</td>
-            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ r.sales | money }}</td>
-            <td class="px-3 py-2 text-right text-red-500 dark:text-red-400" *ngIf="r.returns > 0">−{{ r.returns | money }}</td>
-            <td class="px-3 py-2 text-right text-slate-300" *ngIf="r.returns <= 0">—</td>
-          </tr>
-          <tr *ngIf="!sellerBreakdown().length"><td class="px-3 py-5 text-center text-xs text-slate-400">{{ 'common.noData' | translate }}</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  </ng-container>
-
-  <ng-container *ngIf="showTab('debtors')">
-  <!-- Debtors report -->
-  <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
-    <div class="flex items-center justify-between">
-      <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'reports.debtors' | translate }}</h3>
-      <button *ngIf="canPrint()" class="inline-flex items-center gap-1 rounded-xl border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" [disabled]="!debtors().length" (click)="printDebtors()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></svg>
-        {{ 'reports.print' | translate }}
-      </button>
-    </div>
-
-    <div class="mt-3 grid grid-cols-2 gap-3">
-      <div class="rounded-xl bg-red-50 dark:bg-red-900/20 p-3 ring-1 ring-red-100 dark:ring-red-900/40">
-        <div class="text-xs text-red-500 dark:text-red-400">{{ 'reports.customersOwing' | translate }}</div>
-        <div class="mt-1 text-lg font-extrabold text-red-600 dark:text-red-400">{{ debtors().length }}</div>
-      </div>
-      <div class="rounded-xl bg-red-50 dark:bg-red-900/20 p-3 ring-1 ring-red-100 dark:ring-red-900/40">
-        <div class="text-xs text-red-500 dark:text-red-400">{{ 'customers.debt' | translate }}</div>
-        <div class="mt-1 text-lg font-extrabold text-red-600 dark:text-red-400">{{ totalDebt() | money }}</div>
-      </div>
-    </div>
-
-    <div class="mt-3 max-h-64 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
-      <table class="w-full border-collapse text-sm">
-        <thead class="sticky top-0 bg-slate-50 dark:bg-slate-700">
-          <tr>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.customer' | translate }}</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.phone' | translate }}</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'reports.orders' | translate }}</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'customers.debt' | translate }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let d of debtors()" class="border-t border-slate-100 dark:border-slate-700">
-            <td class="px-3 py-2 font-semibold text-slate-900 dark:text-slate-100">{{ d.name }}</td>
-            <td class="px-3 py-2 text-slate-600 dark:text-slate-400">{{ d.phone || '—' }}</td>
-            <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-300">{{ d.orders }}</td>
-            <td class="px-3 py-2 text-right font-semibold text-red-600 dark:text-red-400">{{ d.debt | money }}</td>
-          </tr>
-          <tr *ngIf="!debtors().length"><td colspan="4" class="px-3 py-6 text-center text-xs text-slate-400">{{ 'common.noData' | translate }}</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  </ng-container>
-
-  <ng-container *ngIf="showTab('stock')">
-  <!-- Stock reports: balance, movers, expiry -->
-  <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700 xl:col-span-2">
-    <div class="flex items-center justify-between">
-      <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'reports.stock' | translate }}</h3>
-      <button *ngIf="canPrint()" class="inline-flex items-center gap-1 rounded-xl border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" (click)="printStock()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></svg>
-        {{ 'reports.print' | translate }}
-      </button>
-    </div>
-
-    <div class="mt-3 grid gap-4 lg:grid-cols-3">
-      <!-- Expiry buckets -->
-      <div>
-        <div class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'reports.expiryBreakdown' | translate }}</div>
-        <div class="mt-1 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
-          <table class="w-full border-collapse text-sm">
-            <tbody>
-              <tr *ngFor="let b of expiryBuckets()" class="border-t border-slate-100 dark:border-slate-700" [class.bg-red-50]="b.maxDays <= 7" [class.dark:bg-red-900/10]="b.maxDays <= 7">
-                <td class="px-3 py-2 font-semibold text-slate-900 dark:text-slate-100">{{ b.label }}</td>
-                <td class="px-3 py-2 text-right text-xs text-slate-500 dark:text-slate-400">{{ b.products.size }} {{ 'reports.items' | translate }}</td>
-                <td class="px-3 py-2 text-right font-semibold" [class.text-red-600]="b.maxDays <= 7" [class.text-slate-900]="b.maxDays > 7">{{ b.qty }}</td>
-              </tr>
-            </tbody>
-          </table>
+      @if (totalPages > 1) {
+        <div class="mt-3 flex items-center justify-between">
+          <div class="text-xs text-slate-600 dark:text-slate-400">
+            {{ 'common.page' | translate }} {{ currentPage() }} {{ 'common.of' | translate }} {{ totalPages }} ({{ allMovements().length }} {{ 'common.total' | translate }})
+          </div>
+          <div class="flex gap-2">
+            <button
+              type="button"
+              class="rounded-xl bg-slate-100 dark:bg-slate-700 px-3 py-2 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
+              (click)="previousPage()"
+              [disabled]="currentPage() === 1"
+              >
+              {{ 'common.previous' | translate }}
+            </button>
+            <button
+              type="button"
+              class="rounded-xl bg-slate-100 dark:bg-slate-700 px-3 py-2 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
+              (click)="nextPage()"
+              [disabled]="currentPage() === totalPages"
+              >
+              {{ 'common.next' | translate }}
+            </button>
+          </div>
         </div>
-      </div>
-
-      <!-- Fast movers -->
-      <div>
-        <div class="text-xs font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-400">{{ 'reports.fastMovers' | translate }}</div>
-        <div class="mt-1 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
-          <table class="w-full border-collapse text-sm">
-            <tbody>
-              <tr *ngFor="let m of fastMovers()" class="border-t border-slate-100 dark:border-slate-700">
-                <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ m.name }}</td>
-                <td class="px-3 py-2 text-right font-semibold text-emerald-600 dark:text-emerald-400">{{ m.qty }}</td>
-              </tr>
-              <tr *ngIf="!fastMovers().length"><td class="px-3 py-5 text-center text-xs text-slate-400">{{ 'common.noData' | translate }}</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Slow movers -->
-      <div>
-        <div class="text-xs font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-400">{{ 'reports.slowMovers' | translate }}</div>
-        <div class="mt-1 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
-          <table class="w-full border-collapse text-sm">
-            <tbody>
-              <tr *ngFor="let p of slowMovers()" class="border-t border-slate-100 dark:border-slate-700">
-                <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ p.name }} <span class="text-xs text-slate-400">{{ p.sku }}</span></td>
-                <td class="px-3 py-2 text-right font-semibold text-amber-600 dark:text-amber-400">{{ p.qty }}</td>
-              </tr>
-              <tr *ngIf="!slowMovers().length"><td class="px-3 py-5 text-center text-xs text-slate-400">{{ 'common.noData' | translate }}</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  </ng-container>
-
-  <ng-container *ngIf="showTab('audit')">
-  <section class="rounded-2xl bg-white dark:bg-slate-800 p-4 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700 xl:col-span-2">
-    <div class="flex items-center justify-between">
-      <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">Movement Audit</h3>
-      <div class="flex items-center gap-2">
-        <button *ngIf="canPrint()" class="inline-flex items-center gap-1 rounded-xl border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" [disabled]="!allMovements().length" (click)="printAudit()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></svg>
-          {{ 'reports.print' | translate }}
-        </button>
-        <button class="rounded-xl bg-pink-500 px-3 py-2 text-xs font-semibold text-white" (click)="loadAudit()">
-          {{ 'common.apply' | translate }}
-        </button>
-      </div>
-    </div>
-
-    <form class="mt-3 grid gap-3 sm:grid-cols-3" [formGroup]="auditForm" (ngSubmit)="loadAudit()">
-      <cis-form-fields [form]="auditForm" [fields]="auditFields" />
-    </form>
-
-    <div class="mt-3 text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">{{ error() }}</div>
-
-    <div class="mt-3 overflow-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700">
-      <table class="w-full border-collapse text-sm">
-        <thead class="bg-slate-50 dark:bg-slate-700">
-          <tr>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.date' | translate }}</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.type' | translate }}</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.sku' | translate }}</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.product' | translate }}</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.batch' | translate }}</th>
-            <th class="px-3 py-2 text-right text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.qty' | translate }}</th>
-            <th class="px-3 py-2 text-left text-xs font-semibold text-slate-600 dark:text-slate-300">{{ 'common.by' | translate }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let m of movements" class="border-t border-slate-100 dark:border-slate-700">
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ m.createdAt }}</td>
-            <td class="px-3 py-2 font-semibold text-slate-900 dark:text-slate-300">{{ m.type }}</td>
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ m.sku }}</td>
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ m.productName }}</td>
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ m.batchNumber }}</td>
-            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ m.quantity }}</td>
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ m.createdBy || '-' }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="mt-3 flex items-center justify-between" *ngIf="totalPages > 1">
-      <div class="text-xs text-slate-600 dark:text-slate-400">
-        {{ 'common.page' | translate }} {{ currentPage() }} {{ 'common.of' | translate }} {{ totalPages }} ({{ allMovements().length }} {{ 'common.total' | translate }})
-      </div>
-      <div class="flex gap-2">
-        <button
-          type="button"
-          class="rounded-xl bg-slate-100 dark:bg-slate-700 px-3 py-2 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
-          (click)="previousPage()"
-          [disabled]="currentPage() === 1"
-        >
-          {{ 'common.previous' | translate }}
-        </button>
-        <button
-          type="button"
-          class="rounded-xl bg-slate-100 dark:bg-slate-700 px-3 py-2 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-50"
-          (click)="nextPage()"
-          [disabled]="currentPage() === totalPages"
-        >
-          {{ 'common.next' | translate }}
-        </button>
-      </div>
-    </div>
-  </section>
-  </ng-container>
+      }
+    </section>
+  }
 </div>

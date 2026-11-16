@@ -94,78 +94,106 @@ const INVALID = 'border-[#B81104] dark:border-red-500';
   // Transparent wrapper — the label/control itself becomes the grid item.
   host: { 'style': 'display: contents' },
   template: `
-    <label *ngIf="!field().bare; else bareControl" [class]="labelClass()">
-      <span>
-        {{ labelText() | translate }}
-        <span *ngIf="field().required" class="text-[#B81104]">*</span>
-        <small *ngIf="labelHintText()" class="font-normal text-slate-400 dark:text-slate-500"> ({{ labelHintText() | translate }})</small>
-      </span>
+    @if (!field().bare) {
+      <label [class]="labelClass()">
+        <span>
+          {{ labelText() | translate }}
+          @if (field().required) {
+            <span class="text-[#B81104]">*</span>
+          }
+          @if (labelHintText()) {
+            <small class="font-normal text-slate-400 dark:text-slate-500"> ({{ labelHintText() | translate }})</small>
+          }
+        </span>
+        <ng-container *ngTemplateOutlet="controlTpl" />
+        @if (hintText()) {
+          <span class="text-[11px] font-normal text-slate-500 dark:text-slate-400">{{ hintText() | translate }}</span>
+        }
+        @if (errorKey()) {
+          <span class="text-[11px] font-semibold text-[#B81104] dark:text-red-400">{{ (errorKey() ?? '') | translate }}</span>
+        }
+      </label>
+    } @else {
       <ng-container *ngTemplateOutlet="controlTpl" />
-      <span *ngIf="hintText()" class="text-[11px] font-normal text-slate-500 dark:text-slate-400">{{ hintText() | translate }}</span>
-      <span *ngIf="errorKey()" class="text-[11px] font-semibold text-[#B81104] dark:text-red-400">{{ (errorKey() ?? '') | translate }}</span>
-    </label>
-
-    <ng-template #bareControl>
-      <ng-container *ngTemplateOutlet="controlTpl" />
-    </ng-template>
-
+    }
+    
+    
     <ng-template #controlTpl>
-      <ng-container [ngSwitch]="field().type ?? 'text'">
-        <select
-          *ngSwitchCase="'select'"
-          [class]="controlClass()"
-          [formControl]="control()"
-        >
-          <option *ngFor="let o of options()" [ngValue]="o.value" [disabled]="optionDisabled(o)">{{ o.label | translate }}</option>
-        </select>
-
-        <textarea
-          *ngSwitchCase="'textarea'"
-          [class]="controlClass()"
-          [rows]="field().rows ?? 3"
-          [placeholder]="placeholder() | translate"
-          [formControl]="control()"
-        ></textarea>
-
-        <input
-          *ngSwitchCase="'checkbox'"
-          type="checkbox"
-          class="h-4 w-4 accent-pink-500"
-          [formControl]="control()"
-        />
-
-        <input
-          *ngSwitchCase="'currency'"
-          cisCurrencyInput
-          type="text"
-          inputmode="decimal"
-          [class]="controlClass()"
-          [placeholder]="placeholder() | translate"
-          [attr.maxlength]="field().maxlength ?? null"
-          [attr.autocomplete]="field().autocomplete ?? 'off'"
-          [attr.autofocus]="field().autofocus ? '' : null"
-          [readonly]="field().readonly ?? false"
-          [formControl]="control()"
-        />
-
-        <input
-          *ngSwitchDefault
-          [type]="field().type ?? 'text'"
-          [class]="controlClass()"
-          [placeholder]="placeholder() | translate"
-          [attr.min]="attr('min')"
-          [attr.max]="attr('max')"
-          [attr.step]="attr('step')"
-          [attr.maxlength]="field().maxlength ?? null"
-          [attr.autocomplete]="field().autocomplete ?? null"
-          [attr.inputmode]="field().inputmode ?? null"
-          [attr.autofocus]="field().autofocus ? '' : null"
-          [readonly]="field().readonly ?? false"
-          [formControl]="control()"
-        />
-      </ng-container>
+      @switch (field().type ?? 'text') {
+        @case ('select') {
+          <select
+            [class]="controlClass()"
+            [formControl]="control()"
+            >
+            @for (o of options(); track o) {
+              <option [ngValue]="o.value" [disabled]="optionDisabled(o)">{{ o.label | translate }}</option>
+            }
+          </select>
+        }
+        @case ('textarea') {
+          <textarea
+            [class]="controlClass()"
+            [rows]="field().rows ?? 3"
+            [placeholder]="placeholder() | translate"
+            [formControl]="control()"
+          ></textarea>
+        }
+        @case ('checkbox') {
+          <input
+            type="checkbox"
+            class="h-4 w-4 accent-pink-500"
+            [formControl]="control()"
+            />
+        }
+        @case ('number') {
+          <input
+            type="number"
+            [class]="controlClass()"
+            [placeholder]="placeholder() | translate"
+            [attr.min]="attr('min')"
+            [attr.max]="attr('max')"
+            [attr.step]="attr('step')"
+            [attr.maxlength]="field().maxlength ?? null"
+            [attr.autocomplete]="field().autocomplete ?? null"
+            [attr.inputmode]="field().inputmode ?? null"
+            [attr.autofocus]="field().autofocus ? '' : null"
+            [readonly]="field().readonly ?? false"
+            [formControl]="control()"
+            />
+        }
+        @case ('currency') {
+          <input
+            cisCurrencyInput
+            type="text"
+            inputmode="decimal"
+            [class]="controlClass()"
+            [placeholder]="placeholder() | translate"
+            [attr.maxlength]="field().maxlength ?? null"
+            [attr.autocomplete]="field().autocomplete ?? 'off'"
+            [attr.autofocus]="field().autofocus ? '' : null"
+            [readonly]="field().readonly ?? false"
+            [formControl]="control()"
+            />
+        }
+        @default {
+          <input
+            [type]="field().type ?? 'text'"
+            [class]="controlClass()"
+            [placeholder]="placeholder() | translate"
+            [attr.min]="attr('min')"
+            [attr.max]="attr('max')"
+            [attr.step]="attr('step')"
+            [attr.maxlength]="field().maxlength ?? null"
+            [attr.autocomplete]="field().autocomplete ?? null"
+            [attr.inputmode]="field().inputmode ?? null"
+            [attr.autofocus]="field().autofocus ? '' : null"
+            [readonly]="field().readonly ?? false"
+            [formControl]="control()"
+            />
+        }
+      }
     </ng-template>
-  `
+    `
 })
 export class CisFormFieldComponent {
   field = input.required<FormField>();
@@ -257,17 +285,18 @@ export class CisFormFieldComponent {
   // layout as if cis-form-fields were not there.
   host: { 'style': 'display: contents' },
   template: `
-    <ng-container *ngFor="let f of fields()">
-      <ng-container *ngIf="!f.hide?.()">
-        <ng-container *ngIf="f.type === 'template'; else stdField">
+    @for (f of fields(); track f) {
+      @if (!f.hide?.()) {
+        @if (f.type === 'template') {
           <ng-container *ngTemplateOutlet="templateFor(f.key); context: { $implicit: control(f) }" />
-        </ng-container>
-        <ng-template #stdField>
-          <cis-form-field *ngIf="control(f) as c" [field]="f" [control]="asFormControl(c)" />
-        </ng-template>
-      </ng-container>
-    </ng-container>
-  `
+        } @else {
+          @if (control(f); as c) {
+            <cis-form-field [field]="f" [control]="asFormControl(c)" />
+          }
+        }
+      }
+    }
+    `
 })
 export class CisFormFieldsComponent {
   fields = input.required<FormField[]>();

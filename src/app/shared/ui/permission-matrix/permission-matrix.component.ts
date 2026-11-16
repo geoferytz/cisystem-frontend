@@ -55,7 +55,7 @@ const MODULES: Array<{ key: string; label: string }> = [
           class="rounded-xl bg-slate-100 dark:bg-slate-700 px-3 py-1.5 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-60"
           (click)="reload()"
           [disabled]="loading()"
-        >
+          >
           {{ 'common.refresh' | translate }}
         </button>
         <button
@@ -63,81 +63,92 @@ const MODULES: Array<{ key: string; label: string }> = [
           class="rounded-xl bg-pink-500 px-4 py-1.5 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
           (click)="save()"
           [disabled]="loading()"
-        >
+          >
           {{ 'common.save' | translate }}
         </button>
       </div>
     </div>
-
+    
     <div class="mt-3 grid min-h-0 gap-4 md:grid-cols-[220px_1fr]">
       <nav class="flex gap-1.5 overflow-x-auto md:max-h-[52vh] md:flex-col md:overflow-y-auto md:overflow-x-visible md:pr-1">
-        <button
-          *ngFor="let m of modules"
-          type="button"
-          class="flex shrink-0 items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-sm font-semibold transition"
+        @for (m of modules; track m) {
+          <button
+            type="button"
+            class="flex shrink-0 items-center justify-between gap-2 rounded-xl px-3 py-2 text-left text-sm font-semibold transition"
           [ngClass]="activeModule() === m.key
             ? 'bg-pink-500 text-white shadow-sm'
             : 'bg-slate-50 text-slate-700 hover:bg-slate-100 dark:bg-slate-700/50 dark:text-slate-200 dark:hover:bg-slate-700'"
-          (click)="activeModule.set(m.key)"
-        >
-          <span class="truncate">{{ m.label }}</span>
-          <span
-            class="rounded-full px-1.5 py-0.5 text-[10px] font-bold"
+            (click)="activeModule.set(m.key)"
+            >
+            <span class="truncate">{{ m.label }}</span>
+            <span
+              class="rounded-full px-1.5 py-0.5 text-[10px] font-bold"
             [ngClass]="activeModule() === m.key
               ? 'bg-white/25 text-white'
               : grantedCount(m.key) ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300' : 'bg-slate-200 text-slate-500 dark:bg-slate-600 dark:text-slate-300'"
-          >{{ grantedCount(m.key) }}/{{ totalCount(m.key) }}</span>
-        </button>
+            >{{ grantedCount(m.key) }}/{{ totalCount(m.key) }}</span>
+          </button>
+        }
       </nav>
-
-      <section *ngIf="activePerm() as p" class="min-h-0 overflow-y-auto rounded-2xl p-4 ring-1 ring-slate-100 dark:ring-slate-700 md:max-h-[52vh]">
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <div class="text-base font-bold text-slate-900 dark:text-slate-100">{{ activeModuleLabel() }}</div>
-          <div class="flex gap-2">
-            <button type="button" class="rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300" (click)="setAllForModule(true)">{{ 'users.perm.grantAll' | translate }}</button>
-            <button type="button" class="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300" (click)="setAllForModule(false)">{{ 'users.perm.clearAll' | translate }}</button>
+    
+      @if (activePerm(); as p) {
+        <section class="min-h-0 overflow-y-auto rounded-2xl p-4 ring-1 ring-slate-100 dark:ring-slate-700 md:max-h-[52vh]">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="text-base font-bold text-slate-900 dark:text-slate-100">{{ activeModuleLabel() }}</div>
+            <div class="flex gap-2">
+              <button type="button" class="rounded-lg bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300" (click)="setAllForModule(true)">{{ 'users.perm.grantAll' | translate }}</button>
+              <button type="button" class="rounded-lg bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300" (click)="setAllForModule(false)">{{ 'users.perm.clearAll' | translate }}</button>
+            </div>
           </div>
-        </div>
-
-        <div class="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'users.perm.basic' | translate }}</div>
-        <div class="mt-2 grid gap-2 sm:grid-cols-2">
-          <label
-            *ngFor="let a of basicActions"
-            class="flex cursor-pointer items-start gap-3 rounded-xl p-3 ring-1 transition"
-            [ngClass]="p[a.key] ? 'bg-pink-50 ring-pink-200 dark:bg-pink-900/20 dark:ring-pink-800' : 'ring-slate-200 hover:bg-slate-50 dark:ring-slate-700 dark:hover:bg-slate-700/40'"
-          >
-            <input type="checkbox" class="mt-0.5 h-4 w-4 accent-pink-500" [checked]="p[a.key]" (change)="togglePermission(p.module, a.key)" />
-            <span>
-              <span class="block text-sm font-semibold text-slate-900 dark:text-slate-100">{{ a.label | translate }}</span>
-              <span class="block text-[11px] text-slate-500 dark:text-slate-400">{{ a.desc | translate }}</span>
-            </span>
-          </label>
-        </div>
-
-        <ng-container *ngIf="activeExtras().length">
-          <div class="mt-5 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'users.perm.extra' | translate }}</div>
+          <div class="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'users.perm.basic' | translate }}</div>
           <div class="mt-2 grid gap-2 sm:grid-cols-2">
-            <label
-              *ngFor="let a of activeExtras()"
-              class="flex cursor-pointer items-start gap-3 rounded-xl p-3 ring-1 transition"
-              [ngClass]="p.extras.includes(a.code) ? 'bg-violet-50 ring-violet-200 dark:bg-violet-900/20 dark:ring-violet-800' : 'ring-slate-200 hover:bg-slate-50 dark:ring-slate-700 dark:hover:bg-slate-700/40'"
-            >
-              <input type="checkbox" class="mt-0.5 h-4 w-4 accent-violet-500" [checked]="p.extras.includes(a.code)" (change)="toggleExtra(a.code)" />
-              <span>
-                <span class="block text-sm font-semibold text-slate-900 dark:text-slate-100">{{ a.label }}</span>
-                <span class="block text-[11px] text-slate-500 dark:text-slate-400">{{ a.description }}</span>
-              </span>
-            </label>
+            @for (a of basicActions; track a) {
+              <label
+                class="flex cursor-pointer items-start gap-3 rounded-xl p-3 ring-1 transition"
+                [ngClass]="p[a.key] ? 'bg-pink-50 ring-pink-200 dark:bg-pink-900/20 dark:ring-pink-800' : 'ring-slate-200 hover:bg-slate-50 dark:ring-slate-700 dark:hover:bg-slate-700/40'"
+                >
+                <input type="checkbox" class="mt-0.5 h-4 w-4 accent-pink-500" [checked]="p[a.key]" (change)="togglePermission(p.module, a.key)" />
+                <span>
+                  <span class="block text-sm font-semibold text-slate-900 dark:text-slate-100">{{ a.label | translate }}</span>
+                  <span class="block text-[11px] text-slate-500 dark:text-slate-400">{{ a.desc | translate }}</span>
+                </span>
+              </label>
+            }
           </div>
-          <p *ngIf="!p.canView" class="mt-2 text-[11px] text-amber-600 dark:text-amber-400">{{ 'users.perm.needsView' | translate }}</p>
-        </ng-container>
-      </section>
+          @if (activeExtras().length) {
+            <div class="mt-5 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'users.perm.extra' | translate }}</div>
+            <div class="mt-2 grid gap-2 sm:grid-cols-2">
+              @for (a of activeExtras(); track a) {
+                <label
+                  class="flex cursor-pointer items-start gap-3 rounded-xl p-3 ring-1 transition"
+                  [ngClass]="p.extras.includes(a.code) ? 'bg-violet-50 ring-violet-200 dark:bg-violet-900/20 dark:ring-violet-800' : 'ring-slate-200 hover:bg-slate-50 dark:ring-slate-700 dark:hover:bg-slate-700/40'"
+                  >
+                  <input type="checkbox" class="mt-0.5 h-4 w-4 accent-violet-500" [checked]="p.extras.includes(a.code)" (change)="toggleExtra(a.code)" />
+                  <span>
+                    <span class="block text-sm font-semibold text-slate-900 dark:text-slate-100">{{ a.label }}</span>
+                    <span class="block text-[11px] text-slate-500 dark:text-slate-400">{{ a.description }}</span>
+                  </span>
+                </label>
+              }
+            </div>
+            @if (!p.canView) {
+              <p class="mt-2 text-[11px] text-amber-600 dark:text-amber-400">{{ 'users.perm.needsView' | translate }}</p>
+            }
+          }
+        </section>
+      }
     </div>
-
-    <div *ngIf="loading()" class="mt-3 text-xs font-semibold text-slate-600 dark:text-slate-400">{{ 'common.loadingPermissions' | translate }}</div>
-    <div class="mt-2 text-sm text-[#B81104] dark:text-red-400" *ngIf="error()">{{ error() }}</div>
-    <div class="mt-2 text-sm text-pink-500 dark:text-pink-400" *ngIf="success()">{{ success() }}</div>
-  `
+    
+    @if (loading()) {
+      <div class="mt-3 text-xs font-semibold text-slate-600 dark:text-slate-400">{{ 'common.loadingPermissions' | translate }}</div>
+    }
+    @if (error()) {
+      <div class="mt-2 text-sm text-[#B81104] dark:text-red-400">{{ error() }}</div>
+    }
+    @if (success()) {
+      <div class="mt-2 text-sm text-pink-500 dark:text-pink-400">{{ success() }}</div>
+    }
+    `
 })
 export class PermissionMatrixComponent {
   /** 'user' edits user_permissions; 'role' edits role_permissions. */

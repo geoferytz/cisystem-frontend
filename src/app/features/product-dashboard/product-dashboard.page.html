@@ -9,13 +9,17 @@
     class="rounded-xl bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-900 disabled:opacity-70"
     (click)="load()"
     [disabled]="loading()"
-  >
+    >
     {{ 'productDashboard.refresh' | translate }}
   </button>
 </div>
 
-<div class="mt-4 text-sm text-slate-600 dark:text-slate-400" *ngIf="loading()">{{ 'productDashboard.loading' | translate }}</div>
-<div class="mt-4 text-sm text-red-700 dark:text-red-400" *ngIf="error()">{{ error() }}</div>
+@if (loading()) {
+  <div class="mt-4 text-sm text-slate-600 dark:text-slate-400">{{ 'productDashboard.loading' | translate }}</div>
+}
+@if (error()) {
+  <div class="mt-4 text-sm text-red-700 dark:text-red-400">{{ error() }}</div>
+}
 
 <!-- ═══════════════════════════════════════════════════════════════ -->
 <!-- SECTION 1 — Top Summary Cards                                  -->
@@ -62,154 +66,162 @@
             stroke-linecap="round"
             stroke-linejoin="round"
             d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
-          />
-        </svg>
+            />
+          </svg>
+        </div>
+        <div class="text-xs font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-400">{{ 'productDashboard.lowStock' | translate }}</div>
       </div>
-      <div class="text-xs font-semibold uppercase tracking-wide text-amber-700 dark:text-amber-400">{{ 'productDashboard.lowStock' | translate }}</div>
-    </div>
-    <div class="mt-3 text-3xl font-extrabold text-amber-700 dark:text-amber-400">{{ lowStockCount() }}</div>
-    <div class="mt-1 text-xs text-amber-600 dark:text-amber-500">{{ 'productDashboard.lowStockHelp' | translate }} (&le; {{ lowStockThreshold }} {{ 'productDashboard.units' | translate }})</div>
-  </section>
+      <div class="mt-3 text-3xl font-extrabold text-amber-700 dark:text-amber-400">{{ lowStockCount() }}</div>
+      <div class="mt-1 text-xs text-amber-600 dark:text-amber-500">{{ 'productDashboard.lowStockHelp' | translate }} (&le; {{ lowStockThreshold }} {{ 'productDashboard.units' | translate }})</div>
+    </section>
 
-  <!-- Out of Stock -->
-  <section data-tone="red" class="rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-sm ring-1 ring-red-200 dark:ring-red-700">
-    <div class="flex items-center gap-3">
-      <div class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
-          />
-        </svg>
+    <!-- Out of Stock -->
+    <section data-tone="red" class="rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-sm ring-1 ring-red-200 dark:ring-red-700">
+      <div class="flex items-center gap-3">
+        <div class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
+              />
+            </svg>
+          </div>
+          <div class="text-xs font-semibold uppercase tracking-wide text-red-700 dark:text-red-400">{{ 'productDashboard.outOfStock' | translate }}</div>
+        </div>
+        <div class="mt-3 text-3xl font-extrabold text-red-700 dark:text-red-400">{{ outOfStockCount() }}</div>
+        <div class="mt-1 text-xs text-red-600 dark:text-red-500">{{ 'productDashboard.zeroQtyProducts' | translate }}</div>
+      </section>
+
+      <!-- Inventory Value -->
+      <section data-tone="blue" class="rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
+        <div class="flex items-center gap-3">
+          <div class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
+            </svg>
+          </div>
+          <div class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'productDashboard.inventoryValue' | translate }}</div>
+        </div>
+        <div class="mt-3 text-2xl font-extrabold text-slate-900 dark:text-slate-100">{{ inventoryValue() | money }}</div>
+        <div class="mt-1 text-xs text-slate-500 dark:text-slate-400">&Sigma; (costPrice &times; quantity)</div>
+      </section>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SECTION 2 — Stock Alerts                                       -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="mt-8">
+      <div class="flex items-center justify-between">
+        <div>
+          <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">{{ 'productDashboard.stockAlerts' | translate }}</h3>
+          <div class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ 'productDashboard.stockAlertsSubtitle' | translate }}</div>
+        </div>
+        <a class="text-sm font-semibold text-purple-900 dark:text-purple-400 hover:underline" routerLink="/expiry-alerts">{{ 'productDashboard.viewAllAlerts' | translate }}</a>
       </div>
-      <div class="text-xs font-semibold uppercase tracking-wide text-red-700 dark:text-red-400">{{ 'productDashboard.outOfStock' | translate }}</div>
-    </div>
-    <div class="mt-3 text-3xl font-extrabold text-red-700 dark:text-red-400">{{ outOfStockCount() }}</div>
-    <div class="mt-1 text-xs text-red-600 dark:text-red-500">{{ 'productDashboard.zeroQtyProducts' | translate }}</div>
-  </section>
 
-  <!-- Inventory Value -->
-  <section data-tone="blue" class="rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
-    <div class="flex items-center gap-3">
-      <div class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
-        </svg>
-      </div>
-      <div class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{{ 'productDashboard.inventoryValue' | translate }}</div>
-    </div>
-    <div class="mt-3 text-2xl font-extrabold text-slate-900 dark:text-slate-100">{{ inventoryValue() | money }}</div>
-    <div class="mt-1 text-xs text-slate-500 dark:text-slate-400">&Sigma; (costPrice &times; quantity)</div>
-  </section>
-</div>
+      <!-- Alerts Pagination -->
+      @if (alerts().length > 0) {
+        <div class="mt-4 flex flex-wrap items-center justify-between gap-2">
+          <div class="text-xs font-semibold text-slate-600 dark:text-slate-400">{{ 'productDashboard.total' | translate }}: {{ alerts().length }}</div>
+          <div class="flex items-center gap-2">
+            <label class="text-xs font-semibold text-slate-600 dark:text-slate-400">
+              {{ 'productDashboard.show' | translate }}
+              <select
+                class="ml-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-xs text-slate-900 dark:text-slate-100"
+                [value]="alertsPageSize()"
+                (change)="setAlertsPageSize(($any($event.target)).value)"
+                >
+                <option [value]="5">5</option>
+                <option [value]="10">10</option>
+                <option [value]="20">20</option>
+                <option [value]="50">50</option>
+              </select>
+            </label>
+            <button
+              class="rounded-lg bg-slate-100 dark:bg-slate-700 px-2 py-1 text-xs font-semibold text-slate-700 dark:text-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
+              (click)="alertsPrevPage()"
+              [disabled]="alertsPageIndex() === 0"
+              >
+              {{ 'productDashboard.prev' | translate }}
+            </button>
+            <div class="text-xs font-semibold text-slate-600 dark:text-slate-400">{{ 'productDashboard.page' | translate }} {{ alertsPageIndex() + 1 }} / {{ alertsTotalPages() }}</div>
+            <button
+              class="rounded-lg bg-slate-100 dark:bg-slate-700 px-2 py-1 text-xs font-semibold text-slate-700 dark:text-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
+              (click)="alertsNextPage()"
+              [disabled]="alertsPageIndex() >= alertsTotalPages() - 1"
+              >
+              {{ 'productDashboard.next' | translate }}
+            </button>
+          </div>
+        </div>
+      }
 
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<!-- SECTION 2 — Stock Alerts                                       -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<div class="mt-8">
-  <div class="flex items-center justify-between">
-    <div>
-      <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">{{ 'productDashboard.stockAlerts' | translate }}</h3>
-      <div class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ 'productDashboard.stockAlertsSubtitle' | translate }}</div>
-    </div>
-    <a class="text-sm font-semibold text-purple-900 dark:text-purple-400 hover:underline" routerLink="/expiry-alerts">{{ 'productDashboard.viewAllAlerts' | translate }}</a>
-  </div>
+      <!-- Alerts Table -->
+      @if (alerts().length > 0) {
+        <div class="mt-3 overflow-auto rounded-2xl bg-white dark:bg-slate-800 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
+          <table class="w-full border-collapse text-sm">
+            <thead class="bg-slate-50 dark:bg-slate-700">
+              <tr>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">{{ 'productDashboard.status' | translate }}</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">SKU</th>
+                <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">{{ 'productDashboard.product' | translate }}</th>
+                <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">{{ 'productDashboard.qtyOnHand' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (a of displayedAlerts(); track a) {
+                <tr class="border-t border-slate-100 dark:border-slate-700 hover:bg-slate-50/50 dark:hover:bg-slate-700/50">
+                  <td class="px-4 py-3">
+                    @if (a.status === 'out_of_stock') {
+                      <span
+                        class="inline-flex items-center gap-1.5 rounded-full bg-red-50 dark:bg-red-900/30 px-2.5 py-1 text-xs font-semibold text-red-700 dark:text-red-400"
+                        >
+                        <span class="h-2 w-2 rounded-full bg-red-500"></span>
+                        {{ 'productDashboard.outOfStock' | translate }}
+                      </span>
+                    }
+                    @if (a.status === 'running_low') {
+                      <span
+                        class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 dark:bg-amber-900/30 px-2.5 py-1 text-xs font-semibold text-amber-700 dark:text-amber-400"
+                        >
+                        <span class="h-2 w-2 rounded-full bg-amber-500"></span>
+                        {{ 'productDashboard.runningLow' | translate }}
+                      </span>
+                    }
+                  </td>
+                  <td class="px-4 py-3 font-mono text-xs text-slate-600 dark:text-slate-300">{{ a.sku }}</td>
+                  <td class="px-4 py-3 font-medium text-slate-900 dark:text-slate-100">{{ a.productName }}</td>
+                  <td
+                    class="px-4 py-3 text-right font-semibold"
+                    [ngClass]="a.status === 'out_of_stock' ? 'text-red-700 dark:text-red-400' : 'text-amber-700 dark:text-amber-400'"
+                    >
+                    {{ a.qtyOnHand }}
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
 
-  <!-- Alerts Pagination -->
-  <div class="mt-4 flex flex-wrap items-center justify-between gap-2" *ngIf="alerts().length > 0">
-    <div class="text-xs font-semibold text-slate-600 dark:text-slate-400">{{ 'productDashboard.total' | translate }}: {{ alerts().length }}</div>
-    <div class="flex items-center gap-2">
-      <label class="text-xs font-semibold text-slate-600 dark:text-slate-400">
-        {{ 'productDashboard.show' | translate }}
-        <select
-          class="ml-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-xs text-slate-900 dark:text-slate-100"
-          [value]="alertsPageSize()"
-          (change)="setAlertsPageSize(($any($event.target)).value)"
-        >
-          <option [value]="5">5</option>
-          <option [value]="10">10</option>
-          <option [value]="20">20</option>
-          <option [value]="50">50</option>
-        </select>
-      </label>
-
-      <button
-        class="rounded-lg bg-slate-100 dark:bg-slate-700 px-2 py-1 text-xs font-semibold text-slate-700 dark:text-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
-        (click)="alertsPrevPage()"
-        [disabled]="alertsPageIndex() === 0"
-      >
-        {{ 'productDashboard.prev' | translate }}
-      </button>
-      <div class="text-xs font-semibold text-slate-600 dark:text-slate-400">{{ 'productDashboard.page' | translate }} {{ alertsPageIndex() + 1 }} / {{ alertsTotalPages() }}</div>
-      <button
-        class="rounded-lg bg-slate-100 dark:bg-slate-700 px-2 py-1 text-xs font-semibold text-slate-700 dark:text-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
-        (click)="alertsNextPage()"
-        [disabled]="alertsPageIndex() >= alertsTotalPages() - 1"
-      >
-        {{ 'productDashboard.next' | translate }}
-      </button>
-    </div>
-  </div>
-
-  <!-- Alerts Table -->
-  <div class="mt-3 overflow-auto rounded-2xl bg-white dark:bg-slate-800 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700" *ngIf="alerts().length > 0">
-    <table class="w-full border-collapse text-sm">
-      <thead class="bg-slate-50 dark:bg-slate-700">
-        <tr>
-          <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">{{ 'productDashboard.status' | translate }}</th>
-          <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">SKU</th>
-          <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">{{ 'productDashboard.product' | translate }}</th>
-          <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">{{ 'productDashboard.qtyOnHand' | translate }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let a of displayedAlerts()" class="border-t border-slate-100 dark:border-slate-700 hover:bg-slate-50/50 dark:hover:bg-slate-700/50">
-          <td class="px-4 py-3">
-            <span
-              *ngIf="a.status === 'out_of_stock'"
-              class="inline-flex items-center gap-1.5 rounded-full bg-red-50 dark:bg-red-900/30 px-2.5 py-1 text-xs font-semibold text-red-700 dark:text-red-400"
-            >
-              <span class="h-2 w-2 rounded-full bg-red-500"></span>
-              {{ 'productDashboard.outOfStock' | translate }}
-            </span>
-            <span
-              *ngIf="a.status === 'running_low'"
-              class="inline-flex items-center gap-1.5 rounded-full bg-amber-50 dark:bg-amber-900/30 px-2.5 py-1 text-xs font-semibold text-amber-700 dark:text-amber-400"
-            >
-              <span class="h-2 w-2 rounded-full bg-amber-500"></span>
-              {{ 'productDashboard.runningLow' | translate }}
-            </span>
-          </td>
-          <td class="px-4 py-3 font-mono text-xs text-slate-600 dark:text-slate-300">{{ a.sku }}</td>
-          <td class="px-4 py-3 font-medium text-slate-900 dark:text-slate-100">{{ a.productName }}</td>
-          <td
-            class="px-4 py-3 text-right font-semibold"
-            [ngClass]="a.status === 'out_of_stock' ? 'text-red-700 dark:text-red-400' : 'text-amber-700 dark:text-amber-400'"
+      <!-- No Alerts -->
+      @if (alerts().length === 0 && !loading()) {
+        <div
+          class="mt-4 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 p-6 text-center ring-1 ring-emerald-200 dark:ring-emerald-700"
           >
-            {{ a.qtyOnHand }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+          <div class="text-sm font-semibold text-emerald-700 dark:text-emerald-400">{{ 'productDashboard.allGood' | translate }}</div>
+        </div>
+      }
+    </div>
 
-  <!-- No Alerts -->
-  <div
-    class="mt-4 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 p-6 text-center ring-1 ring-emerald-200 dark:ring-emerald-700"
-    *ngIf="alerts().length === 0 && !loading()"
-  >
-    <div class="text-sm font-semibold text-emerald-700 dark:text-emerald-400">{{ 'productDashboard.allGood' | translate }}</div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<!-- SECTION 3 — Charts                                             -->
-<!-- ═══════════════════════════════════════════════════════════════ -->
-<!-- <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3"> -->
-  <!-- Chart 1: Stock by Category -->
-  <!-- <section class="rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- SECTION 3 — Charts                                             -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- <div class="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3"> -->
+    <!-- Chart 1: Stock by Category -->
+    <!-- <section class="rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
     <h4 class="text-base font-semibold text-slate-900 dark:text-slate-100">Stock by Category</h4>
     <div class="mt-1 text-xs text-slate-500 dark:text-slate-400">Inventory distribution across categories</div>
     <div class="mt-4" *ngIf="categoryLabels().length > 0">
@@ -222,65 +234,71 @@
 
   <!-- Chart 2: Most Sold Products -->
   <!-- <section class="rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
-    <h4 class="text-base font-semibold text-slate-900 dark:text-slate-100">Most Sold Products</h4>
-    <div class="mt-1 text-xs text-slate-500 dark:text-slate-400">Top 10 by total quantity sold (from sales)</div>
-    <div class="mt-4" *ngIf="mostSoldLabels().length > 0">
-      <canvas baseChart [type]="'bar'" [data]="mostSoldChartData()" [options]="mostSoldChartOptions"></canvas>
-    </div>
-    <div class="mt-4 py-8 text-center text-sm text-slate-400 dark:text-slate-500" *ngIf="mostSoldLabels().length === 0 && !loading()">
-      No sales data available
-    </div>
-  </section> -->
+  <h4 class="text-base font-semibold text-slate-900 dark:text-slate-100">Most Sold Products</h4>
+  <div class="mt-1 text-xs text-slate-500 dark:text-slate-400">Top 10 by total quantity sold (from sales)</div>
+  <div class="mt-4" *ngIf="mostSoldLabels().length > 0">
+    <canvas baseChart [type]="'bar'" [data]="mostSoldChartData()" [options]="mostSoldChartOptions"></canvas>
+  </div>
+  <div class="mt-4 py-8 text-center text-sm text-slate-400 dark:text-slate-500" *ngIf="mostSoldLabels().length === 0 && !loading()">
+    No sales data available
+  </div>
+</section> -->
 
-  <!-- Chart 3: Dead Stock -->
-  <!-- <section class="rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
-    <h4 class="text-base font-semibold text-slate-900 dark:text-slate-100">Dead Stock</h4>
-    <div class="mt-1 text-xs text-slate-500 dark:text-slate-400">Products not sold in 30+ days (still in inventory)</div>
-    <div class="mt-4" *ngIf="deadStockLabels().length > 0">
-      <canvas baseChart [type]="'bar'" [data]="deadStockChartData()" [options]="deadStockChartOptions"></canvas>
-    </div>
-    <div class="mt-4 py-8 text-center text-sm text-slate-400 dark:text-slate-500" *ngIf="deadStockLabels().length === 0 && !loading()">
-      No dead stock detected
-    </div>
-  </section> -->
+<!-- Chart 3: Dead Stock -->
+<!-- <section class="rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
+<h4 class="text-base font-semibold text-slate-900 dark:text-slate-100">Dead Stock</h4>
+<div class="mt-1 text-xs text-slate-500 dark:text-slate-400">Products not sold in 30+ days (still in inventory)</div>
+<div class="mt-4" *ngIf="deadStockLabels().length > 0">
+  <canvas baseChart [type]="'bar'" [data]="deadStockChartData()" [options]="deadStockChartOptions"></canvas>
+</div>
+<div class="mt-4 py-8 text-center text-sm text-slate-400 dark:text-slate-500" *ngIf="deadStockLabels().length === 0 && !loading()">
+  No dead stock detected
+</div>
+</section> -->
 <!-- </div> -->
 
 <!-- Dead Stock Detail Table -->
-<div class="mt-6" *ngIf="deadStockItems().length > 0">
-  <div class="flex items-center justify-between">
-    <div>
-      <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">{{ 'productDashboard.deadStockDetails' | translate }}</h3>
-      <div class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-        {{ deadStockItems().length }} {{ 'productDashboard.deadStockDescription' | translate }}
+@if (deadStockItems().length > 0) {
+  <div class="mt-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100">{{ 'productDashboard.deadStockDetails' | translate }}</h3>
+        <div class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          {{ deadStockItems().length }} {{ 'productDashboard.deadStockDescription' | translate }}
+        </div>
       </div>
     </div>
-  </div>
-
-  <cis-pager class="mt-4 block" [total]="deadStockItems().length" [(pageSize)]="deadStockPageSize" [(pageIndex)]="deadStockPageIndex" />
-
-  <div class="mt-4 overflow-auto rounded-2xl bg-white dark:bg-slate-800 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
-    <table class="w-full border-collapse text-sm">
-      <thead class="bg-slate-50 dark:bg-slate-700">
-        <tr>
-          <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">SKU</th>
-          <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">{{ 'productDashboard.product' | translate }}</th>
-          <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">{{ 'productDashboard.qtyOnHand' | translate }}</th>
-          <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">{{ 'productDashboard.daysSinceSale' | translate }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let d of displayedDeadStock()" class="border-t border-slate-100 dark:border-slate-700 hover:bg-slate-50/50 dark:hover:bg-slate-700/50">
-          <td class="px-4 py-3 font-mono text-xs text-slate-600 dark:text-slate-300">{{ d.sku }}</td>
-          <td class="px-4 py-3 font-medium text-slate-900 dark:text-slate-100">{{ d.productName }}</td>
-          <td class="px-4 py-3 text-right font-semibold text-slate-900 dark:text-slate-100">{{ d.qtyOnHand }}</td>
-          <td class="px-4 py-3 text-right">
-            <span *ngIf="d.daysSinceLastSale !== null" class="font-semibold text-red-600 dark:text-red-400"
-              >{{ d.daysSinceLastSale }} {{ 'productDashboard.daysAgo' | translate }}</span
-            >
-            <span *ngIf="d.daysSinceLastSale === null" class="text-xs text-slate-400 dark:text-slate-500">{{ 'productDashboard.neverSold' | translate }}</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+    <cis-pager class="mt-4 block" [total]="deadStockItems().length" [(pageSize)]="deadStockPageSize" [(pageIndex)]="deadStockPageIndex" />
+    <div class="mt-4 overflow-auto rounded-2xl bg-white dark:bg-slate-800 shadow-sm ring-1 ring-slate-100 dark:ring-slate-700">
+      <table class="w-full border-collapse text-sm">
+        <thead class="bg-slate-50 dark:bg-slate-700">
+          <tr>
+            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">SKU</th>
+            <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">{{ 'productDashboard.product' | translate }}</th>
+            <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">{{ 'productDashboard.qtyOnHand' | translate }}</th>
+            <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">{{ 'productDashboard.daysSinceSale' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (d of displayedDeadStock(); track d) {
+            <tr class="border-t border-slate-100 dark:border-slate-700 hover:bg-slate-50/50 dark:hover:bg-slate-700/50">
+              <td class="px-4 py-3 font-mono text-xs text-slate-600 dark:text-slate-300">{{ d.sku }}</td>
+              <td class="px-4 py-3 font-medium text-slate-900 dark:text-slate-100">{{ d.productName }}</td>
+              <td class="px-4 py-3 text-right font-semibold text-slate-900 dark:text-slate-100">{{ d.qtyOnHand }}</td>
+              <td class="px-4 py-3 text-right">
+                @if (d.daysSinceLastSale !== null) {
+                  <span class="font-semibold text-red-600 dark:text-red-400"
+                    >{{ d.daysSinceLastSale }} {{ 'productDashboard.daysAgo' | translate }}</span
+                    >
+                  }
+                  @if (d.daysSinceLastSale === null) {
+                    <span class="text-xs text-slate-400 dark:text-slate-500">{{ 'productDashboard.neverSold' | translate }}</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }

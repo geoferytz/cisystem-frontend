@@ -8,7 +8,9 @@
     <span class="counter-connection" [class.is-offline]="!pwa.online()"><span></span>{{ pwa.online() ? 'Connected' : 'Offline' }}</span>
   </header>
 
-  <div class="counter-notice error" role="alert" *ngIf="actionError() && !checkoutOpen()">{{ actionError() }}</div>
+  @if (actionError() && !checkoutOpen()) {
+    <div class="counter-notice error" role="alert">{{ actionError() }}</div>
+  }
 
   <section class="counter-actions" aria-label="Counter actions">
     <button class="counter-action sale-action" type="button" data-counter-action="sale" (click)="openSale()" [disabled]="busy() || !canSell()">
@@ -17,31 +19,42 @@
       <span class="counter-arrow" aria-hidden="true">→</span>
     </button>
     <div class="counter-action-pair" [class.single]="!perm.canView('SALES')">
-      <button *ngIf="!expenseSuccess()" class="counter-action expense-action" type="button" data-counter-action="expense" (click)="openExpense()" [disabled]="busy() || !canExpense()">
-        <span class="counter-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3ZM9 7h6M9 11h6M9 15h3" /></svg></span>
-        <span><strong>New Expenses</strong><small>Record an expense without leaving the counter.</small></span>
-        <span class="counter-arrow" aria-hidden="true">→</span>
-      </button>
-      <a *ngIf="expenseSuccess()" class="counter-action expense-action success-state" routerLink="/expenses" role="status">
-        <span class="counter-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg></span>
-        <span><strong>{{ expenseSuccess() }}</strong><small>Tap here to open the expenses page.</small></span>
-        <span class="counter-arrow" aria-hidden="true">→</span>
-      </a>
-      <a class="counter-action viewsales-action" [class.success-state]="!!success()" routerLink="/sales" *ngIf="perm.canView('SALES')" role="status">
-        <span class="counter-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path *ngIf="success()" d="m5 13 4 4L19 7" /><ng-container *ngIf="!success()"><path d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" /><path d="M12 6v2m0 10v2" /><path d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" /></ng-container></svg></span>
-        <span><strong>{{ success() || 'View Sales' }}</strong><small>{{ success() ? 'Tap here to open the sales page.' : 'See all sales, customers and debts.' }}</small></span>
-        <span class="counter-arrow" aria-hidden="true">→</span>
-      </a>
-      <button
-        *ngIf="lastSale()"
-        class="counter-action"
-        type="button"
-        (click)="printLastSale()"
-      >
-        <span class="counter-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></svg></span>
-        <span><strong>{{ 'sales.printReceipt' | translate }}</strong><small>{{ lastSale()?.referenceNumber || '#' + lastSale()?.id }}</small></span>
-        <span class="counter-arrow" aria-hidden="true">→</span>
-      </button>
+      @if (!expenseSuccess()) {
+        <button class="counter-action expense-action" type="button" data-counter-action="expense" (click)="openExpense()" [disabled]="busy() || !canExpense()">
+          <span class="counter-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3ZM9 7h6M9 11h6M9 15h3" /></svg></span>
+          <span><strong>New Expenses</strong><small>Record an expense without leaving the counter.</small></span>
+          <span class="counter-arrow" aria-hidden="true">→</span>
+        </button>
+      }
+      @if (expenseSuccess()) {
+        <a class="counter-action expense-action success-state" routerLink="/expenses" role="status">
+          <span class="counter-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m5 13 4 4L19 7" /></svg></span>
+          <span><strong>{{ expenseSuccess() }}</strong><small>Tap here to open the expenses page.</small></span>
+          <span class="counter-arrow" aria-hidden="true">→</span>
+        </a>
+      }
+      @if (perm.canView('SALES')) {
+        <a class="counter-action viewsales-action" [class.success-state]="!!success()" routerLink="/sales" role="status">
+          <span class="counter-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">@if (success()) {
+            <path d="m5 13 4 4L19 7" />
+            }@if (!success()) {
+            <ng-container><path d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" /><path d="M12 6v2m0 10v2" /><path d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" /></ng-container>
+          }</svg></span>
+          <span><strong>{{ success() || 'View Sales' }}</strong><small>{{ success() ? 'Tap here to open the sales page.' : 'See all sales, customers and debts.' }}</small></span>
+          <span class="counter-arrow" aria-hidden="true">→</span>
+        </a>
+      }
+      @if (lastSale()) {
+        <button
+          class="counter-action"
+          type="button"
+          (click)="printLastSale()"
+          >
+          <span class="counter-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V4a1 1 0 011-1h10a1 1 0 011 1v5" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" /><rect x="6" y="14" width="12" height="7" rx="1" /></svg></span>
+          <span><strong>{{ 'sales.printReceipt' | translate }}</strong><small>{{ lastSale()?.referenceNumber || '#' + lastSale()?.id }}</small></span>
+          <span class="counter-arrow" aria-hidden="true">→</span>
+        </button>
+      }
     </div>
   </section>
 
@@ -51,88 +64,138 @@
     <div><span>Current cart</span><strong>{{ itemCount() }} <small>items</small></strong><small>{{ total() | money }}</small></div>
   </section>
 
-  <section #saleWorkspace class="counter-workspace scroll-mt-28" *ngIf="workspaceOpen()" aria-label="New sale workspace">
-    <div class="counter-catalog counter-panel">
-      <div class="counter-section-heading">
-        <div><h2>Choose products</h2><p>Prices come from your product settings.</p></div>
-        <button type="button" class="counter-button secondary" (click)="closeSale()" [disabled]="busy()">Close</button>
-      </div>
-      <div class="counter-catalog-tools">
-        <label class="counter-search"><span class="sr-only">Search products</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 5 5" /></svg><input type="search" placeholder="Search name, SKU, barcode, or brand" [value]="search()" (input)="setSearch($any($event.target).value)" (keydown.enter)="onSearchEnter(); $event.preventDefault()" /></label>
-        <label class="counter-location">{{ 'common.branch' | translate }}<select [formControl]="location" [disabled]="lines().length > 0 || busy() || branchCtx.locked()" (change)="changeLocation()" aria-label="Branch"><option *ngFor="let b of branchCtx.options()" [value]="b.code">{{ b.name }} ({{ b.code }})</option></select></label>
-        <button type="button" class="counter-button secondary" (click)="scannerOpen.set(true)" [disabled]="busy()">Scan</button>
-        <button type="button" class="counter-button secondary" (click)="loadProducts()" [disabled]="catalogLoading() || busy()">Refresh</button>
-      </div>
-      <div class="counter-category-tabs" aria-label="Product category">
-        <button type="button" [class.selected]="!category()" (click)="category.set(''); visibleLimit.set(36)">All products</button>
-        <button type="button" *ngFor="let name of productCategories()" [class.selected]="category() === name" (click)="category.set(name); visibleLimit.set(36)">{{ name }}</button>
-      </div>
-      <div class="counter-notice error" role="alert" *ngIf="catalogError()">{{ catalogError() }}</div>
-      <div class="counter-empty" role="status" *ngIf="catalogLoading()">Loading your product catalog…</div>
-      <button type="button" *ngIf="lines().length" class="sticky top-24 z-10 mb-3 w-full rounded-xl bg-primary-500 px-4 py-3 text-sm font-semibold text-white shadow-lg min-[1101px]:hidden" (click)="viewCart(cartPanel)">View cart ({{ itemCount() }}) · {{ total() | money }}</button>
-      <div class="counter-product-grid" *ngIf="!catalogLoading()">
-        <button type="button" class="counter-product" *ngFor="let product of visibleProducts()" [class.in-cart]="quantityByProduct().has(product.id)" [disabled]="!canAdd(product)" (click)="addProduct(product)" [attr.aria-label]="'Add ' + product.name + ' to cart'">
-          <span class="counter-product-top"><span class="counter-product-monogram" aria-hidden="true">{{ product.name.slice(0, 2) | uppercase }}</span><span class="counter-product-count" *ngIf="quantityByProduct().get(product.id) as count">{{ count }} in cart</span></span>
-          <small class="counter-product-category">{{ product.category || 'Uncategorized' }}</small>
-          <strong>{{ product.name }}</strong>
-          <small>{{ product.sku }}<span *ngIf="product.brand"> · {{ product.brand }}</span></small>
-          <span *ngIf="product.expiryDate" class="inline-flex w-fit items-center gap-1 rounded-lg bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700 dark:bg-amber-900/50 dark:text-amber-300">
-            {{ 'common.expiry' | translate }}: {{ product.expiryDate }}
-          </span>
-          <span class="counter-product-price">{{ product.sellingPrice === null ? 'Price not set' : (product.sellingPrice | money) }}</span>
-          <small *ngIf="product.daysToExpiry !== null" [class.text-[#B81104]]="product.daysToExpiry <= 7" [class.dark:text-red-400]="product.daysToExpiry <= 7">
-            {{ 'common.expiresIn' | translate }} {{ product.daysToExpiry }} {{ 'common.days' | translate }}
-          </small>
-          <span *ngIf="product.suggestedSellingPrice !== null" class="counter-product-price" style="font-size: 0.8rem; color: #7367d8;">
-            {{ 'common.suggested' | translate }} {{ product.suggestedSellingPrice | money }}
-          </span>
-          <span class="counter-product-bottom">
-            <small [class.out-of-stock]="product.availableQuantity === 0">{{ product.availableQuantity > 0 ? product.availableQuantity + ' available' : 'Out of stock' }}</small>
-            <button *ngIf="product.suggestedSellingPrice !== null" type="button" class="counter-button secondary" style="padding: 0.25rem 0.5rem; font-size: 0.7rem;" (click)="addProduct(product, true); $event.stopPropagation()" [disabled]="!canAddDiscounted(product)">Add {{ product.suggestedSellingPrice | money }}</button>
-            <span class="counter-add" aria-hidden="true">+</span>
-          </span>
-        </button>
-      </div>
-      <div class="counter-empty" *ngIf="!catalogLoading() && !catalogError() && !filteredProducts().length"><h3>No products found</h3><p>Try another search or category.</p></div>
-      <button type="button" class="counter-button secondary counter-load-more" *ngIf="filteredProducts().length > visibleLimit()" (click)="visibleLimit.set(visibleLimit() + 36)">Show more products ({{ filteredProducts().length - visibleLimit() }} remaining)</button>
+  @if (workspaceOpen()) {
+    <section #saleWorkspace class="counter-workspace scroll-mt-28" aria-label="New sale workspace">
+      <div class="counter-catalog counter-panel">
+        <div class="counter-section-heading">
+          <div><h2>Choose products</h2><p>Prices come from your product settings.</p></div>
+          <button type="button" class="counter-button secondary" (click)="closeSale()" [disabled]="busy()">Close</button>
+        </div>
+        <div class="counter-catalog-tools">
+          <label class="counter-search"><span class="sr-only">Search products</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 5 5" /></svg><input type="search" placeholder="Search name, SKU, barcode, or brand" [value]="search()" (input)="setSearch($any($event.target).value)" (keydown.enter)="onSearchEnter(); $event.preventDefault()" /></label>
+          <label class="counter-location">{{ 'common.branch' | translate }}<select [formControl]="location" [disabled]="lines().length > 0 || busy() || branchCtx.locked()" (change)="changeLocation()" aria-label="Branch">@for (b of branchCtx.options(); track b) {
+            <option [value]="b.code">{{ b.name }} ({{ b.code }})</option>
+          }</select></label>
+          <button type="button" class="counter-button secondary" (click)="scannerOpen.set(true)" [disabled]="busy()">Scan</button>
+          <button type="button" class="counter-button secondary" (click)="loadProducts()" [disabled]="catalogLoading() || busy()">Refresh</button>
+        </div>
+        <div class="counter-category-tabs" aria-label="Product category">
+          <button type="button" [class.selected]="!category()" (click)="category.set(''); visibleLimit.set(36)">All products</button>
+          @for (name of productCategories(); track name) {
+            <button type="button" [class.selected]="category() === name" (click)="category.set(name); visibleLimit.set(36)">{{ name }}</button>
+          }
+        </div>
+        @if (catalogError()) {
+          <div class="counter-notice error" role="alert">{{ catalogError() }}</div>
+        }
+        @if (catalogLoading()) {
+          <div class="counter-empty" role="status">Loading your product catalog…</div>
+        }
+        @if (lines().length) {
+          <button type="button" class="sticky top-24 z-10 mb-3 w-full rounded-xl bg-primary-500 px-4 py-3 text-sm font-semibold text-white shadow-lg min-[1101px]:hidden" (click)="viewCart(cartPanel)">View cart ({{ itemCount() }}) · {{ total() | money }}</button>
+        }
+        @if (!catalogLoading()) {
+          <div class="counter-product-grid">
+            @for (product of visibleProducts(); track product) {
+              <button type="button" class="counter-product" [class.in-cart]="quantityByProduct().has(product.id)" [disabled]="!canAdd(product)" (click)="addProduct(product)" [attr.aria-label]="'Add ' + product.name + ' to cart'">
+                <span class="counter-product-top"><span class="counter-product-monogram" aria-hidden="true">{{ product.name.slice(0, 2) | uppercase }}</span>@if (quantityByProduct().get(product.id); as count) {
+                <span class="counter-product-count">{{ count }} in cart</span>
+              }</span>
+              <small class="counter-product-category">{{ product.category || 'Uncategorized' }}</small>
+              <strong>{{ product.name }}</strong>
+              <small>{{ product.sku }}@if (product.brand) {
+                <span> · {{ product.brand }}</span>
+              }</small>
+              @if (product.expiryDate) {
+                <span class="inline-flex w-fit items-center gap-1 rounded-lg bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700 dark:bg-amber-900/50 dark:text-amber-300">
+                  {{ 'common.expiry' | translate }}: {{ product.expiryDate }}
+                </span>
+              }
+              <span class="counter-product-price">{{ product.sellingPrice === null ? 'Price not set' : (product.sellingPrice | money) }}</span>
+              @if (product.daysToExpiry !== null) {
+                <small [class.text-[#B81104]]="product.daysToExpiry <= 7" [class.dark:text-red-400]="product.daysToExpiry <= 7">
+                  {{ 'common.expiresIn' | translate }} {{ product.daysToExpiry }} {{ 'common.days' | translate }}
+                </small>
+              }
+              @if (product.suggestedSellingPrice !== null) {
+                <span class="counter-product-price" style="font-size: 0.8rem; color: #7367d8;">
+                  {{ 'common.suggested' | translate }} {{ product.suggestedSellingPrice | money }}
+                </span>
+              }
+              <span class="counter-product-bottom">
+                <small [class.out-of-stock]="product.availableQuantity === 0">{{ product.availableQuantity > 0 ? product.availableQuantity + ' available' : 'Out of stock' }}</small>
+                @if (product.suggestedSellingPrice !== null) {
+                  <button type="button" class="counter-button secondary" style="padding: 0.25rem 0.5rem; font-size: 0.7rem;" (click)="addProduct(product, true); $event.stopPropagation()" [disabled]="!canAddDiscounted(product)">Add {{ product.suggestedSellingPrice | money }}</button>
+                }
+                <span class="counter-add" aria-hidden="true">+</span>
+              </span>
+            </button>
+          }
+        </div>
+      }
+      @if (!catalogLoading() && !catalogError() && !filteredProducts().length) {
+        <div class="counter-empty"><h3>No products found</h3><p>Try another search or category.</p></div>
+      }
+      @if (filteredProducts().length > visibleLimit()) {
+        <button type="button" class="counter-button secondary counter-load-more" (click)="visibleLimit.set(visibleLimit() + 36)">Show more products ({{ filteredProducts().length - visibleLimit() }} remaining)</button>
+      }
     </div>
-
     <aside #cartPanel class="counter-cart counter-panel scroll-mt-28" aria-label="Sales cart">
-      <div class="counter-section-heading"><div><h2>Sales cart</h2><p>{{ cartVersion() === null ? 'New transaction' : 'Resumed held sale' }}</p></div><div class="flex items-center gap-2"><button *ngIf="canReturn()" type="button" class="counter-button secondary" (click)="openFindSale()" [disabled]="busy()" title="{{ 'returns.action' | translate }}">↩ {{ 'returns.tabReturn' | translate }}</button><span class="counter-count">{{ itemCount() }}</span></div></div>
+      <div class="counter-section-heading"><div><h2>Sales cart</h2><p>{{ cartVersion() === null ? 'New transaction' : 'Resumed held sale' }}</p></div><div class="flex items-center gap-2">@if (canReturn()) {
+      <button type="button" class="counter-button secondary" (click)="openFindSale()" [disabled]="busy()" title="{{ 'returns.action' | translate }}">↩ {{ 'returns.tabReturn' | translate }}</button>
+      }<span class="counter-count">{{ itemCount() }}</span></div></div>
       <form class="counter-customer-form" [formGroup]="headerForm">
         <label>
           {{ 'common.customer' | translate }} <small>(optional — {{ 'customers.walkIn' | translate }} if empty)</small>
           <select formControlName="customerId" [disabled]="busy()">
             <option [ngValue]="null">{{ 'customers.walkIn' | translate }}</option>
-            <option *ngFor="let c of customers()" [ngValue]="c.id">{{ c.name }}<span *ngIf="c.phone"> · {{ c.phone }}</span></option>
+            @for (c of customers(); track c) {
+              <option [ngValue]="c.id">{{ c.name }}@if (c.phone) {
+                <span> · {{ c.phone }}</span>
+              }</option>
+            }
           </select>
         </label>
-        <div class="counter-notice warning" *ngIf="customerDebt() != null && headerForm.controls.customerId.value" role="status">
-          {{ customerName(headerForm.controls.customerId.value) }} · {{ 'customers.debt' | translate }}: {{ customerDebt() | money }}
-        </div>
-        <div class="counter-new-customer" *ngIf="!newCustomerOpen()">
-          <button type="button" class="counter-link" (click)="newCustomerOpen.set(true)" [disabled]="busy()">{{ 'customers.newInline' | translate }}</button>
-        </div>
+        @if (customerDebt() != null && headerForm.controls.customerId.value) {
+          <div class="counter-notice warning" role="status">
+            {{ customerName(headerForm.controls.customerId.value) }} · {{ 'customers.debt' | translate }}: {{ customerDebt() | money }}
+          </div>
+        }
+        @if (!newCustomerOpen()) {
+          <div class="counter-new-customer">
+            <button type="button" class="counter-link" (click)="newCustomerOpen.set(true)" [disabled]="busy()">{{ 'customers.newInline' | translate }}</button>
+          </div>
+        }
         <label>Reference <small>(optional — auto)</small><input formControlName="referenceNumber" maxlength="120" placeholder="Auto (e.g. 201026-0001)" [readonly]="busy()" /></label>
       </form>
-      <div class="counter-new-customer-form" *ngIf="newCustomerOpen()" [formGroup]="newCustomerForm">
-        <input formControlName="name" maxlength="200" placeholder="{{ 'customers.name' | translate }} *" />
-        <input formControlName="phone" maxlength="40" placeholder="{{ 'customers.phone' | translate }}" />
-        <div class="counter-new-customer-actions">
-          <button type="button" class="counter-button secondary" (click)="newCustomerOpen.set(false)" [disabled]="newCustomerBusy()">{{ 'common.cancel' | translate }}</button>
-          <button type="button" class="counter-button primary" (click)="createCustomerInline()" [disabled]="newCustomerBusy() || newCustomerForm.invalid">{{ newCustomerBusy() ? '…' : ('customers.createInline' | translate) }}</button>
+      @if (newCustomerOpen()) {
+        <div class="counter-new-customer-form" [formGroup]="newCustomerForm">
+          <input formControlName="name" maxlength="200" placeholder="{{ 'customers.name' | translate }} *" />
+          <input formControlName="phone" maxlength="40" placeholder="{{ 'customers.phone' | translate }}" />
+          <div class="counter-new-customer-actions">
+            <button type="button" class="counter-button secondary" (click)="newCustomerOpen.set(false)" [disabled]="newCustomerBusy()">{{ 'common.cancel' | translate }}</button>
+            <button type="button" class="counter-button primary" (click)="createCustomerInline()" [disabled]="newCustomerBusy() || newCustomerForm.invalid">{{ newCustomerBusy() ? '…' : ('customers.createInline' | translate) }}</button>
+          </div>
         </div>
-      </div>
-      <div class="counter-empty" *ngIf="!lines().length"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 3h2l3 12h10l3-9H6M9 20h.01M18 20h.01" /></svg><h3>Your cart is ready</h3><p>Select a product to start this sale.</p></div>
+      }
+      @if (!lines().length) {
+        <div class="counter-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 3h2l3 12h10l3-9H6M9 20h.01M18 20h.01" /></svg><h3>Your cart is ready</h3><p>Select a product to start this sale.</p></div>
+      }
       <div class="counter-cart-lines">
-        <article class="counter-cart-line" *ngFor="let line of lines()">
-          <div class="counter-line-title"><div><strong>{{ line.productName }}</strong><small>{{ line.sku }} · {{ line.location }}<span *ngIf="line.expiryDate" class="ml-1 inline-flex items-center rounded-md bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">{{ 'common.expiry' | translate }}: {{ line.expiryDate }}</span></small></div><button type="button" class="counter-remove" [attr.aria-label]="'Remove ' + line.productName" (click)="removeProduct(line.productId)" [disabled]="busy()">×</button></div>
-          <small>{{ line.unitPrice | money }} each</small>
-          <div class="counter-line-bottom"><div class="counter-stepper"><button type="button" [attr.aria-label]="'Decrease ' + line.productName + ' quantity'" (click)="setQuantity(line.productId, line.quantity - 1)" [disabled]="busy() || line.quantity <= 1">−</button><input type="number" min="1" step="1" [value]="line.quantity" [readonly]="busy()" (change)="setQuantity(line.productId, $any($event.target).value)" [attr.aria-label]="line.productName + ' quantity'" /><button type="button" [attr.aria-label]="'Increase ' + line.productName + ' quantity'" (click)="setQuantity(line.productId, line.quantity + 1)" [disabled]="busy()">+</button></div><strong>{{ line.quantity * line.unitPrice | money }}</strong></div>
-        </article>
+        @for (line of lines(); track line) {
+          <article class="counter-cart-line">
+            <div class="counter-line-title"><div><strong>{{ line.productName }}</strong><small>{{ line.sku }} · {{ line.location }}@if (line.expiryDate) {
+            <span class="ml-1 inline-flex items-center rounded-md bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">{{ 'common.expiry' | translate }}: {{ line.expiryDate }}</span>
+            }</small></div><button type="button" class="counter-remove" [attr.aria-label]="'Remove ' + line.productName" (click)="removeProduct(line.productId)" [disabled]="busy()">×</button></div>
+            <small>{{ line.unitPrice | money }} each</small>
+            <div class="counter-line-bottom"><div class="counter-stepper"><button type="button" [attr.aria-label]="'Decrease ' + line.productName + ' quantity'" (click)="setQuantity(line.productId, line.quantity - 1)" [disabled]="busy() || line.quantity <= 1">−</button><input type="number" min="1" step="1" [value]="line.quantity" [readonly]="busy()" (change)="setQuantity(line.productId, $any($event.target).value)" [attr.aria-label]="line.productName + ' quantity'" /><button type="button" [attr.aria-label]="'Increase ' + line.productName + ' quantity'" (click)="setQuantity(line.productId, line.quantity + 1)" [disabled]="busy()">+</button></div><strong>{{ line.quantity * line.unitPrice | money }}</strong></div>
+          </article>
+        }
       </div>
       <div class="counter-cart-footer">
-        <div class="counter-notice warning" *ngIf="stockIssues() && lines().length && !catalogLoading()">Some items no longer have enough stock. Adjust quantities or hold this cart.</div>
+        @if (stockIssues() && lines().length && !catalogLoading()) {
+          <div class="counter-notice warning">Some items no longer have enough stock. Adjust quantities or hold this cart.</div>
+        }
         <div class="counter-total"><span>Total to charge</span><strong aria-live="polite">{{ total() | money }}</strong></div>
         <p class="counter-hint">Stock is checked again at checkout. Held carts do not reserve stock.</p>
         <button type="button" class="counter-button primary counter-charge" (click)="saveCart(true)" [disabled]="busy() || !lines().length || !pwa.online() || stockIssues() || catalogLoading() || !!catalogError()">{{ busy() ? 'Please wait…' : 'Charge ' + (total() | money) }}</button>
@@ -141,28 +204,45 @@
       </div>
     </aside>
   </section>
+}
 
-  <section class="counter-panel counter-pending" *ngIf="perm.canView('SALES')" aria-label="Pending sales">
+@if (perm.canView('SALES')) {
+  <section class="counter-panel counter-pending" aria-label="Pending sales">
     <div class="counter-section-heading"><div><h2>Pending sales <span class="counter-count">{{ pending().length }}</span></h2><p>Held carts from all cashiers. Resume a sale when the customer is ready.</p></div><button type="button" class="counter-button secondary" (click)="loadPending()" [disabled]="pendingLoading() || busy()">{{ pendingLoading() ? 'Refreshing…' : 'Refresh list' }}</button></div>
     <label class="counter-search counter-pending-search"><span class="sr-only">Search pending sales</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 5 5" /></svg><input type="search" placeholder="Search customer, reference, or product" [value]="pendingSearch()" (input)="pendingSearch.set($any($event.target).value)" /></label>
-    <div class="counter-notice error" role="alert" *ngIf="pendingError()">{{ pendingError() }}</div>
-    <div class="counter-empty" role="status" *ngIf="pendingLoading() && !pending().length">Loading pending sales…</div>
-    <cis-pager class="mt-2 block" *ngIf="filteredPending().length" [total]="filteredPending().length" [(pageSize)]="pendingPageSize" [(pageIndex)]="pendingPageIndex" />
-    <div class="counter-pending-table" *ngIf="filteredPending().length">
-      <table class="w-full border-collapse text-sm">
-        <thead><tr><th>Sale / customer</th><th>Items</th><th>Last saved</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
-        <tbody><tr *ngFor="let cart of displayedPending()">
-          <td><div><strong>{{ cart.customer || 'Walk-in customer' }}</strong><small>{{ cart.referenceNumber || '#' + cart.id.slice(0, 8) }}</small></div></td>
-          <td><span>{{ cart.lines.length }} products</span></td>
-          <td><span>{{ cart.updatedAt | date:'dd MMM, HH:mm' }}</span></td>
-          <td><strong>{{ cart.total | money }}</strong></td>
-          <td><span class="counter-status">On hold</span></td>
-          <td><cis-row-actions><button type="button" class="cis-row-action" (click)="openSale(cart)" [disabled]="busy() || !canSell()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 4l14 8-14 8V4z" /></svg>Resume</button><button type="button" class="cis-row-action cis-row-action-danger" *ngIf="canDeleteCarts()" (click)="cancelTarget.set(cart)" [disabled]="busy()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Cancel</button></cis-row-actions></td>
-        </tr></tbody>
+    @if (pendingError()) {
+      <div class="counter-notice error" role="alert">{{ pendingError() }}</div>
+    }
+    @if (pendingLoading() && !pending().length) {
+      <div class="counter-empty" role="status">Loading pending sales…</div>
+    }
+    @if (filteredPending().length) {
+      <cis-pager class="mt-2 block" [total]="filteredPending().length" [(pageSize)]="pendingPageSize" [(pageIndex)]="pendingPageIndex" />
+    }
+    @if (filteredPending().length) {
+      <div class="counter-pending-table">
+        <table class="w-full border-collapse text-sm">
+          <thead><tr><th>Sale / customer</th><th>Items</th><th>Last saved</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>@for (cart of displayedPending(); track cart) {
+            <tr>
+              <td><div><strong>{{ cart.customer || 'Walk-in customer' }}</strong><small>{{ cart.referenceNumber || '#' + cart.id.slice(0, 8) }}</small></div></td>
+              <td><span>{{ cart.lines.length }} products</span></td>
+              <td><span>{{ cart.updatedAt | date:'dd MMM, HH:mm' }}</span></td>
+              <td><strong>{{ cart.total | money }}</strong></td>
+              <td><span class="counter-status">On hold</span></td>
+              <td><cis-row-actions><button type="button" class="cis-row-action" (click)="openSale(cart)" [disabled]="busy() || !canSell()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 4l14 8-14 8V4z" /></svg>Resume</button>@if (canDeleteCarts()) {
+              <button type="button" class="cis-row-action cis-row-action-danger" (click)="cancelTarget.set(cart)" [disabled]="busy()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Cancel</button>
+            }</cis-row-actions></td>
+          </tr>
+        }</tbody>
       </table>
     </div>
-    <div class="counter-empty" *ngIf="!pendingLoading() && !pendingError() && !filteredPending().length"><h3>{{ pendingSearch() ? 'No matching sales' : 'All caught up' }}</h3><p>{{ pendingSearch() ? 'Try a different customer or reference.' : 'No held sales right now. Start a new sale and hold it here whenever you need.' }}</p></div>
-  </section>
+  }
+  @if (!pendingLoading() && !pendingError() && !filteredPending().length) {
+    <div class="counter-empty"><h3>{{ pendingSearch() ? 'No matching sales' : 'All caught up' }}</h3><p>{{ pendingSearch() ? 'Try a different customer or reference.' : 'No held sales right now. Start a new sale and hold it here whenever you need.' }}</p></div>
+  }
+</section>
+}
 </div>
 
 <cis-modal [open]="checkoutOpen()" title="Complete this sale" maxWidthClass="max-w-md" (close)="!busy() && checkoutOpen.set(false)">
@@ -193,13 +273,21 @@
       <input cisCurrencyInput type="text" inputmode="decimal" [ngModel]="amountReceived()" (ngModelChange)="amountReceived.set($event)" [readonly]="busy()" placeholder="{{ payable() | number:'1.0-0' }}" />
     </label>
   </div>
-  <div class="counter-notice warning" role="status" *ngIf="debtPreview() > 0">
-    {{ debtPreview() | money }} {{ 'customers.debtNote' | translate }}
-  </div>
-  <div class="counter-notice error" role="alert" *ngIf="discountError()">{{ discountError() }}</div>
-  <div class="counter-notice warning" role="alert" *ngIf="debtPreview() > 0 && !headerForm.controls.customerId.value">Select a registered customer to sell on debt.</div>
+  @if (debtPreview() > 0) {
+    <div class="counter-notice warning" role="status">
+      {{ debtPreview() | money }} {{ 'customers.debtNote' | translate }}
+    </div>
+  }
+  @if (discountError()) {
+    <div class="counter-notice error" role="alert">{{ discountError() }}</div>
+  }
+  @if (debtPreview() > 0 && !headerForm.controls.customerId.value) {
+    <div class="counter-notice warning" role="alert">Select a registered customer to sell on debt.</div>
+  }
   <p class="counter-hint">Confirm that payment has been collected before completing this sale. This records the sale and deducts stock; it does not process an online payment.</p>
-  <div class="counter-notice error" role="alert" *ngIf="actionError()">{{ actionError() }}</div>
+  @if (actionError()) {
+    <div class="counter-notice error" role="alert">{{ actionError() }}</div>
+  }
   <div class="counter-modal-actions"><button type="button" class="counter-button secondary" (click)="checkoutOpen.set(false)" [disabled]="busy()">Back to cart</button><button type="button" class="counter-button primary" (click)="completeSale()" [disabled]="busy() || !pwa.online() || !!discountError() || (debtPreview() > 0 && !headerForm.controls.customerId.value)">{{ busy() ? 'Completing…' : 'Payment received · Complete sale' }}</button></div>
 </cis-modal>
 
@@ -207,15 +295,23 @@
   <p class="counter-hint">Record an expense against the correct category and payment method.</p>
   <form class="counter-expense-form" [formGroup]="expenseForm" (ngSubmit)="saveExpense()">
     <label>Date<input type="date" formControlName="date" [readonly]="busy()" /></label>
-    <label>Category<select formControlName="categoryId"><option value="">{{ categoriesLoading() ? 'Loading categories…' : 'Select an expense category' }}</option><option *ngFor="let item of categories()" [value]="item.id">{{ item.name }}</option></select></label>
-    <label>Amount (TSH)<input cisCurrencyInput type="text" inputmode="decimal" formControlName="amount" [readonly]="busy()" /></label>
-    <label>Payment method<select formControlName="paymentMethod"><option value="CASH">Cash</option><option value="MPESA">M-Pesa</option><option value="BANK">Bank</option></select></label>
-    <label>Description <small>(optional)</small><textarea formControlName="description" rows="3" maxlength="1000" placeholder="What was this expense for?" [readonly]="busy()"></textarea></label>
-    <p class="counter-notice warning" *ngIf="!categoriesLoading() && !categories().length">No expense categories are available. Ask an administrator to create a category, then <button type="button" (click)="loadExpenseCategories()">retry</button>.</p>
-    <p class="counter-notice error" role="alert" *ngIf="expenseForm.touched && expenseForm.invalid">Choose a date and category, and enter an amount greater than zero.</p>
-    <p class="counter-notice error" role="alert" *ngIf="expenseError()">{{ expenseError() }}</p>
-    <div class="counter-modal-actions"><button type="button" class="counter-button secondary" (click)="expenseOpen.set(false)" [disabled]="busy()">Cancel</button><button type="submit" class="counter-button primary" [disabled]="busy() || categoriesLoading() || !categories().length || !pwa.online()">{{ busy() ? 'Saving…' : 'Save expense' }}</button></div>
-  </form>
+    <label>Category<select formControlName="categoryId"><option value="">{{ categoriesLoading() ? 'Loading categories…' : 'Select an expense category' }}</option>@for (item of categories(); track item) {
+    <option [value]="item.id">{{ item.name }}</option>
+  }</select></label>
+  <label>Amount (TSH)<input cisCurrencyInput type="text" inputmode="decimal" formControlName="amount" [readonly]="busy()" /></label>
+  <label>Payment method<select formControlName="paymentMethod"><option value="CASH">Cash</option><option value="MPESA">M-Pesa</option><option value="BANK">Bank</option></select></label>
+  <label>Description <small>(optional)</small><textarea formControlName="description" rows="3" maxlength="1000" placeholder="What was this expense for?" [readonly]="busy()"></textarea></label>
+  @if (!categoriesLoading() && !categories().length) {
+    <p class="counter-notice warning">No expense categories are available. Ask an administrator to create a category, then <button type="button" (click)="loadExpenseCategories()">retry</button>.</p>
+  }
+  @if (expenseForm.touched && expenseForm.invalid) {
+    <p class="counter-notice error" role="alert">Choose a date and category, and enter an amount greater than zero.</p>
+  }
+  @if (expenseError()) {
+    <p class="counter-notice error" role="alert">{{ expenseError() }}</p>
+  }
+  <div class="counter-modal-actions"><button type="button" class="counter-button secondary" (click)="expenseOpen.set(false)" [disabled]="busy()">Cancel</button><button type="submit" class="counter-button primary" [disabled]="busy() || categoriesLoading() || !categories().length || !pwa.online()">{{ busy() ? 'Saving…' : 'Save expense' }}</button></div>
+</form>
 </cis-modal>
 
 <cis-confirm-dialog [open]="!!discardTarget()" title="Discard unsaved cart changes?" message="Your unsaved changes will be lost. To keep this cart, go back and choose Hold sale for later." confirmText="Discard changes" cancelText="Keep editing" (confirm)="confirmDiscard()" (cancel)="cancelDiscard()" />
@@ -227,7 +323,9 @@
   <p class="counter-hint">{{ 'returns.findSaleHint' | translate }}</p>
   <form class="mt-3 grid gap-3" (ngSubmit)="findSale()">
     <input class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100" type="text" [ngModel]="findSaleQuery()" (ngModelChange)="findSaleQuery.set($event)" name="ref" placeholder="211026-0002" autofocus />
-    <p class="counter-notice error" role="alert" *ngIf="findSaleError()">{{ findSaleError() }}</p>
+    @if (findSaleError()) {
+      <p class="counter-notice error" role="alert">{{ findSaleError() }}</p>
+    }
     <div class="counter-modal-actions">
       <button type="button" class="counter-button secondary" (click)="findSaleOpen.set(false)">{{ 'common.cancel' | translate }}</button>
       <button type="submit" class="counter-button primary" [disabled]="findSaleBusy() || !findSaleQuery().trim()">{{ findSaleBusy() ? '…' : ('returns.findSale' | translate) }}</button>
@@ -242,10 +340,10 @@
   [location]="location.value.trim() || branchCtx.writeBranch()"
   (close)="returnOrderId.set(null)"
   (completed)="onReturnCompleted($event)"
-/>
+  />
 
-<cis-receipt-dialog
-  [open]="receiptOpen()"
-  [order]="receiptOrder()"
-  (close)="receiptOpen.set(false)"
-/>
+  <cis-receipt-dialog
+    [open]="receiptOpen()"
+    [order]="receiptOrder()"
+    (close)="receiptOpen.set(false)"
+    />

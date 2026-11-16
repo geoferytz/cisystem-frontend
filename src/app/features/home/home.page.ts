@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, computed, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
@@ -54,7 +54,7 @@ type MyPermissionsQueryResult = {
 @Component({
   selector: 'cis-home-page',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslatePipe],
+  imports: [RouterLink, TranslatePipe],
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss'
 })

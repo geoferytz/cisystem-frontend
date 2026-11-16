@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, HostListener, signal } from '@angular/core';
 
 @Component({
   selector: 'cis-row-actions',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `
     <button
       type="button"
@@ -13,14 +13,14 @@ import { Component, HostListener, signal } from '@angular/core';
       aria-haspopup="menu"
       aria-label="Actions"
       (click)="toggle($event)"
-    >
+      >
       <svg viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5" aria-hidden="true">
         <circle cx="12" cy="5" r="1.7" />
         <circle cx="12" cy="12" r="1.7" />
         <circle cx="12" cy="19" r="1.7" />
       </svg>
     </button>
-    <ng-container *ngIf="open()">
+    @if (open()) {
       <div class="fixed inset-0 z-[70]" (click)="close()" aria-hidden="true"></div>
       <div
         class="fixed z-[71] w-44 overflow-hidden rounded-xl bg-white py-1 shadow-lg ring-1 ring-slate-200 dark:bg-slate-800 dark:ring-slate-700"
@@ -29,11 +29,11 @@ import { Component, HostListener, signal } from '@angular/core';
         [style.bottom.px]="openUp() ? bottom() : null"
         role="menu"
         (click)="close()"
-      >
+        >
         <ng-content />
       </div>
-    </ng-container>
-  `,
+    }
+    `,
   styles: [
     `
       :host {

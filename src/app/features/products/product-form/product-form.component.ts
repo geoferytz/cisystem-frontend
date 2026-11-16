@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, inject, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BarcodeScannerComponent } from '../../../shared/ui/barcode-scanner/barcode-scanner.component';
@@ -45,7 +45,7 @@ type PricingTier = {
 @Component({
   selector: 'cis-product-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, BarcodeScannerComponent, CIS_FORM_IMPORTS],
+  imports: [FormsModule, ReactiveFormsModule, BarcodeScannerComponent, CIS_FORM_IMPORTS],
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.scss'
 })

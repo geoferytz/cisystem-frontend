@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -84,7 +84,7 @@ type PurchaseLineInput = {
 @Component({
   selector: 'cis-purchasing-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, ConfirmDialogComponent, ModalComponent, MoneyPipe, TranslatePipe, RepurchaseComponent, RowActionsMenuComponent, PagerComponent, CIS_FORM_IMPORTS],
+  imports: [ReactiveFormsModule, RouterLink, ConfirmDialogComponent, ModalComponent, MoneyPipe, TranslatePipe, RepurchaseComponent, RowActionsMenuComponent, PagerComponent, CIS_FORM_IMPORTS],
   templateUrl: './purchasing.page.html',
   styleUrl: './purchasing.page.scss'
 })

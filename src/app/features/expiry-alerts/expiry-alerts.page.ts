@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
@@ -34,7 +34,7 @@ type LowStockAlertsQueryResult = { lowStockAlerts: LowStockAlert[] };
 @Component({
   selector: 'cis-expiry-alerts-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, PagerComponent, CIS_FORM_IMPORTS],
+  imports: [ReactiveFormsModule, TranslatePipe, PagerComponent, CIS_FORM_IMPORTS],
   templateUrl: './expiry-alerts.page.html',
   styleUrl: './expiry-alerts.page.scss'
 })

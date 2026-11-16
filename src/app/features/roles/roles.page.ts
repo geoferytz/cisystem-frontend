@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GraphqlService } from '../../core/graphql/graphql.service';
 import { PermissionService } from '../../shared/services/permission.service';
@@ -25,7 +25,7 @@ type DeleteRoleResult = { deleteRole: boolean };
 @Component({
   selector: 'cis-roles-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, RowActionsMenuComponent, PermissionMatrixComponent, CIS_TABLE_IMPORTS, CIS_FORM_IMPORTS],
+  imports: [ReactiveFormsModule, TranslatePipe, RowActionsMenuComponent, PermissionMatrixComponent, CIS_TABLE_IMPORTS, CIS_FORM_IMPORTS],
   templateUrl: './roles.page.html'
 })
 export class RolesPage {

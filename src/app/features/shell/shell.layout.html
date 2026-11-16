@@ -2,696 +2,698 @@
   <div
     class="grid min-h-screen grid-cols-1"
     [ngClass]="{ 'md:grid-cols-[260px_1fr]': !isHome() && sidebarOpen() }"
-  >
-    <div
-      *ngIf="isMobile() && sidebarOpen()"
-      class="fixed inset-0 z-40 bg-slate-900/40 md:hidden"
-      (click)="closeSidebar()"
-    ></div>
+    >
+    @if (isMobile() && sidebarOpen()) {
+      <div
+        class="fixed inset-0 z-40 bg-slate-900/40 md:hidden"
+        (click)="closeSidebar()"
+      ></div>
+    }
 
-    <aside
-      *ngIf="!isHome() || isMobile()"
-      id="main-sidebar"
-      aria-label="Main navigation"
-      [attr.role]="isMobile() ? 'dialog' : null"
-      [attr.aria-modal]="isMobile() && sidebarOpen() ? true : null"
-      [attr.inert]="isMobile() && !sidebarOpen() ? '' : null"
-      [cdkTrapFocus]="isMobile() && sidebarOpen()"
-      [cdkTrapFocusAutoCapture]="isMobile() && sidebarOpen()"
-      [class.cis-sidebar-open]="isMobile() && sidebarOpen()"
-      class="cis-sidebar z-50 flex flex-col bg-primary-500 dark:bg-primary-900 text-white p-4 md:p-5 md:static md:translate-x-0"
+    @if (!isHome() || isMobile()) {
+      <aside
+        id="main-sidebar"
+        aria-label="Main navigation"
+        [attr.role]="isMobile() ? 'dialog' : null"
+        [attr.aria-modal]="isMobile() && sidebarOpen() ? true : null"
+        [attr.inert]="isMobile() && !sidebarOpen() ? '' : null"
+        [cdkTrapFocus]="isMobile() && sidebarOpen()"
+        [cdkTrapFocusAutoCapture]="isMobile() && sidebarOpen()"
+        [class.cis-sidebar-open]="isMobile() && sidebarOpen()"
+        class="cis-sidebar z-50 flex flex-col bg-primary-500 dark:bg-primary-900 text-white p-4 md:p-5 md:static md:translate-x-0"
       [ngClass]="{
         'fixed inset-y-0 left-0 w-[260px] transform transition-transform duration-200 ease-out': true,
         'md:hidden': !sidebarOpen(),
         '-translate-x-full': !sidebarOpen(),
         'translate-x-0': sidebarOpen()
       }"
-    >
-      <button type="button" class="mb-2 ml-auto flex h-11 w-11 items-center justify-center rounded-xl hover:bg-white/15 md:hidden" (click)="closeSidebar()" aria-label="Close navigation" cdkFocusInitial>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6" /></svg>
-      </button>
-      <div class="flex flex-col items-center justify-center gap-1.5 py-5">
-        <a routerLink="/home" class="block">
-          <img src="/NABO.png" alt="NABOO" class="h-9 w-auto object-contain" />
-        </a>
-        <span class="text-[11px] font-medium text-white/70">Sales &amp; Management System</span>
-      </div>
-
-      <hr class="mx-1 border-0 border-t border-white/20" />
-
-      <nav class="mt-4 grid gap-1">
-        <a
-          routerLink="/dashboard"
-          routerLinkActive="cis-nav-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
-          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 11l9-8 9 8v10a2 2 0 01-2 2H5a2 2 0 01-2-2V11z" />
-            </svg>
-          </span>
-          <span>{{ 'nav.dashboard' | translate }}</span>
-        </a>
-
-        <a
-          *ngIf="canView('COUNTER') || canView('SALES') || canView('EXPENSES')"
-          routerLink="/counter"
-          routerLinkActive="cis-nav-active"
-          ariaCurrentWhenActive="page"
-          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
-          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4" aria-hidden="true"><path d="M5 3h14v12H5zM8 6h8M8 10h2m4 0h2M3 15h18v6H3zM9 18h6" /></svg>
-          </span>
-          <span>{{ 'nav.counter' | translate }}</span>
-        </a>
-
-        <!-- Products with flyout popup -->
-        <div class="relative">
+        >
+        <button type="button" class="mb-2 ml-auto flex h-11 w-11 items-center justify-center rounded-xl hover:bg-white/15 md:hidden" (click)="closeSidebar()" aria-label="Close navigation" cdkFocusInitial>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-5 w-5" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6" /></svg>
+        </button>
+        <div class="flex flex-col items-center justify-center gap-1.5 py-5">
+          <a routerLink="/home" class="block">
+            <img src="/NABO.png" alt="NABOO" class="h-9 w-auto object-contain" />
+          </a>
+          <span class="text-[11px] font-medium text-white/70">Sales &amp; Management System</span>
+        </div>
+        <hr class="mx-1 border-0 border-t border-white/20" />
+        <nav class="mt-4 grid gap-1">
           <a
-            [routerLink]="isMobile() ? null : '/product-dashboard'"
-            [attr.role]="isMobile() ? 'button' : null"
-            [attr.tabindex]="isMobile() ? 0 : null"
-            [attr.aria-expanded]="productsExpanded()"
-            (keydown.enter)="isMobile() && toggleProducts()"
-            (click)="toggleProducts(); $event.stopPropagation()"
-            class="grid w-full grid-cols-[44px_1fr_auto] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15 cursor-pointer"
-            [ngClass]="{ 'cis-nav-active': isProductsSection() || productsExpanded() }">
-            <span class="relative grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+            routerLink="/dashboard"
+            routerLinkActive="cis-nav-active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
+            <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M20 13V7a2 2 0 00-2-2H6a2 2 0 00-2 2v6" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 13h16v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 11l9-8 9 8v10a2 2 0 01-2 2H5a2 2 0 01-2-2V11z" />
               </svg>
             </span>
-            <span>{{ 'nav.productDashboard' | translate }}</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 transition-transform duration-200"
-              [ngClass]="{ 'rotate-90': productsExpanded() }">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
+            <span>{{ 'nav.dashboard' | translate }}</span>
           </a>
-
-          <!-- Flyout backdrop (click to close) -->
-          <div
-            *ngIf="productsExpanded()"
-            class="fixed inset-0 z-[60] hidden md:block"
-            (click)="toggleProducts()">
-          </div>
-
-          <!-- Flyout popup -->
-          <div
-            *ngIf="productsExpanded()"
-            class="cis-sidebar-flyout absolute left-full top-0 z-[61] ml-2 w-56 rounded-xl bg-white dark:bg-slate-800 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700 overflow-hidden"
-            (click)="$event.stopPropagation()">
-
-            <div class="border-b border-slate-100 dark:border-slate-700 px-4 py-3">
-              <div class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{{ 'nav.productDashboard' | translate }}</div>
-            </div>
-
-            <div class="grid gap-0.5 p-2">
-              <a *ngIf="isMobile()" routerLink="/product-dashboard" class="rounded-lg px-3 py-2 text-sm font-semibold text-primary-700 dark:text-primary-200">{{ 'nav.overview' | translate }}</a>
-              <a
-                *ngIf="canView('PRODUCTS')"
-                routerLink="/products"
-                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="toggleProducts()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-purple-600 dark:text-purple-400">
+          @if (canView('COUNTER') || canView('SALES') || canView('EXPENSES')) {
+            <a
+              routerLink="/counter"
+              routerLinkActive="cis-nav-active"
+              ariaCurrentWhenActive="page"
+              class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
+              <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4" aria-hidden="true"><path d="M5 3h14v12H5zM8 6h8M8 10h2m4 0h2M3 15h18v6H3zM9 18h6" /></svg>
+              </span>
+              <span>{{ 'nav.counter' | translate }}</span>
+            </a>
+          }
+          <!-- Products with flyout popup -->
+          <div class="relative">
+            <a
+              [routerLink]="isMobile() ? null : '/product-dashboard'"
+              [attr.role]="isMobile() ? 'button' : null"
+              [attr.tabindex]="isMobile() ? 0 : null"
+              [attr.aria-expanded]="productsExpanded()"
+              (keydown.enter)="isMobile() && toggleProducts()"
+              (click)="toggleProducts(); $event.stopPropagation()"
+              class="grid w-full grid-cols-[44px_1fr_auto] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15 cursor-pointer"
+              [ngClass]="{ 'cis-nav-active': isProductsSection() || productsExpanded() }">
+              <span class="relative grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M20 13V7a2 2 0 00-2-2H6a2 2 0 00-2 2v6" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M4 13h16v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6z" />
                 </svg>
-                <span>{{ 'nav.products' | translate }}</span>
-              </a>
-
-              <a
-                *ngIf="canView('CATEGORIES')"
-                routerLink="/categories"
-                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="toggleProducts()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-emerald-600 dark:text-emerald-400">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-                <span>{{ 'nav.categories' | translate }}</span>
-              </a>
-
-              <a
-                *ngIf="canView('EXPIRY_ALERTS')"
-                routerLink="/expiry-alerts"
-                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="toggleProducts()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-amber-600 dark:text-amber-400">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-                </svg>
-                <span>{{ 'nav.expiryAlerts' | translate }}</span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <a
-          *ngIf="canView('INVENTORY')"
-          routerLink="/inventory"
-          routerLinkActive="cis-nav-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
-          <span class="relative grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4v10l8 4 8-4V7z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4 7l8 4 8-4" />
-            </svg>
-            <span
-              *ngIf="pendingReceivingCount()"
-              class="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-red-500 px-0.5 text-[9px] font-bold leading-none text-white ring-2 ring-primary-500"
-            >{{ pendingReceivingCount() }}</span>
-          </span>
-          <span>{{ 'nav.inventory' | translate }}</span>
-        </a>
-
-        <a
-          *ngIf="canView('STOCK_MOVEMENTS')"
-          routerLink="/stock-movements"
-          routerLinkActive="cis-nav-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
-          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13M8 12h13M8 17h13" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h.01M3 12h.01M3 17h.01" />
-            </svg>
-          </span>
-          <span>{{ 'nav.stockMovements' | translate }}</span>
-        </a>
-
-        <a
-          *ngIf="canView('TRANSFERS')"
-          routerLink="/transfers"
-          routerLinkActive="cis-nav-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
-          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13m0 0l-3-3m3 3l-3 3M16 17H3m0 0l3 3m-3-3l3-3" />
-            </svg>
-          </span>
-          <span>{{ 'nav.transfers' | translate }}</span>
-        </a>
-
-        <a
-          *ngIf="canView('PURCHASING')"
-          routerLink="/purchasing"
-          routerLinkActive="cis-nav-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
-          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M7 13l-1.5 7h13L17 13" />
-            </svg>
-          </span>
-          <span>{{ 'nav.purchasing' | translate }}</span>
-        </a>
-
-        <!-- Sales with flyout popup -->
-        <div class="relative">
-          <button
-            type="button"
-            (click)="toggleSales(); $event.stopPropagation()"
-            class="grid w-full grid-cols-[44px_1fr_auto] items-center rounded-xl px-3 py-2 text-left text-sm text-white/90 hover:bg-white/15"
-            [ngClass]="{ 'cis-nav-active': isSalesSection() || salesExpanded() }">
-            <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" />
+              </span>
+              <span>{{ 'nav.productDashboard' | translate }}</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 transition-transform duration-200"
+                [ngClass]="{ 'rotate-90': productsExpanded() }">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
               </svg>
-            </span>
-            <span>{{ 'nav.sales' | translate }}</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 transition-transform duration-200"
-              [ngClass]="{ 'rotate-90': salesExpanded() }">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-
-          <!-- Flyout backdrop (click to close) -->
-          <div
-            *ngIf="salesExpanded()"
-            class="fixed inset-0 z-[60] hidden md:block"
-            (click)="toggleSales()">
+            </a>
+            <!-- Flyout backdrop (click to close) -->
+            @if (productsExpanded()) {
+              <div
+                class="fixed inset-0 z-[60] hidden md:block"
+                (click)="toggleProducts()">
+              </div>
+            }
+            <!-- Flyout popup -->
+            @if (productsExpanded()) {
+              <div
+                class="cis-sidebar-flyout absolute left-full top-0 z-[61] ml-2 w-56 rounded-xl bg-white dark:bg-slate-800 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700 overflow-hidden"
+                (click)="$event.stopPropagation()">
+                <div class="border-b border-slate-100 dark:border-slate-700 px-4 py-3">
+                  <div class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{{ 'nav.productDashboard' | translate }}</div>
+                </div>
+                <div class="grid gap-0.5 p-2">
+                  @if (isMobile()) {
+                    <a routerLink="/product-dashboard" class="rounded-lg px-3 py-2 text-sm font-semibold text-primary-700 dark:text-primary-200">{{ 'nav.overview' | translate }}</a>
+                  }
+                  @if (canView('PRODUCTS')) {
+                    <a
+                      routerLink="/products"
+                      routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
+                      [routerLinkActiveOptions]="{ exact: true }"
+                      (click)="toggleProducts()"
+                      class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-purple-600 dark:text-purple-400">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20 13V7a2 2 0 00-2-2H6a2 2 0 00-2 2v6" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 13h16v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6z" />
+                      </svg>
+                      <span>{{ 'nav.products' | translate }}</span>
+                    </a>
+                  }
+                  @if (canView('CATEGORIES')) {
+                    <a
+                      routerLink="/categories"
+                      routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
+                      [routerLinkActiveOptions]="{ exact: true }"
+                      (click)="toggleProducts()"
+                      class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-emerald-600 dark:text-emerald-400">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                      </svg>
+                      <span>{{ 'nav.categories' | translate }}</span>
+                    </a>
+                  }
+                  @if (canView('EXPIRY_ALERTS')) {
+                    <a
+                      routerLink="/expiry-alerts"
+                      routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
+                      [routerLinkActiveOptions]="{ exact: true }"
+                      (click)="toggleProducts()"
+                      class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-amber-600 dark:text-amber-400">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                      </svg>
+                      <span>{{ 'nav.expiryAlerts' | translate }}</span>
+                    </a>
+                  }
+                </div>
+              </div>
+            }
           </div>
-
-          <!-- Flyout popup -->
-          <div
-            *ngIf="salesExpanded()"
-            class="cis-sidebar-flyout absolute left-full top-0 z-[61] ml-2 w-56 rounded-xl bg-white dark:bg-slate-800 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700 overflow-hidden"
-            (click)="$event.stopPropagation()">
-
-            <div class="border-b border-slate-100 dark:border-slate-700 px-4 py-3">
-              <div class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{{ 'nav.sales' | translate }}</div>
-            </div>
-
-            <div class="grid gap-0.5 p-2">
-              <a
-                *ngIf="canView('SALES')"
-                routerLink="/sales"
-                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="toggleSales()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-emerald-600 dark:text-emerald-400">
+          @if (canView('INVENTORY')) {
+            <a
+              routerLink="/inventory"
+              routerLinkActive="cis-nav-active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
+              <span class="relative grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4v10l8 4 8-4V7z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 7l8 4 8-4" />
+                </svg>
+                @if (pendingReceivingCount()) {
+                  <span
+                    class="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-red-500 px-0.5 text-[9px] font-bold leading-none text-white ring-2 ring-primary-500"
+                  >{{ pendingReceivingCount() }}</span>
+                }
+              </span>
+              <span>{{ 'nav.inventory' | translate }}</span>
+            </a>
+          }
+          @if (canView('STOCK_MOVEMENTS')) {
+            <a
+              routerLink="/stock-movements"
+              routerLinkActive="cis-nav-active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
+              <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13M8 12h13M8 17h13" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 7h.01M3 12h.01M3 17h.01" />
+                </svg>
+              </span>
+              <span>{{ 'nav.stockMovements' | translate }}</span>
+            </a>
+          }
+          @if (canView('TRANSFERS')) {
+            <a
+              routerLink="/transfers"
+              routerLinkActive="cis-nav-active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
+              <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h13m0 0l-3-3m3 3l-3 3M16 17H3m0 0l3 3m-3-3l3-3" />
+                </svg>
+              </span>
+              <span>{{ 'nav.transfers' | translate }}</span>
+            </a>
+          }
+          @if (canView('PURCHASING')) {
+            <a
+              routerLink="/purchasing"
+              routerLinkActive="cis-nav-active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
+              <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 13l-1.5 7h13L17 13" />
+                </svg>
+              </span>
+              <span>{{ 'nav.purchasing' | translate }}</span>
+            </a>
+          }
+          <!-- Sales with flyout popup -->
+          <div class="relative">
+            <button
+              type="button"
+              (click)="toggleSales(); $event.stopPropagation()"
+              class="grid w-full grid-cols-[44px_1fr_auto] items-center rounded-xl px-3 py-2 text-left text-sm text-white/90 hover:bg-white/15"
+              [ngClass]="{ 'cis-nav-active': isSalesSection() || salesExpanded() }">
+              <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" />
                 </svg>
-                <span>{{ 'nav.sales' | translate }}</span>
-              </a>
-
-              <a
-                *ngIf="canView('MY_SALES')"
-                routerLink="/my-sales"
-                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="toggleSales()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-purple-600 dark:text-purple-400">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 14l2 2 4-4" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 3h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" />
-                </svg>
-                <span>{{ 'nav.mySales' | translate }}</span>
-              </a>
-
-            </div>
-          </div>
-        </div>
-
-        <a
-          *ngIf="canView('CUSTOMERS')"
-          routerLink="/customers"
-          routerLinkActive="cis-nav-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
-          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-3-3h-1m-4 5v-2a3 3 0 00-3-3H7a3 3 0 00-3 3v2h10zm-7-9a3.5 3.5 0 110-7 3.5 3.5 0 010 7z" />
-            </svg>
-          </span>
-          <span>{{ 'nav.customers' | translate }}</span>
-        </a>
-
-        <a
-          *ngIf="canView('RETURNS') || canView('SALES')"
-          routerLink="/returns"
-          routerLinkActive="cis-nav-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
-          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 14 4 9l5-5" /><path stroke-linecap="round" stroke-linejoin="round" d="M4 9h11a5 5 0 0 1 0 10h-3" />
-            </svg>
-          </span>
-          <span>{{ 'nav.returns' | translate }}</span>
-        </a>
-
-        <!-- Finance with flyout popup -->
-        <div class="relative">
-          <button
-            type="button"
-            (click)="toggleFinance(); $event.stopPropagation()"
-            class="grid w-full grid-cols-[44px_1fr_auto] items-center rounded-xl px-3 py-2 text-left text-sm text-white/90 hover:bg-white/15"
-            [ngClass]="{ 'cis-nav-active': isFinanceSection() || financeExpanded() }">
-            <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" />
+              </span>
+              <span>{{ 'nav.sales' | translate }}</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 transition-transform duration-200"
+                [ngClass]="{ 'rotate-90': salesExpanded() }">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
               </svg>
-            </span>
-            <span>{{ 'nav.finance' | translate }}</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 transition-transform duration-200"
-              [ngClass]="{ 'rotate-90': financeExpanded() }">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-
-          <!-- Flyout backdrop (click to close) -->
-          <div
-            *ngIf="financeExpanded()"
-            class="fixed inset-0 z-[60] hidden md:block"
-            (click)="toggleFinance()">
+            </button>
+            <!-- Flyout backdrop (click to close) -->
+            @if (salesExpanded()) {
+              <div
+                class="fixed inset-0 z-[60] hidden md:block"
+                (click)="toggleSales()">
+              </div>
+            }
+            <!-- Flyout popup -->
+            @if (salesExpanded()) {
+              <div
+                class="cis-sidebar-flyout absolute left-full top-0 z-[61] ml-2 w-56 rounded-xl bg-white dark:bg-slate-800 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700 overflow-hidden"
+                (click)="$event.stopPropagation()">
+                <div class="border-b border-slate-100 dark:border-slate-700 px-4 py-3">
+                  <div class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{{ 'nav.sales' | translate }}</div>
+                </div>
+                <div class="grid gap-0.5 p-2">
+                  @if (canView('SALES')) {
+                    <a
+                      routerLink="/sales"
+                      routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
+                      [routerLinkActiveOptions]="{ exact: true }"
+                      (click)="toggleSales()"
+                      class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-emerald-600 dark:text-emerald-400">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" />
+                      </svg>
+                      <span>{{ 'nav.sales' | translate }}</span>
+                    </a>
+                  }
+                  @if (canView('MY_SALES')) {
+                    <a
+                      routerLink="/my-sales"
+                      routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
+                      [routerLinkActiveOptions]="{ exact: true }"
+                      (click)="toggleSales()"
+                      class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-purple-600 dark:text-purple-400">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 14l2 2 4-4" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 3h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" />
+                      </svg>
+                      <span>{{ 'nav.mySales' | translate }}</span>
+                    </a>
+                  }
+                </div>
+              </div>
+            }
           </div>
-
-          <!-- Flyout popup -->
-          <div
-            *ngIf="financeExpanded()"
-            class="cis-sidebar-flyout absolute left-full top-0 z-[61] ml-2 w-56 rounded-xl bg-white dark:bg-slate-800 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700 overflow-hidden"
-            (click)="$event.stopPropagation()">
-
-            <div class="border-b border-slate-100 dark:border-slate-700 px-4 py-3">
-              <div class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{{ 'nav.finance' | translate }}</div>
-            </div>
-
-            <div class="grid gap-0.5 p-2">
-              <a
-                *ngIf="canView('EXPENSES')"
-                routerLink="/expenses"
-                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="toggleFinance()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-emerald-600 dark:text-emerald-400">
+          @if (canView('CUSTOMERS')) {
+            <a
+              routerLink="/customers"
+              routerLinkActive="cis-nav-active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
+              <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-3-3h-1m-4 5v-2a3 3 0 00-3-3H7a3 3 0 00-3 3v2h10zm-7-9a3.5 3.5 0 110-7 3.5 3.5 0 010 7z" />
+                </svg>
+              </span>
+              <span>{{ 'nav.customers' | translate }}</span>
+            </a>
+          }
+          @if (canView('RETURNS') || canView('SALES')) {
+            <a
+              routerLink="/returns"
+              routerLinkActive="cis-nav-active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
+              <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 14 4 9l5-5" /><path stroke-linecap="round" stroke-linejoin="round" d="M4 9h11a5 5 0 0 1 0 10h-3" />
+                </svg>
+              </span>
+              <span>{{ 'nav.returns' | translate }}</span>
+            </a>
+          }
+          <!-- Finance with flyout popup -->
+          <div class="relative">
+            <button
+              type="button"
+              (click)="toggleFinance(); $event.stopPropagation()"
+              class="grid w-full grid-cols-[44px_1fr_auto] items-center rounded-xl px-3 py-2 text-left text-sm text-white/90 hover:bg-white/15"
+              [ngClass]="{ 'cis-nav-active': isFinanceSection() || financeExpanded() }">
+              <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" />
                 </svg>
-                <span>{{ 'nav.expenses' | translate }}</span>
-              </a>
-
-              <a
-                *ngIf="canView('EXPENSE_CATEGORIES')"
-                routerLink="/expense-categories"
-                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="toggleFinance()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-amber-600 dark:text-amber-400">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-                <span>{{ 'nav.expenseCategories' | translate }}</span>
-              </a>
-
-              <a
-                *ngIf="canView('PROFIT_MANAGEMENT')"
-                routerLink="/profit-management"
-                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="toggleFinance()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-purple-600 dark:text-purple-400">
+              </span>
+              <span>{{ 'nav.finance' | translate }}</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 transition-transform duration-200"
+                [ngClass]="{ 'rotate-90': financeExpanded() }">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+            <!-- Flyout backdrop (click to close) -->
+            @if (financeExpanded()) {
+              <div
+                class="fixed inset-0 z-[60] hidden md:block"
+                (click)="toggleFinance()">
+              </div>
+            }
+            <!-- Flyout popup -->
+            @if (financeExpanded()) {
+              <div
+                class="cis-sidebar-flyout absolute left-full top-0 z-[61] ml-2 w-56 rounded-xl bg-white dark:bg-slate-800 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700 overflow-hidden"
+                (click)="$event.stopPropagation()">
+                <div class="border-b border-slate-100 dark:border-slate-700 px-4 py-3">
+                  <div class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{{ 'nav.finance' | translate }}</div>
+                </div>
+                <div class="grid gap-0.5 p-2">
+                  @if (canView('EXPENSES')) {
+                    <a
+                      routerLink="/expenses"
+                      routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
+                      [routerLinkActiveOptions]="{ exact: true }"
+                      (click)="toggleFinance()"
+                      class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-emerald-600 dark:text-emerald-400">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.5 0-3 .5-3 2s1.5 2 3 2 3 .5 3 2-1.5 2-3 2" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v2m0 10v2" />
+                      </svg>
+                      <span>{{ 'nav.expenses' | translate }}</span>
+                    </a>
+                  }
+                  @if (canView('EXPENSE_CATEGORIES')) {
+                    <a
+                      routerLink="/expense-categories"
+                      routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
+                      [routerLinkActiveOptions]="{ exact: true }"
+                      (click)="toggleFinance()"
+                      class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-amber-600 dark:text-amber-400">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                      </svg>
+                      <span>{{ 'nav.expenseCategories' | translate }}</span>
+                    </a>
+                  }
+                  @if (canView('PROFIT_MANAGEMENT')) {
+                    <a
+                      routerLink="/profit-management"
+                      routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
+                      [routerLinkActiveOptions]="{ exact: true }"
+                      (click)="toggleFinance()"
+                      class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-purple-600 dark:text-purple-400">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 15l3-3 3 2 5-6" />
+                      </svg>
+                      <span>{{ 'nav.profitManagement' | translate }}</span>
+                    </a>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+          @if (canView('REPORTS')) {
+            <a
+              routerLink="/reports"
+              routerLinkActive="cis-nav-active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
+              <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M7 15l3-3 3 2 5-6" />
                 </svg>
-                <span>{{ 'nav.profitManagement' | translate }}</span>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <a
-          *ngIf="canView('REPORTS')"
-          routerLink="/reports"
-          routerLinkActive="cis-nav-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
-          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M7 15l3-3 3 2 5-6" />
-            </svg>
-          </span>
-          <span>{{ 'nav.reports' | translate }}</span>
-        </a>
-
-
-        <div class="relative" *ngIf="canView('USERS_ROLES')">
-          <button
-            type="button"
-            (click)="toggleUsersRoles(); $event.stopPropagation()"
-            class="grid w-full grid-cols-[44px_1fr_auto] items-center rounded-xl px-3 py-2 text-left text-sm text-white/90 hover:bg-white/15"
-            [ngClass]="{ 'cis-nav-active': isUsersRolesSection() || usersRolesExpanded() }">
-            <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 20H2v-2a4 4 0 014-4h1" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16 3.13a4 4 0 010 7.75" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M8 3.13a4 4 0 000 7.75" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 12a4 4 0 100-8 4 4 0 000 8z" />
-              </svg>
-            </span>
-            <span>{{ 'nav.usersRoles' | translate }}</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 transition-transform duration-200"
-              [ngClass]="{ 'rotate-90': usersRolesExpanded() }">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-
-          <!-- Flyout backdrop (click to close) -->
-          <div
-            *ngIf="usersRolesExpanded()"
-            class="fixed inset-0 z-[60] hidden md:block"
-            (click)="toggleUsersRoles()">
-          </div>
-
-          <!-- Flyout popup -->
-          <div
-            *ngIf="usersRolesExpanded()"
-            class="cis-sidebar-flyout absolute left-full top-0 z-[61] ml-2 w-56 rounded-xl bg-white dark:bg-slate-800 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700 overflow-hidden"
-            (click)="$event.stopPropagation()">
-
-            <div class="border-b border-slate-100 dark:border-slate-700 px-4 py-3">
-              <div class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{{ 'nav.usersRoles' | translate }}</div>
-            </div>
-
-            <div class="grid gap-0.5 p-2">
-              <a
-                routerLink="/users"
-                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="toggleUsersRoles()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-pink-600 dark:text-pink-400">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a7.5 7.5 0 0115 0" />
+              </span>
+              <span>{{ 'nav.reports' | translate }}</span>
+            </a>
+          }
+          @if (canView('USERS_ROLES')) {
+            <div class="relative">
+              <button
+                type="button"
+                (click)="toggleUsersRoles(); $event.stopPropagation()"
+                class="grid w-full grid-cols-[44px_1fr_auto] items-center rounded-xl px-3 py-2 text-left text-sm text-white/90 hover:bg-white/15"
+                [ngClass]="{ 'cis-nav-active': isUsersRolesSection() || usersRolesExpanded() }">
+                <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-4-4h-1" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 20H2v-2a4 4 0 014-4h1" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 3.13a4 4 0 010 7.75" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 3.13a4 4 0 000 7.75" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 12a4 4 0 100-8 4 4 0 000 8z" />
+                  </svg>
+                </span>
+                <span>{{ 'nav.usersRoles' | translate }}</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 transition-transform duration-200"
+                  [ngClass]="{ 'rotate-90': usersRolesExpanded() }">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
-                <span>{{ 'nav.users' | translate }}</span>
-              </a>
-
-              <a
-                routerLink="/roles"
-                routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
-                [routerLinkActiveOptions]="{ exact: true }"
-                (click)="toggleUsersRoles()"
-                class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-violet-600 dark:text-violet-400">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                </svg>
-                <span>{{ 'nav.roles' | translate }}</span>
-              </a>
+              </button>
+              <!-- Flyout backdrop (click to close) -->
+              @if (usersRolesExpanded()) {
+                <div
+                  class="fixed inset-0 z-[60] hidden md:block"
+                  (click)="toggleUsersRoles()">
+                </div>
+              }
+              <!-- Flyout popup -->
+              @if (usersRolesExpanded()) {
+                <div
+                  class="cis-sidebar-flyout absolute left-full top-0 z-[61] ml-2 w-56 rounded-xl bg-white dark:bg-slate-800 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700 overflow-hidden"
+                  (click)="$event.stopPropagation()">
+                  <div class="border-b border-slate-100 dark:border-slate-700 px-4 py-3">
+                    <div class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{{ 'nav.usersRoles' | translate }}</div>
+                  </div>
+                  <div class="grid gap-0.5 p-2">
+                    <a
+                      routerLink="/users"
+                      routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
+                      [routerLinkActiveOptions]="{ exact: true }"
+                      (click)="toggleUsersRoles()"
+                      class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-pink-600 dark:text-pink-400">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.25a7.5 7.5 0 0115 0" />
+                      </svg>
+                      <span>{{ 'nav.users' | translate }}</span>
+                    </a>
+                    <a
+                      routerLink="/roles"
+                      routerLinkActive="bg-pink-50 dark:bg-pink-900/30 text-pink-900 dark:text-pink-300 font-semibold"
+                      [routerLinkActiveOptions]="{ exact: true }"
+                      (click)="toggleUsersRoles()"
+                      class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4 text-violet-600 dark:text-violet-400">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                      </svg>
+                      <span>{{ 'nav.roles' | translate }}</span>
+                    </a>
+                  </div>
+                </div>
+              }
             </div>
-          </div>
-        </div>
-
-        <a
-          *ngIf="canView('BRANCHES')"
-          routerLink="/branches"
-          routerLinkActive="cis-nav-active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
-          <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 9l1.5-5h15L21 9" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 9v11a1 1 0 001 1h16a1 1 0 001-1V9" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3 9h18M9 21v-7h6v7" />
-            </svg>
-          </span>
-          <span>{{ 'nav.branches' | translate }}</span>
-        </a>
-
-      </nav>
-
-      <!-- <button
+          }
+          @if (canView('BRANCHES')) {
+            <a
+              routerLink="/branches"
+              routerLinkActive="cis-nav-active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="grid grid-cols-[44px_1fr] items-center rounded-xl px-3 py-2 text-sm text-white/90 hover:bg-white/15">
+              <span class="grid h-8 w-8 place-items-center rounded-lg bg-white/5 ring-1 ring-white/10">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 9l1.5-5h15L21 9" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 9v11a1 1 0 001 1h16a1 1 0 001-1V9" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 9h18M9 21v-7h6v7" />
+                </svg>
+              </span>
+              <span>{{ 'nav.branches' | translate }}</span>
+            </a>
+          }
+        </nav>
+        <!-- <button
         *ngIf="isAuthed()"
         (click)="logout()"
         class="mt-6 w-full rounded-xl bg-white/15 px-3 py-2 text-sm font-semibold hover:bg-white/20"
-      >
+        >
         Logout
       </button> -->
-
       <div class="mt-auto pt-6">
         <div class="text-center text-[11px] text-purple-100/90">
           © {{ currentYear }} {{ 'common.footer' | translate }}
         </div>
       </div>
     </aside>
+  }
 
-    <main class="cis-system flex min-h-screen flex-col p-4 md:p-6 dark:bg-slate-900" (click)="closeMenus()">
-      <cis-toasts />
-      <app-shell-header
-        [user]="user()"
-        [isAuthed]="isAuthed()"
-        [showSidebarToggle]="!isHome() || isMobile()"
-        [sidebarOpen]="sidebarOpen()"
-        [notificationsCount]="notificationsCount()"
-        [canViewAlerts]="canView('EXPIRY_ALERTS')"
-        [notificationsOpen]="notificationsOpen()"
-        [userMenuOpen]="userMenuOpen()"
-        [langMenuOpen]="langMenuOpen()"
-        [branchMenuOpen]="branchMenuOpen()"
-        (toggleSidebar)="toggleSidebar()"
-        (toggleNotifications)="toggleNotifications()"
-        (toggleUserMenu)="toggleUserMenu()"
-        (toggleLangMenu)="toggleLangMenu()"
-        (toggleBranchMenu)="toggleBranchMenu()"
-        (closeMenus)="closeMenus()"
-        (logout)="logout()"
-        (changePassword)="openChangePassword()"
-        (resetUserPassword)="openResetUserPassword()"
+  <main class="cis-system flex min-h-screen flex-col p-4 md:p-6 dark:bg-slate-900" (click)="closeMenus()">
+    <cis-toasts />
+    <app-shell-header
+      [user]="user()"
+      [isAuthed]="isAuthed()"
+      [showSidebarToggle]="!isHome() || isMobile()"
+      [sidebarOpen]="sidebarOpen()"
+      [notificationsCount]="notificationsCount()"
+      [canViewAlerts]="canView('EXPIRY_ALERTS')"
+      [notificationsOpen]="notificationsOpen()"
+      [userMenuOpen]="userMenuOpen()"
+      [langMenuOpen]="langMenuOpen()"
+      [branchMenuOpen]="branchMenuOpen()"
+      (toggleSidebar)="toggleSidebar()"
+      (toggleNotifications)="toggleNotifications()"
+      (toggleUserMenu)="toggleUserMenu()"
+      (toggleLangMenu)="toggleLangMenu()"
+      (toggleBranchMenu)="toggleBranchMenu()"
+      (closeMenus)="closeMenus()"
+      (logout)="logout()"
+      (changePassword)="openChangePassword()"
+      (resetUserPassword)="openResetUserPassword()"
       />
 
-      <div class="flex-1">
-        <router-outlet />
-      </div>
+    <div class="flex-1">
+      <router-outlet />
+    </div>
 
-      <footer *ngIf="isHome()" class="mt-8 text-center text-xs text-slate-500 dark:text-slate-400">
+    @if (isHome()) {
+      <footer class="mt-8 text-center text-xs text-slate-500 dark:text-slate-400">
         © {{ currentYear }} {{ 'common.footer' | translate }}
       </footer>
-    </main>
-  </div>
+    }
+  </main>
+</div>
 
-  <nav class="cis-bottom-nav" aria-label="Mobile navigation">
-    <a routerLink="/home" routerLinkActive="cis-bottom-active" ariaCurrentWhenActive="page" [routerLinkActiveOptions]="{ exact: true }" aria-label="Home">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3V10Z" /><path d="M9 20v-7h6v7" /></svg>
-      <span>{{ 'nav.home' | translate }}</span>
-    </a>
-    <a routerLink="/dashboard" routerLinkActive="cis-bottom-active" ariaCurrentWhenActive="page">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z" /></svg>
-      <span>{{ 'nav.dashboard' | translate }}</span>
-    </a>
-    <a *ngIf="canView('SALES') || canView('EXPENSES')" routerLink="/counter" routerLinkActive="cis-bottom-active" ariaCurrentWhenActive="page">
+<nav class="cis-bottom-nav" aria-label="Mobile navigation">
+  <a routerLink="/home" routerLinkActive="cis-bottom-active" ariaCurrentWhenActive="page" [routerLinkActiveOptions]="{ exact: true }" aria-label="Home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3V10Z" /><path d="M9 20v-7h6v7" /></svg>
+    <span>{{ 'nav.home' | translate }}</span>
+  </a>
+  <a routerLink="/dashboard" routerLinkActive="cis-bottom-active" ariaCurrentWhenActive="page">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z" /></svg>
+    <span>{{ 'nav.dashboard' | translate }}</span>
+  </a>
+  @if (canView('SALES') || canView('EXPENSES')) {
+    <a routerLink="/counter" routerLinkActive="cis-bottom-active" ariaCurrentWhenActive="page">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 3h14v12H5zM8 6h8M8 10h2m4 0h2M3 15h18v6H3zM9 18h6" /></svg>
       <span>{{ 'nav.counter' | translate }}</span>
     </a>
-    <button type="button" (click)="toggleSidebar()" [attr.aria-expanded]="sidebarOpen()" aria-controls="main-sidebar" aria-label="Open navigation">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
-      <span>{{ 'nav.menu' | translate }}</span>
-    </button>
-  </nav>
+  }
+  <button type="button" (click)="toggleSidebar()" [attr.aria-expanded]="sidebarOpen()" aria-controls="main-sidebar" aria-label="Open navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+    <span>{{ 'nav.menu' | translate }}</span>
+  </button>
+</nav>
 </div>
 
-<div *ngIf="changePasswordOpen()" class="cis-modal-overlay fixed inset-0 z-50">
-  <div class="absolute inset-0 bg-slate-900/40" (click)="closeChangePassword()"></div>
-  <div class="absolute inset-0 flex items-center justify-center p-4">
-    <div class="w-full max-w-sm rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700" (click)="$event.stopPropagation()">
-      <div class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'modal.changePassword.title' | translate }}</div>
-      <div class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ 'modal.changePassword.help' | translate }}</div>
-
-      <div class="mt-4 grid gap-3">
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'modal.changePassword.currentPassword' | translate }}
-          <input
-            type="password"
-            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100"
-            [value]="changePasswordCurrent()"
-            (input)="changePasswordCurrent.set(($any($event.target).value))"
-          />
-        </label>
-
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'modal.changePassword.newPassword' | translate }}
-          <input
-            type="password"
-            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100"
-            [value]="changePasswordNew()"
-            (input)="changePasswordNew.set(($any($event.target).value))"
-          />
-        </label>
-
-        <div class="text-sm text-red-700 dark:text-red-400" *ngIf="changePasswordError()">{{ changePasswordError() }}</div>
-        <div class="text-sm text-emerald-700 dark:text-emerald-400" *ngIf="changePasswordSuccess()">{{ changePasswordSuccess() }}</div>
-
-        <div class="mt-1 flex items-center justify-end gap-2">
-          <button
-            type="button"
-            class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600"
-            (click)="closeChangePassword()"
-          >
-            {{ 'common.cancel' | translate }}
-          </button>
-          <button
-            type="button"
-            class="rounded-xl bg-purple-600 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
-            (click)="submitChangePassword()"
-            [disabled]="changePasswordLoading()"
-          >
-            {{ 'modal.changePassword.update' | translate }}
-          </button>
+@if (changePasswordOpen()) {
+  <div class="cis-modal-overlay fixed inset-0 z-50">
+    <div class="absolute inset-0 bg-slate-900/40" (click)="closeChangePassword()"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="w-full max-w-sm rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700" (click)="$event.stopPropagation()">
+        <div class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'modal.changePassword.title' | translate }}</div>
+        <div class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ 'modal.changePassword.help' | translate }}</div>
+        <div class="mt-4 grid gap-3">
+          <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+            {{ 'modal.changePassword.currentPassword' | translate }}
+            <input
+              type="password"
+              class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100"
+              [value]="changePasswordCurrent()"
+              (input)="changePasswordCurrent.set(($any($event.target).value))"
+              />
+          </label>
+          <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+            {{ 'modal.changePassword.newPassword' | translate }}
+            <input
+              type="password"
+              class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100"
+              [value]="changePasswordNew()"
+              (input)="changePasswordNew.set(($any($event.target).value))"
+              />
+          </label>
+          @if (changePasswordError()) {
+            <div class="text-sm text-red-700 dark:text-red-400">{{ changePasswordError() }}</div>
+          }
+          @if (changePasswordSuccess()) {
+            <div class="text-sm text-emerald-700 dark:text-emerald-400">{{ changePasswordSuccess() }}</div>
+          }
+          <div class="mt-1 flex items-center justify-end gap-2">
+            <button
+              type="button"
+              class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600"
+              (click)="closeChangePassword()"
+              >
+              {{ 'common.cancel' | translate }}
+            </button>
+            <button
+              type="button"
+              class="rounded-xl bg-purple-600 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+              (click)="submitChangePassword()"
+              [disabled]="changePasswordLoading()"
+              >
+              {{ 'modal.changePassword.update' | translate }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+}
 
-<div *ngIf="resetUserPasswordOpen()" class="cis-modal-overlay fixed inset-0 z-50">
-  <div class="absolute inset-0 bg-slate-900/40" (click)="closeResetUserPassword()"></div>
-  <div class="absolute inset-0 flex items-center justify-center p-4">
-    <div class="w-full max-w-md rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700" (click)="$event.stopPropagation()">
-      <div class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'modal.resetPassword.title' | translate }}</div>
-      <div class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ 'modal.resetPassword.help' | translate }}</div>
-
-      <div class="mt-4 grid gap-3">
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'modal.resetPassword.user' | translate }}
-          <select
-            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100"
-            [value]="resetUserId()"
-            (change)="resetUserId.set(($any($event.target).value))"
-          >
-            <option value="">{{ 'modal.resetPassword.selectUser' | translate }}</option>
-            <option *ngFor="let u of adminUsers()" [value]="u.id">{{ u.name }} ({{ u.email }})</option>
-          </select>
-        </label>
-
-        <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
-          {{ 'modal.resetPassword.newPassword' | translate }}
-          <input
-            type="password"
-            class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100"
-            [value]="resetNewPassword()"
-            (input)="resetNewPassword.set(($any($event.target).value))"
-          />
-        </label>
-
-        <div class="text-sm text-red-700 dark:text-red-400" *ngIf="resetUserPasswordError()">{{ resetUserPasswordError() }}</div>
-        <div class="text-sm text-emerald-700 dark:text-emerald-400" *ngIf="resetUserPasswordSuccess()">{{ resetUserPasswordSuccess() }}</div>
-
-        <div class="mt-1 flex items-center justify-end gap-2">
-          <button
-            type="button"
-            class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600"
-            (click)="closeResetUserPassword()"
-          >
-            {{ 'common.cancel' | translate }}
-          </button>
-          <button
-            type="button"
-            class="rounded-xl bg-purple-600 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
-            (click)="submitResetUserPassword()"
-            [disabled]="resetUserPasswordLoading()"
-          >
-            {{ 'modal.resetPassword.reset' | translate }}
-          </button>
+@if (resetUserPasswordOpen()) {
+  <div class="cis-modal-overlay fixed inset-0 z-50">
+    <div class="absolute inset-0 bg-slate-900/40" (click)="closeResetUserPassword()"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="w-full max-w-md rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700" (click)="$event.stopPropagation()">
+        <div class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'modal.resetPassword.title' | translate }}</div>
+        <div class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ 'modal.resetPassword.help' | translate }}</div>
+        <div class="mt-4 grid gap-3">
+          <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+            {{ 'modal.resetPassword.user' | translate }}
+            <select
+              class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100"
+              [value]="resetUserId()"
+              (change)="resetUserId.set(($any($event.target).value))"
+              >
+              <option value="">{{ 'modal.resetPassword.selectUser' | translate }}</option>
+              @for (u of adminUsers(); track u) {
+                <option [value]="u.id">{{ u.name }} ({{ u.email }})</option>
+              }
+            </select>
+          </label>
+          <label class="grid gap-2 text-xs text-slate-700 dark:text-slate-300">
+            {{ 'modal.resetPassword.newPassword' | translate }}
+            <input
+              type="password"
+              class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100"
+              [value]="resetNewPassword()"
+              (input)="resetNewPassword.set(($any($event.target).value))"
+              />
+          </label>
+          @if (resetUserPasswordError()) {
+            <div class="text-sm text-red-700 dark:text-red-400">{{ resetUserPasswordError() }}</div>
+          }
+          @if (resetUserPasswordSuccess()) {
+            <div class="text-sm text-emerald-700 dark:text-emerald-400">{{ resetUserPasswordSuccess() }}</div>
+          }
+          <div class="mt-1 flex items-center justify-end gap-2">
+            <button
+              type="button"
+              class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600"
+              (click)="closeResetUserPassword()"
+              >
+              {{ 'common.cancel' | translate }}
+            </button>
+            <button
+              type="button"
+              class="rounded-xl bg-purple-600 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+              (click)="submitResetUserPassword()"
+              [disabled]="resetUserPasswordLoading()"
+              >
+              {{ 'modal.resetPassword.reset' | translate }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<div *ngIf="session.idleExpired()" class="cis-modal-overlay fixed inset-0 z-[70]">
-  <div class="absolute inset-0 bg-slate-900/50"></div>
-  <div class="absolute inset-0 flex items-center justify-center p-4">
-    <div class="w-full max-w-sm rounded-2xl bg-white dark:bg-slate-800 p-6 text-center shadow-xl ring-1 ring-slate-200 dark:ring-slate-700" role="alertdialog" aria-modal="true">
-      <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-500/15 dark:text-amber-400">
-        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+}
+@if (session.idleExpired()) {
+  <div class="cis-modal-overlay fixed inset-0 z-[70]">
+    <div class="absolute inset-0 bg-slate-900/50"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="w-full max-w-sm rounded-2xl bg-white dark:bg-slate-800 p-6 text-center shadow-xl ring-1 ring-slate-200 dark:ring-slate-700" role="alertdialog" aria-modal="true">
+        <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-500/15 dark:text-amber-400">
+          <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <div class="mt-3 text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'session.expiredTitle' | translate }}</div>
+        <div class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ 'session.expiredBody' | translate }}</div>
+        <button
+          type="button"
+          class="mt-5 w-full rounded-xl bg-purple-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-purple-700"
+          (click)="session.confirmExpire()"
+          >
+          {{ 'session.continueLogin' | translate }}
+        </button>
       </div>
-      <div class="mt-3 text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'session.expiredTitle' | translate }}</div>
-      <div class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ 'session.expiredBody' | translate }}</div>
-      <button
-        type="button"
-        class="mt-5 w-full rounded-xl bg-purple-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-purple-700"
-        (click)="session.confirmExpire()"
-      >
-        {{ 'session.continueLogin' | translate }}
-      </button>
     </div>
   </div>
-</div>
+}

@@ -1,5 +1,5 @@
 import { Component, computed, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { GraphqlService } from '../../core/graphql/graphql.service';
@@ -45,7 +45,7 @@ type LowStockBatchAlertsQueryResult = {
 @Component({
   selector: 'cis-inventory-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslatePipe, PendingRepurchasesComponent, RowActionsMenuComponent, CIS_FORM_IMPORTS],
+  imports: [ReactiveFormsModule, RouterLink, TranslatePipe, PendingRepurchasesComponent, RowActionsMenuComponent, CIS_FORM_IMPORTS],
   templateUrl: './inventory.page.html',
   styleUrl: './inventory.page.scss'
 })

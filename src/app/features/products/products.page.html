@@ -7,22 +7,24 @@
     <div class="flex items-center justify-between">
       <h3 class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'common.list' | translate }}</h3>
       <div class="flex items-center gap-2">
-        <button
-          *ngIf="perm.canCreate('PRODUCTS')"
-          class="rounded-xl bg-pink-500 px-3 py-2 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
-          (click)="openCreate()"
-          [disabled]="loading()"
-        >
-          {{ 'common.add' | translate }} {{ 'common.product' | translate }}
-        </button>
-        <button
-          *ngIf="branchCtx.effective() && perm.canCreate('PRODUCTS') && perm.can('PRODUCTS', 'REGISTER_TO_BRANCH')"
-          class="rounded-xl border border-pink-300 bg-pink-50 px-3 py-2 text-xs font-semibold text-pink-700 hover:bg-pink-100 disabled:cursor-not-allowed disabled:opacity-70 dark:border-pink-700 dark:bg-pink-900/30 dark:text-pink-300"
-          (click)="openRegister()"
-          [disabled]="loading()"
-        >
-          {{ 'products.registerToBranch' | translate }}
-        </button>
+        @if (perm.canCreate('PRODUCTS')) {
+          <button
+            class="rounded-xl bg-pink-500 px-3 py-2 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+            (click)="openCreate()"
+            [disabled]="loading()"
+            >
+            {{ 'common.add' | translate }} {{ 'common.product' | translate }}
+          </button>
+        }
+        @if (branchCtx.effective() && perm.canCreate('PRODUCTS') && perm.can('PRODUCTS', 'REGISTER_TO_BRANCH')) {
+          <button
+            class="rounded-xl border border-pink-300 bg-pink-50 px-3 py-2 text-xs font-semibold text-pink-700 hover:bg-pink-100 disabled:cursor-not-allowed disabled:opacity-70 dark:border-pink-700 dark:bg-pink-900/30 dark:text-pink-300"
+            (click)="openRegister()"
+            [disabled]="loading()"
+            >
+            {{ 'products.registerToBranch' | translate }}
+          </button>
+        }
       </div>
     </div>
 
@@ -32,12 +34,12 @@
         [value]="searchQuery()"
         (input)="onSearch(($any($event.target)).value)"
         placeholder="{{ 'common.searchProductSkuBarcode' | translate }}"
-      />
+        />
       <select
         class="rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100"
         [value]="statusFilter()"
         (change)="setStatusFilter(($any($event.target)).value)"
-      >
+        >
         <option value="active">{{ 'common.active' | translate }}</option>
         <option value="inactive">{{ 'common.inactive' | translate }}</option>
         <option value="all">{{ 'common.all' | translate }}</option>
@@ -46,7 +48,7 @@
         class="rounded-xl bg-pink-500 px-3 py-2 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
         (click)="load()"
         [disabled]="loading()"
-      >
+        >
         {{ 'common.search' | translate }}
       </button>
     </div>
@@ -60,7 +62,7 @@
             class="ml-2 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-2 py-1 text-xs text-slate-900 dark:text-slate-100"
             [value]="pageSize()"
             (change)="setPageSize(($any($event.target)).value)"
-          >
+            >
             <option [value]="10">10</option>
             <option [value]="20">20</option>
             <option [value]="50">50</option>
@@ -72,7 +74,7 @@
           class="rounded-lg bg-slate-100 dark:bg-slate-700 px-2 py-1 text-xs font-semibold text-slate-700 dark:text-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
           (click)="prevPage()"
           [disabled]="pageIndex() === 0"
-        >
+          >
           {{ 'common.prev' | translate }}
         </button>
         <div class="text-xs font-semibold text-slate-600 dark:text-slate-400">{{ 'common.page' | translate }} {{ pageIndex() + 1 }} / {{ totalPages() }}</div>
@@ -80,7 +82,7 @@
           class="rounded-lg bg-slate-100 dark:bg-slate-700 px-2 py-1 text-xs font-semibold text-slate-700 dark:text-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
           (click)="nextPage()"
           [disabled]="pageIndex() >= totalPages() - 1"
-        >
+          >
           {{ 'common.next' | translate }}
         </button>
       </div>
@@ -104,288 +106,281 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let p of displayedProducts()" class="border-t border-slate-100 dark:border-slate-700">
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
-              <ng-container *ngIf="editingId() !== p.id; else editSku">
-                {{ p.sku }}
-              </ng-container>
-              <ng-template #editSku>
-                <cis-form-field [field]="editField('sku')" [control]="editForm.controls.sku" />
-              </ng-template>
-            </td>
-
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
-              <ng-container *ngIf="editingId() !== p.id; else editBarcode">
-                {{ p.barcode || '-' }}
-              </ng-container>
-              <ng-template #editBarcode>
-                <cis-form-field [field]="editField('barcode')" [control]="editForm.controls.barcode" />
-              </ng-template>
-            </td>
-
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
-              <ng-container *ngIf="editingId() !== p.id; else editBatch">
-                {{ latestBatchNumber(p) }}
-              </ng-container>
-              <ng-template #editBatch>
-                <cis-form-field [field]="batchEditField(p)" [control]="editForm.controls.batchNumber" />
-              </ng-template>
-            </td>
-
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
-              <ng-container *ngIf="editingId() !== p.id; else editName">
-                {{ p.name }}
-              </ng-container>
-              <ng-template #editName>
-                <cis-form-field [field]="editField('name')" [control]="editForm.controls.name" />
-              </ng-template>
-            </td>
-
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
-              <ng-container *ngIf="editingId() !== p.id; else editBrand">
-                {{ p.brand || '-' }}
-              </ng-container>
-              <ng-template #editBrand>
-                <cis-form-field [field]="editField('brand')" [control]="editForm.controls.brand" />
-              </ng-template>
-            </td>
-
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
-              <ng-container *ngIf="editingId() !== p.id; else editCategory">
-                {{ p.category || '-' }}
-              </ng-container>
-              <ng-template #editCategory>
-                <cis-form-field [field]="categoryEditField()" [control]="editForm.controls.category" />
-              </ng-template>
-            </td>
-
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
-              <ng-container *ngIf="editingId() !== p.id; else editBuying">
-                {{ p.buyingPrice | money }}
-              </ng-container>
-              <ng-template #editBuying>
-                <cis-form-field [field]="editField('buyingPrice', { type: 'currency' })" [control]="editForm.controls.buyingPrice" />
-              </ng-template>
-            </td>
-
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
-              <ng-container *ngIf="editingId() !== p.id; else editSelling">
-                {{ p.sellingPrice | money }}
-              </ng-container>
-              <ng-template #editSelling>
-                <cis-form-field [field]="editField('sellingPrice', { type: 'currency' })" [control]="editForm.controls.sellingPrice" />
-              </ng-template>
-            </td>
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
-              <ng-container *ngIf="editingId() !== p.id; else editunitOfMeasure">
-                {{ p.unitOfMeasure ?? '-' }}
-              </ng-container>
-              <ng-template #editunitOfMeasure>
-                <cis-form-field [field]="editField('unitOfMeasure')" [control]="editForm.controls.unitOfMeasure" />
-              </ng-template>
-            </td>
-            <td class="px-3 py-2">
-              <span class="text-slate-800 dark:text-slate-200" [class.text-[#B81104]]="!p.active">
-                {{ p.active ? ('common.active' | translate) : ('common.inactive' | translate) }}
-              </span>
-            </td>
-
-            <td class="px-3 py-2">
-              <ng-container *ngIf="editingId() !== p.id; else editActions">
-                <cis-row-actions>
-                  <button
-                    *ngIf="perm.canEdit('PRODUCTS')"
-                    class="cis-row-action"
-                    (click)="startEdit(p)"
-                    [disabled]="loading()"
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-                    {{ 'common.edit' | translate }}
-                  </button>
-                  <button
-                    *ngIf="perm.canEdit('PRODUCTS') && !p.active"
-                    class="cis-row-action"
-                    (click)="activate(p)"
-                    [disabled]="loading()"
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    {{ 'common.activate' | translate }}
-                  </button>
-                  <button
-                    *ngIf="perm.canDelete('PRODUCTS') && p.active"
-                    class="cis-row-action cis-row-action-danger"
-                    (click)="delete(p)"
-                    [disabled]="loading()"
-                  >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                    {{ 'common.delete' | translate }}
-                  </button>
-                </cis-row-actions>
-              </ng-container>
-
-              <ng-template #editActions>
-                <div class="flex gap-2">
-                  <button
-                    class="rounded-lg bg-emerald-700 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
-                    (click)="saveEdit()"
-                    [disabled]="loading() || editForm.invalid"
-                  >
-                    {{ 'common.save' | translate }}
-                  </button>
-                  <button
-                    class="rounded-lg bg-slate-700 dark:bg-slate-600 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
-                    (click)="cancelEdit()"
-                    [disabled]="loading()"
-                  >
-                    {{ 'common.close' | translate }}
-                  </button>
-                </div>
-              </ng-template>
-            </td>
-          </tr>
+          @for (p of displayedProducts(); track p) {
+            <tr class="border-t border-slate-100 dark:border-slate-700">
+              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
+                @if (editingId() !== p.id) {
+                  {{ p.sku }}
+                } @else {
+                  <cis-form-field [field]="editField('sku')" [control]="editForm.controls.sku" />
+                }
+              </td>
+              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
+                @if (editingId() !== p.id) {
+                  {{ p.barcode || '-' }}
+                } @else {
+                  <cis-form-field [field]="editField('barcode')" [control]="editForm.controls.barcode" />
+                }
+              </td>
+              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
+                @if (editingId() !== p.id) {
+                  {{ latestBatchNumber(p) }}
+                } @else {
+                  <cis-form-field [field]="batchEditField(p)" [control]="editForm.controls.batchNumber" />
+                }
+              </td>
+              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
+                @if (editingId() !== p.id) {
+                  {{ p.name }}
+                } @else {
+                  <cis-form-field [field]="editField('name')" [control]="editForm.controls.name" />
+                }
+              </td>
+              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
+                @if (editingId() !== p.id) {
+                  {{ p.brand || '-' }}
+                } @else {
+                  <cis-form-field [field]="editField('brand')" [control]="editForm.controls.brand" />
+                }
+              </td>
+              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
+                @if (editingId() !== p.id) {
+                  {{ p.category || '-' }}
+                } @else {
+                  <cis-form-field [field]="categoryEditField()" [control]="editForm.controls.category" />
+                }
+              </td>
+              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
+                @if (editingId() !== p.id) {
+                  {{ p.buyingPrice | money }}
+                } @else {
+                  <cis-form-field [field]="editField('buyingPrice', { type: 'currency' })" [control]="editForm.controls.buyingPrice" />
+                }
+              </td>
+              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
+                @if (editingId() !== p.id) {
+                  {{ p.sellingPrice | money }}
+                } @else {
+                  <cis-form-field [field]="editField('sellingPrice', { type: 'currency' })" [control]="editForm.controls.sellingPrice" />
+                }
+              </td>
+              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">
+                @if (editingId() !== p.id) {
+                  {{ p.unitOfMeasure ?? '-' }}
+                } @else {
+                  <cis-form-field [field]="editField('unitOfMeasure')" [control]="editForm.controls.unitOfMeasure" />
+                }
+              </td>
+              <td class="px-3 py-2">
+                <span class="text-slate-800 dark:text-slate-200" [class.text-[#B81104]]="!p.active">
+                  {{ p.active ? ('common.active' | translate) : ('common.inactive' | translate) }}
+                </span>
+              </td>
+              <td class="px-3 py-2">
+                @if (editingId() !== p.id) {
+                  <cis-row-actions>
+                    @if (perm.canEdit('PRODUCTS')) {
+                      <button
+                        class="cis-row-action"
+                        (click)="startEdit(p)"
+                        [disabled]="loading()"
+                        >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                        {{ 'common.edit' | translate }}
+                      </button>
+                    }
+                    @if (perm.canEdit('PRODUCTS') && !p.active) {
+                      <button
+                        class="cis-row-action"
+                        (click)="activate(p)"
+                        [disabled]="loading()"
+                        >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        {{ 'common.activate' | translate }}
+                      </button>
+                    }
+                    @if (perm.canDelete('PRODUCTS') && p.active) {
+                      <button
+                        class="cis-row-action cis-row-action-danger"
+                        (click)="delete(p)"
+                        [disabled]="loading()"
+                        >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        {{ 'common.delete' | translate }}
+                      </button>
+                    }
+                  </cis-row-actions>
+                } @else {
+                  <div class="flex gap-2">
+                    <button
+                      class="rounded-lg bg-emerald-700 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                      (click)="saveEdit()"
+                      [disabled]="loading() || editForm.invalid"
+                      >
+                      {{ 'common.save' | translate }}
+                    </button>
+                    <button
+                      class="rounded-lg bg-slate-700 dark:bg-slate-600 px-2 py-1 text-xs font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+                      (click)="cancelEdit()"
+                      [disabled]="loading()"
+                      >
+                      {{ 'common.close' | translate }}
+                    </button>
+                  </div>
+                }
+              </td>
+            </tr>
+          }
         </tbody>
       </table>
     </div>
   </section>
 </div>
 
-<div *ngIf="createDialogOpen()" class="cis-modal-overlay fixed inset-0 z-40">
-  <div class="absolute inset-0 bg-slate-900/40" (click)="cancelCreate()"></div>
-  <div class="absolute inset-0 flex items-center justify-center p-4">
-    <div class="w-full max-w-2xl rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700">
-      <div class="flex items-center justify-between">
-        <div class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'common.add' | translate }} {{ 'common.product' | translate }}</div>
-        <button class="rounded-xl bg-slate-100 dark:bg-slate-700 px-3 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200" (click)="cancelCreate()">✕</button>
-      </div>
-
-      <div class="mt-4">
-        <cis-product-form
-          [categories]="categories()"
-          [loading]="loading()"
-          [error]="error()"
-          [open]="createDialogOpen()"
-          (submitted)="create($event)"
-          (cancel)="cancelCreate()"
-        ></cis-product-form>
+@if (createDialogOpen()) {
+  <div class="cis-modal-overlay fixed inset-0 z-40">
+    <div class="absolute inset-0 bg-slate-900/40" (click)="cancelCreate()"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="w-full max-w-2xl rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700">
+        <div class="flex items-center justify-between">
+          <div class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'common.add' | translate }} {{ 'common.product' | translate }}</div>
+          <button class="rounded-xl bg-slate-100 dark:bg-slate-700 px-3 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200" (click)="cancelCreate()">✕</button>
+        </div>
+        <div class="mt-4">
+          <cis-product-form
+            [categories]="categories()"
+            [loading]="loading()"
+            [error]="error()"
+            [open]="createDialogOpen()"
+            (submitted)="create($event)"
+            (cancel)="cancelCreate()"
+          ></cis-product-form>
+        </div>
       </div>
     </div>
   </div>
-</div>
+}
 
-<div
-  *ngIf="toastMessage()"
-  class="fixed right-4 top-4 z-50"
-  role="status"
-  aria-live="polite"
->
+@if (toastMessage()) {
   <div
-    class="flex items-start gap-3 rounded-xl px-4 py-3 text-sm font-medium shadow-lg ring-1"
-    [class.bg-[#FFFACD]]="toastVariant() === 'success'"
-    [class.text-emerald-900]="toastVariant() === 'success'"
-    [class.ring-pink-500/25]="toastVariant() === 'success'"
-    [class.bg-[#B81104]/10]="toastVariant() === 'error'"
-    [class.text-red-900]="toastVariant() === 'error'"
-    [class.ring-[#B81104]/25]="toastVariant() === 'error'"
-  >
-    <div class="flex-1">{{ toastMessage() }}</div>
-    <button class="text-xs font-semibold opacity-80 hover:opacity-100" (click)="dismissToast()">{{ 'common.close' | translate }}</button>
-  </div>
-</div>
-
-<div *ngIf="deleteDialogOpen()" class="cis-modal-overlay fixed inset-0 z-40">
-  <div class="absolute inset-0 bg-slate-900/40" (click)="cancelDelete()"></div>
-  <div class="absolute inset-0 flex items-center justify-center p-4">
-    <div class="w-full max-w-md rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700">
-      <div class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'common.delete' | translate }}</div>
-      <div class="mt-2 text-sm text-slate-600 dark:text-slate-400">
-        Are you sure you want to delete
-        <span class="font-semibold text-slate-900 dark:text-slate-100">{{ pendingDelete()?.name }}</span>?
-        The product will be deactivated and hidden everywhere until it is reactivated.
-      </div>
-
-      <div class="mt-5 flex justify-end gap-2">
-        <button
-          class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-70"
-          (click)="cancelDelete()"
-          [disabled]="loading()"
-        >
-          {{ 'common.close' | translate }}
-        </button>
-        <button
-          class="rounded-xl bg-[#B81104] px-4 py-2 text-sm font-semibold text-white hover:bg-[#7f0c03] disabled:cursor-not-allowed disabled:opacity-70"
-          (click)="confirmDelete()"
-          [disabled]="loading()"
-        >
-          {{ 'common.delete' | translate }}
-        </button>
-      </div>
+    class="fixed right-4 top-4 z-50"
+    role="status"
+    aria-live="polite"
+    >
+    <div
+      class="flex items-start gap-3 rounded-xl px-4 py-3 text-sm font-medium shadow-lg ring-1"
+      [class.bg-[#FFFACD]]="toastVariant() === 'success'"
+      [class.text-emerald-900]="toastVariant() === 'success'"
+      [class.ring-pink-500/25]="toastVariant() === 'success'"
+      [class.bg-[#B81104]/10]="toastVariant() === 'error'"
+      [class.text-red-900]="toastVariant() === 'error'"
+      [class.ring-[#B81104]/25]="toastVariant() === 'error'"
+      >
+      <div class="flex-1">{{ toastMessage() }}</div>
+      <button class="text-xs font-semibold opacity-80 hover:opacity-100" (click)="dismissToast()">{{ 'common.close' | translate }}</button>
     </div>
   </div>
-</div>
+}
 
-<!-- Register existing products to selected branch -->
-<div *ngIf="registerOpen()" class="cis-modal-overlay fixed inset-0 z-40">
-  <div class="absolute inset-0 bg-slate-900/40" (click)="registerOpen.set(false)"></div>
-  <div class="absolute inset-0 flex items-center justify-center p-4">
-    <div class="flex max-h-[85vh] w-full max-w-lg flex-col rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700">
-      <div class="flex items-center justify-between">
-        <div>
-          <div class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'products.registerToBranch' | translate }}</div>
-          <div class="text-xs text-slate-500 dark:text-slate-400">{{ 'products.registerToBranchHelp' | translate }} — <b>{{ branchCtx.effective() }}</b></div>
+@if (deleteDialogOpen()) {
+  <div class="cis-modal-overlay fixed inset-0 z-40">
+    <div class="absolute inset-0 bg-slate-900/40" (click)="cancelDelete()"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="w-full max-w-md rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700">
+        <div class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'common.delete' | translate }}</div>
+        <div class="mt-2 text-sm text-slate-600 dark:text-slate-400">
+          Are you sure you want to delete
+          <span class="font-semibold text-slate-900 dark:text-slate-100">{{ pendingDelete()?.name }}</span>?
+          The product will be deactivated and hidden everywhere until it is reactivated.
         </div>
-        <button class="rounded-xl bg-slate-100 dark:bg-slate-700 px-3 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200" (click)="registerOpen.set(false)">✕</button>
-      </div>
-
-      <input
-        class="mt-3 w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
-        [value]="registerSearch()"
-        (input)="registerSearch.set($any($event.target).value)"
-        placeholder="{{ 'common.search' | translate }}"
-      />
-
-      <div class="mt-3 flex-1 space-y-1 overflow-y-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700 p-1">
-        <div
-          *ngFor="let p of filteredRegisterCandidates()"
-          class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-slate-50 dark:hover:bg-slate-700/50"
-          [class.bg-pink-50]="registerSelected().has(p.id)"
-          [class.dark:bg-pink-900/20]="registerSelected().has(p.id)"
-        >
-          <label class="flex min-w-0 flex-1 cursor-pointer items-center gap-3">
-            <input type="checkbox" class="h-4 w-4 accent-pink-500" [checked]="registerSelected().has(p.id)" (change)="toggleRegister(p.id)" />
-            <span class="min-w-0 flex-1 truncate text-slate-900 dark:text-slate-100">{{ p.name }} <span class="text-xs text-slate-400">{{ p.sku }}</span></span>
-            <span class="text-xs text-slate-500 dark:text-slate-400">{{ p.category }}</span>
-          </label>
-          <label *ngIf="registerSelected().has(p.id)" class="flex shrink-0 items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400">
-            {{ 'common.quantity' | translate }}
-            <input
-              type="number"
-              min="1"
-              class="w-20 rounded-lg border border-slate-200 bg-white px-2 py-1 text-sm text-slate-900 outline-none focus:border-[#7367d8] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
-              [value]="registerQty()[p.id] ?? 1"
-              (input)="setRegisterQty(p.id, $any($event.target).value)"
-            />
-          </label>
-        </div>
-        <div *ngIf="!filteredRegisterCandidates().length" class="py-6 text-center text-xs text-slate-400 dark:text-slate-500">
-          {{ 'products.registerEmpty' | translate }}
-        </div>
-      </div>
-
-      <div class="mt-4 flex items-center justify-between gap-2">
-        <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">{{ registerSelected().size }} {{ 'products.selected' | translate }}</span>
-        <div class="flex gap-2">
-          <button class="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" (click)="registerOpen.set(false)">
-            {{ 'common.cancel' | translate }}
+        <div class="mt-5 flex justify-end gap-2">
+          <button
+            class="rounded-xl bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-70"
+            (click)="cancelDelete()"
+            [disabled]="loading()"
+            >
+            {{ 'common.close' | translate }}
           </button>
           <button
-            class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white hover:bg-pink-600 disabled:cursor-not-allowed disabled:opacity-60"
-            [disabled]="!registerSelected().size || registerSaving()"
-            (click)="submitRegister()"
-          >
-            {{ registerSaving() ? '...' : ('products.registerSubmit' | translate) }}
+            class="rounded-xl bg-[#B81104] px-4 py-2 text-sm font-semibold text-white hover:bg-[#7f0c03] disabled:cursor-not-allowed disabled:opacity-70"
+            (click)="confirmDelete()"
+            [disabled]="loading()"
+            >
+            {{ 'common.delete' | translate }}
           </button>
         </div>
       </div>
     </div>
   </div>
-</div>
+}
+
+<!-- Register existing products to selected branch -->
+@if (registerOpen()) {
+  <div class="cis-modal-overlay fixed inset-0 z-40">
+    <div class="absolute inset-0 bg-slate-900/40" (click)="registerOpen.set(false)"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="flex max-h-[85vh] w-full max-w-lg flex-col rounded-2xl bg-white dark:bg-slate-800 p-5 shadow-xl ring-1 ring-slate-200 dark:ring-slate-700">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-base font-semibold text-slate-900 dark:text-slate-100">{{ 'products.registerToBranch' | translate }}</div>
+            <div class="text-xs text-slate-500 dark:text-slate-400">{{ 'products.registerToBranchHelp' | translate }} — <b>{{ branchCtx.effective() }}</b></div>
+          </div>
+          <button class="rounded-xl bg-slate-100 dark:bg-slate-700 px-3 py-2 text-sm font-semibold text-slate-800 dark:text-slate-200" (click)="registerOpen.set(false)">✕</button>
+        </div>
+        <input
+          class="mt-3 w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none focus:border-[#7367d8]"
+          [value]="registerSearch()"
+          (input)="registerSearch.set($any($event.target).value)"
+          placeholder="{{ 'common.search' | translate }}"
+          />
+        <div class="mt-3 flex-1 space-y-1 overflow-y-auto rounded-xl ring-1 ring-slate-100 dark:ring-slate-700 p-1">
+          @for (p of filteredRegisterCandidates(); track p) {
+            <div
+              class="flex items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-slate-50 dark:hover:bg-slate-700/50"
+              [class.bg-pink-50]="registerSelected().has(p.id)"
+              [class.dark:bg-pink-900/20]="registerSelected().has(p.id)"
+              >
+              <label class="flex min-w-0 flex-1 cursor-pointer items-center gap-3">
+                <input type="checkbox" class="h-4 w-4 accent-pink-500" [checked]="registerSelected().has(p.id)" (change)="toggleRegister(p.id)" />
+                <span class="min-w-0 flex-1 truncate text-slate-900 dark:text-slate-100">{{ p.name }} <span class="text-xs text-slate-400">{{ p.sku }}</span></span>
+                <span class="text-xs text-slate-500 dark:text-slate-400">{{ p.category }}</span>
+              </label>
+              @if (registerSelected().has(p.id)) {
+                <label class="flex shrink-0 items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400">
+                  {{ 'common.quantity' | translate }}
+                  <input
+                    type="number"
+                    min="1"
+                    class="w-20 rounded-lg border border-slate-200 bg-white px-2 py-1 text-sm text-slate-900 outline-none focus:border-[#7367d8] dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100"
+                    [value]="registerQty()[p.id] ?? 1"
+                    (input)="setRegisterQty(p.id, $any($event.target).value)"
+                    />
+                </label>
+              }
+            </div>
+          }
+          @if (!filteredRegisterCandidates().length) {
+            <div class="py-6 text-center text-xs text-slate-400 dark:text-slate-500">
+              {{ 'products.registerEmpty' | translate }}
+            </div>
+          }
+        </div>
+        <div class="mt-4 flex items-center justify-between gap-2">
+          <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">{{ registerSelected().size }} {{ 'products.selected' | translate }}</span>
+          <div class="flex gap-2">
+            <button class="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" (click)="registerOpen.set(false)">
+              {{ 'common.cancel' | translate }}
+            </button>
+            <button
+              class="rounded-xl bg-pink-500 px-4 py-2 text-sm font-semibold text-white hover:bg-pink-600 disabled:cursor-not-allowed disabled:opacity-60"
+              [disabled]="!registerSelected().size || registerSaving()"
+              (click)="submitRegister()"
+              >
+              {{ registerSaving() ? '...' : ('products.registerSubmit' | translate) }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}

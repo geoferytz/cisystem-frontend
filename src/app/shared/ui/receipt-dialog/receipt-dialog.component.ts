@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
@@ -13,53 +13,64 @@ import { ModalComponent } from '../modal/modal.component';
 @Component({
   selector: 'cis-receipt-dialog',
   standalone: true,
-  imports: [CommonModule, ModalComponent, TranslatePipe, MoneyPipe],
+  imports: [ModalComponent, TranslatePipe, MoneyPipe],
   template: `
   <cis-modal [open]="open" [title]="'receipt.title' | translate" maxWidthClass="max-w-sm" (close)="close.emit()">
-    <ng-container *ngIf="order as o">
+    @if (order; as o) {
       <!-- Paper-style receipt preview -->
       <div class="mx-auto w-full max-w-[300px] rounded-lg bg-white p-4 font-mono text-[12px] leading-5 text-black shadow ring-1 ring-slate-200">
         <div class="text-center text-[15px] font-bold tracking-wide">GYLA COSMETICS</div>
         <div class="text-center text-[10px] italic">Your Beauty, Our Duty</div>
         <div class="my-2 border-y border-dashed border-black py-1 text-center font-bold">SALES RECEIPT / RISITI</div>
-
         <div class="text-[11px]">
           <div class="flex justify-between"><span>Date / Tarehe</span><span>{{ o.soldAt }}</span></div>
-          <div class="flex justify-between" *ngIf="o.referenceNumber"><span>Ref / Kumbukumbu</span><span>{{ o.referenceNumber }}</span></div>
-          <div class="flex justify-between" *ngIf="o.customer"><span>Customer / Mteja</span><span>{{ o.customer }}</span></div>
-          <div class="flex justify-between" *ngIf="o.soldBy"><span>Cashier / Muuzaji</span><span>{{ o.soldBy }}</span></div>
-          <div class="flex justify-between" *ngIf="o.paymentMethod"><span>Payment / Malipo</span><span>{{ o.paymentMethod }}</span></div>
+          @if (o.referenceNumber) {
+            <div class="flex justify-between"><span>Ref / Kumbukumbu</span><span>{{ o.referenceNumber }}</span></div>
+          }
+          @if (o.customer) {
+            <div class="flex justify-between"><span>Customer / Mteja</span><span>{{ o.customer }}</span></div>
+          }
+          @if (o.soldBy) {
+            <div class="flex justify-between"><span>Cashier / Muuzaji</span><span>{{ o.soldBy }}</span></div>
+          }
+          @if (o.paymentMethod) {
+            <div class="flex justify-between"><span>Payment / Malipo</span><span>{{ o.paymentMethod }}</span></div>
+          }
         </div>
-
         <div class="my-2 border-t border-dashed border-black"></div>
-
-        <div class="border-b border-dotted border-slate-300 py-1.5" *ngFor="let l of o.lines">
-          <div class="flex justify-between gap-2">
-            <span class="min-w-0 flex-1">{{ l.productName }}</span>
-            <span class="whitespace-nowrap">{{ lineTotal(l) | money }}</span>
+        @for (l of o.lines; track l) {
+          <div class="border-b border-dotted border-slate-300 py-1.5">
+            <div class="flex justify-between gap-2">
+              <span class="min-w-0 flex-1">{{ l.productName }}</span>
+              <span class="whitespace-nowrap">{{ lineTotal(l) | money }}</span>
+            </div>
+            <div class="text-[10px] text-slate-600">{{ l.quantity }} × {{ l.unitPrice | money }}</div>
+            @if ((l.returnedQuantity ?? 0) > 0) {
+              <div class="text-[10px] font-bold">↩ RUDISHWA ×{{ l.returnedQuantity }}</div>
+            }
           </div>
-          <div class="text-[10px] text-slate-600">{{ l.quantity }} × {{ l.unitPrice | money }}</div>
-          <div class="text-[10px] font-bold" *ngIf="(l.returnedQuantity ?? 0) > 0">↩ RUDISHWA ×{{ l.returnedQuantity }}</div>
-        </div>
-
+        }
         <div class="my-2 border-t border-dashed border-black"></div>
-
         <div class="space-y-0.5 text-[11px]">
           <div class="flex justify-between"><span>Subtotal / Jumla ndogo</span><span>{{ gross(o) | money }}</span></div>
-          <div class="flex justify-between" *ngIf="discount(o) > 0"><span>Discount / Punguzo</span><span>-{{ discount(o) | money }}</span></div>
+          @if (discount(o) > 0) {
+            <div class="flex justify-between"><span>Discount / Punguzo</span><span>-{{ discount(o) | money }}</span></div>
+          }
           <div class="my-1 flex justify-between border-y border-dashed border-black py-1 text-[14px] font-bold"><span>TOTAL / JUMLA</span><span>{{ net(o) | money }}</span></div>
-          <ng-container *ngIf="returned(o) > 0">
+          @if (returned(o) > 0) {
             <div class="flex justify-between"><span>Returns / Marejesho</span><span>-{{ returned(o) | money }}</span></div>
             <div class="flex justify-between"><span>Net / Iliyobaki</span><span>{{ netAfter(o) | money }}</span></div>
-          </ng-container>
+          }
           <div class="flex justify-between"><span>Paid / Amelipa</span><span>{{ received(o) | money }}</span></div>
-          <div class="flex justify-between" *ngIf="change(o) > 0"><span>Change / Chenji</span><span>{{ change(o) | money }}</span></div>
-          <div class="flex justify-between font-bold" *ngIf="debt(o) > 0"><span>DEBT / DENI</span><span>{{ debt(o) | money }}</span></div>
+          @if (change(o) > 0) {
+            <div class="flex justify-between"><span>Change / Chenji</span><span>{{ change(o) | money }}</span></div>
+          }
+          @if (debt(o) > 0) {
+            <div class="flex justify-between font-bold"><span>DEBT / DENI</span><span>{{ debt(o) | money }}</span></div>
+          }
         </div>
-
         <div class="mt-3 text-center text-[10px]">Asante kwa kununua!<br/>Karibu tena — Thank you</div>
       </div>
-
       <div class="mt-4 flex justify-end gap-2">
         <button type="button" class="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700" (click)="close.emit()">
           {{ 'common.cancel' | translate }}
@@ -69,7 +80,7 @@ import { ModalComponent } from '../modal/modal.component';
           {{ 'sales.printReceipt' | translate }}
         </button>
       </div>
-    </ng-container>
+    }
   </cis-modal>
   `
 })

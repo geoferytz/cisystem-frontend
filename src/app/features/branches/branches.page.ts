@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GraphqlService } from '../../core/graphql/graphql.service';
@@ -31,7 +31,7 @@ type BranchMutationResult = {
 @Component({
   selector: 'cis-branches-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe, RowActionsMenuComponent, PagerComponent, CIS_FORM_IMPORTS],
+  imports: [ReactiveFormsModule, TranslatePipe, RowActionsMenuComponent, PagerComponent, CIS_FORM_IMPORTS],
   templateUrl: './branches.page.html',
   styleUrl: './branches.page.scss'
 })

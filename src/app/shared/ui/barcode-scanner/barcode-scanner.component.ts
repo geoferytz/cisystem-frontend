@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild } from '@angular/core';
 import type { IScannerControls } from '@zxing/browser';
 import { ModalComponent } from '../modal/modal.component';
@@ -8,7 +8,7 @@ type ScanStatus = 'idle' | 'starting' | 'scanning' | 'error';
 @Component({
   selector: 'cis-barcode-scanner',
   standalone: true,
-  imports: [CommonModule, ModalComponent],
+  imports: [ModalComponent],
   templateUrl: './barcode-scanner.component.html',
   styleUrl: './barcode-scanner.component.scss'
 })

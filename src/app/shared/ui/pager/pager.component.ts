@@ -1,11 +1,11 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, computed, input, model } from '@angular/core';
 import { TranslatePipe } from '../../../core/i18n/translate.pipe';
 
 @Component({
   selector: 'cis-pager',
   standalone: true,
-  imports: [CommonModule, TranslatePipe],
+  imports: [TranslatePipe],
   template: `
     <div class="flex flex-wrap items-center justify-between gap-2">
       <div class="text-xs font-semibold text-slate-600 dark:text-slate-400">{{ 'common.total' | translate }}: {{ total() }}</div>

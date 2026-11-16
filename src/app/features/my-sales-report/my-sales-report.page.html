@@ -37,16 +37,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let s of displayedDaily()" class="border-t border-indigo-100 dark:border-indigo-700">
-            <td class="px-3 py-2 text-xs text-slate-600 dark:text-slate-400">{{ s.createdAt }}</td>
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ s.customer || '-' }}</td>
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ s.referenceNumber || '-' }}</td>
-            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ s.lines.length }}</td>
-            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ saleTotalValue(s) | money}}</td>
-          </tr>
-          <tr *ngIf="!dailySales().length" class="border-t border-indigo-100 dark:border-indigo-700">
-            <td class="px-3 py-6 text-center text-sm text-slate-600 dark:text-slate-400" colspan="5">No sales for selected day</td>
-          </tr>
+          @for (s of displayedDaily(); track s) {
+            <tr class="border-t border-indigo-100 dark:border-indigo-700">
+              <td class="px-3 py-2 text-xs text-slate-600 dark:text-slate-400">{{ s.createdAt }}</td>
+              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ s.customer || '-' }}</td>
+              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ s.referenceNumber || '-' }}</td>
+              <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ s.lines.length }}</td>
+              <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ saleTotalValue(s) | money}}</td>
+            </tr>
+          }
+          @if (!dailySales().length) {
+            <tr class="border-t border-indigo-100 dark:border-indigo-700">
+              <td class="px-3 py-6 text-center text-sm text-slate-600 dark:text-slate-400" colspan="5">No sales for selected day</td>
+            </tr>
+          }
         </tbody>
       </table>
     </div>
@@ -84,16 +88,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let s of displayedMonthly()" class="border-t border-emerald-100 dark:border-emerald-700">
-            <td class="px-3 py-2 text-xs text-slate-600 dark:text-slate-400">{{ s.createdAt }}</td>
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ s.customer || '-' }}</td>
-            <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ s.referenceNumber || '-' }}</td>
-            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ s.lines.length }}</td>
-            <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ saleTotalValue(s) | money}}</td>
-          </tr>
-          <tr *ngIf="!monthlySales().length" class="border-t border-emerald-100 dark:border-emerald-700">
-            <td class="px-3 py-6 text-center text-sm text-slate-600 dark:text-slate-400" colspan="5">No sales for selected month</td>
-          </tr>
+          @for (s of displayedMonthly(); track s) {
+            <tr class="border-t border-emerald-100 dark:border-emerald-700">
+              <td class="px-3 py-2 text-xs text-slate-600 dark:text-slate-400">{{ s.createdAt }}</td>
+              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ s.customer || '-' }}</td>
+              <td class="px-3 py-2 text-slate-900 dark:text-slate-300">{{ s.referenceNumber || '-' }}</td>
+              <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ s.lines.length }}</td>
+              <td class="px-3 py-2 text-right font-semibold text-slate-900 dark:text-slate-300">{{ saleTotalValue(s) | money}}</td>
+            </tr>
+          }
+          @if (!monthlySales().length) {
+            <tr class="border-t border-emerald-100 dark:border-emerald-700">
+              <td class="px-3 py-6 text-center text-sm text-slate-600 dark:text-slate-400" colspan="5">No sales for selected month</td>
+            </tr>
+          }
         </tbody>
       </table>
     </div>

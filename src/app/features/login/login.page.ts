@@ -1,5 +1,5 @@
 import { Component, DestroyRef, ElementRef, afterNextRender, computed, inject, signal, viewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { HttpErrorResponse } from '@angular/common/http';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -20,7 +20,7 @@ const LOGIN_MUTATION = `mutation Login($input: LoginInput!) { login(input: $inpu
 @Component({
   selector: 'cis-login-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
+  imports: [ReactiveFormsModule, TranslatePipe],
   templateUrl: './login.page.html',
   styleUrl: './login.page.scss'
 })

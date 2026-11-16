@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'cis-error-banner',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './error-banner.component.html',
   styleUrl: './error-banner.component.scss'
 })

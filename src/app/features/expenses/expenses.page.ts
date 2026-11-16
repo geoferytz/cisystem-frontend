@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { GraphqlService } from '../../core/graphql/graphql.service';
@@ -51,7 +51,7 @@ type DeleteExpenseMutationResult = {
 @Component({
   selector: 'cis-expenses-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MoneyPipe, TranslatePipe, RowActionsMenuComponent, PagerComponent, CIS_FORM_IMPORTS],
+  imports: [ReactiveFormsModule, MoneyPipe, TranslatePipe, RowActionsMenuComponent, PagerComponent, CIS_FORM_IMPORTS],
   templateUrl: './expenses.page.html',
   styleUrl: './expenses.page.scss'
 })
