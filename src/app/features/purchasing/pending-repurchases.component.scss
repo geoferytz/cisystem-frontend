@@ -8,6 +8,9 @@ p { margin: 8px 0; }
 button { min-height: 44px; border-radius: 10px; padding: 8px 14px; font-size: 12px; font-weight: 650; background: var(--cis-page); color: var(--cis-primary-strong); }
 button.primary { background: var(--cis-primary); color: white; }
 button.primary:hover:not(:disabled) { background: var(--cis-primary-hover); }
+button.danger { background: #fdecea; color: #b81104; }
+button.danger:hover:not(:disabled) { background: #f9d3ce; }
+:host-context(.dark) button.danger { background: rgba(184, 17, 4, .18); color: #fca5a5; }
 button:disabled { cursor: not-allowed; opacity: .55; }
 .rp-heading, .rp-actions { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
 .rp-actions { justify-content: flex-end; }

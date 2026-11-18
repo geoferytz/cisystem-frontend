@@ -21,9 +21,14 @@
           <div><strong>{{ order.supplier || 'Repurchase order' }}</strong><p>{{ order.invoiceNumber || order.id.slice(0, 8) }} · {{ order.createdAt | date:'medium' }}</p></div>
           <span class="rp-badge">{{ order.activation ? 'New product — pending receipt' : 'Pending receipt' }}</span>
           <strong>{{ orderTotal(order.lines) | money }}</strong>
-          @if (perm.canCreate('PURCHASING')) {
-            <button type="button" class="primary" [disabled]="busy()" (click)="openReceipt(order)">Receive</button>
-          }
+          <div class="rp-actions">
+            @if (perm.canDelete('PURCHASING')) {
+              <button type="button" class="danger" [disabled]="busy()" (click)="deleteTarget.set(order)">Delete</button>
+            }
+            @if (perm.canCreate('PURCHASING')) {
+              <button type="button" class="primary" [disabled]="busy()" (click)="openReceipt(order)">Receive</button>
+            }
+          </div>
         </div>
         <details><summary>View {{ order.lines.length }} product(s)</summary>
         @for (line of order.lines; track line) {
@@ -37,6 +42,19 @@
   }
 </section>
 }
+
+<cis-confirm-dialog
+  [open]="!!deleteTarget()"
+  [title]="deleteTarget()?.activation ? 'Delete pending product?' : 'Delete pending order?'"
+  [message]="deleteTarget()?.activation
+    ? 'This removes the order and the new product(s) in it. They were never received, so no stock is affected. This cannot be undone.'
+    : 'This removes the pending order. Products and stock are not changed. This cannot be undone.'"
+  confirmText="Delete"
+  cancelText="Keep"
+  confirmButtonClass="bg-[#B81104] hover:bg-[#7f0c03]"
+  (confirm)="deleteOrder()"
+  (cancel)="deleteTarget.set(null)"
+/>
 
 <cis-modal [open]="!!receiptOrder()" title="Receive repurchase order" maxWidthClass="max-w-3xl" (close)="!busy() && receiptOrder.set(null)">
   <div class="rp-receipt">

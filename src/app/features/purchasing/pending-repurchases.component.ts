@@ -6,13 +6,14 @@ import { BranchContext } from '../../shared/services/branch-context.service';
 import { MoneyPipe } from '../../shared/pipes/money.pipe';
 import { PendingReceivingService } from '../../shared/services/pending-receiving.service';
 import { PermissionService } from '../../shared/services/permission.service';
+import { ConfirmDialogComponent } from '../../shared/ui/confirm-dialog/confirm-dialog.component';
 import { ModalComponent } from '../../shared/ui/modal/modal.component';
 import { ReceiptLine, RepurchaseLine, RepurchaseOrder, orderFields } from './repurchase.types';
 
 @Component({
   selector: 'cis-pending-repurchases',
   standalone: true,
-  imports: [CommonModule, FormsModule, MoneyPipe, ModalComponent],
+  imports: [CommonModule, FormsModule, MoneyPipe, ModalComponent, ConfirmDialogComponent],
   templateUrl: './pending-repurchases.component.html',
   styleUrl: './pending-repurchases.component.scss'
 })
@@ -41,6 +42,7 @@ export class PendingRepurchasesComponent {
   notice = signal<string | null>(null);
   receiptOrder = signal<RepurchaseOrder | null>(null);
   receiptLines: ReceiptLine[] = [];
+  deleteTarget = signal<RepurchaseOrder | null>(null);
 
   constructor() {
     this.refresh();
@@ -73,6 +75,22 @@ export class PendingRepurchasesComponent {
       expiryDate: l.expiryDate ?? '',
       qty: l.quantity }));
     this.receiptOrder.set(order);
+  }
+
+  deleteOrder(): void {
+    const order = this.deleteTarget();
+    if (!order || this.busy() || !this.perm.canDelete('PURCHASING')) return;
+    this.busy.set(true); this.error.set(null);
+    this.gql.request<{ deletePendingRepurchase: boolean }>(`mutation DeletePendingRepurchase($id: ID!) {
+      deletePendingRepurchase(id: $id)
+    }`, { id: order.id }).subscribe({
+      next: () => {
+        this.busy.set(false); this.deleteTarget.set(null);
+        this.notice.set(order.activation ? 'Pending product deleted.' : 'Pending order deleted.');
+        this.refresh(); this.received.emit();
+      },
+      error: e => { this.busy.set(false); this.deleteTarget.set(null); this.error.set(e instanceof Error ? e.message : 'Could not delete the pending order.'); }
+    });
   }
 
   receiveOrder(): void {
